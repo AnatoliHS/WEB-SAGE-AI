@@ -1,1 +1,197 @@
-<script src="/assets/script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Header Scroll & Hero Shrink
+        const header = document.getElementById('main-header');
+        const hero = document.getElementById('hero');
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+
+            // Header Effect
+            if (scrollPos > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            // Hero Shrink Effect (Desktop Only)
+            if (window.innerWidth > 991 && hero) {
+                // Shrink as soon as we start scrolling
+                if (scrollPos > 20) {
+                    hero.classList.add('shrink');
+                } else {
+                    hero.classList.remove('shrink');
+                }
+            }
+        });
+
+        // Optimized Smooth Parallax (Standalone Listener)
+        const parallaxSection = document.querySelector('.parallax-section');
+        const parallaxImg = document.querySelector('.parallax-img');
+        let parallaxTicking = false;
+
+        if (parallaxSection && parallaxImg) {
+            const updateParallax = () => {
+                const rect = parallaxSection.getBoundingClientRect();
+                const viewHeight = window.innerHeight;
+
+                if (rect.top < viewHeight && rect.bottom > 0) {
+                    const scrollDistance = (viewHeight - rect.top) / (viewHeight + rect.height);
+                    const moveY = (scrollDistance - 0.5) * 30; // Smooth % shift
+                    parallaxImg.style.transform = `translate3d(0, ${moveY}%, 0)`;
+                }
+                parallaxTicking = false;
+            };
+
+            window.addEventListener('scroll', () => {
+                if (!parallaxTicking) {
+                    window.requestAnimationFrame(updateParallax);
+                    parallaxTicking = true;
+                }
+            }, { passive: true });
+        }
+
+        // Reveal on Scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Interactive Listings scroll trigger for mobile
+        const listingsSection = document.getElementById('listings');
+        const activeHalf = document.querySelector('.active-half');
+        const soldHalf = document.querySelector('.sold-half');
+        const divider = document.querySelector('.listings-separator-line');
+
+        if (listingsSection && activeHalf && soldHalf && divider) {
+            const handleListingsScroll = () => {
+                // Only run on mobile screen sizes
+                if (window.innerWidth > 768) {
+                    activeHalf.classList.remove('scroll-active');
+                    soldHalf.classList.remove('scroll-active');
+                    return;
+                }
+
+                const rect = listingsSection.getBoundingClientRect();
+                const viewportCenter = window.innerHeight / 2;
+
+                // Check if the interactive listings section is currently covering the center of the viewport (with a 150px offset on the bottom to keep Sold visible longer)
+                if (rect.top <= viewportCenter && rect.bottom >= (viewportCenter - 150)) {
+                    const dividerRect = divider.getBoundingClientRect();
+                    if (dividerRect.top > viewportCenter) {
+                        activeHalf.classList.add('scroll-active');
+                        soldHalf.classList.remove('scroll-active');
+                    } else {
+                        soldHalf.classList.add('scroll-active');
+                        activeHalf.classList.remove('scroll-active');
+                    }
+                } else {
+                    // Reset both if we scroll away from the listings block
+                    activeHalf.classList.remove('scroll-active');
+                    soldHalf.classList.remove('scroll-active');
+                }
+            };
+
+            window.addEventListener('scroll', handleListingsScroll, { passive: true });
+            window.addEventListener('resize', handleListingsScroll, { passive: true });
+            handleListingsScroll();
+        }
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (question) {
+                question.addEventListener('click', () => {
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            const otherSpan = otherItem.querySelector('.faq-question span');
+                            if (otherSpan) otherSpan.textContent = '+';
+                        }
+                    });
+                    item.classList.toggle('active');
+                    const span = question.querySelector('span');
+                    if (span) span.textContent = item.classList.contains('active') ? '-' : '+';
+                });
+            }
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                e.preventDefault();
+                const target = document.querySelector(targetId);
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Simple Form Submission (Placeholder)
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Thank you for your message! Dale will get back to you shortly.');
+                contactForm.reset();
+            });
+        }
+
+        // Mobile Menu Toggle
+        const mobileToggle = document.querySelector('.mobile-nav-toggle');
+        const navLinksList = document.getElementById('nav-links');
+
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                mobileToggle.classList.toggle('active');
+                navLinksList.classList.toggle('active');
+                document.body.style.overflow = navLinksList.classList.contains('active') ? 'hidden' : '';
+            });
+        }
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinksList.classList.contains('active')) {
+                    mobileToggle.classList.remove('active');
+                    navLinksList.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Mobile Hero Content Slide-up effect
+        if (window.innerWidth <= 992) {
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                window.addEventListener('scroll', () => {
+                    const scrollPos = window.scrollY;
+                    const heroHeight = window.innerHeight;
+                    
+                    if (scrollPos < heroHeight) {
+                        // Move text up faster than scroll and fade it out
+                        const moveAmount = scrollPos * 0.8;
+                        const opacityAmount = 1 - (scrollPos / (heroHeight * 0.7));
+                        
+                        heroContent.style.transform = `translateY(-${moveAmount}px)`;
+                        heroContent.style.opacity = Math.max(0, opacityAmount);
+                    }
+                });
+            }
+        }
+
+    });
+</script>

@@ -1,67 +1,122 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ site.name }} | Expert Mortgage Broker in Georgetown, ON</title>
+  <title>Dale Bryant | Luxury Real Estate in Durham, Northumberland & Hastings</title>
 
   <meta name="description"
-    content="Professional mortgage advice from {{ site.name }}, {{ site.title }} at {{ site.brokerage }}. Specialized in Home Purchases, Renewals, and Refinancing. Serving Georgetown and across Ontario." />
+    content="Experience bespoke real estate services in Cobourg, Port Hope, and beyond. Personalized luxury real estate with a focus on limited, high-quality client relationships." />
   <meta name="keywords"
-    content="Mortgage Broker, Georgetown, Ontario, Home Purchase, Mortgage Renewal, Refinancing, Carole Ann Bryant, Dominion Lending Centres" />
-  <meta name="author" content="{{ site.name }}" />
+    content="Real Estate, Luxury Homes, Durham Region, Northumberland County, Hastings County, Cobourg, Port Hope, Dale Bryant" />
+  <meta name="author" content="Dale Bryant" />
   <meta name="robots" content="index, follow" />
 
   <!-- Canonical URL -->
-  <link rel="canonical" href="{{ site.url }}" />
+  <link rel="canonical" href="https://dalebryant.ca" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{ site.url }}" />
-  <meta property="og:title" content="{{ site.name }} | Mortgage Broker Georgetown, ON" />
-  <meta property="og:description" content="Expert mortgage advice with access to hundreds of products. Specializing in home purchases, renewals, and equity refinancing." />
-  <meta property="og:image" content="{{ site.url }}assets/carol-ann-bryant.JPG" />
+  <meta property="og:url" content="https://dalebryant.ca" />
+  <meta property="og:title" content="Dale Bryant | Luxury Real Estate Specialist" />
+  <meta property="og:description" content="Personalized real estate services with a focus on luxury properties in Ontario's Durham and Northumberland regions." />
+  <meta property="og:image" content="https://dalebryant.ca/assets/og-image.jpg" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="{{ site.url }}" />
-  <meta property="twitter:title" content="{{ site.name }} | Mortgage Broker Georgetown" />
-  <meta property="twitter:description" content="Professional mortgage solutions tailored to your unique financial situation." />
-  <meta property="twitter:image" content="{{ site.url }}assets/carol-ann-bryant.JPG" />
+  <meta property="twitter:url" content="https://dalebryant.ca" />
+  <meta property="twitter:title" content="Dale Bryant | Luxury Real Estate Specialist" />
+  <meta property="twitter:description" content="Professional real estate solutions tailored to your unique needs." />
+  <meta property="twitter:image" content="https://dalebryant.ca/assets/og-image.jpg" />
 
-  <!-- Structured Data: FinancialService / Mortgage Broker -->
+  <!-- JSON-LD RealEstateAgent Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "FinancialService",
-    "name": "{{ site.name }} - {{ site.brokerage }}",
-    "description": "Licensed mortgage professional providing expert advice on home purchases, renewals, and refinancing in Georgetown and across Ontario.",
-    "url": "{{ site.url }}",
-    "telephone": "{{ site.phone }}",
-    "email": "{{ site.email }}",
+    "@type": "RealEstateAgent",
+    "name": "Dale Bryant Real Estate",
+    "image": "https://dalebryant.ca/assets/dale-bryant-headshot.jpg",
+    "@id": "https://dalebryant.ca",
+    "url": "https://dalebryant.ca",
+    "telephone": "+19053492700",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "83 Mill Street, Suite 203",
-      "addressLocality": "Georgetown",
+      "streetAddress": "P.O. Box 474",
+      "addressLocality": "Cobourg",
       "addressRegion": "ON",
-      "postalCode": "L7G 5E9",
+      "postalCode": "K9A 4L1",
       "addressCountry": "CA"
     },
-    "image": "{{ site.url }}assets/carol-ann-bryant.JPG",
-    "priceRange": "$$$",
-    "legalName": "{{ site.name }}",
-    "memberOf": {
-      "@type": "Organization",
-      "name": "{{ site.brokerage }}"
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 43.9591,
+      "longitude": -78.1652
     },
-    "identifier": [
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "09:00",
+      "closes": "21:00"
+    },
+    "sameAs": [
+      "https://www.facebook.com/DaleBryantRealEstate/",
+      "https://www.instagram.com/dalebryantrealestate/"
+    ],
+    "areaServed": ["Durham Region", "Northumberland County", "Hastings County", "Cobourg", "Port Hope"]
+  }
+  </script>
+
+  <!-- JSON-LD FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
       {
-        "@type": "PropertyValue",
-        "name": "Originator Licence",
-        "value": "M08001276"
+        "@type": "Question",
+        "name": "What regions do you specialize in?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We specialize in the Durham Region, Northumberland County, and Hastings County, including communities like Cobourg, Port Hope, and surrounding areas."
+        }
       },
       {
-        "@type": "PropertyValue",
-        "name": "Brokerage Licence",
-        "value": "13119"
+        "@type": "Question",
+        "name": "What is the Built-In Advantage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It's our philosophy of limiting client volume. This allows us to dedicate more time, resources, and personal attention to each listing, ensuring superior results."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you market luxury properties?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We use a combination of professional cinematography, high-end photography, targeted digital advertising, and our exclusive network to ensure maximum exposure to qualified buyers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you assist with mortgage financing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our team offers a seamless, in-house advantage with Mortgage Broker CaroleAnn Bryant (Dominion Lending Centres Alliance), combining professional real estate and financing representation under one roof."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I start the process of selling my home?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The first step is a private consultation. We will discuss your goals, provide a comprehensive market evaluation, and outline a bespoke marketing strategy tailored to your property."
+        }
       }
     ]
   }
@@ -74,126 +129,7 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <style>
-    @font-face {
-      font-family: 'Teodor';
-      src: url('/assets/teodor.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    :root {
-      --bg-color: #f2f8fc;
-      --primary-color: #1a365d;
-      /* Deep Navy */
-      --accent-color: #b8860b;
-      /* Gold/Brass */
-      --text-color: #1a365d;
-      --text-light: rgba(26, 54, 93, 0.7);
-      --white: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-
-      --font-serif: 'Teodor', 'Playfair Display', serif;
-      --font-sans: 'Inter', sans-serif;
-
-      --radius: 2rem;
-      --radius-sm: 0.75rem;
-      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: var(--font-sans);
-      line-height: 1.8;
-      overflow-x: hidden;
-      letter-spacing: -0.01em;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4 {
-      font-family: var(--font-serif);
-      color: var(--primary-color);
-      font-weight: 300;
-      line-height: 1.2;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-
-    section {
-        padding: 120px 20px;
-        max-width: 1400px;
-        margin: 0 auto;
-        scroll-margin-top: 100px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Scroll Reveal Base Classes */
-    .reveal-text {
-      color: rgba(26, 54, 93, 0.15);
-      background-clip: text;
-      -webkit-background-clip: text;
-      background-repeat: no-repeat;
-      background-size: 0% 100%;
-      background-image: linear-gradient(90deg, var(--primary-color), var(--primary-color));
-    }
-
-    .reveal-text.visible {
-      background-size: 100% 100%;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 16px 32px;
-      border-radius: var(--radius-sm);
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: var(--white);
-    }
-
-    .btn-primary:hover {
-      background-color: var(--accent-color);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .btn-outline {
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .btn-outline:hover {
-      background-color: var(--primary-color);
-      color: var(--white);
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/css/style.css">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
