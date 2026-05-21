@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   {% include "component/head.njk" %}
-  <body>
+  <body class="{% if bodyClass %}{{ bodyClass }}{% else %}page-light{% endif %}">
         
       {% include "component/navbar.njk" %}
       

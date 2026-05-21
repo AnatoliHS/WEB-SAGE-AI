@@ -10,7 +10,7 @@
 <header id="main-header">
     <div class="container">
         <nav>
-            <div class="logo logo-container">DALE BRYANT</div>
+            <a href="/" class="logo logo-container">DALE BRYANT</a>
 
             <button class="mobile-nav-toggle" aria-label="Toggle navigation">
                 <span></span>
@@ -23,6 +23,7 @@
                     <img src="/assets/sig2.webp" alt="Dale Bryant Signature"
                         style="max-height: 100px; width: auto; margin: 0 auto;">
                 </li>
+                {% if page.url == "/" or page.url == "/index.html" %}
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#listings">Listings</a></li>
@@ -30,8 +31,21 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li class="mobile-only"><a href="#contact" class="btn">Get in Touch</a></li>
+                {% else %}
+                <li><a href="/#hero">Home</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a href="/#listings">Listings</a></li>
+                <li><a href="/#reviews">Reviews</a></li>
+                <li><a href="/#faq">FAQ</a></li>
+                <li><a href="/#contact">Contact</a></li>
+                <li class="mobile-only"><a href="/#contact" class="btn">Get in Touch</a></li>
+                {% endif %}
             </ul>
+            {% if page.url == "/" or page.url == "/index.html" %}
             <a href="#contact" class="btn nav-cta">Get in Touch</a>
+            {% else %}
+            <a href="/#contact" class="btn nav-cta">Get in Touch</a>
+            {% endif %}
         </nav>
     </div>
 </header>
