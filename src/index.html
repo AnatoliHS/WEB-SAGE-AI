@@ -3,240 +3,732 @@ layout: default.njk
 title: Home
 ---
 
-<!-- Hero Section with Pinning -->
-<div class="hero-pin-container">
-    <section id="hero" class="hero">
-        <div class="hero-video-container">
-            <video autoplay muted playsinline loop id="hero-video" class="hero-video">
-                <source src="/assets/hero-video7.mp4" type="video/mp4">
-                <!-- Fallback for browsers that don't support video -->
-            </video>
-        </div>
-        <div class="hero-centering-wrapper">
-            <div class="hero-content reveal">
-                <p>Your Moving Destination</p>
-                <h1 class="hero-write-heading">
-                    <span class="write-text line-1">Residential & Luxury</span><br>
-                    <span class="write-text line-2">Real Estate Services</span>
-                </h1>
-            </div>
-        </div>
-        <div class="hero-stats">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number">$50M+</span>
-                    <span class="stat-label">Career Sales</span>
+<!-- Hero Section -->
+<section id="hero" class="hero">
+    <div class="container">
+        <div class="hero-grid">
+            <div class="hero-animation-wrapper">
+                <div class="animation-container">
+                    <!-- JS will dynamically inject the 13x13 grid of dots here -->
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number">24</span>
-                    <span class="stat-label">Avg. Days on Market</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">95%</span>
-                    <span class="stat-label">List-to-Sale Ratio</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">5 / 5★</span>
-                    <span class="stat-label">Google Review Rating</span>
+                <div class="hero-content">
+                    <h1>SHEENA <span class="hero-badge">RDH</span></h1>
                 </div>
             </div>
-        </div>
-    </section>
-</div>
-
-<!-- Expertise Reveal Section -->
-<section id="expertise" class="section expertise-section">
-    <div class="container text-center">
-        <h2 class="expertise-title reveal">
-            <span class="expert-word">Expert</span>
-            <div class="services-wrapper">
-                <div class="services-inner">
-                    <div class="services-text">Real Estate Guidance</div>
-                </div>
-            </div>
-        </h2>
-        <div class="expertise-intro reveal"
-            style="max-width: 1200px; margin: 40px auto 0; text-align: center; line-height: 1.8; color: var(--accent-gold);">
-            <p>I provide expert residential real estate services for discerning buyers and sellers along the 401
-                corridor, from Pickering to Belleville. Specializing in everything from family homes to luxury
-                properties, I bring firsthand experience to every transaction, treating your move with the utmost
-                dedication. In today’s shifting market, you deserve a skilled real estate agent working strictly in your
-                best interest. To streamline your purchase, our team offers a seamless, in-house advantage with Mortgage
-                Broker CaroleAnn Bryant (Dominion Lending Centres Alliance), combining professional real estate and
-                financing representation under one roof.</p>
         </div>
     </div>
 </section>
-<div class="parallax-section">
-    <div class="parallax-img"></div>
-</div>
-<!-- About Section -->
+
+<!-- About / Bio Section -->
 <section id="about" class="section">
     <div class="container">
-        <div class="about-grid">
-            <div class="about-image reveal">
-                <img src="/assets/Dale.avif" alt="Dale Bryant">
+        <div class="bio-grid">
+            <div class="bio-image-wrapper">
+                <img src="/assets/sheena-rdh.jpg" alt="Sheena RDH in clinical setting"
+                    style="filter: saturate(0.9) contrast(1.05);">
+                <div class="bio-card-overlay">
+                    <h4>Gentle &amp; Evidence-Based Care</h4>
+                    <p>Dedicated to clinical excellence and patient empowerment.</p>
+                </div>
             </div>
-            <div class="about-text reveal">
-                <h2 class="section-title">
-                    <img src="/assets/sig.webp" alt="Dale Bryant"
-                        style="max-height: 80px; width: auto; filter: brightness(0);">
-                </h2>
-                <p class="subtitle">Personalized Service</p>
-                <p>As part of the service we provide to the residential real estate market, I work with a limited
-                    number of clients at any given time. This naturally creates a built-in time advantage so that
-                    you’ll never experience a volume oriented production line of transactional service. </p>
-                <p>Our enhanced real estate marketing is tailored to the uniqueness of the homes, neighbourhoods and
-                    clientele in the luxury community but used for all our residential homes and clients. Paying close
-                    attention to the details that are truly important to the home sellers and home buyers that I work
-                    with is the hallmark of a most enjoyable career in real estate. It’s not about the awards we earn
-                    year after year; it’s about the care we take doing it.</p>
-                <a href="#contact" class="btn">Learn More</a>
+            <div class="bio-content">
+                <h2>Empowering You to Achieve a Lifetime of Oral Health</h2>
+                <p>Hello! I'm Sheena, a Registered Dental Hygienist (RDH) with over a decade of clinical experience. My
+                    professional mission goes beyond scaling teeth—I believe in building strong partnerships with my
+                    patients to address the root causes of dental disease.</p>
+                <p>During my years in clinical practice, I noticed that patients often want to improve their oral health
+                    but lack clear, personalized guidance on what to do once they leave the chair. That is why I created
+                    this digital portal: to translate your physical exam findings into practical, everyday solutions you
+                    can implement at home.</p>
+
+                <div class="bio-features">
+                    <div class="bio-feature-item">
+                        <span class="feature-check">✓</span>
+                        <div class="feature-text">
+                            <h4>Prevention Focused</h4>
+                            <p>Stopping inflammation and tooth decay before they require drilling.</p>
+                        </div>
+                    </div>
+                    <div class="bio-feature-item">
+                        <span class="feature-check">✓</span>
+                        <div class="feature-text">
+                            <h4>Certified Specialist</h4>
+                            <p>Advanced training in Periodontal Maintenance and Soft-Tissue Laser Therapy.</p>
+                        </div>
+                    </div>
+                    <div class="bio-feature-item">
+                        <span class="feature-check">✓</span>
+                        <div class="feature-text">
+                            <h4>Gentle Philosophy</h4>
+                            <p>Ensuring dental anxiety is met with compassion, patience, and a light touch.</p>
+                        </div>
+                    </div>
+                    <div class="bio-feature-item">
+                        <span class="feature-check">✓</span>
+                        <div class="feature-text">
+                            <h4>Canadian Certified</h4>
+                            <p>Active member of the College of Dental Hygienists of Ontario (CDHO).</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Listings Section -->
-<section id="listings" class="interactive-listings-section">
-    <div class="container" style="padding-top: 100px; padding-bottom: 60px; text-align: left; width: 100%;">
-        <h2 class="section-title reveal" style="color: var(--white); text-align: left;">Residential Real Estate Listings & Marketing</h2>
-        <p class="subtitle reveal" style="text-align: left;">Listing homes for sale, sold & marketing</p>
-    </div>
-
-    <!-- Active Section -->
-    <a href="/active/" class="interactive-listings-half active-half">
-        <div class="bg-slide bottom-up">
-            <img src="/assets/listing-1.png" alt="Active Listings">
-            <div class="overlay"></div>
-        </div>
-        <div class="content-wrap">
-            <span class="category-title">Active</span>
-        </div>
-    </a>
-
-    <!-- Gold Separator Line -->
-    <div class="listings-separator-line divider-1"></div>
-
-    <!-- Sold Section -->
-    <a href="/sold/" class="interactive-listings-half sold-half">
-        <div class="bg-slide bottom-up">
-            <img src="/assets/listing-2.png" alt="Sold Listings">
-            <div class="overlay"></div>
-        </div>
-        <div class="content-wrap">
-            <span class="category-title">Sold</span>
-        </div>
-    </a>
-
-    <!-- Gold Separator Line -->
-    <div class="listings-separator-line divider-2"></div>
-
-    <!-- Marketing Section -->
-    <a href="/marketing/" class="interactive-listings-half marketing-half">
-        <div class="bg-slide bottom-up">
-            <img src="/assets/listing-3.png" alt="Marketing">
-            <div class="overlay"></div>
-        </div>
-        <div class="content-wrap">
-            <span class="category-title">Marketing</span>
-        </div>
-    </a>
-</section>
-
-<!-- Reviews Section -->
-<section id="reviews" class="section" style="background-color: var(--secondary-bg);">
+<!-- Patient Exam Portal Section -->
+<section id="portal" class="section portal-section">
     <div class="container">
-        <h2 class="text-center section-title reveal">What Our Clients Say</h2>
-        <div class="reviews-grid">
-            <div class="review-card reveal">
-                <p class="review-text">"Dale's attention to detail and personalized approach made all the difference in
-                    selling our luxury home in Cobourg. Truly a professional experience."</p>
-                <p class="review-author">— Sarah & James M.</p>
+        <div class="text-center">
+            <h2 class="section-title">Your Personal Exam Portal</h2>
+            <p class="portal-menu-desc" style="max-width: 700px; margin: 0 auto 48px;">
+                At your last in-person checkup, Sheena assigned you a clinical category based on your gum health and
+                cavity risk. Select your category below to unlock your custom daily home-care routine, treatment goals,
+                and recommended solutions.
+            </p>
+        </div>
+
+        <div class="portal-grid">
+            <!-- Left Side Categories -->
+            <div class="portal-menu">
+                <button class="portal-tab-btn active" data-tab="cat1" aria-label="Select Category 1">
+                    <div class="tab-number">1</div>
+                    <div class="tab-title">
+                        <h4>Healthy &amp; Preventive</h4>
+                        <p>Maintenance &amp; Prevention</p>
+                    </div>
+                </button>
+
+                <button class="portal-tab-btn" data-tab="cat2" aria-label="Select Category 2">
+                    <div class="tab-number">2</div>
+                    <div class="tab-title">
+                        <h4>Active Gingivitis</h4>
+                        <p>Reversing Gum Inflammation</p>
+                    </div>
+                </button>
+
+                <button class="portal-tab-btn" data-tab="cat3" aria-label="Select Category 3">
+                    <div class="tab-number">3</div>
+                    <div class="tab-title">
+                        <h4>Periodontal Maintenance</h4>
+                        <p>Stable Gum Disease Care</p>
+                    </div>
+                </button>
+
+                <button class="portal-tab-btn" data-tab="cat4" aria-label="Select Category 4">
+                    <div class="tab-number">4</div>
+                    <div class="tab-title">
+                        <h4>High Cavity &amp; Dry Mouth</h4>
+                        <p>Enamel Protection &amp; Saliva</p>
+                    </div>
+                </button>
             </div>
-            <div class="review-card reveal">
-                <p class="review-text">"Working with Dale and CaroleAnn was seamless. They understood the local market
-                    perfectly and helped us find our dream home in Port Hope."</p>
-                <p class="review-author">— Robert L.</p>
-            </div>
-            <div class="review-card reveal">
-                <p class="review-text">"The limited client philosophy is real. We felt like we were their only priority
-                    throughout the entire process. Highly recommended."</p>
-                <p class="review-author">— The Thompson Family</p>
+
+            <!-- Right Side Display Card -->
+            <div class="portal-display">
+
+                <!-- Category 1 Display -->
+                <div class="portal-pane active" id="pane-cat1">
+                    <div class="pane-header">
+                        <div>
+                            <span class="pane-badge">Category 1</span>
+                            <h3 style="margin-top: 8px;">Healthy &amp; Preventive Care</h3>
+                        </div>
+                        <span class="pane-badge" style="background-color: #E8F5E9; color: #2E7D32;">Low Risk</span>
+                    </div>
+                    <div class="pane-body">
+                        <p class="pane-intro">Your gums are pink and firm, there is minimal to no bleeding during
+                            brushing or flossing, and gum pocket depths are healthy (1–3mm). The goal here is long-term
+                            maintenance and prevention of future plaque accumulation.</p>
+
+                        <div class="pane-sections">
+                            <div class="pane-section-box">
+                                <h4>🎯 Core Routine Goals</h4>
+                                <ul>
+                                    <li>Keep plaque levels below the threshold of inflammation.</li>
+                                    <li>Maintain healthy supportive bone levels around teeth.</li>
+                                    <li>Remineralize enamel daily to protect against early decay.</li>
+                                </ul>
+                            </div>
+                            <div class="pane-section-box">
+                                <h4>🪥 Home Care Guidelines</h4>
+                                <ul>
+                                    <li>Brush twice daily for 2 minutes with a soft-bristled brush.</li>
+                                    <li>Floss once daily, gently wrapping the floss around each tooth.</li>
+                                    <li>Use a mineralizing or standard fluoride toothpaste.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2 Display -->
+                <div class="portal-pane" id="pane-cat2">
+                    <div class="pane-header">
+                        <div>
+                            <span class="pane-badge warning-badge">Category 2</span>
+                            <h3 style="margin-top: 8px;">Active Gingivitis</h3>
+                        </div>
+                        <span class="pane-badge warning-badge">Moderate Risk</span>
+                    </div>
+                    <div class="pane-body">
+                        <p class="pane-intro">Your gums are red, puffy, and bleed easily during brushing, flossing, or
+                            probing. Gum pockets are slightly deep (3-4mm) due to swelling, but there is no bone loss.
+                            Gingivitis is <strong>100% reversible</strong> with focused intervention.</p>
+
+                        <div class="pane-sections">
+                            <div class="pane-section-box">
+                                <h4>🎯 Core Routine Goals</h4>
+                                <ul>
+                                    <li>Elimate bleeding and reduce bacterial gum swelling.</li>
+                                    <li>Remove plaque biofilm under the gum margins daily.</li>
+                                    <li>Restore tissue health and seal the gums around the teeth.</li>
+                                </ul>
+                            </div>
+                            <div class="pane-section-box">
+                                <h4>🪥 Home Care Guidelines</h4>
+                                <ul>
+                                    <li>Switch to an electric toothbrush with a pressure sensor.</li>
+                                    <li>Floss daily. *Do not stop flossing because of bleeding*—that is a sign to clean
+                                        more!</li>
+                                    <li>Use an antiseptic alcohol-free mouthrinse to reduce bacterial load.</li>
+                                    <li>Incorporate warm saltwater rinses if gums feel tender.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3 Display -->
+                <div class="portal-pane" id="pane-cat3">
+                    <div class="pane-header">
+                        <div>
+                            <span class="pane-badge danger-badge">Category 3</span>
+                            <h3 style="margin-top: 8px;">Periodontal Maintenance</h3>
+                        </div>
+                        <span class="pane-badge danger-badge">High Risk</span>
+                    </div>
+                    <div class="pane-body">
+                        <p class="pane-intro">You have a history of periodontitis (bone loss supporting the teeth). The
+                            disease is currently stable, but you have receding gums, exposed root surfaces, or pocket
+                            depths of 4-5mm. This category requires lifetime maintenance to prevent disease
+                            reactivation.</p>
+
+                        <div class="pane-sections">
+                            <div class="pane-section-box">
+                                <h4>🎯 Core Routine Goals</h4>
+                                <ul>
+                                    <li>Prevent bacteria from re-colonizing deep under the gumline.</li>
+                                    <li>Protect exposed, softer root surfaces from root cavities.</li>
+                                    <li>Manage tooth sensitivity caused by recession.</li>
+                                </ul>
+                            </div>
+                            <div class="pane-section-box">
+                                <h4>🪥 Home Care Guidelines</h4>
+                                <ul>
+                                    <li>Use interdental brushes (proxy brushes) to clean the wider gaps between teeth.
+                                    </li>
+                                    <li>Use a water flosser daily to flush out deep pockets.</li>
+                                    <li>Use a low-abrasion, sensitive toothpaste containing fluoride or hydroxyapatite.
+                                    </li>
+                                    <li>Keep your professional scaling appointments at a strict 3-to-4 month interval.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 4 Display -->
+                <div class="portal-pane" id="pane-cat4">
+                    <div class="pane-header">
+                        <div>
+                            <span class="pane-badge warning-badge">Category 4</span>
+                            <h3 style="margin-top: 8px;">High Cavity Risk &amp; Dry Mouth</h3>
+                        </div>
+                        <span class="pane-badge warning-badge">Elevated Risk</span>
+                    </div>
+                    <div class="pane-body">
+                        <p class="pane-intro">You have experienced frequent new decay (cavities) recently or suffer from
+                            Xerostomia (dry mouth) due to medication, mouth breathing, or medical conditions. Saliva is
+                            your mouth's natural defense, and a lack of it leads to rapid enamel breakdown.</p>
+
+                        <div class="pane-sections">
+                            <div class="pane-section-box">
+                                <h4>🎯 Core Routine Goals</h4>
+                                <ul>
+                                    <li>Stimulate natural salivary flow and lubricate oral tissues.</li>
+                                    <li>Remineralize weakened enamel and raise oral pH levels.</li>
+                                    <li>Protect roots and crown margins from aggressive decay.</li>
+                                </ul>
+                            </div>
+                            <div class="pane-section-box">
+                                <h4>🪥 Home Care Guidelines</h4>
+                                <ul>
+                                    <li>Sip plain water constantly throughout the day; avoid sipping acidic beverages.
+                                    </li>
+                                    <li>Use toothpaste containing 10% Nano-Hydroxyapatite or high fluoride.</li>
+                                    <li>Chew sugar-free gum or use lozenges containing 100% Xylitol to stimulate saliva.
+                                    </li>
+                                    <li>Use an alcohol-free, dry-mouth lubricating mouthwash before bed.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
 
-<div class="parallax-section">
-    <div class="parallax-img city-parallax"></div>
-</div>
+<!-- Dental Hygiene Topics Section (Educational Accordion) -->
+<section id="topics" class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Evidence-Based Dental Advice</h2>
+            <p style="max-width: 600px; margin: 0 auto 48px;">Discover the science behind common dental hygiene
+                practices. Empowering you to make informed decisions for your daily routine.</p>
+        </div>
+
+        <div class="topics-container">
+            <div class="topics-accordion">
+
+                <!-- Topic 1 -->
+                <details class="disclosure" name="topics-group" open>
+                    <summary>Electric vs. Manual Toothbrushes: The Clinical Evidence <span class="summary-icon">+</span>
+                    </summary>
+                    <div class="disclosure-content">
+                        <p>Many patients ask if upgrading to an electric toothbrush is truly worth it. From a clinical
+                            perspective, the short answer is <strong>yes</strong>. Extensive clinical trials show that
+                            electric toothbrushes are significantly more effective at removing plaque biofilm and
+                            reducing gum disease.</p>
+                        <p><strong>Key Advantages Include:</strong></p>
+                        <ul>
+                            <li><strong>Superior Plaque Removal:</strong> High-end electric toothbrushes (specifically
+                                sonic or rotating-oscillating types) remove up to 21% more plaque than manual brushes.
+                            </li>
+                            <li><strong>Pressure Controls:</strong> A common mistake with manual brushing is scrubing
+                                too hard, which leads to permanent gum recession and enamel wear. Electric toothbrushes
+                                have built-in pressure sensors that alert you when brushing too aggressively.</li>
+                            <li><strong>Built-in Timers:</strong> The average person brushes with a manual toothbrush
+                                for only 45 seconds. Electric brushes force a full 2-minute cycle, partitioned into
+                                30-second quad indicators.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <!-- Topic 2 -->
+                <details class="disclosure" name="topics-group">
+                    <summary>Why Flossing is Non-Negotiable (Brushing Only Cleans 60%) <span
+                            class="summary-icon">+</span></summary>
+                    <div class="disclosure-content">
+                        <p>Brushing only cleans the front, back, and biting surfaces of your teeth. The sides of your
+                            teeth—the interdental spaces—make up approximately <strong>40% of your total tooth surface
+                                area</strong>. If you do not floss, you are leaving almost half of your mouth uncleaned.
+                        </p>
+                        <p>Plaque bacteria colony buildup in these tight spaces is the primary cause of:</p>
+                        <ul>
+                            <li><strong>Interproximal Cavities:</strong> Cavities that start between the teeth, which
+                                are invisible to the eye and require diagnostic X-rays to detect.</li>
+                            <li><strong>Interdental Gingivitis:</strong> Inflammation of the pointed gum tissue between
+                                teeth, leading to bad breath (halitosis) and bleeding.</li>
+                            <li><strong>Water Flosser vs String Floss:</strong> String floss physically scrapes plaque
+                                biofilm off the tooth wall, making it the gold standard. However, if you find string
+                                flossing too difficult or tedious, a water flosser is a fantastic alternative that
+                                flushes out food debris and bacteria from deep within the gum pockets.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <!-- Topic 3 -->
+                <details class="disclosure" name="topics-group">
+                    <summary>Understanding Gum Disease: Gingivitis vs. Periodontitis <span class="summary-icon">+</span>
+                    </summary>
+                    <div class="disclosure-content">
+                        <p>Gum disease is a progressive, bacterial infection that exists in two primary stages:
+                            Gingivitis and Periodontitis. Understanding the difference is crucial for protecting your
+                            smile.</p>
+                        <p><strong>Gingivitis (Reversible):</strong> This is the initial response to plaque buildup.
+                            Gums become red, puffy, and bleed during cleaning. At this stage, the bacteria have not yet
+                            affected the bone supporting your teeth. Gingivitis can be fully cured with professional
+                            cleanings and improved home care.</p>
+                        <p><strong>Periodontitis (Irreversible):</strong> If gingivitis is left untreated, the chronic
+                            inflammation causes the gums to pull away from the teeth, creating deep "pockets" where
+                            bacteria multiply. The body's immune response to these bacteria begins to break down the
+                            surrounding bone that holds your teeth in place. Once bone is lost, it cannot grow back.
+                            Treatment shifts from curing the disease to stabilizing it (Periodontal Maintenance) to
+                            prevent tooth loss.</p>
+                    </div>
+                </details>
+
+                <!-- Topic 4 -->
+                <details class="disclosure" name="topics-group">
+                    <summary>What Actually Happens During a Scaling (Deep Cleaning)? <span class="summary-icon">+</span>
+                    </summary>
+                    <div class="disclosure-content">
+                        <p>When plaque (soft bacterial film) remains on your teeth for more than 24-48 hours, it absorbs
+                            minerals from your saliva and calcifies into a rock-hard substance called <strong>Calculus
+                                (Tartar)</strong>. Once calculus forms, it cannot be brushed or flossed away—it can only
+                            be removed by a dental professional.</p>
+                        <p>During your appointment, Sheena performs <strong>Scaling and Root Planing</strong>:</p>
+                        <ul>
+                            <li><strong>Ultrasonic Scaling:</strong> An acoustic handpiece vibrates at high frequency,
+                                using water micro-cavitation to break up hard tartar deposits and flush away bacterial
+                                toxins.</li>
+                            <li><strong>Hand Instruments (Curettes):</strong> Finely tuned hand instruments are used to
+                                precisely scrape remaining deposits from the root surfaces, leaving them smooth so gum
+                                tissue can reattach.</li>
+                            <li><strong>Why smooth roots matter:</strong> Bacteria easily adhere to rough tartar. By
+                                scraping the tooth clean and smoothing the root, we remove the "microbial anchors" and
+                                give your gums a clean surface to heal against.</li>
+                        </ul>
+                    </div>
+                </details>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recommended Products Section -->
+<section id="products" class="section products-section" style="background-color: var(--primary-bg); color: var(--teal-dark); overflow: hidden; padding: 50px 0;">
+    <div class="container">
+        <div class="products-grid-layout">
+            <!-- Left Side: Title & 3D Card Stack -->
+            <div class="products-left-col">
+                <h2 class="products-main-title">Recommended <br><span class="title-faded">Oral Care.</span></h2>
+                <p class="products-left-desc">
+                    Evidence-based oral care products selected for clinical efficacy. Hover or select a recommendation on the right to examine its features.
+                </p>
+
+                <!-- 3D Card Stack Container -->
+                <div class="products-stack-container" id="product-stack">
+                    
+                    <!-- Product Card 1 -->
+                    <div class="stack-card active" data-index="0" data-category="brush">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_sonicare.jpg" alt="Philips Sonicare Electric Toothbrush" class="card-product-img">
+                                    <span class="card-category-tag">Toothbrush</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">Philips Sonicare</h3>
+                                        <p class="card-product-desc">Advanced sonic technology offering up to 62,000 brush movements per minute with pressure sensors.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "Crucial for gum recession and active gingivitis. The pressure sensor prevents aggressive scrubbing."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Plaque Control</span>
+                                        <span class="card-tag-pill">Gingivitis Reversal</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="stack-card" data-index="1" data-category="interdental">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_waterpik.jpg" alt="Waterpik Cordless Water Flosser" class="card-product-img">
+                                    <span class="card-category-tag">Flossing</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">Waterpik Cordless</h3>
+                                        <p class="card-product-desc">Removes up to 99.9% of plaque from treated areas. Clinically 50% more effective than string floss.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "Perfect for patients with deep pockets or orthodontic braces where string floss is hard to navigate."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Pocket Cleansing</span>
+                                        <span class="card-tag-pill">Ortho Friendly</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="stack-card" data-index="2" data-category="interdental">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_tepe.jpg" alt="TePe Proxy Brushes" class="card-product-img">
+                                    <span class="card-category-tag">Interdental</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">TePe Proxy Brushes</h3>
+                                        <p class="card-product-desc">Small, specialized interdental brushes designed to clean spaces between teeth where regular brushes cannot reach.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "Essential for Category 3 periodontal maintenance. Cleans hidden concave root surfaces effectively."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Recession Care</span>
+                                        <span class="card-tag-pill">Deep Cleaning</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="stack-card" data-index="3" data-category="paste">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_mipaste.jpg" alt="MI Paste Plus Toothpaste" class="card-product-img">
+                                    <span class="card-category-tag">Toothpaste</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">MI Paste Plus</h3>
+                                        <p class="card-product-desc">Uses Nano-Hydroxyapatite calcium and phosphate to naturally remineralize teeth and close dentin tubules.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "The absolute best for Category 4 patients. Rebuilds enamel mineral density and reduces root sensitivity."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Enamel Repair</span>
+                                        <span class="card-tag-pill">Sensitivity Relief</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 5 -->
+                    <div class="stack-card" data-index="4" data-category="paste">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_therabreath.jpg" alt="TheraBreath Rinse Mouthwash" class="card-product-img">
+                                    <span class="card-category-tag">Mouthwash</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">TheraBreath Rinse</h3>
+                                        <p class="card-product-desc">Clinical formula utilizing natural oxygenating compounds. Contains zero alcohol or burning ingredients.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "Since it contains zero alcohol, it doesn't dry out mucosal tissues, which is vital for high cavity risk."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Alcohol-Free</span>
+                                        <span class="card-tag-pill">Xerostomia Safe</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 6 -->
+                    <div class="stack-card" data-index="5" data-category="specialty">
+                        <div class="card-gradient-border">
+                            <div class="card-inner">
+                                <div class="card-img-side">
+                                    <img src="/assets/images/product_xylimelts.jpg" alt="XyliMelts Dry Mouth Discs" class="card-product-img">
+                                    <span class="card-category-tag">Dry Mouth</span>
+                                </div>
+                                <div class="card-info-side">
+                                    <div>
+                                        <h3 class="card-product-title">XyliMelts Discs</h3>
+                                        <p class="card-product-desc">Slow-dissolving oral adhering discs that stimulate saliva flow, coat tissues, and reduce plaque.</p>
+                                    </div>
+                                    <div class="card-why-recommend">
+                                        <strong>Sheena's Note:</strong> "A nighttime lifesaver for dry mouth. Xylitol actively inhibits bacteria that cause cavities."
+                                    </div>
+                                    <div class="card-tags-row">
+                                        <span class="card-tag-pill">Saliva Stimulant</span>
+                                        <span class="card-tag-pill">100% Xylitol</span>
+                                    </div>
+                                    <a href="https://amazon.com" target="_blank" rel="noopener" class="btn btn-gold card-cta">View on Amazon &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Mobile Arrow Navigation Controls -->
+                <div class="mobile-products-nav">
+                    <button class="mobile-nav-btn prev-btn" id="product-prev-btn" aria-label="Previous Product">
+                        &larr;
+                    </button>
+                    <span class="mobile-nav-counter" id="product-counter">1 / 6</span>
+                    <button class="mobile-nav-btn next-btn" id="product-next-btn" aria-label="Next Product">
+                        &rarr;
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Side: Compact Title-Only Hover Buttons (Screenshot Style) -->
+            <div class="products-right-col">
+                <h3 class="products-list-header">Recommendations:</h3>
+                
+                <div class="products-list">
+                    <button class="menu-item active" data-target="0">
+                        <span class="menu-num">01</span>
+                        <strong class="product-headline">Philips Sonicare</strong>
+                    </button>
+
+                    <button class="menu-item" data-target="1">
+                        <span class="menu-num">02</span>
+                        <strong class="product-headline">Waterpik Cordless</strong>
+                    </button>
+
+                    <button class="menu-item" data-target="2">
+                        <span class="menu-num">03</span>
+                        <strong class="product-headline">TePe Proxy Brushes</strong>
+                    </button>
+
+                    <button class="menu-item" data-target="3">
+                        <span class="menu-num">04</span>
+                        <strong class="product-headline">MI Paste Plus</strong>
+                    </button>
+
+                    <button class="menu-item" data-target="4">
+                        <span class="menu-num">05</span>
+                        <strong class="product-headline">TheraBreath Rinse</strong>
+                    </button>
+
+                    <button class="menu-item" data-target="5">
+                        <span class="menu-num">06</span>
+                        <strong class="product-headline">XyliMelts Discs</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- FAQ Section -->
-<section id="faq" class="section">
-    <div class="container">
-        <h2 class="text-center section-title reveal">Frequently Asked Questions</h2>
-        <div class="faq-accordion reveal">
-            <div class="faq-item">
-                <div class="faq-question">What regions do you specialize in? <span>+</span></div>
-                <div class="faq-answer">
-                    We specialize in the Durham Region, Northumberland County, and Hastings County, including
-                    communities like Cobourg, Port Hope, and surrounding areas.
+<section id="faq" class="section faq-section">
+    <div class="container" style="max-width: 800px;">
+        <div class="text-center">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="topics-accordion" style="margin-top: 48px;">
+
+            <details class="disclosure" name="faq-group">
+                <summary>Is charcoal toothpaste safe for daily use? <span class="summary-icon">+</span></summary>
+                <div class="disclosure-content">
+                    <p>Clinical dental professionals do <strong>not</strong> recommend charcoal toothpaste for daily
+                        use. While it may temporarily scrub away surface stains, activated charcoal is highly abrasive.
+                        Over time, it acts like sandpaper, wearing down your protective outer enamel. This exposes the
+                        yellow dentin underneath, making your teeth look darker and significantly more sensitive.</p>
                 </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">What is the "Built-In Advantage"? <span>+</span></div>
-                <div class="faq-answer">
-                    It's our philosophy of limiting client volume. This allows us to dedicate more time, resources, and
-                    personal attention to each listing, ensuring superior results.
+            </details>
+
+            <details class="disclosure" name="faq-group">
+                <summary>Why do my teeth feel sensitive after a professional cleaning? <span
+                        class="summary-icon">+</span></summary>
+                <div class="disclosure-content">
+                    <p>Calculus (tartar) acts like a thick, insulating blanket over exposed tooth roots. When Sheena
+                        scales off this buildup, the underlying root surface is exposed to temperature changes in the
+                        mouth for the first time in months. The minor irritation is normal and usually resolves within a
+                        week. Using a sensitivity toothpaste helps speed up the recovery process.</p>
                 </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">How do you market luxury properties? <span>+</span></div>
-                <div class="faq-answer">
-                    We use a combination of professional cinematography, high-end photography, targeted digital
-                    advertising, and our exclusive network to ensure maximum exposure to qualified buyers.
+            </details>
+
+            <details class="disclosure" name="faq-group">
+                <summary>How is a dental hygienist (RDH) different from a dentist? <span class="summary-icon">+</span>
+                </summary>
+                <div class="disclosure-content">
+                    <p>Dental Hygienists (RDH) and Dentists work as a team, but have different scopes of practice. An
+                        RDH is a licensed specialist focused entirely on preventive oral health, gum therapy (scaling),
+                        and home-care education. Dentists focus on restorative care, such as diagnostics, fillings, root
+                        canals, crowns, and oral surgery. Regular cleanings with your RDH reduce the need for
+                        restorative work with your dentist.</p>
                 </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">Do you assist with mortgage financing? <span>+</span></div>
-                <div class="faq-answer">
-                    Yes, our team offers a seamless, in-house advantage with Mortgage Broker CaroleAnn Bryant
-                    (Dominion Lending Centres Alliance), combining professional real estate and financing
-                    representation under one roof.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">How do I start the process of selling my home? <span>+</span></div>
-                <div class="faq-answer">
-                    The first step is a private consultation. We will discuss your goals, provide a comprehensive
-                    market evaluation, and outline a bespoke marketing strategy tailored to your property.
-                </div>
-            </div>
+            </details>
+
         </div>
     </div>
 </section>
 
-<!-- Contact Section -->
-<section id="contact" class="section"
-    style="background-color: var(--accent-dark); color: var(--accent-gold); border-bottom: none;">
+<!-- Booking & Contact Section -->
+<section id="contact" class="section contact-section">
     <div class="container">
         <div class="contact-grid">
-            <div class="contact-info reveal">
-                <h2 style="color: var(--accent-gold);">Let's Start Your Journey</h2>
-                <p>Contact us today for a private consultation regarding your real estate needs.</p>
+            <div class="contact-info-block">
+                <h2>Request a Scheduling Consultation</h2>
+                <p>Have questions about your exam category or want to book your next scaling appointment? Send a
+                    message, and Sheena will follow up with details.</p>
+
                 <ul class="contact-details">
-                    <li><strong>Phone:</strong> (905) 349-2700</li>
-                    <li><strong>Email:</strong> dale@dalebryant.ca</li>
-                    <li><strong>Address:</strong> P.O. Box 474, Cobourg, ON K9A 4L1</li>
+                    <li class="contact-detail-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-detail-text">
+                            <h4>Phone Support</h4>
+                            <p>(555) 019-8822</p>
+                        </div>
+                    </li>
+                    <li class="contact-detail-item">
+                        <div class="contact-icon">✉️</div>
+                        <div class="contact-detail-text">
+                            <h4>Email Enquiries</h4>
+                            <p>sheena@sheenardh.ca</p>
+                        </div>
+                    </li>
+                    <li class="contact-detail-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-detail-text">
+                            <h4>Service Region</h4>
+                            <p>Durham Region, Ontario</p>
+                        </div>
+                    </li>
                 </ul>
             </div>
-            <div class="contact-form-container reveal">
+
+            <div class="contact-form-card">
+                <h3>Send Sheena a Message</h3>
+                <p>Provide your assigned Category (if known) to help customize your feedback.</p>
+
                 <form id="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="btn btn-gold">Send Message</button>
+                    <div class="form-group">
+                        <label class="form-label" for="form-name">Your Name</label>
+                        <input type="text" id="form-name" class="form-control" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="form-email">Email Address</label>
+                        <input type="email" id="form-email" class="form-control" placeholder="john@example.com"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="form-cat">Your Exam Category</label>
+                        <select id="form-cat" class="form-control" style="appearance: auto;">
+                            <option value="none">I don't know my category yet</option>
+                            <option value="cat1">Category 1 - Healthy &amp; Preventive</option>
+                            <option value="cat2">Category 2 - Active Gingivitis</option>
+                            <option value="cat3">Category 3 - Periodontal Maintenance</option>
+                            <option value="cat4">Category 4 - High Cavity &amp; Dry Mouth</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="form-msg">Questions or Booking Details</label>
+                        <textarea id="form-msg" class="form-control" placeholder="Let me know how I can help..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Request</button>
                 </form>
             </div>
         </div>

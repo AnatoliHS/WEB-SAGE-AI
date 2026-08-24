@@ -1,0 +1,7 @@
+- [x] Generate Sheena's professional headshot image
+- [x] Redesign `src/assets/css/style.css` with the modern wellness theme
+- [x] Update layout files (`head.njk`, `navbar.njk`, `footer.njk`)
+- [x] Update client-side scripts `scripts.njk`
+- [x] Replace homepage `index.html` content with the dental hygiene profile & portal sections
+- [x] Remove unused real estate pages (`active.html`, `sold.html`, `marketing.html`, `our_test_page.md`)
+- [x] Build the project and verify it compiles successfully

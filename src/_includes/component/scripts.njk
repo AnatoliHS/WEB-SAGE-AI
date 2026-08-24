@@ -1,211 +1,258 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // Header Scroll & Hero Shrink
-        const header = document.getElementById('main-header');
-        const hero = document.getElementById('hero');
-        window.addEventListener('scroll', () => {
-            const scrollPos = window.scrollY;
+        // AnimeJS Stagger Dots Grid Setup (Dynamic Layout: Horizontal on Desktop, Vertical on Mobile)
+        const animationContainer = document.querySelector('.animation-container');
+        if (animationContainer) {
+            let animeInstance = null;
 
-            // Header Effect
-            if (scrollPos > 50) {
+            function initGrid() {
+                if (animeInstance) {
+                    animeInstance.pause();
+                    animeInstance = null;
+                }
+
+                animationContainer.innerHTML = '';
+
+                const isMobile = window.innerWidth <= 768;
+                const cols = isMobile ? 13 : 25;
+                const rows = isMobile ? 25 : 13;
+                const totalDots = cols * rows;
+
+                const grid = document.createElement('div');
+                grid.className = 'dots-grid';
+                grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+                grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+                for (let i = 0; i < totalDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    grid.appendChild(dot);
+                }
+                animationContainer.appendChild(grid);
+
+                if (typeof anime !== 'undefined') {
+                    // Rolling wave: short per-dot cycle + wide stagger so center shrinks
+                    // before outer dots finish expanding — true ripple wave effect
+                    animeInstance = anime({
+                        targets: '.dot',
+                        scale: [
+                            { value: 0.1, easing: 'easeOutSine', duration: 450 },
+                            { value: 2.2, easing: 'easeInOutQuad', duration: 650 }
+                        ],
+                        delay: anime.stagger(160, {
+                            grid: [cols, rows],
+                            from: 'center'
+                        }),
+                        loop: true
+                    });
+                }
+            }
+
+            // Initialize layout on load
+            initGrid();
+
+            // Handle window resize to adapt layout structure dynamically
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    const isMobileNow = window.innerWidth <= 768;
+                    const gridElement = animationContainer.querySelector('.dots-grid');
+                    if (gridElement) {
+                        const currentCols = gridElement.style.gridTemplateColumns.match(/\d+/);
+                        const expectedCols = isMobileNow ? '13' : '25';
+                        if (currentCols && currentCols[0] !== expectedCols) {
+                            initGrid();
+                        }
+                    }
+                }, 250);
+            });
+        }
+
+        // Header Scroll Styling
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
-
-            // Hero Shrink Effect (Desktop Only)
-            if (window.innerWidth > 991 && hero) {
-                // Shrink as soon as we start scrolling
-                if (scrollPos > 20) {
-                    hero.classList.add('shrink');
-                } else {
-                    hero.classList.remove('shrink');
-                }
-            }
         });
-
-        // Optimized Smooth Parallax (Standalone Listener)
-        const parallaxSections = document.querySelectorAll('.parallax-section');
-        let parallaxTicking = false;
-
-        if (parallaxSections.length > 0) {
-            const updateParallax = () => {
-                const viewHeight = window.innerHeight;
-                parallaxSections.forEach(section => {
-                    const rect = section.getBoundingClientRect();
-                    const img = section.querySelector('.parallax-img');
-                    if (img && rect.top < viewHeight && rect.bottom > 0) {
-                        const scrollDistance = (viewHeight - rect.top) / (viewHeight + rect.height);
-                        const moveY = (scrollDistance - 0.5) * 30; // Smooth % shift
-                        img.style.transform = `translate3d(0, ${moveY}%, 0)`;
-                    }
-                });
-                parallaxTicking = false;
-            };
-
-            window.addEventListener('scroll', () => {
-                if (!parallaxTicking) {
-                    window.requestAnimationFrame(updateParallax);
-                    parallaxTicking = true;
-                }
-            }, { passive: true });
-            
-            updateParallax();
-        }
-
-        // Reveal on Scroll
-        const revealElements = document.querySelectorAll('.reveal');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        revealElements.forEach(el => revealObserver.observe(el));
-
-        // Interactive Listings scroll trigger for mobile
-        const listingsSection = document.getElementById('listings');
-        const activeHalf = document.querySelector('.active-half');
-        const soldHalf = document.querySelector('.sold-half');
-        const marketingHalf = document.querySelector('.marketing-half');
-        const divider1 = document.querySelector('.listings-separator-line.divider-1');
-        const divider2 = document.querySelector('.listings-separator-line.divider-2');
-
-        if (listingsSection && activeHalf && soldHalf && marketingHalf && divider1 && divider2) {
-            const handleListingsScroll = () => {
-                // Only run on mobile screen sizes
-                if (window.innerWidth > 768) {
-                    activeHalf.classList.remove('scroll-active');
-                    soldHalf.classList.remove('scroll-active');
-                    marketingHalf.classList.remove('scroll-active');
-                    return;
-                }
-
-                const rect = listingsSection.getBoundingClientRect();
-                const viewportCenter = window.innerHeight / 2;
-
-                // Check if the interactive listings section is currently covering the center of the viewport (with a 150px offset on the bottom to keep the active section visible)
-                if (rect.top <= viewportCenter && rect.bottom >= (viewportCenter - 150)) {
-                    const divider1Rect = divider1.getBoundingClientRect();
-                    const divider2Rect = divider2.getBoundingClientRect();
-
-                    if (divider1Rect.top > viewportCenter) {
-                        activeHalf.classList.add('scroll-active');
-                        soldHalf.classList.remove('scroll-active');
-                        marketingHalf.classList.remove('scroll-active');
-                    } else if (divider2Rect.top > viewportCenter) {
-                        soldHalf.classList.add('scroll-active');
-                        activeHalf.classList.remove('scroll-active');
-                        marketingHalf.classList.remove('scroll-active');
-                    } else {
-                        marketingHalf.classList.add('scroll-active');
-                        activeHalf.classList.remove('scroll-active');
-                        soldHalf.classList.remove('scroll-active');
-                    }
-                } else {
-                    // Reset all if we scroll away from the listings block
-                    activeHalf.classList.remove('scroll-active');
-                    soldHalf.classList.remove('scroll-active');
-                    marketingHalf.classList.remove('scroll-active');
-                }
-            };
-
-            window.addEventListener('scroll', handleListingsScroll, { passive: true });
-            window.addEventListener('resize', handleListingsScroll, { passive: true });
-            handleListingsScroll();
-        }
-
-        // FAQ Accordion
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            if (question) {
-                question.addEventListener('click', () => {
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item) {
-                            otherItem.classList.remove('active');
-                            const otherSpan = otherItem.querySelector('.faq-question span');
-                            if (otherSpan) otherSpan.textContent = '+';
-                        }
-                    });
-                    item.classList.toggle('active');
-                    const span = question.querySelector('span');
-                    if (span) span.textContent = item.classList.contains('active') ? '-' : '+';
-                });
-            }
-        });
-
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-
-                e.preventDefault();
-                const target = document.querySelector(targetId);
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Simple Form Submission (Placeholder)
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert('Thank you for your message! Dale will get back to you shortly.');
-                contactForm.reset();
-            });
-        }
 
         // Mobile Menu Toggle
         const mobileToggle = document.querySelector('.mobile-nav-toggle');
         const navLinksList = document.getElementById('nav-links');
 
-        if (mobileToggle) {
+        if (mobileToggle && navLinksList) {
             mobileToggle.addEventListener('click', () => {
                 mobileToggle.classList.toggle('active');
                 navLinksList.classList.toggle('active');
                 document.body.style.overflow = navLinksList.classList.contains('active') ? 'hidden' : '';
             });
-        }
 
-        // Close menu on link click
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinksList.classList.contains('active')) {
+            // Close menu on link click
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
                     mobileToggle.classList.remove('active');
                     navLinksList.classList.remove('active');
                     document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // Active Nav Link on Scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navItems = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const scrollPos = window.scrollY + 120; // offset for sticky header
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const href = item.getAttribute('href');
+                if (href === `#${current}` || href === `/#${current}`) {
+                    item.classList.add('active');
                 }
             });
         });
 
-        // Mobile Hero Content Slide-up effect
-        if (window.innerWidth <= 992) {
-            const heroContent = document.querySelector('.hero-content');
-            if (heroContent) {
-                window.addEventListener('scroll', () => {
-                    const scrollPos = window.scrollY;
-                    const heroHeight = window.innerHeight;
-                    
-                    if (scrollPos < heroHeight) {
-                        // Move text up faster than scroll and fade it out
-                        const moveAmount = scrollPos * 0.8;
-                        const opacityAmount = 1 - (scrollPos / (heroHeight * 0.7));
-                        
-                        heroContent.style.transform = `translateY(-${moveAmount}px)`;
-                        heroContent.style.opacity = Math.max(0, opacityAmount);
+        // Patient Exam Portal Tabs
+        const tabBtns = document.querySelectorAll('.portal-tab-btn');
+        const panes = document.querySelectorAll('.portal-pane');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+
+                // Toggle Active Tab Button
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Toggle Active Display Pane
+                panes.forEach(pane => {
+                    if (pane.id === `pane-${targetTab}`) {
+                        pane.classList.add('active');
+                    } else {
+                        pane.classList.remove('active');
                     }
                 });
+            });
+        });
+
+        // Product Stack & Mobile Arrow Navigation
+        const menuItems = document.querySelectorAll('.menu-item');
+        const cards = document.querySelectorAll('.stack-card');
+        const prevBtn = document.getElementById('product-prev-btn');
+        const nextBtn = document.getElementById('product-next-btn');
+        const counterEl = document.getElementById('product-counter');
+        const totalCards = cards.length;
+        let currentIdx = 0;
+
+        function updateStack(activeIndex) {
+            currentIdx = activeIndex;
+            const isMobile = window.innerWidth <= 768;
+            const isTablet = window.innerWidth <= 1024;
+
+            const stackBaseX = isMobile ? -15 : (isTablet ? -40 : -65);
+            const xOffset = isMobile ? 6 : (isTablet ? 12 : 16);
+            const rotateOffset = isMobile ? 0.5 : (isTablet ? 1.5 : 2);
+            const scaleOffset = 0.02;
+
+            cards.forEach(card => {
+                const index = parseInt(card.getAttribute('data-index'), 10);
+
+                if (index < activeIndex) {
+                    card.classList.remove('active');
+                    card.style.zIndex = 10 - index;
+                    card.style.transform = 'translate3d(-125%, 0, 0) rotate(-6deg) scale(0.9)';
+                    card.style.opacity = 0;
+                } else if (index === activeIndex) {
+                    card.classList.add('active');
+                    card.style.zIndex = 20;
+                    card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+                    card.style.opacity = 1;
+                } else {
+                    card.classList.remove('active');
+                    const depth = index - activeIndex;
+                    const zIndexVal = 10 - index;
+                    const shiftVal = stackBaseX - (depth * xOffset);
+                    const rotateVal = -1 * (depth * rotateOffset);
+                    const scaleVal = 1 - (depth * scaleOffset);
+
+                    card.style.zIndex = zIndexVal;
+                    card.style.transform = `translate3d(${shiftVal}px, 0, 0) rotate(${rotateVal}deg) scale(${scaleVal})`;
+                    card.style.opacity = 1;
+                }
+            });
+
+            // Update counter display
+            if (counterEl) {
+                counterEl.textContent = `${activeIndex + 1} / ${totalCards}`;
             }
+
+            // Sync menuItems active state
+            menuItems.forEach((mi, idx) => {
+                if (idx === activeIndex) {
+                    mi.classList.add('active');
+                } else {
+                    mi.classList.remove('active');
+                }
+            });
+        }
+
+        if (cards.length > 0) {
+            updateStack(0);
+
+            // Desktop Menu Items Hover/Click
+            menuItems.forEach((item, idx) => {
+                const handleSelection = () => updateStack(idx);
+                item.addEventListener('mouseenter', handleSelection);
+                item.addEventListener('click', handleSelection);
+            });
+
+            // Mobile Arrow Buttons
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    const newIdx = (currentIdx - 1 + totalCards) % totalCards;
+                    updateStack(newIdx);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const newIdx = (currentIdx + 1) % totalCards;
+                    updateStack(newIdx);
+                });
+            }
+        }
+
+
+        // Contact & Booking Form Submission
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const name = contactForm.querySelector('input[type="text"]').value;
+                const email = contactForm.querySelector('input[type="email"]').value;
+                const category = contactForm.querySelector('select').value;
+                const message = contactForm.querySelector('textarea').value;
+
+                // Simple confirmation notification
+                alert(`Thank you, ${name}! Your consultation request has been submitted. Sheena will contact you at ${email} regarding scheduling.`);
+                contactForm.reset();
+            });
         }
 
     });
