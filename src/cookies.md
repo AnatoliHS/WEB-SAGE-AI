@@ -1,11 +1,14 @@
 
-# Cookies
+---
+layout: policy.njk
+title: Cookie Policy
+---
 
-## COOKIE POLICY
+# Cookie Policy
 
-Last updated May 22, 2024
+**Last updated May 22, 2024**
 
-This Cookie Policy explains how Startr LLC ("Company," "we," "us," and "our") uses cookies and similar technologies to recognize you when you visit our website at https://11ty Startr Site/ai ("Website"). It explains these technologies, why we use them, and your rights to control our use.
+This Cookie Policy explains how Sheena RDH uses cookies and similar technologies to recognize you when you visit our website. It explains these technologies, why we use them, and your rights to control our use.
 
 Sometimes, we may use cookies to collect personal information, which becomes personal if we combine it with other information.
 

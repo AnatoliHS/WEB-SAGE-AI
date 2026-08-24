@@ -33,15 +33,16 @@
                 animationContainer.appendChild(grid);
 
                 if (typeof anime !== 'undefined') {
-                    // Rolling wave: short per-dot cycle + wide stagger so center shrinks
-                    // before outer dots finish expanding — true ripple wave effect
+                    // Full circle animation: scale up from normal size 1.0 -> 3.2 (larger expansion) then back 3.2 -> 1.0 (shrink)
+                    // Dots stay 100% visible at normal size and never shrink down or disappear
                     animeInstance = anime({
                         targets: '.dot',
                         scale: [
-                            { value: 0.1, easing: 'easeOutSine', duration: 450 },
-                            { value: 2.2, easing: 'easeInOutQuad', duration: 650 }
+                            { value: 1.0, duration: 0 },
+                            { value: 3.2, easing: 'easeOutQuad', duration: 420 },
+                            { value: 1.0, easing: 'easeInQuad', duration: 520 }
                         ],
-                        delay: anime.stagger(160, {
+                        delay: anime.stagger(60, {
                             grid: [cols, rows],
                             from: 'center'
                         }),
