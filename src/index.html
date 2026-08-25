@@ -32,7 +32,7 @@ title: Home
                 </div>
             </div>
             <div class="bio-content">
-                <h2>Empowering You to Achieve a Lifetime of Oral Health</h2>
+                <h2 class="bio-main-title">Empowering You to Achieve <br><span class="title-faded">a Lifetime of Oral Health.</span></h2>
                 <p>Hello! I'm Sheena, a Registered Dental Hygienist (RDH) with over a decade of clinical experience. My
                     professional mission goes beyond scaling teeth—I believe in building strong partnerships with my
                     patients to address the root causes of dental disease.</p>
@@ -79,79 +79,103 @@ title: Home
 <!-- Patient Exam Portal Section -->
 <section id="portal" class="section portal-section">
     <div class="container">
-        <div class="text-center">
-            <h2 class="section-title">Your Personal Exam Portal</h2>
-            <p class="portal-menu-desc" style="max-width: 700px; margin: 0 auto 48px;">
-                At your last in-person checkup, Sheena assigned you a clinical category based on your gum health and
-                cavity risk. Select your category below to unlock your custom daily home-care routine, treatment goals,
-                and recommended solutions.
+        <div class="portal-header-block">
+            <h2 class="portal-title-main">Your Personal <span class="title-faded">Exam Portal.</span></h2>
+            <p class="portal-desc">
+                At your last in-person checkup, Sheena assigned you a clinical category based on your gum health and cavity risk. Select your category below to unlock your custom daily home-care routine, treatment goals, and recommended solutions.
             </p>
         </div>
 
-        <div class="portal-grid">
-            <!-- Left Side Categories -->
-            <div class="portal-menu">
-                <button class="portal-tab-btn active" data-tab="cat1" aria-label="Select Category 1">
-                    <div class="tab-number">1</div>
-                    <div class="tab-title">
-                        <h4>Healthy &amp; Preventive</h4>
-                        <p>Maintenance &amp; Prevention</p>
-                    </div>
-                </button>
+        <div class="portal-testimonial-layout">
+            <!-- Left Column: Dynamic Clinical Video per Stage -->
+            <div class="portal-img-col">
+                <div class="portal-video-wrapper">
+                    <!-- Stage 1 Video -->
+                    <video class="portal-featured-video active" id="video-cat1" autoplay loop muted playsinline webkit-playsinline preload="auto">
+                        <source src="/assets/brush.mp4" type="video/mp4">
+                    </video>
 
-                <button class="portal-tab-btn" data-tab="cat2" aria-label="Select Category 2">
-                    <div class="tab-number">2</div>
-                    <div class="tab-title">
-                        <h4>Active Gingivitis</h4>
-                        <p>Reversing Gum Inflammation</p>
-                    </div>
-                </button>
+                    <!-- Stage 2 Video -->
+                    <video class="portal-featured-video" id="video-cat2" autoplay loop muted playsinline webkit-playsinline preload="auto">
+                        <source src="/assets/floss.mp4" type="video/mp4">
+                    </video>
 
-                <button class="portal-tab-btn" data-tab="cat3" aria-label="Select Category 3">
-                    <div class="tab-number">3</div>
-                    <div class="tab-title">
-                        <h4>Periodontal Maintenance</h4>
-                        <p>Stable Gum Disease Care</p>
-                    </div>
-                </button>
+                    <!-- Stage 3 Video -->
+                    <video class="portal-featured-video" id="video-cat3" autoplay loop muted playsinline webkit-playsinline preload="auto">
+                        <source src="/assets/fdc-video.mp4" type="video/mp4">
+                    </video>
 
-                <button class="portal-tab-btn" data-tab="cat4" aria-label="Select Category 4">
-                    <div class="tab-number">4</div>
-                    <div class="tab-title">
-                        <h4>High Cavity &amp; Dry Mouth</h4>
-                        <p>Enamel Protection &amp; Saliva</p>
-                    </div>
-                </button>
+                    <!-- Stage 4 Video -->
+                    <video class="portal-featured-video" id="video-cat4" autoplay loop muted playsinline webkit-playsinline preload="auto">
+                        <source src="/assets/rinse.mp4" type="video/mp4">
+                    </video>
+                </div>
             </div>
 
-            <!-- Right Side Display Card -->
-            <div class="portal-display">
-
-                <!-- Category 1 Display -->
-                <div class="portal-pane active" id="pane-cat1">
-                    <div class="pane-header">
-                        <div>
-                            <span class="pane-badge">Category 1</span>
-                            <h3 style="margin-top: 8px;">Healthy &amp; Preventive Care</h3>
-                        </div>
-                        <span class="pane-badge" style="background-color: #E8F5E9; color: #2E7D32;">Low Risk</span>
+            <!-- Right Column: Editorial Quote & Tab Controller -->
+            <div class="portal-content-col">
+                <!-- Header Info (Placed above the top line) -->
+                <div class="portal-top-headers-wrapper">
+                    <div class="portal-top-header active" id="top-header-cat1">
+                        <span class="portal-meta-name">HEALTHY &amp; PREVENTIVE CARE</span>
+                        <span class="portal-meta-divider">/</span>
+                        <span class="portal-meta-badge badge-green">LOW RISK</span>
                     </div>
-                    <div class="pane-body">
-                        <p class="pane-intro">Your gums are pink and firm, there is minimal to no bleeding during
-                            brushing or flossing, and gum pocket depths are healthy (1–3mm). The goal here is long-term
-                            maintenance and prevention of future plaque accumulation.</p>
 
-                        <div class="pane-sections">
-                            <div class="pane-section-box">
-                                <h4>🎯 Core Routine Goals</h4>
+                    <div class="portal-top-header" id="top-header-cat2">
+                        <span class="portal-meta-name">ACTIVE GINGIVITIS CARE</span>
+                        <span class="portal-meta-divider">/</span>
+                        <span class="portal-meta-badge badge-orange">MODERATE RISK</span>
+                    </div>
+
+                    <div class="portal-top-header" id="top-header-cat3">
+                        <span class="portal-meta-name">PERIODONTAL MAINTENANCE</span>
+                        <span class="portal-meta-divider">/</span>
+                        <span class="portal-meta-badge badge-red">HIGH RISK</span>
+                    </div>
+
+                    <div class="portal-top-header" id="top-header-cat4">
+                        <span class="portal-meta-name">HIGH CAVITY RISK &amp; DRY MOUTH</span>
+                        <span class="portal-meta-divider">/</span>
+                        <span class="portal-meta-badge badge-orange">ELEVATED RISK</span>
+                    </div>
+                </div>
+
+                <!-- Top Hairline Divider Line (above 1, 2, 3, 4) -->
+                <div class="portal-top-line"></div>
+
+                <div class="portal-top-bar">
+                    <!-- Round Number Tabs 1, 2, 3, 4 -->
+                    <div class="portal-num-tabs">
+                        <button class="portal-num-btn active" data-tab="cat1" aria-label="Category 1">1</button>
+                        <button class="portal-num-btn" data-tab="cat2" aria-label="Category 2">2</button>
+                        <button class="portal-num-btn" data-tab="cat3" aria-label="Category 3">3</button>
+                        <button class="portal-num-btn" data-tab="cat4" aria-label="Category 4">4</button>
+                    </div>
+                    <!-- Top Right Quote Symbol -->
+                    <div class="portal-quote-mark">”</div>
+                </div>
+
+                <!-- Dynamic Panes -->
+                <div class="portal-panes-wrapper">
+
+                    <!-- Category 1 Pane -->
+                    <div class="portal-pane active" id="pane-cat1">
+                        <blockquote class="portal-quote-text">
+                            "Your gums are pink and firm, there is minimal to no bleeding during brushing or flossing, and gum pocket depths are healthy (1–3mm). The goal here is long-term maintenance and prevention of future plaque accumulation."
+                        </blockquote>
+
+                        <div class="portal-pane-details">
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core Routine Goals</h4>
                                 <ul>
                                     <li>Keep plaque levels below the threshold of inflammation.</li>
                                     <li>Maintain healthy supportive bone levels around teeth.</li>
                                     <li>Remineralize enamel daily to protect against early decay.</li>
                                 </ul>
                             </div>
-                            <div class="pane-section-box">
-                                <h4>🪥 Home Care Guidelines</h4>
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon" class="portal-detail-icon"> Home Care Guidelines</h4>
                                 <ul>
                                     <li>Brush twice daily for 2 minutes with a soft-bristled brush.</li>
                                     <li>Floss once daily, gently wrapping the floss around each tooth.</li>
@@ -160,123 +184,89 @@ title: Home
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Category 2 Display -->
-                <div class="portal-pane" id="pane-cat2">
-                    <div class="pane-header">
-                        <div>
-                            <span class="pane-badge warning-badge">Category 2</span>
-                            <h3 style="margin-top: 8px;">Active Gingivitis</h3>
-                        </div>
-                        <span class="pane-badge warning-badge">Moderate Risk</span>
-                    </div>
-                    <div class="pane-body">
-                        <p class="pane-intro">Your gums are red, puffy, and bleed easily during brushing, flossing, or
-                            probing. Gum pockets are slightly deep (3-4mm) due to swelling, but there is no bone loss.
-                            Gingivitis is <strong>100% reversible</strong> with focused intervention.</p>
+                    <!-- Category 2 Pane -->
+                    <div class="portal-pane" id="pane-cat2">
+                        <blockquote class="portal-quote-text">
+                            "Your gums are red, puffy, and bleed easily during brushing, flossing, or probing. Gum pockets are slightly deep (3–4mm) due to swelling, but there is no bone loss. Gingivitis is 100% reversible with focused intervention."
+                        </blockquote>
 
-                        <div class="pane-sections">
-                            <div class="pane-section-box">
-                                <h4>🎯 Core Routine Goals</h4>
+                        <div class="portal-pane-details">
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core Routine Goals</h4>
                                 <ul>
-                                    <li>Elimate bleeding and reduce bacterial gum swelling.</li>
+                                    <li>Eliminate bleeding and reduce bacterial gum swelling.</li>
                                     <li>Remove plaque biofilm under the gum margins daily.</li>
                                     <li>Restore tissue health and seal the gums around the teeth.</li>
                                 </ul>
                             </div>
-                            <div class="pane-section-box">
-                                <h4>🪥 Home Care Guidelines</h4>
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon" class="portal-detail-icon"> Home Care Guidelines</h4>
                                 <ul>
                                     <li>Switch to an electric toothbrush with a pressure sensor.</li>
-                                    <li>Floss daily. *Do not stop flossing because of bleeding*—that is a sign to clean
-                                        more!</li>
+                                    <li>Floss daily. *Do not stop flossing because of bleeding*—that is a sign to clean more!</li>
                                     <li>Use an antiseptic alcohol-free mouthrinse to reduce bacterial load.</li>
                                     <li>Incorporate warm saltwater rinses if gums feel tender.</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Category 3 Display -->
-                <div class="portal-pane" id="pane-cat3">
-                    <div class="pane-header">
-                        <div>
-                            <span class="pane-badge danger-badge">Category 3</span>
-                            <h3 style="margin-top: 8px;">Periodontal Maintenance</h3>
-                        </div>
-                        <span class="pane-badge danger-badge">High Risk</span>
-                    </div>
-                    <div class="pane-body">
-                        <p class="pane-intro">You have a history of periodontitis (bone loss supporting the teeth). The
-                            disease is currently stable, but you have receding gums, exposed root surfaces, or pocket
-                            depths of 4-5mm. This category requires lifetime maintenance to prevent disease
-                            reactivation.</p>
+                    <!-- Category 3 Pane -->
+                    <div class="portal-pane" id="pane-cat3">
+                        <blockquote class="portal-quote-text">
+                            "You have a history of periodontitis (bone loss supporting the teeth). The disease is currently stable, but you have receding gums, exposed root surfaces, or pocket depths of 4–5mm. This category requires lifetime maintenance to prevent disease reactivation."
+                        </blockquote>
 
-                        <div class="pane-sections">
-                            <div class="pane-section-box">
-                                <h4>🎯 Core Routine Goals</h4>
+                        <div class="portal-pane-details">
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core Routine Goals</h4>
                                 <ul>
                                     <li>Prevent bacteria from re-colonizing deep under the gumline.</li>
                                     <li>Protect exposed, softer root surfaces from root cavities.</li>
                                     <li>Manage tooth sensitivity caused by recession.</li>
                                 </ul>
                             </div>
-                            <div class="pane-section-box">
-                                <h4>🪥 Home Care Guidelines</h4>
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon" class="portal-detail-icon"> Home Care Guidelines</h4>
                                 <ul>
-                                    <li>Use interdental brushes (proxy brushes) to clean the wider gaps between teeth.
-                                    </li>
+                                    <li>Use interdental brushes (proxy brushes) to clean the wider gaps between teeth.</li>
                                     <li>Use a water flosser daily to flush out deep pockets.</li>
-                                    <li>Use a low-abrasion, sensitive toothpaste containing fluoride or hydroxyapatite.
-                                    </li>
-                                    <li>Keep your professional scaling appointments at a strict 3-to-4 month interval.
-                                    </li>
+                                    <li>Use a low-abrasion, sensitive toothpaste containing fluoride or hydroxyapatite.</li>
+                                    <li>Keep your professional scaling appointments at a strict 3-to-4 month interval.</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Category 4 Display -->
-                <div class="portal-pane" id="pane-cat4">
-                    <div class="pane-header">
-                        <div>
-                            <span class="pane-badge warning-badge">Category 4</span>
-                            <h3 style="margin-top: 8px;">High Cavity Risk &amp; Dry Mouth</h3>
-                        </div>
-                        <span class="pane-badge warning-badge">Elevated Risk</span>
-                    </div>
-                    <div class="pane-body">
-                        <p class="pane-intro">You have experienced frequent new decay (cavities) recently or suffer from
-                            Xerostomia (dry mouth) due to medication, mouth breathing, or medical conditions. Saliva is
-                            your mouth's natural defense, and a lack of it leads to rapid enamel breakdown.</p>
+                    <!-- Category 4 Pane -->
+                    <div class="portal-pane" id="pane-cat4">
+                        <blockquote class="portal-quote-text">
+                            "You have experienced frequent new decay (cavities) recently or suffer from Xerostomia (dry mouth) due to medication, mouth breathing, or medical conditions. Saliva is your mouth's natural defense, and a lack of it leads to rapid enamel breakdown."
+                        </blockquote>
 
-                        <div class="pane-sections">
-                            <div class="pane-section-box">
-                                <h4>🎯 Core Routine Goals</h4>
+                        <div class="portal-pane-details">
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core Routine Goals</h4>
                                 <ul>
                                     <li>Stimulate natural salivary flow and lubricate oral tissues.</li>
                                     <li>Remineralize weakened enamel and raise oral pH levels.</li>
                                     <li>Protect roots and crown margins from aggressive decay.</li>
                                 </ul>
                             </div>
-                            <div class="pane-section-box">
-                                <h4>🪥 Home Care Guidelines</h4>
+                            <div class="portal-detail-box">
+                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon" class="portal-detail-icon"> Home Care Guidelines</h4>
                                 <ul>
-                                    <li>Sip plain water constantly throughout the day; avoid sipping acidic beverages.
-                                    </li>
+                                    <li>Sip plain water constantly throughout the day; avoid sipping acidic beverages.</li>
                                     <li>Use toothpaste containing 10% Nano-Hydroxyapatite or high fluoride.</li>
-                                    <li>Chew sugar-free gum or use lozenges containing 100% Xylitol to stimulate saliva.
-                                    </li>
+                                    <li>Chew sugar-free gum or use lozenges containing 100% Xylitol to stimulate saliva.</li>
                                     <li>Use an alcohol-free, dry-mouth lubricating mouthwash before bed.</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
@@ -286,7 +276,7 @@ title: Home
 <section id="topics" class="section">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-title">Evidence-Based Dental Advice</h2>
+            <h2 class="section-title">Evidence-Based <span class="title-faded">Dental Advice.</span></h2>
             <p style="max-width: 600px; margin: 0 auto 48px;">Discover the science behind common dental hygiene
                 practices. Empowering you to make informed decisions for your daily routine.</p>
         </div>
@@ -619,7 +609,7 @@ title: Home
 <section id="faq" class="section faq-section">
     <div class="container" style="max-width: 800px;">
         <div class="text-center">
-            <h2 class="section-title">Frequently Asked Questions</h2>
+            <h2 class="section-title">Frequently Asked <span class="title-faded">Questions.</span></h2>
         </div>
 
         <div class="topics-accordion" style="margin-top: 48px;">
@@ -666,7 +656,7 @@ title: Home
     <div class="container">
         <div class="contact-grid">
             <div class="contact-info-block">
-                <h2>Request a Scheduling Consultation</h2>
+                <h2 class="contact-main-title">Request a <br><span class="title-faded">Consultation.</span></h2>
                 <p>Have questions about your exam category or want to book your next scaling appointment? Send a
                     message, and Sheena will follow up with details.</p>
 

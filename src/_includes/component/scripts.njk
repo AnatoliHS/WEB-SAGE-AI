@@ -129,8 +129,20 @@
         });
 
         // Patient Exam Portal Tabs
-        const tabBtns = document.querySelectorAll('.portal-tab-btn');
+        const tabBtns = document.querySelectorAll('.portal-num-btn, .portal-tab-btn');
         const panes = document.querySelectorAll('.portal-pane');
+        const topHeaders = document.querySelectorAll('.portal-top-header');
+        const stageVideos = document.querySelectorAll('.portal-featured-video');
+
+        // Ensure all stage videos start playing for seamless mobile playback
+        stageVideos.forEach(vid => {
+            vid.muted = true;
+            vid.playsInline = true;
+            const playPromise = vid.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {});
+            }
+        });
 
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -139,6 +151,26 @@
                 // Toggle Active Tab Button
                 tabBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+
+                // Toggle Active Top Header
+                topHeaders.forEach(th => {
+                    if (th.id === `top-header-${targetTab}`) {
+                        th.classList.add('active');
+                    } else {
+                        th.classList.remove('active');
+                    }
+                });
+
+                // Toggle Active Stage Video
+                stageVideos.forEach(vid => {
+                    if (vid.id === `video-${targetTab}`) {
+                        vid.classList.add('active');
+                        vid.play().catch(() => {});
+                    } else {
+                        vid.classList.remove('active');
+                        vid.pause();
+                    }
+                });
 
                 // Toggle Active Display Pane
                 panes.forEach(pane => {
