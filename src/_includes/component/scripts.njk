@@ -51,8 +51,34 @@
                 }
             }
 
-            // Initialize layout on load
+            // Initialize teeth grid layout on load
             initGrid();
+
+            // Animate "SHEENA" Letter by Letter and "RDH" Badge
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: '.hero-letter',
+                    opacity: [0, 1],
+                    translateY: [35, 0],
+                    scale: [0.8, 1],
+                    easing: 'easeOutBack',
+                    duration: 900,
+                    delay: anime.stagger(140, { start: 250 })
+                });
+
+                anime({
+                    targets: '.hero-badge',
+                    opacity: [0, 1],
+                    scale: [0.65, 1],
+                    easing: 'easeOutBack',
+                    duration: 800,
+                    delay: 1150,
+                    complete: function() {
+                        const badge = document.querySelector('.hero-badge');
+                        if (badge) badge.classList.add('active-color');
+                    }
+                });
+            }
 
             // Handle window resize to adapt layout structure dynamically
             let resizeTimeout;
@@ -140,7 +166,7 @@
             vid.playsInline = true;
             const playPromise = vid.play();
             if (playPromise !== undefined) {
-                playPromise.catch(() => {});
+                playPromise.catch(() => { });
             }
         });
 
@@ -165,7 +191,7 @@
                 stageVideos.forEach(vid => {
                     if (vid.id === `video-${targetTab}`) {
                         vid.classList.add('active');
-                        vid.play().catch(() => {});
+                        vid.play().catch(() => { });
                     } else {
                         vid.classList.remove('active');
                         vid.pause();
