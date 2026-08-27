@@ -2,111 +2,136 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        // AnimeJS Stagger Dots Grid Setup (Dynamic Layout: Horizontal on Desktop, Vertical on Mobile)
-        const animationContainer = document.querySelector('.animation-container');
-        if (animationContainer) {
-            let animeInstance = null;
+        // Falling & Rotating Teeth Animation Setup
+        const teethContainer = document.getElementById('falling-teeth-container');
+        if (teethContainer) {
+            const toothCount = 35; // Total tooth particles
+            const toothImgSrc = '/assets/tooth.png';
 
-            function initGrid() {
-                if (animeInstance) {
-                    animeInstance.pause();
-                    animeInstance = null;
-                }
+            for (let i = 0; i < toothCount; i++) {
+                const tooth = document.createElement('img');
+                tooth.src = toothImgSrc;
+                tooth.alt = '';
+                tooth.className = 'falling-tooth';
 
-                animationContainer.innerHTML = '';
+                // Organic randomized properties
+                const size = Math.floor(Math.random() * 42) + 24; // 24px to 66px different sizes
+                const leftPos = (Math.random() * 94 + 1).toFixed(2); // Random X positions (1% - 95%)
+                const duration = (Math.random() * 10 + 8).toFixed(2); // 8s to 18s smooth fall rate
+                const delay = (Math.random() * duration).toFixed(2); // Initial position distribution
+                const startRot = Math.floor(Math.random() * 360);
+                const rotDirection = Math.random() > 0.5 ? 1 : -1;
+                const rotSpan = rotDirection * (360 + Math.floor(Math.random() * 540)); // 360-900 deg rotation
+                const sway = ((Math.random() - 0.5) * 90).toFixed(2); // Horizontal drift/sway
+                const maxOpacity = (Math.random() * 0.35 + 0.35).toFixed(2); // 0.35 to 0.70 visible opacity
 
-                const isMobile = window.innerWidth <= 768;
-                const cols = isMobile ? 13 : 25;
-                const rows = isMobile ? 25 : 13;
-                const totalDots = cols * rows;
+                tooth.style.width = `${size}px`;
+                tooth.style.height = 'auto';
+                tooth.style.left = `${leftPos}%`;
+                tooth.style.setProperty('--start-rot', `${startRot}deg`);
+                tooth.style.setProperty('--end-rot', `${startRot + rotSpan}deg`);
+                tooth.style.setProperty('--sway', `${sway}px`);
+                tooth.style.setProperty('--max-opacity', maxOpacity);
+                tooth.style.animation = `fallingTooth ${duration}s linear infinite`;
+                tooth.style.animationDelay = `-${delay}s`;
 
-                const grid = document.createElement('div');
-                grid.className = 'dots-grid';
-                grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-                grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-
-                for (let i = 0; i < totalDots; i++) {
-                    const dot = document.createElement('div');
-                    dot.className = 'dot';
-                    grid.appendChild(dot);
-                }
-                animationContainer.appendChild(grid);
-
-                if (typeof anime !== 'undefined') {
-                    // Full circle animation: scale up from normal size 1.0 -> 3.2 (larger expansion) then back 3.2 -> 1.0 (shrink)
-                    // Dots stay 100% visible at normal size and never shrink down or disappear
-                    animeInstance = anime({
-                        targets: '.dot',
-                        scale: [
-                            { value: 1.0, duration: 0 },
-                            { value: 3.2, easing: 'easeOutQuad', duration: 420 },
-                            { value: 1.0, easing: 'easeInQuad', duration: 520 }
-                        ],
-                        delay: anime.stagger(60, {
-                            grid: [cols, rows],
-                            from: 'center'
-                        }),
-                        loop: true
-                    });
-                }
+                teethContainer.appendChild(tooth);
             }
 
-            // Initialize teeth grid layout on load
-            initGrid();
+            // Special Clean Tooth particle (/assets/clean.png) - Appears once every 20 seconds
+            const cleanTooth = document.createElement('img');
+            cleanTooth.src = '/assets/clean.png';
+            cleanTooth.alt = '';
+            cleanTooth.className = 'falling-tooth special-clean-tooth';
 
-            // Animate "SHEENA" Letter by Letter and "RDH" Badge
-            if (typeof anime !== 'undefined') {
-                anime({
-                    targets: '.hero-letter',
-                    opacity: [0, 1],
-                    translateY: [35, 0],
-                    scale: [0.8, 1],
-                    easing: 'easeOutBack',
-                    duration: 900,
-                    delay: anime.stagger(140, { start: 250 })
-                });
+            function triggerCleanTooth() {
+                const size = Math.floor(Math.random() * 24) + 40; // 40px to 64px prominent size
+                const leftPos = (Math.random() * 84 + 6).toFixed(2); // 6% to 90%
+                const startRot = Math.floor(Math.random() * 360);
+                const rotDirection = Math.random() > 0.5 ? 1 : -1;
+                const rotSpan = rotDirection * (360 + Math.floor(Math.random() * 360));
+                const sway = ((Math.random() - 0.5) * 80).toFixed(2);
 
-                anime({
-                    targets: '.hero-badge',
-                    opacity: [0, 1],
-                    scale: [0.65, 1],
-                    easing: 'easeOutBack',
-                    duration: 800,
-                    delay: 1150,
-                    complete: function() {
-                        const badge = document.querySelector('.hero-badge');
-                        if (badge) badge.classList.add('active-color');
-                    }
-                });
+                cleanTooth.style.animation = 'none';
+                void cleanTooth.offsetWidth; // DOM reflow trigger to restart animation
+                cleanTooth.style.width = `${size}px`;
+                cleanTooth.style.height = 'auto';
+                cleanTooth.style.left = `${leftPos}%`;
+                cleanTooth.style.setProperty('--start-rot', `${startRot}deg`);
+                cleanTooth.style.setProperty('--end-rot', `${startRot + rotSpan}deg`);
+                cleanTooth.style.setProperty('--sway', `${sway}px`);
+                cleanTooth.style.setProperty('--max-opacity', '0.85');
+                cleanTooth.style.animation = 'fallingTooth 12s linear 1';
             }
 
-            // Handle window resize to adapt layout structure dynamically
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    const isMobileNow = window.innerWidth <= 768;
-                    const gridElement = animationContainer.querySelector('.dots-grid');
-                    if (gridElement) {
-                        const currentCols = gridElement.style.gridTemplateColumns.match(/\d+/);
-                        const expectedCols = isMobileNow ? '13' : '25';
-                        if (currentCols && currentCols[0] !== expectedCols) {
-                            initGrid();
-                        }
-                    }
-                }, 250);
+            cleanTooth.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.location.href = '/surprise/';
+            });
+
+            // Initial launch on load
+            triggerCleanTooth();
+            teethContainer.appendChild(cleanTooth);
+
+            // Re-trigger every 20 seconds
+            setInterval(triggerCleanTooth, 20000);
+        }
+
+        // Animate "Sheena" Name and "RDH" Badge
+        if (typeof anime !== 'undefined') {
+            anime({
+                targets: '.hero-name, .hero-letter',
+                opacity: [0, 1],
+                translateY: [35, 0],
+                scale: [0.85, 1],
+                easing: 'easeOutBack',
+                duration: 900,
+                delay: 250
+            });
+
+            anime({
+                targets: '.hero-badge',
+                opacity: [0, 1],
+                scale: [0.65, 1],
+                easing: 'easeOutBack',
+                duration: 800,
+                delay: 1150,
+                complete: function() {
+                    const badge = document.querySelector('.hero-badge');
+                    if (badge) badge.classList.add('active-color');
+                }
             });
         }
 
-        // Header Scroll Styling
+        // Section Titles Scroll Reveal Observer (Wipes darker color overlay across title on scroll into view)
+        if ('IntersectionObserver' in window) {
+            const titleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, {
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.15
+            });
+
+            document.querySelectorAll('.section-title, .bio-main-title, .portal-title-main, .products-main-title, .contact-main-title, .section-title-reveal').forEach(title => {
+                titleObserver.observe(title);
+            });
+        }
         const header = document.getElementById('main-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
+        if (header) {
+            const handleScroll = () => {
+                if (window.scrollY > 20) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            };
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
+        }
 
         // Mobile Menu Toggle
         const mobileToggle = document.querySelector('.mobile-nav-toggle');
@@ -116,7 +141,6 @@
             mobileToggle.addEventListener('click', () => {
                 mobileToggle.classList.toggle('active');
                 navLinksList.classList.toggle('active');
-                document.body.style.overflow = navLinksList.classList.contains('active') ? 'hidden' : '';
             });
 
             // Close menu on link click
@@ -124,7 +148,6 @@
                 link.addEventListener('click', () => {
                     mobileToggle.classList.remove('active');
                     navLinksList.classList.remove('active');
-                    document.body.style.overflow = '';
                 });
             });
         }

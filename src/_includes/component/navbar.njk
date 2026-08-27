@@ -1,8 +1,6 @@
 <header id="main-header">
     <div class="container">
         <nav>
-            <a href="/" class="logo">SHEENA <span class="logo-badge">RDH</span></a>
-
             <button class="mobile-nav-toggle" aria-label="Toggle navigation">
                 <span></span>
                 <span></span>
@@ -28,12 +26,6 @@
                 <li><a href="/#contact">Contact</a></li>
                 {% endif %}
             </ul>
-            
-            {% if page.url == "/" or page.url == "/index.html" %}
-            <a href="#contact" class="btn btn-primary nav-cta">Book Consultation</a>
-            {% else %}
-            <a href="/#contact" class="btn btn-primary nav-cta">Book Consultation</a>
-            {% endif %}
         </nav>
     </div>
 </header>

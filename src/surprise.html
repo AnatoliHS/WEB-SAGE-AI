@@ -1,0 +1,75 @@
+---
+layout: default.njk
+title: Surprise | Sheena RDH
+---
+
+<section class="surprise-section">
+    <div class="container text-center">
+        <h1 class="surprise-title">Coming Soon</h1>
+        <p class="surprise-subtitle">Something special is on its way. Stay tuned!</p>
+        <a href="/" class="surprise-back-btn">&larr; Back to Home</a>
+    </div>
+</section>
+
+<style>
+.surprise-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-bg);
+    padding: 120px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.surprise-title {
+    font-family: var(--font-cursive);
+    font-size: clamp(4.5rem, 10vw, 8.5rem);
+    color: var(--teal-dark);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    text-shadow: 0 10px 30px rgba(196, 172, 230, 0.35);
+    animation: fadeInSurprise 1s ease-out forwards;
+}
+
+.surprise-subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 40px;
+}
+
+.surprise-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--teal-dark);
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.surprise-back-btn:hover {
+    background-color: var(--accent-lavender);
+    color: var(--teal-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(196, 172, 230, 0.4);
+}
+
+@keyframes fadeInSurprise {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+</style>

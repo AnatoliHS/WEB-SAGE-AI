@@ -38,7 +38,7 @@ title: Terms of Use
 
         <div>
             <h2 style="color: var(--teal-dark); font-size: 1.5rem; margin-bottom: 15px;">Links to Third Party Sites</h2>
-            <p>Outside Links – While on this web site, you may be led to other web sites operated by parties other than Sheena RDH (such as affiliate product links). Inclusion of hyperlinks to external websites does not imply any endorsement of the material on such web sites or any association with their operators.</p>
+            <p>Outside Links: While on this web site, you may be led to other web sites operated by parties other than Sheena RDH (such as affiliate product links). Inclusion of hyperlinks to external websites does not imply any endorsement of the material on such web sites or any association with their operators.</p>
         </div>
 
         <div>
