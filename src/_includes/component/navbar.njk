@@ -1,6 +1,11 @@
 <header id="main-header">
     <div class="container">
         <nav>
+            <a href="/" class="nav-logo-link" aria-label="Sheena Osborne RDH Home">
+                <img src="/assets/lavender-logo.png" alt="Sheena RDH Logo" class="nav-logo-img">
+                <span class="nav-brand-text">Sheena Osborne <span class="brand-badge">RDH</span></span>
+            </a>
+
             <button class="mobile-nav-toggle" aria-label="Toggle navigation">
                 <span></span>
                 <span></span>
@@ -15,7 +20,7 @@
                 <li><a href="#topics">Hygiene Topics</a></li>
                 <li><a href="#products">Products</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li class="mobile-only-contact"><a href="#contact">Contact</a></li>
                 {% else %}
                 <li><a href="/#hero">Home</a></li>
                 <li><a href="/#about">About</a></li>
@@ -23,9 +28,13 @@
                 <li><a href="/#topics">Hygiene Topics</a></li>
                 <li><a href="/#products">Products</a></li>
                 <li><a href="/#faq">FAQ</a></li>
-                <li><a href="/#contact">Contact</a></li>
+                <li class="mobile-only-contact"><a href="/#contact">Contact</a></li>
                 {% endif %}
             </ul>
+
+            <div class="nav-cta-wrapper">
+                <a href="#contact" class="nav-cta-btn">Contact</a>
+            </div>
         </nav>
     </div>
 </header>

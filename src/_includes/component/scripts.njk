@@ -119,6 +119,10 @@
             document.querySelectorAll('.section-title, .bio-main-title, .portal-title-main, .advice-main-title, .products-main-title, .contact-main-title, .faq-banner-title, .section-title-reveal').forEach(title => {
                 titleObserver.observe(title);
             });
+        } else {
+            document.querySelectorAll('.section-title, .bio-main-title, .portal-title-main, .advice-main-title, .products-main-title, .contact-main-title, .faq-banner-title, .section-title-reveal').forEach(title => {
+                title.classList.add('revealed');
+            });
         }
         const header = document.getElementById('main-header');
         if (header) {
