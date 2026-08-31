@@ -2507,13 +2507,28 @@ textarea.form-control {
 }
 
 .footer-logo {
-    font-family: var(--font-heading);
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--teal-dark);
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.footer-logo-img {
+    height: 54px;
+    width: auto;
+    object-fit: contain;
+}
+
+.footer-brand-text {
+    font-family: var(--font-cursive);
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--teal-dark);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .footer-brand-desc {
