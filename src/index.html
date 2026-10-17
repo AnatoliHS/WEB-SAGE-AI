@@ -268,6 +268,59 @@ title: Home
     </div>
 </section>
 
+<!-- Know Your Smile: interactive dental chart -->
+<section id="smile" class="section smile-section">
+    <div class="container">
+        <div class="smile-grid">
+            <div class="smile-intro">
+                <h2 class="section-title-reveal smile-title">Know Your <br><span class="title-faded">Smile.</span></h2>
+                <p class="smile-desc">Hygienists chart all 32 adult teeth by number. Select any tooth to see what it does and how to keep it clean at home.</p>
+            </div>
+
+            <div class="smile-detail">
+                {% set first = toothChart.types[6] %}
+                <div class="smile-card" aria-live="polite">
+                    <div class="smile-card-head">
+                        <span class="smile-card-num" id="smile-num">16</span>
+                        <div>
+                            <p class="smile-card-where" id="smile-where">{{ toothChart.quadrants[1] }}</p>
+                            <h3 class="smile-card-name" id="smile-name">{{ first.name }}</h3>
+                        </div>
+                    </div>
+                    <p class="smile-card-role" id="smile-role">{{ first.role }}</p>
+                    <div class="smile-card-tip">
+                        <span class="smile-card-tip-label">Care tip</span>
+                        <p id="smile-tip">{{ first.tip }}</p>
+                    </div>
+                </div>
+
+                <button type="button" class="smile-cta" data-nav-open="contact">
+                    Ask Sheena about a tooth
+                    <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+            </div>
+
+            <div class="smile-chart">
+                <svg viewBox="-215 -215 430 430" role="group" aria-label="Adult dental chart. Select a tooth to learn about it.">
+                    <text class="smile-chart-label" x="0" y="-60">Upper</text>
+                    <text class="smile-chart-label" x="0" y="72">Lower</text>
+                    <text class="smile-chart-side" x="-205" y="4">R</text>
+                    <text class="smile-chart-side" x="205" y="4">L</text>
+                    <text class="smile-chart-num" id="smile-chart-num" x="0" y="20">16</text>
+                    {% for t in toothChart.teeth %}
+                    <g class="smile-tooth{% if t.n == 16 %} is-selected{% endif %}" data-tooth="{{ t.n }}" style="--k: {{ loop.index0 }}" transform="{{ t.transform }}" tabindex="0" role="button" aria-label="Tooth {{ t.n }}, {{ t.label }}" aria-pressed="{{ 'true' if t.n == 16 else 'false' }}">
+                        <rect x="{{ t.x }}" y="{{ t.y }}" width="{{ t.w }}" height="{{ t.d }}" rx="{{ t.r }}"/>
+                        {% if t.groove %}<path d="{{ t.groove }}"/>{% endif %}
+                    </g>
+                    {% endfor %}
+                </svg>
+                <p class="smile-chart-note">Shown as if you're facing the patient, so their right side is on your left.</p>
+            </div>
+        </div>
+    </div>
+    <script type="application/json" id="tooth-info">{{ {"quadrants": toothChart.quadrants, "types": toothChart.types} | dump | safe }}</script>
+</section>
+
 <!-- Dental Hygiene Topics Section (Evidence-Based Advice) -->
 <section id="topics" class="section advice-section">
     <div class="container">
@@ -563,57 +616,4 @@ title: Home
             </div>
         </div>
     </div>
-</section>
-
-<!-- Know Your Smile: interactive dental chart -->
-<section id="smile" class="section smile-section">
-    <div class="container">
-        <div class="smile-grid">
-            <div class="smile-intro">
-                <h2 class="section-title-reveal smile-title">Know Your <br><span class="title-faded">Smile.</span></h2>
-                <p class="smile-desc">Hygienists chart all 32 adult teeth by number. Select any tooth to see what it does and how to keep it clean at home.</p>
-            </div>
-
-            <div class="smile-detail">
-                {% set first = toothChart.types[6] %}
-                <div class="smile-card" aria-live="polite">
-                    <div class="smile-card-head">
-                        <span class="smile-card-num" id="smile-num">16</span>
-                        <div>
-                            <p class="smile-card-where" id="smile-where">{{ toothChart.quadrants[1] }}</p>
-                            <h3 class="smile-card-name" id="smile-name">{{ first.name }}</h3>
-                        </div>
-                    </div>
-                    <p class="smile-card-role" id="smile-role">{{ first.role }}</p>
-                    <div class="smile-card-tip">
-                        <span class="smile-card-tip-label">Care tip</span>
-                        <p id="smile-tip">{{ first.tip }}</p>
-                    </div>
-                </div>
-
-                <button type="button" class="smile-cta" data-nav-open="contact">
-                    Ask Sheena about a tooth
-                    <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </button>
-            </div>
-
-            <div class="smile-chart">
-                <svg viewBox="-215 -215 430 430" role="group" aria-label="Adult dental chart. Select a tooth to learn about it.">
-                    <text class="smile-chart-label" x="0" y="-60">Upper</text>
-                    <text class="smile-chart-label" x="0" y="72">Lower</text>
-                    <text class="smile-chart-side" x="-205" y="4">R</text>
-                    <text class="smile-chart-side" x="205" y="4">L</text>
-                    <text class="smile-chart-num" id="smile-chart-num" x="0" y="20">16</text>
-                    {% for t in toothChart.teeth %}
-                    <g class="smile-tooth{% if t.n == 16 %} is-selected{% endif %}" data-tooth="{{ t.n }}" style="--k: {{ loop.index0 }}" transform="{{ t.transform }}" tabindex="0" role="button" aria-label="Tooth {{ t.n }}, {{ t.label }}" aria-pressed="{{ 'true' if t.n == 16 else 'false' }}">
-                        <rect x="{{ t.x }}" y="{{ t.y }}" width="{{ t.w }}" height="{{ t.d }}" rx="{{ t.r }}"/>
-                        {% if t.groove %}<path d="{{ t.groove }}"/>{% endif %}
-                    </g>
-                    {% endfor %}
-                </svg>
-                <p class="smile-chart-note">Shown as if you're facing the patient, so their right side is on your left.</p>
-            </div>
-        </div>
-    </div>
-    <script type="application/json" id="tooth-info">{{ {"quadrants": toothChart.quadrants, "types": toothChart.types} | dump | safe }}</script>
 </section>
