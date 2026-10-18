@@ -16,6 +16,7 @@ module.exports = function(eleventyConfig) {
     "src/assets/apple-touch-icon.png": "/apple-touch-icon.png",
     "src/assets/favicon-32x32.png": "/favicon-32x32.png",
     "src/assets/favicon-16x16.png": "/favicon-16x16.png",
+    "src/assets/favicon-48x48.png": "/favicon-48x48.png",
     "src/assets/site.webmanifest": "/site.webmanifest",
     "src/assets/android-chrome-192x192.png": "/android-chrome-192x192.png",
     "src/assets/android-chrome-512x512.png": "/android-chrome-512x512.png"

@@ -47,222 +47,87 @@ title: Home
 <!-- Patient Exam Portal Section -->
 <section id="portal" class="section portal-section">
     <div class="container">
-        <div class="portal-header-block">
-            <h2 class="portal-title-main">Your <span class="brush-underline">Personal</span> <span class="title-faded">Exam Portal.</span></h2>
-            <p class="portal-desc">
-                At your last in-person checkup, Sheena assigned you a clinical category based on your gum health and
-                cavity risk. Select your category below to unlock your custom daily home-care routine, treatment goals,
-                and recommended solutions.
-            </p>
+        <div class="portal-head">
+            <h2 class="portal-title-main">Your Personal <span class="title-faded">Exam Portal.</span></h2>
+            <p class="portal-desc">At your last checkup, Sheena placed you in one of four categories based on your gum health and cavity risk. Choose yours to see your goals, and a daily routine you can tick off as you go.</p>
         </div>
 
-        <div class="portal-testimonial-layout">
-            <!-- Left Column: Dynamic Clinical Video per Stage -->
-            <div class="portal-img-col">
-                <div class="portal-video-wrapper">
-                    <!-- Stage 1 Video -->
-                    <video class="portal-featured-video active" id="video-cat1" autoplay loop muted playsinline
-                        webkit-playsinline preload="auto">
-                        <source src="/assets/brush.mp4" type="video/mp4">
-                    </video>
+        <div class="portal-picker" data-level="{{ portal.categories[0].level }}">
+            <span class="portal-picker-label" id="portal-picker-label">Your category</span>
+            <button class="portal-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="portal-picker-list" aria-labelledby="portal-picker-label portal-picker-value">
+                <span class="portal-picker-num" id="portal-picker-num">01</span>
+                <span class="portal-picker-text">
+                    <span class="portal-picker-value" id="portal-picker-value">{{ portal.categories[0].name }}</span>
+                    <span class="portal-risk portal-picker-risk" id="portal-picker-risk">{{ portal.categories[0].risk }}</span>
+                </span>
+                <span class="portal-picker-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </button>
+            <ul class="portal-picker-list" id="portal-picker-list" role="listbox" aria-labelledby="portal-picker-label" tabindex="-1">
+                {% for c in portal.categories %}
+                <li class="portal-picker-option" role="option" id="portal-option-{{ c.n }}" data-value="{{ c.n }}" data-level="{{ c.level }}" data-risk="{{ c.risk }}" data-name="{{ c.name }}" aria-selected="{{ 'true' if loop.first else 'false' }}" style="--i: {{ loop.index0 }}">
+                    <span class="portal-picker-num">0{{ c.n }}</span>
+                    <span class="portal-picker-text">
+                        <span class="portal-picker-name">{{ c.name }}</span>
+                        <span class="portal-risk portal-risk--{{ c.level }}">{{ c.risk }}</span>
+                    </span>
+                    <svg class="portal-picker-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-                    <!-- Stage 2 Video -->
-                    <video class="portal-featured-video" id="video-cat2" autoplay loop muted playsinline
-                        webkit-playsinline preload="auto">
-                        <source src="/assets/floss.mp4" type="video/mp4">
-                    </video>
+        <div class="portal-tabs" role="tablist" aria-label="Exam categories">
+            {% for c in portal.categories %}
+            <button class="portal-tab{% if loop.first %} is-active{% endif %}" type="button" role="tab" id="portal-tab-{{ c.n }}" aria-controls="portal-pane-{{ c.n }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-portal-tab="{{ c.n }}">
+                <span class="portal-tab-name"><b>0{{ c.n }}</b>{{ c.short }}</span>
+                <span class="portal-risk portal-risk--{{ c.level }}">{{ c.risk }}</span>
+            </button>
+            {% endfor %}
+        </div>
 
-                    <!-- Stage 3 Video -->
-                    <video class="portal-featured-video" id="video-cat3" autoplay loop muted playsinline
-                        webkit-playsinline preload="auto">
-                        <source src="/assets/fdc-video.mp4" type="video/mp4">
-                    </video>
-
-                    <!-- Stage 4 Video -->
-                    <video class="portal-featured-video" id="video-cat4" autoplay loop muted playsinline
-                        webkit-playsinline preload="auto">
-                        <source src="/assets/rinse.mp4" type="video/mp4">
-                    </video>
-                </div>
+        <div class="portal-body">
+            <div class="portal-media">
+                {% for c in portal.categories %}
+                <video class="portal-video{% if loop.first %} is-active{% endif %}" data-portal-video="{{ c.n }}" loop muted playsinline webkit-playsinline preload="{{ 'auto' if loop.first else 'none' }}" poster="{{ c.poster }}" aria-hidden="true">
+                    <source src="{{ c.video }}" type="video/mp4">
+                </video>
+                {% endfor %}
             </div>
 
-            <!-- Right Column: Editorial Quote & Tab Controller -->
-            <div class="portal-content-col">
-                <!-- Header Info (Placed above the top line) -->
-                <div class="portal-top-headers-wrapper">
-                    <div class="portal-top-header active" id="top-header-cat1">
-                        <span class="portal-meta-name">HEALTHY &amp; PREVENTIVE CARE</span>
-                        <span class="portal-meta-divider">/</span>
-                        <span class="portal-meta-badge badge-green">LOW RISK</span>
-                    </div>
-
-                    <div class="portal-top-header" id="top-header-cat2">
-                        <span class="portal-meta-name">ACTIVE GINGIVITIS CARE</span>
-                        <span class="portal-meta-divider">/</span>
-                        <span class="portal-meta-badge badge-orange">MODERATE RISK</span>
-                    </div>
-
-                    <div class="portal-top-header" id="top-header-cat3">
-                        <span class="portal-meta-name">PERIODONTAL MAINTENANCE</span>
-                        <span class="portal-meta-divider">/</span>
-                        <span class="portal-meta-badge badge-red">HIGH RISK</span>
-                    </div>
-
-                    <div class="portal-top-header" id="top-header-cat4">
-                        <span class="portal-meta-name">HIGH CAVITY RISK &amp; DRY MOUTH</span>
-                        <span class="portal-meta-divider">/</span>
-                        <span class="portal-meta-badge badge-orange">ELEVATED RISK</span>
+            <div class="portal-panes">
+                {% for c in portal.categories %}
+                <div class="portal-pane{% if loop.first %} is-active{% endif %}" role="tabpanel" id="portal-pane-{{ c.n }}" aria-labelledby="portal-tab-{{ c.n }}" data-category="{{ c.n }}"{% if not loop.first %} hidden{% endif %}>
+                    <p class="portal-pane-label">Category {{ c.n }} · {{ c.name }}</p>
+                    <blockquote class="portal-assess">"{{ c.assessment }}"<span class="portal-sig">Sheena</span></blockquote>
+                    <div class="portal-lists">
+                        <div class="portal-goals">
+                            <h3 class="portal-list-title">Your goals</h3>
+                            <ul>
+                                {% for g in c.goals %}<li>{{ g }}</li>{% endfor %}
+                            </ul>
+                        </div>
+                        <div class="portal-routine">
+                            <div class="portal-routine-head">
+                                <h3 class="portal-list-title">Today's routine</h3>
+                                <span class="portal-progress"><span aria-hidden="true"><i></i></span><em class="portal-progress-count">0 of {{ c.routine | length }}</em></span>
+                            </div>
+                            <ul>
+                                {% for r in c.routine %}
+                                <li>
+                                    <button class="portal-check" type="button" role="checkbox" aria-checked="false" data-step="{{ loop.index0 }}">
+                                        <span class="portal-check-box" aria-hidden="true"></span>
+                                        <span class="portal-check-text">{{ r }}</span>
+                                    </button>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <p class="portal-routine-done" aria-live="polite"></p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Top Hairline Divider Line (above 1, 2, 3, 4) -->
-                <div class="portal-top-line"></div>
-
-                <div class="portal-top-bar">
-                    <!-- Round Number Tabs 1, 2, 3, 4 -->
-                    <div class="portal-num-tabs">
-                        <button class="portal-num-btn active" data-tab="cat1" aria-label="Category 1">1</button>
-                        <button class="portal-num-btn" data-tab="cat2" aria-label="Category 2">2</button>
-                        <button class="portal-num-btn" data-tab="cat3" aria-label="Category 3">3</button>
-                        <button class="portal-num-btn" data-tab="cat4" aria-label="Category 4">4</button>
-                    </div>
-                    <!-- Top Right Quote Symbol -->
-                    <div class="portal-quote-mark">”</div>
-                </div>
-
-                <!-- Dynamic Panes -->
-                <div class="portal-panes-wrapper">
-
-                    <!-- Category 1 Pane -->
-                    <div class="portal-pane active" id="pane-cat1">
-                        <blockquote class="portal-quote-text">
-                            "Your gums are pink and firm, there is minimal to no bleeding during brushing or flossing,
-                            and gum pocket depths are healthy (1–3mm). The goal here is long-term maintenance and
-                            prevention of future plaque accumulation."
-                        </blockquote>
-
-                        <div class="portal-pane-details">
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core
-                                    Routine Goals</h4>
-                                <ul>
-                                    <li>Keep plaque levels below the threshold of inflammation.</li>
-                                    <li>Maintain healthy supportive bone levels around teeth.</li>
-                                    <li>Remineralize enamel daily to protect against early decay.</li>
-                                </ul>
-                            </div>
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon"
-                                        class="portal-detail-icon"> Home Care Guidelines</h4>
-                                <ul>
-                                    <li>Brush twice daily for 2 minutes with a soft-bristled brush.</li>
-                                    <li>Floss once daily, gently wrapping the floss around each tooth.</li>
-                                    <li>Use a mineralizing or standard fluoride toothpaste.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 2 Pane -->
-                    <div class="portal-pane" id="pane-cat2">
-                        <blockquote class="portal-quote-text">
-                            "Your gums are red, puffy, and bleed easily during brushing, flossing, or probing. Gum
-                            pockets are slightly deep (3–4mm) due to swelling, but there is no bone loss. Gingivitis is
-                            100% reversible with focused intervention."
-                        </blockquote>
-
-                        <div class="portal-pane-details">
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core
-                                    Routine Goals</h4>
-                                <ul>
-                                    <li>Eliminate bleeding and reduce bacterial gum swelling.</li>
-                                    <li>Remove plaque biofilm under the gum margins daily.</li>
-                                    <li>Restore tissue health and seal the gums around the teeth.</li>
-                                </ul>
-                            </div>
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon"
-                                        class="portal-detail-icon"> Home Care Guidelines</h4>
-                                <ul>
-                                    <li>Switch to an electric toothbrush with a pressure sensor.</li>
-                                    <li>Floss daily. *Do not stop flossing because of bleeding*, as that is a sign to clean
-                                        more!</li>
-                                    <li>Use an antiseptic alcohol-free mouthrinse to reduce bacterial load.</li>
-                                    <li>Incorporate warm saltwater rinses if gums feel tender.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 3 Pane -->
-                    <div class="portal-pane" id="pane-cat3">
-                        <blockquote class="portal-quote-text">
-                            "You have a history of periodontitis (bone loss supporting the teeth). The disease is
-                            currently stable, but you have receding gums, exposed root surfaces, or pocket depths of
-                            4–5mm. This category requires lifetime maintenance to prevent disease reactivation."
-                        </blockquote>
-
-                        <div class="portal-pane-details">
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core
-                                    Routine Goals</h4>
-                                <ul>
-                                    <li>Prevent bacteria from re-colonizing deep under the gumline.</li>
-                                    <li>Protect exposed, softer root surfaces from root cavities.</li>
-                                    <li>Manage tooth sensitivity caused by recession.</li>
-                                </ul>
-                            </div>
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon"
-                                        class="portal-detail-icon"> Home Care Guidelines</h4>
-                                <ul>
-                                    <li>Use interdental brushes (proxy brushes) to clean the wider gaps between teeth.
-                                    </li>
-                                    <li>Use a water flosser daily to flush out deep pockets.</li>
-                                    <li>Use a low-abrasion, sensitive toothpaste containing fluoride or hydroxyapatite.
-                                    </li>
-                                    <li>Keep your professional scaling appointments at a strict 3-to-4 month interval.
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 4 Pane -->
-                    <div class="portal-pane" id="pane-cat4">
-                        <blockquote class="portal-quote-text">
-                            "You have experienced frequent new decay (cavities) recently or suffer from Xerostomia (dry
-                            mouth) due to medication, mouth breathing, or medical conditions. Saliva is your mouth's
-                            natural defense, and a lack of it leads to rapid enamel breakdown."
-                        </blockquote>
-
-                        <div class="portal-pane-details">
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/tooth.png" alt="Tooth Icon" class="portal-detail-icon"> Core
-                                    Routine Goals</h4>
-                                <ul>
-                                    <li>Stimulate natural salivary flow and lubricate oral tissues.</li>
-                                    <li>Remineralize weakened enamel and raise oral pH levels.</li>
-                                    <li>Protect roots and crown margins from aggressive decay.</li>
-                                </ul>
-                            </div>
-                            <div class="portal-detail-box">
-                                <h4><img src="/assets/dental-floss.png" alt="Dental Floss Icon"
-                                        class="portal-detail-icon"> Home Care Guidelines</h4>
-                                <ul>
-                                    <li>Sip plain water constantly throughout the day; avoid sipping acidic beverages.
-                                    </li>
-                                    <li>Use toothpaste containing 10% Nano-Hydroxyapatite or high fluoride.</li>
-                                    <li>Chew sugar-free gum or use lozenges containing 100% Xylitol to stimulate saliva.
-                                    </li>
-                                    <li>Use an alcohol-free, dry-mouth lubricating mouthwash before bed.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -279,24 +144,24 @@ title: Home
 
             <div class="smile-detail">
                 {% set first = toothChart.types[6] %}
-                <div class="smile-card" aria-live="polite">
-                    <div class="smile-card-head">
-                        <span class="smile-card-num" id="smile-num">16</span>
-                        <div>
-                            <p class="smile-card-where" id="smile-where">{{ toothChart.quadrants[1] }}</p>
-                            <h3 class="smile-card-name" id="smile-name">{{ first.name }}</h3>
+                <div class="smile-info" aria-live="polite">
+                    <div class="smile-info-top">
+                        <span class="smile-info-num" id="smile-num">16</span>
+                        <div class="smile-info-name">
+                            <p class="smile-info-label" id="smile-where">{{ toothChart.quadrants[1] }}</p>
+                            <h3 class="smile-info-title" id="smile-name">{{ first.name }}</h3>
                         </div>
                     </div>
-                    <p class="smile-card-role" id="smile-role">{{ first.role }}</p>
-                    <div class="smile-card-tip">
-                        <span class="smile-card-tip-label">Care tip</span>
+                    <p class="smile-info-role" id="smile-role">{{ first.role }}</p>
+                    <div class="smile-info-tip">
+                        <span class="smile-info-label">Care tip</span>
                         <p id="smile-tip">{{ first.tip }}</p>
                     </div>
                 </div>
 
-                <button type="button" class="smile-cta" data-nav-open="contact">
+                <button type="button" class="pill-btn" data-nav-open="contact">
                     Ask Sheena about a tooth
-                    <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 </button>
             </div>
 
@@ -324,154 +189,59 @@ title: Home
 <!-- Dental Hygiene Topics Section (Evidence-Based Advice) -->
 <section id="topics" class="section advice-section">
     <div class="container">
-        <!-- Section Header Split Layout -->
-        <div class="advice-header-grid">
-            <div class="advice-header-left">
-                <h2 class="advice-main-title">
-                    <span class="brush-underline">Evidence</span>-Based <br>
-                    <span class="title-faded">Dental Advice.</span>
-                </h2>
-            </div>
-            <div class="advice-header-right">
-                <p class="advice-header-desc">
-                    See how we've helped clients achieve their best oral health, with clear evidence-based clinical guidance.
-                </p>
-                <a href="#portal" class="advice-pill-btn advice-pill-dark">
-                    Explore Advice &rarr;
-                </a>
-            </div>
+        <div class="advice-head">
+            <h2 class="advice-main-title">
+                Evidence-Based <br>
+                <span class="title-faded">Dental Advice.</span>
+            </h2>
+            <p class="advice-head-desc">Clear, research-backed answers to the questions patients ask Sheena most.</p>
         </div>
 
-        <!-- Advice Rows List -->
-        <div class="advice-rows-container">
-
-            <!-- Article Row 1 -->
-            <article class="advice-row-item">
-                <div class="advice-row-grid">
-                    <div class="advice-left-col">
-                        <span class="advice-date-tag">2026-08-31</span>
-                        <h3 class="advice-item-title">Electric vs. Manual Toothbrushes: The Clinical Evidence</h3>
-                        <p class="advice-item-excerpt">
-                            Many patients ask if upgrading to an electric toothbrush is truly worth it. Extensive clinical trials show electric toothbrushes remove up to 21% more plaque biofilm and significantly reduce gum disease compared to manual brushing.
-                        </p>
-                        <details class="advice-details-toggle">
-                            <summary class="advice-pill-btn advice-pill-outline">
-                                <span class="toggle-text-more">Read More &rarr;</span>
-                                <span class="toggle-text-less">Show Less &uarr;</span>
-                            </summary>
-                            <div class="advice-expanded-content">
-                                <p><strong>Key Clinical Advantages Include:</strong></p>
-                                <ul>
-                                    <li><strong>Superior Plaque Removal:</strong> High-end sonic or rotating-oscillating toothbrushes remove up to 21% more plaque than manual brushes.</li>
-                                    <li><strong>Pressure Sensors:</strong> Built-in pressure alerts prevent aggressive scrubbing that leads to permanent gum recession and enamel wear.</li>
-                                    <li><strong>Built-in Timers:</strong> Ensures a full 2-minute brushing cycle partitioned into 30-second quad indicators.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </div>
-                    <div class="advice-right-col">
-                        <div class="advice-img-wrapper">
-                            <img src="/assets/images/topic_toothbrush.jpg" alt="Electric vs Manual Toothbrushes" class="advice-featured-img">
-                        </div>
-                    </div>
+        <div class="advice-windows">
+            {% for a in articles %}
+            <article class="advice-window{% if loop.first %} is-open{% endif %}" style="--k: {{ loop.index0 }}; --h: {{ a.height }}px; --off: {{ a.offset }}px" tabindex="0" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-label="{{ a.title }}">
+                <img src="{{ a.image }}" alt="" loading="lazy">
+                <span class="advice-window-num" aria-hidden="true">0{{ loop.index }}</span>
+                <span class="advice-window-side" aria-hidden="true">{{ a.short }}</span>
+                <div class="advice-window-body">
+                    <p class="advice-meta"><span class="advice-topic">{{ a.topic }}</span><time datetime="{{ a.date }}">{{ a.dateLabel }}</time></p>
+                    <h3 class="advice-window-title">{{ a.title }}</h3>
+                    <p class="advice-window-excerpt">{{ a.excerpt }}</p>
+                    <ul class="advice-window-keys">
+                        {% for p in a.points %}<li>{{ p[0] }}</li>{% endfor %}
+                    </ul>
+                    <button type="button" class="pill-btn advice-read-btn" data-article="{{ loop.index0 }}">
+                        Read article
+                        <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </button>
                 </div>
             </article>
-
-            <!-- Article Row 2 -->
-            <article class="advice-row-item">
-                <div class="advice-row-grid">
-                    <div class="advice-left-col">
-                        <span class="advice-date-tag">2026-08-15</span>
-                        <h3 class="advice-item-title">Why Flossing is Non-Negotiable (Brushing Only Cleans 60%)</h3>
-                        <p class="advice-item-excerpt">
-                            Brushing only cleans the front, back, and biting surfaces of your teeth. The sides between your teeth account for nearly 40% of total surface area—leaving them uncleaned allows destructive interdental plaque biofilm to form.
-                        </p>
-                        <details class="advice-details-toggle">
-                            <summary class="advice-pill-btn advice-pill-outline">
-                                <span class="toggle-text-more">Read More &rarr;</span>
-                                <span class="toggle-text-less">Show Less &uarr;</span>
-                            </summary>
-                            <div class="advice-expanded-content">
-                                <p><strong>Plaque buildup between teeth is the primary cause of:</strong></p>
-                                <ul>
-                                    <li><strong>Interproximal Cavities:</strong> Cavities starting between teeth, which require diagnostic X-rays to detect.</li>
-                                    <li><strong>Interdental Gingivitis:</strong> Inflammation of pointed gum tissue causing bad breath and bleeding.</li>
-                                    <li><strong>Water Flosser vs String Floss:</strong> String floss physically scrapes biofilm, while water flossers flush out deep pockets for patients with wider gaps or braces.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </div>
-                    <div class="advice-right-col">
-                        <div class="advice-img-wrapper">
-                            <img src="/assets/images/topic_flossing.jpg" alt="Flossing and Water Flosser" class="advice-featured-img">
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Article Row 3 -->
-            <article class="advice-row-item">
-                <div class="advice-row-grid">
-                    <div class="advice-left-col">
-                        <span class="advice-date-tag">2026-08-01</span>
-                        <h3 class="advice-item-title">Understanding Gum Disease: Gingivitis vs. Periodontitis</h3>
-                        <p class="advice-item-excerpt">
-                            Gum disease is a progressive infection existing in two primary stages. Recognizing the distinction between reversible gingival swelling and irreversible bone loss is essential for protecting your smile.
-                        </p>
-                        <details class="advice-details-toggle">
-                            <summary class="advice-pill-btn advice-pill-outline">
-                                <span class="toggle-text-more">Read More &rarr;</span>
-                                <span class="toggle-text-less">Show Less &uarr;</span>
-                            </summary>
-                            <div class="advice-expanded-content">
-                                <p><strong>Clinical Disease Breakdown:</strong></p>
-                                <ul>
-                                    <li><strong>Gingivitis (Reversible):</strong> Initial reaction to plaque. Gums bleed during cleaning, but supportive bone is unaffected. Fully cured with professional cleanings and home care.</li>
-                                    <li><strong>Periodontitis (Irreversible):</strong> Untreated inflammation causes bone loss around teeth and deep pockets. Treatment shifts to lifetime periodontal maintenance.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </div>
-                    <div class="advice-right-col">
-                        <div class="advice-img-wrapper">
-                            <img src="/assets/images/topic_gum_health.jpg" alt="Gum Health and Clinical Care" class="advice-featured-img">
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Article Row 4 -->
-            <article class="advice-row-item">
-                <div class="advice-row-grid">
-                    <div class="advice-left-col">
-                        <span class="advice-date-tag">2026-07-20</span>
-                        <h3 class="advice-item-title">What Actually Happens During a Scaling (Deep Cleaning)?</h3>
-                        <p class="advice-item-excerpt">
-                            When plaque remains on teeth for over 24-48 hours, it calcifies into rock-hard calculus (tartar) that cannot be brushed away. Professional scaling and root planing removes these microbial anchors so gum tissue can reattach.
-                        </p>
-                        <details class="advice-details-toggle">
-                            <summary class="advice-pill-btn advice-pill-outline">
-                                <span class="toggle-text-more">Read More &rarr;</span>
-                                <span class="toggle-text-less">Show Less &uarr;</span>
-                            </summary>
-                            <div class="advice-expanded-content">
-                                <p><strong>The Professional Hygiene Process:</strong></p>
-                                <ul>
-                                    <li><strong>Ultrasonic Scaling:</strong> High-frequency micro-vibrations shatter hard calculus deposits and flush away bacterial toxins.</li>
-                                    <li><strong>Hand Instrumentation:</strong> Precision curettes scrape remaining root deposits, leaving surfaces smooth so gums can heal.</li>
-                                </ul>
-                            </div>
-                        </details>
-                    </div>
-                    <div class="advice-right-col">
-                        <div class="advice-img-wrapper">
-                            <img src="/assets/images/topic_scaling.jpg" alt="Dental Scaling and Professional Cleaning" class="advice-featured-img">
-                        </div>
-                    </div>
-                </div>
-            </article>
-
+            {% endfor %}
         </div>
+
+        {% for a in articles %}
+        <dialog class="advice-reader" id="advice-reader-{{ loop.index0 }}" aria-labelledby="advice-reader-title-{{ loop.index0 }}">
+            <div class="advice-reader-img">
+                <img src="{{ a.image }}" alt="" loading="lazy">
+                <button type="button" class="advice-reader-close" aria-label="Close article">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+            <div class="advice-reader-body">
+                <p class="advice-meta"><span class="advice-topic">{{ a.topic }}</span><time datetime="{{ a.date }}">{{ a.dateLabel }}</time></p>
+                <h3 class="advice-reader-title" id="advice-reader-title-{{ loop.index0 }}">{{ a.title }}</h3>
+                <p class="advice-reader-excerpt">{{ a.excerpt }}</p>
+                <p class="advice-reader-lead">{{ a.lead }}</p>
+                <ul class="advice-reader-points">
+                    {% for p in a.points %}<li><strong>{{ p[0] }}.</strong> {{ p[1] }}</li>{% endfor %}
+                </ul>
+                <button type="button" class="pill-btn" data-nav-open="contact" data-close-reader>
+                    Ask Sheena about this
+                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+            </div>
+        </dialog>
+        {% endfor %}
     </div>
 </section>
 
@@ -480,7 +250,7 @@ title: Home
     <div class="container">
         <div class="shelf-top">
             <div class="shelf-head">
-                <h2 class="products-main-title">Recommended <br><span class="brush-underline title-faded">Oral Care.</span></h2>
+                <h2 class="products-main-title">Recommended <br><span class="title-faded">Oral Care.</span></h2>
                 <p class="shelf-intro">Products Sheena recommends to her own patients, each with her note on who it helps.</p>
             </div>
             <div class="shelf-filters" role="group" aria-label="Filter products">
@@ -542,22 +312,24 @@ title: Home
                 <p class="faq-banner-desc">
                     Discover clinical explanations and evidence behind common dental hygiene practices. Empowering you to make informed decisions for your smile.
                 </p>
-                <a href="#contact" class="faq-purple-btn" data-nav-open="contact">
-                    Ask Sheena &rarr;
+                <a href="#contact" class="pill-btn" data-nav-open="contact">
+                    Ask Sheena
+                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 </a>
             </div>
 
             <!-- Right Column: Lined Notepad Paper Card -->
             <div class="faq-notepad-card">
-                <div class="notepad-margin-line"></div>
+                <div class="notepad-margin-line" aria-hidden="true"></div>
+                <p class="notepad-heading" aria-hidden="true">Notes from Sheena</p>
                 <div class="notepad-accordion">
 
                     <!-- FAQ Item 1 -->
-                    <details class="notepad-disclosure" name="faq-group">
+                    <details class="notepad-disclosure">
                         <summary class="notepad-summary">
-                            <span class="notepad-check">&#10003;</span>
+                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
                             <span class="notepad-question">Is charcoal toothpaste safe for daily use?</span>
-                            <span class="summary-icon">+</span>
+                            <span class="notepad-toggle" aria-hidden="true"></span>
                         </summary>
                         <div class="notepad-answer">
                             <p>Clinical dental professionals do <strong>not</strong> recommend charcoal toothpaste for daily use. While it may temporarily scrub away surface stains, activated charcoal is highly abrasive. Over time, it acts like sandpaper, wearing down your protective outer enamel. This exposes yellow dentin underneath, making teeth look darker and significantly more sensitive.</p>
@@ -565,11 +337,11 @@ title: Home
                     </details>
 
                     <!-- FAQ Item 2 -->
-                    <details class="notepad-disclosure" name="faq-group">
+                    <details class="notepad-disclosure">
                         <summary class="notepad-summary">
-                            <span class="notepad-check">&#10003;</span>
+                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
                             <span class="notepad-question">Why do teeth feel sensitive after a cleaning?</span>
-                            <span class="summary-icon">+</span>
+                            <span class="notepad-toggle" aria-hidden="true"></span>
                         </summary>
                         <div class="notepad-answer">
                             <p>Calculus (tartar) acts like a thick, insulating blanket over exposed tooth roots. When Sheena scales off this buildup, the underlying root surface is exposed to temperature changes in the mouth for the first time in months. The minor sensitivity is normal and usually resolves within a week. Using a sensitivity toothpaste helps speed recovery.</p>
@@ -577,11 +349,11 @@ title: Home
                     </details>
 
                     <!-- FAQ Item 3 -->
-                    <details class="notepad-disclosure" name="faq-group">
+                    <details class="notepad-disclosure">
                         <summary class="notepad-summary">
-                            <span class="notepad-check">&#10003;</span>
+                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
                             <span class="notepad-question">How is an RDH different from a dentist?</span>
-                            <span class="summary-icon">+</span>
+                            <span class="notepad-toggle" aria-hidden="true"></span>
                         </summary>
                         <div class="notepad-answer">
                             <p>Dental Hygienists (RDH) and Dentists work as a team with distinct scopes of practice. An RDH is a licensed specialist focused entirely on preventive oral health, gum therapy (scaling), and home-care education. Dentists focus on restorative care like fillings, root canals, and crowns. Regular cleanings with your RDH reduce the need for restorative procedures.</p>
@@ -589,11 +361,11 @@ title: Home
                     </details>
 
                     <!-- FAQ Item 4 -->
-                    <details class="notepad-disclosure" name="faq-group">
+                    <details class="notepad-disclosure">
                         <summary class="notepad-summary">
-                            <span class="notepad-check">&#10003;</span>
+                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
                             <span class="notepad-question">How often should I replace my toothbrush head?</span>
-                            <span class="summary-icon">+</span>
+                            <span class="notepad-toggle" aria-hidden="true"></span>
                         </summary>
                         <div class="notepad-answer">
                             <p>Dental hygienists recommend replacing your manual toothbrush or electric brush head every <strong>3 months</strong>, or sooner if the bristles become frayed. Worn bristles lose flexibility and effectiveness at sweeping away plaque, and can harbor bacterial buildup over time.</p>
@@ -601,11 +373,11 @@ title: Home
                     </details>
 
                     <!-- FAQ Item 5 -->
-                    <details class="notepad-disclosure" name="faq-group">
+                    <details class="notepad-disclosure">
                         <summary class="notepad-summary">
-                            <span class="notepad-check">&#10003;</span>
+                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
                             <span class="notepad-question">Are electric toothbrushes really better than manual ones?</span>
-                            <span class="summary-icon">+</span>
+                            <span class="notepad-toggle" aria-hidden="true"></span>
                         </summary>
                         <div class="notepad-answer">
                             <p>Yes! Clinical studies consistently show that electric toothbrushes (sonic or oscillating) remove up to <strong>21% more plaque</strong> and reduce gingivitis by 11% compared to manual brushing. They also include pressure sensors to protect sensitive gums from aggressive scrubbing.</p>

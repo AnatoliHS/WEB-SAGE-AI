@@ -1,82 +1,87 @@
+{% set fbase = "" if (page.url == "/" or page.url == "/index.html") else "/" %}
 <footer class="site-footer">
     <div class="container">
-        <!-- Top Main Footer Grid -->
-        <div class="footer-grid">
-            <!-- Col 1: Brand & Socials -->
-            <div class="footer-brand-col">
-                <a href="/" class="footer-logo">
-                    <img src="/assets/lavender-logo.png" alt="Sheena RDH Logo" class="footer-logo-img">
-                    <span class="footer-brand-text">Sheena Osborne <span class="brand-badge">RDH</span></span>
+        <div class="footer-top">
+            <div class="footer-lead">
+                <p class="footer-lead-title">Healthier gums start <span class="title-faded">at home.</span></p>
+                <a href="{{ fbase }}#contact" class="pill-btn" data-nav-open="contact">
+                    Book a consultation
+                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 </a>
-                <p class="footer-brand-desc">
-                    Registered Dental Hygienist providing evidence-based oral care guidance, custom home-care routines, and clinically verified product recommendations.
-                </p>
-                <!-- Social Media Links -->
                 <div class="footer-socials">
                     <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
                     </a>
                     <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-icon-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
                     </a>
                     <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                     </a>
                     <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.5 6.4a2.8 2.8 0 0 0-1.9-2C18.9 4 12 4 12 4s-6.9 0-8.6.5a2.8 2.8 0 0 0-1.9 2A29 29 0 0 0 1 11.8a29 29 0 0 0 .5 5.3 2.8 2.8 0 0 0 1.9 1.9c1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5a2.8 2.8 0 0 0 1.9-1.9 29 29 0 0 0 .5-5.3 29 29 0 0 0-.5-5.4z"/><path d="M9.8 15l5.7-3.2-5.7-3.3z"/></svg>
                     </a>
-                    <a href="mailto:sheena@sheenardh.ca" aria-label="Email" class="social-icon-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <a href="mailto:{{ site.email }}" aria-label="Email" class="social-icon-btn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
                     </a>
                 </div>
             </div>
 
-            <!-- Col 2: Navigation Links -->
-            <div class="footer-col">
-                <h4 class="footer-col-title">Navigation</h4>
-                <ul class="footer-nav-list">
-                    <li><a href="#about">About Sheena</a></li>
-                    <li><a href="#portal">Patient Exam Portal</a></li>
-                    <li><a href="#topics">Hygiene Advice</a></li>
-                    <li><a href="#products">Recommended Products</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#contact" data-nav-open="contact">Book Consultation</a></li>
+            <nav class="footer-col" aria-label="Explore">
+                <h2 class="footer-col-title">Explore</h2>
+                <ul class="footer-links">
+                    <li><a href="{{ fbase }}#about">About Sheena</a></li>
+                    <li><a href="{{ fbase }}#portal">Exam Portal</a></li>
+                    <li><a href="{{ fbase }}#smile">Your Smile</a></li>
+                    <li><a href="{{ fbase }}#topics">Hygiene Advice</a></li>
+                    <li><a href="{{ fbase }}#products">Products</a></li>
+                    <li><a href="{{ fbase }}#faq">FAQ</a></li>
                 </ul>
-            </div>
+            </nav>
 
-            <!-- Col 3: Clinical Portals -->
-            <div class="footer-col">
-                <h4 class="footer-col-title">Exam Categories</h4>
-                <ul class="footer-nav-list">
-                    <li><a href="#portal">Category 1 Healthy &amp; Preventive</a></li>
-                    <li><a href="#portal">Category 2 Active Gingivitis</a></li>
-                    <li><a href="#portal">Category 3 Periodontal Maintenance</a></li>
-                    <li><a href="#portal">Category 4 High Cavity &amp; Dry Mouth</a></li>
+            <nav class="footer-col" aria-label="Exam categories">
+                <h2 class="footer-col-title">Exam categories</h2>
+                <ul class="footer-links">
+                    {% for c in portal.categories %}
+                    <li><a href="{{ fbase }}#portal" data-portal-open="{{ c.n }}">{{ c.name }}</a></li>
+                    {% endfor %}
                 </ul>
-            </div>
+            </nav>
 
-            <!-- Col 4: Contact Info -->
             <div class="footer-col">
-                <h4 class="footer-col-title">Contact &amp; Location</h4>
-                <ul class="footer-contact-list">
-                    <li>📍 Durham Region, Ontario, CA</li>
-                    <li><a href="tel:5550198822">📞 (555) 019-8822</a></li>
-                    <li><a href="mailto:sheena@sheenardh.ca">✉️ sheena@sheenardh.ca</a></li>
+                <h2 class="footer-col-title">Contact</h2>
+                <ul class="footer-contact">
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                        <span>Durham Region, Ontario</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+                        <a href="tel:+15550198822">(555) 019-8822</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                        <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        <span>Mon to Fri, 8:00 to 17:00</span>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Footer Bottom Bar -->
         <div class="footer-bottom">
-            <p class="footer-copy">&copy; 2026 Sheena RDH. All Rights Reserved.</p>
-            <ul class="footer-legal-links">
-                <li><a href="/privacy/">Privacy Policy</a></li>
-                <li><a href="/terms/">Terms of Service</a></li>
-                <li><a href="/cookies/">Cookie Policy</a></li>
+            <p class="footer-copy">&copy; 2026 Sheena Osborne RDH. All rights reserved.</p>
+            <ul class="footer-legal">
+                <li><a href="/privacy/">Privacy</a></li>
+                <li><a href="/terms/">Terms</a></li>
+                <li><a href="/cookies/">Cookies</a></li>
             </ul>
+            <p class="footer-credit">Design and development by <a href="https://chastech.ca" target="_blank" rel="noopener">ChasTech Inc.</a></p>
         </div>
-        <p class="footer-disclaimer">
-            Disclaimer: Recommended products may contain affiliate links. Commissions earned support this clinical educational portal.
-        </p>
+        <p class="footer-disclaimer">Some product links are affiliate links. Commissions help support this free educational site.</p>
+
+        <p class="footer-wordmark" aria-hidden="true"><span>Sheena</span> <span>Osborne</span></p>
     </div>
 </footer>
