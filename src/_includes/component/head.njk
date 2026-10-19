@@ -1,127 +1,61 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sheena RDH | Professional Dental Hygienist & Preventive Oral Health Portal</title>
+  <title>{{ title or "Tinker — The Bold Creative Playground & Visual Automation Engine" }}</title>
 
-  <meta name="description"
-    content="Meet Sheena, a Registered Dental Hygienist (RDH) dedicated to personalized, gentle preventive dental care. Access the interactive Patient Portal and home-care guide." />
-  <meta name="keywords"
-    content="Dental Hygienist, RDH, Sheena RDH, Oral Hygiene, Teeth Cleaning, Gum Health, Preventive Dentistry, Flossing, Periodontal Care" />
-  <meta name="author" content="Sheena RDH" />
+  <meta name="description" content="{{ description or 'Tinker is the gateway to friction-free creative workflows and intelligent visual automations. Join the waitlist for private Alpha access.' }}" />
+  <meta name="keywords" content="Tinker, visual canvas, automations, workflow engine, developer tools, creative playground, no-code, tinker app, tinker.click" />
+  <meta name="author" content="Tinker" />
   <meta name="robots" content="index, follow" />
 
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://sheenardh.ca" />
+  <link rel="canonical" href="https://tinker.click{{ page.url }}" />
 
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://sheenardh.ca" />
-  <meta property="og:title" content="Sheena RDH | Registered Dental Hygienist" />
-  <meta property="og:description" content="Personalized dental hygiene solutions and preventive health portals. Start your journey to a healthier smile." />
-  <meta property="og:image" content="https://sheenardh.ca/assets/sheena-rdh.jpg" />
+  <meta property="og:url" content="https://tinker.click{{ page.url }}" />
+  <meta property="og:title" content="{{ title or 'Tinker — The Bold Creative Playground & Visual Automation Engine' }}" />
+  <meta property="og:description" content="{{ description or 'Tinker is coming. Explore the next generation of visual flow engineering and reserve your priority early access.' }}" />
+  <meta property="og:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
 
-  <!-- Twitter -->
+  <!-- Twitter Card -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://sheenardh.ca" />
-  <meta property="twitter:title" content="Sheena RDH | Registered Dental Hygienist" />
-  <meta property="twitter:description" content="Empowering patients with evidence-based oral care guidance." />
-  <meta property="twitter:image" content="https://sheenardh.ca/assets/sheena-rdh.jpg" />
+  <meta property="twitter:url" content="https://tinker.click{{ page.url }}" />
+  <meta property="twitter:title" content="{{ title or 'Tinker — The Bold Creative Playground & Visual Automation Engine' }}" />
+  <meta property="twitter:description" content="{{ description or 'Tinker is coming. Explore the next generation of visual flow engineering and reserve your priority early access.' }}" />
+  <meta property="twitter:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
 
-  <!-- JSON-LD Dentist / MedicalBusiness Schema -->
+  <!-- Structured Data: SoftwareApplication -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Dentist",
-    "name": "Sheena RDH - Registered Dental Hygienist",
-    "image": "https://sheenardh.ca/assets/sheena-rdh.jpg",
-    "@id": "https://sheenardh.ca",
-    "url": "https://sheenardh.ca",
-    "telephone": "+15550198822",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Durham Region",
-      "addressRegion": "ON",
-      "addressCountry": "CA"
+    "@type": "SoftwareApplication",
+    "name": "Tinker",
+    "operatingSystem": "Web, macOS, Windows, Linux",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 43.9591,
-      "longitude": -78.1652
-    },
-    "description": "Professional dental hygiene consulting, scaling, and personalized preventive home-care coaching by Sheena, Registered Dental Hygienist.",
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      "opens": "08:00",
-      "closes": "17:00"
-    }
+    "description": "Tinker is a next-generation visual automation canvas and creative playground that lets builders, developers, and creators assemble logic, pipelines, and workflows at the speed of thought.",
+    "url": "https://tinker.click"
   }
   </script>
 
-  <!-- JSON-LD FAQ Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is a Registered Dental Hygienist (RDH)?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A Registered Dental Hygienist (RDH) is a licensed preventive oral health professional who specializes in teeth cleaning (scaling and root planing), oral tissue assessments, radiography, and educating patients on customized home care routines."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How often should I have a professional cleaning?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "While the standard is every 6 months, intervals vary depending on individual oral health. Patients with active gingivitis, deep gum pockets, or a history of gum disease (periodontal maintenance) require professional scaling every 3 to 4 months to prevent disease recurrence."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Are electric toothbrushes better than manual ones?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, clinical research consistently shows that high-quality electric toothbrushes remove up to 21% more plaque and reduce gingivitis by 11% compared to manual toothbrushes, thanks to their oscillation/rotation or sonic technology and built-in timers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do my gums bleed when I floss?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Gums bleed because of inflammation (gingivitis), which is caused by plaque bacteria left along the gumline. While it is tempting to stop flossing when they bleed, the solution is to floss daily and gently. The bleeding and inflammation will usually resolve in 7 to 10 days."
-        }
-      }
-    ]
-  }
-  </script>
-
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Anton (Bold Display), Geist (Editorial Grotesque Body), JetBrains Mono (Tech Accent) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Alex+Brush&family=Great+Vibes&family=Parisienne&family=Sacramento&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Core Stylesheet -->
   <link rel="stylesheet" href="/assets/css/style.css">
 
-  <!-- Favicons: the lavender flower logo -->
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#FAF9F6" />
+  <!-- Favicons -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
 </head>

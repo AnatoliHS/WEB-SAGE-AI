@@ -1,391 +1,796 @@
 ---
 layout: default.njk
-title: Home
+title: Tinker — The Bold Creative Playground & Visual Automation Engine
+description: Tinker is the gateway to friction-free creative workflows and intelligent visual automations. Join the waitlist for private Alpha access at tinker.click.
 ---
 
-<!-- Hero Section -->
-<section id="hero" class="hero">
-    <div class="falling-teeth-container" id="falling-teeth-container"></div>
-    <div class="container">
-        <div class="hero-grid">
-            <div class="hero-animation-wrapper">
-                <div class="hero-content">
-                    <h1><span class="hero-name">Sheena Osborne</span> <span class="hero-badge">RDH</span></h1>
-                </div>
-            </div>
-        </div>
+<!-- ========================================================
+     1. HERO SECTION (BOLD EDITORIAL AESTHETIC)
+     ======================================================== -->
+<section id="hero" class="hero-section bold-hero">
+  <div class="ambient-glow glow-center"></div>
+  <div class="ambient-glow glow-top-right"></div>
+  
+  <div class="container hero-container">
+
+    <!-- Massive Bold Hero Wordmark Layout Anchor (Reserves exact space for dynamic shrinking brand) -->
+    <div class="hero-giant-wordmark-wrap" id="hero-wordmark-anchor">
+      <div class="hero-giant-wordmark hero-wordmark-ghost" aria-hidden="true">
+        TINKER <span class="hero-submark-click">CLICK</span>
+      </div>
     </div>
-</section>
 
-<!-- About / Bio Section -->
-<section id="about" class="section">
-    <div class="container">
-        <div class="bio-grid">
-            <div class="bio-image-wrapper">
-                <img src="/assets/sheena.jpg" alt="Sheena RDH"
-                    style="filter: saturate(0.9) contrast(1.05);">
-                <div class="bio-card-overlay">
-                    <h4>Gentle &amp; Evidence-Based Care</h4>
-                    <p>Dedicated to clinical excellence and patient empowerment.</p>
-                </div>
-            </div>
-            <div class="bio-content">
-                <h2 class="bio-main-title">Empowering You to Achieve <br><span class="title-faded">a Lifetime of Oral
-                        Health.</span></h2>
-                <p>Hello! I'm Sheena, a Registered Dental Hygienist (RDH) with over a decade of clinical experience. My
-                    professional mission goes beyond scaling teeth. I believe in building strong partnerships with my
-                    patients to address the root causes of dental disease.</p>
-                <p>During my years in clinical practice, I noticed that patients often want to improve their oral health
-                    but lack clear, personalized guidance on what to do once they leave the chair. That is why I created
-                    this digital portal: to translate your physical exam findings into practical, everyday solutions you
-                    can implement at home.</p>
-            </div>
+    <!-- Bold Architectural Line Divider (Outfit / Nakula style) -->
+    <div class="hero-architectural-line"></div>
+
+    <!-- Editorial Sub-Grid -->
+    <div class="hero-editorial-grid">
+      <!-- Col 1: Status & Discipline -->
+      <div class="editorial-col col-index">
+        <div class="editorial-meta-stack">
+          <span class="meta-label">DISCIPLINE</span>
+          <span class="meta-val">Visual Automation & Canvas</span>
+          <span class="meta-label">SPEED</span>
+          <span class="meta-val">4.2ms Edge Execution</span>
         </div>
+      </div>
+
+      <!-- Col 2: Punchy Bold Statement & Subtitle -->
+      <div class="editorial-col col-statement">
+        <h2 class="editorial-headline">
+          STOP WRESTLING BROKEN TOOLS.<br>
+          <span class="bold-glow-text">START TINKERING.</span>
+        </h2>
+        <p class="editorial-paragraph">
+          The frictionless visual workspace and automation engine for modern builders. Connect APIs, intelligent logic graphs, and dynamic data pipelines in minutes—without brittle spaghetti code.
+        </p>
+      </div>
+
+      <!-- Col 3: CTAs & Conversion -->
+      <div class="editorial-col col-actions">
+        <a href="#waitlist" class="btn-bold-primary">
+          <span>JOIN ALPHA WAITLIST</span>
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <a href="#reveal" class="btn-bold-secondary">
+          <span>EXPLORE ENGINE</span>
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M8 3v10M4 9l4 4 4-4"/>
+          </svg>
+        </a>
+        <div class="editorial-counter">
+          <div class="pulse-counter-dot"></div>
+          <span>4,200+ BUILDERS IN QUEUE</span>
+        </div>
+      </div>
     </div>
-</section>
 
-<!-- Patient Exam Portal Section -->
-<section id="portal" class="section portal-section">
-    <div class="container">
-        <div class="portal-head">
-            <h2 class="portal-title-main">Your Personal <span class="title-faded">Exam Portal.</span></h2>
-            <p class="portal-desc">At your last checkup, Sheena placed you in one of four categories based on your gum health and cavity risk. Choose yours to see your goals, and a daily routine you can tick off as you go.</p>
+    <!-- Hero Interactive Canvas / Application Preview Window -->
+    <div class="hero-mockup-wrapper">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <div class="window-controls">
+            <span class="ctrl-dot red"></span>
+            <span class="ctrl-dot yellow"></span>
+            <span class="ctrl-dot green"></span>
+          </div>
+          <div class="window-title">
+            <span class="title-icon">⚡</span>
+            <span>TINKER STUDIO // WORKSPACE PREVIEW</span>
+          </div>
+          <div class="window-status">
+            <span class="status-live-dot"></span>
+            <span>4.2MS EDGE ENGINE</span>
+          </div>
         </div>
 
-        <div class="portal-picker" data-level="{{ portal.categories[0].level }}">
-            <span class="portal-picker-label" id="portal-picker-label">Your category</span>
-            <button class="portal-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="portal-picker-list" aria-labelledby="portal-picker-label portal-picker-value">
-                <span class="portal-picker-num" id="portal-picker-num">01</span>
-                <span class="portal-picker-text">
-                    <span class="portal-picker-value" id="portal-picker-value">{{ portal.categories[0].name }}</span>
-                    <span class="portal-risk portal-picker-risk" id="portal-picker-risk">{{ portal.categories[0].risk }}</span>
-                </span>
-                <span class="portal-picker-chevron" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
+        <div class="mockup-canvas">
+          <div class="canvas-grid-pattern"></div>
+          
+          <div class="canvas-nodes-container">
+            <!-- Node 1 -->
+            <button type="button" class="flow-node active" data-node-id="node-input" aria-label="Inspect webhook trigger node">
+              <div class="node-header">
+                <span class="node-pill">TRIGGER</span>
+                <span class="node-indicator"></span>
+              </div>
+              <div class="node-body">
+                <span class="node-icon">⚡</span>
+                <div class="node-info">
+                  <strong>Stripe Webhook</strong>
+                  <span>POST /order.created</span>
+                </div>
+              </div>
+              <div class="node-port port-right"></div>
             </button>
-            <ul class="portal-picker-list" id="portal-picker-list" role="listbox" aria-labelledby="portal-picker-label" tabindex="-1">
-                {% for c in portal.categories %}
-                <li class="portal-picker-option" role="option" id="portal-option-{{ c.n }}" data-value="{{ c.n }}" data-level="{{ c.level }}" data-risk="{{ c.risk }}" data-name="{{ c.name }}" aria-selected="{{ 'true' if loop.first else 'false' }}" style="--i: {{ loop.index0 }}">
-                    <span class="portal-picker-num">0{{ c.n }}</span>
-                    <span class="portal-picker-text">
-                        <span class="portal-picker-name">{{ c.name }}</span>
-                        <span class="portal-risk portal-risk--{{ c.level }}">{{ c.risk }}</span>
-                    </span>
-                    <svg class="portal-picker-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
 
-        <div class="portal-tabs" role="tablist" aria-label="Exam categories">
-            {% for c in portal.categories %}
-            <button class="portal-tab{% if loop.first %} is-active{% endif %}" type="button" role="tab" id="portal-tab-{{ c.n }}" aria-controls="portal-pane-{{ c.n }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}" data-portal-tab="{{ c.n }}">
-                <span class="portal-tab-name"><b>0{{ c.n }}</b>{{ c.short }}</span>
-                <span class="portal-risk portal-risk--{{ c.level }}">{{ c.risk }}</span>
+            <!-- Connector 1 -->
+            <div class="flow-wire wire-1">
+              <span class="wire-pulse"></span>
+            </div>
+
+            <!-- Node 2 -->
+            <button type="button" class="flow-node" data-node-id="node-tinker" aria-label="Inspect Tinker core transformer node">
+              <div class="node-header">
+                <span class="node-pill pill-purple">ENGINE</span>
+                <span class="node-indicator"></span>
+              </div>
+              <div class="node-body">
+                <span class="node-icon">🧩</span>
+                <div class="node-info">
+                  <strong>Tinker Graph</strong>
+                  <span>Transform & Validate</span>
+                </div>
+              </div>
+              <div class="node-port port-left"></div>
+              <div class="node-port port-right"></div>
             </button>
-            {% endfor %}
-        </div>
 
-        <div class="portal-body">
-            <div class="portal-media">
-                {% for c in portal.categories %}
-                <video class="portal-video{% if loop.first %} is-active{% endif %}" data-portal-video="{{ c.n }}" loop muted playsinline webkit-playsinline preload="{{ 'auto' if loop.first else 'none' }}" poster="{{ c.poster }}" aria-hidden="true">
-                    <source src="{{ c.video }}" type="video/mp4">
-                </video>
-                {% endfor %}
+            <!-- Connector 2 -->
+            <div class="flow-wire wire-2">
+              <span class="wire-pulse"></span>
             </div>
 
-            <div class="portal-panes">
-                {% for c in portal.categories %}
-                <div class="portal-pane{% if loop.first %} is-active{% endif %}" role="tabpanel" id="portal-pane-{{ c.n }}" aria-labelledby="portal-tab-{{ c.n }}" data-category="{{ c.n }}"{% if not loop.first %} hidden{% endif %}>
-                    <p class="portal-pane-label">Category {{ c.n }} · {{ c.name }}</p>
-                    <blockquote class="portal-assess">"{{ c.assessment }}"<span class="portal-sig">Sheena</span></blockquote>
-                    <div class="portal-lists">
-                        <div class="portal-goals">
-                            <h3 class="portal-list-title">Your goals</h3>
-                            <ul>
-                                {% for g in c.goals %}<li>{{ g }}</li>{% endfor %}
-                            </ul>
-                        </div>
-                        <div class="portal-routine">
-                            <div class="portal-routine-head">
-                                <h3 class="portal-list-title">Today's routine</h3>
-                                <span class="portal-progress"><span aria-hidden="true"><i></i></span><em class="portal-progress-count">0 of {{ c.routine | length }}</em></span>
-                            </div>
-                            <ul>
-                                {% for r in c.routine %}
-                                <li>
-                                    <button class="portal-check" type="button" role="checkbox" aria-checked="false" data-step="{{ loop.index0 }}">
-                                        <span class="portal-check-box" aria-hidden="true"></span>
-                                        <span class="portal-check-text">{{ r }}</span>
-                                    </button>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            <p class="portal-routine-done" aria-live="polite"></p>
-                        </div>
-                    </div>
+            <!-- Node 3 -->
+            <button type="button" class="flow-node" data-node-id="node-ai" aria-label="Inspect AI synthesis node">
+              <div class="node-header">
+                <span class="node-pill pill-cyan">SYNTHESIS</span>
+                <span class="node-indicator"></span>
+              </div>
+              <div class="node-body">
+                <span class="node-icon">✨</span>
+                <div class="node-info">
+                  <strong>AI Smart Router</strong>
+                  <span>Classify & Enrich</span>
                 </div>
-                {% endfor %}
+              </div>
+              <div class="node-port port-left"></div>
+              <div class="node-port port-right"></div>
+            </button>
+
+            <!-- Connector 3 -->
+            <div class="flow-wire wire-3">
+              <span class="wire-pulse"></span>
             </div>
+
+            <!-- Node 4 -->
+            <button type="button" class="flow-node" data-node-id="node-output" aria-label="Inspect Edge deploy node">
+              <div class="node-header">
+                <span class="node-pill pill-green">DEPLOY</span>
+                <span class="node-indicator"></span>
+              </div>
+              <div class="node-body">
+                <span class="node-icon">🚀</span>
+                <div class="node-info">
+                  <strong>Global Edge</strong>
+                  <span>tinker.click/app</span>
+                </div>
+              </div>
+              <div class="node-port port-left"></div>
+            </button>
+          </div>
+
+          <!-- Bottom Console Ribbon -->
+          <div class="mockup-terminal">
+            <span class="terminal-prompt">$ tinker --status:</span>
+            <span class="terminal-text" id="hero-terminal-output">Trigger: User input received [Event: webhook.payload]</span>
+            <span class="terminal-hint">(Click any node above to inspect execution)</span>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Know Your Smile: interactive dental chart -->
-<section id="smile" class="section smile-section">
-    <div class="container">
-        <div class="smile-grid">
-            <div class="smile-intro">
-                <h2 class="section-title-reveal smile-title">Know Your <br><span class="title-faded">Smile.</span></h2>
-                <p class="smile-desc">Hygienists chart all 32 adult teeth by number. Select any tooth to see what it does and how to keep it clean at home.</p>
-            </div>
-
-            <div class="smile-detail">
-                {% set first = toothChart.types[6] %}
-                <div class="smile-info" aria-live="polite">
-                    <div class="smile-info-top">
-                        <span class="smile-info-num" id="smile-num">16</span>
-                        <div class="smile-info-name">
-                            <p class="smile-info-label" id="smile-where">{{ toothChart.quadrants[1] }}</p>
-                            <h3 class="smile-info-title" id="smile-name">{{ first.name }}</h3>
-                        </div>
-                    </div>
-                    <p class="smile-info-role" id="smile-role">{{ first.role }}</p>
-                    <div class="smile-info-tip">
-                        <span class="smile-info-label">Care tip</span>
-                        <p id="smile-tip">{{ first.tip }}</p>
-                    </div>
-                </div>
-
-                <button type="button" class="pill-btn" data-nav-open="contact">
-                    Ask Sheena about a tooth
-                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </button>
-            </div>
-
-            <div class="smile-chart">
-                <svg viewBox="-215 -215 430 430" role="group" aria-label="Adult dental chart. Select a tooth to learn about it.">
-                    <text class="smile-chart-label" x="0" y="-60">Upper</text>
-                    <text class="smile-chart-label" x="0" y="72">Lower</text>
-                    <text class="smile-chart-side" x="-205" y="4">R</text>
-                    <text class="smile-chart-side" x="205" y="4">L</text>
-                    <text class="smile-chart-num" id="smile-chart-num" x="0" y="20">16</text>
-                    {% for t in toothChart.teeth %}
-                    <g class="smile-tooth{% if t.n == 16 %} is-selected{% endif %}" data-tooth="{{ t.n }}" style="--k: {{ loop.index0 }}" transform="{{ t.transform }}" tabindex="0" role="button" aria-label="Tooth {{ t.n }}, {{ t.label }}" aria-pressed="{{ 'true' if t.n == 16 else 'false' }}">
-                        <rect x="{{ t.x }}" y="{{ t.y }}" width="{{ t.w }}" height="{{ t.d }}" rx="{{ t.r }}"/>
-                        {% if t.groove %}<path d="{{ t.groove }}"/>{% endif %}
-                    </g>
-                    {% endfor %}
-                </svg>
-                <p class="smile-chart-note">Shown as if you're facing the patient, so their right side is on your left.</p>
-            </div>
-        </div>
+<!-- ========================================================
+     BOLD TICKER / MARQUEE STRIP (NAKULA & OUTFIT STYLE)
+     ======================================================== -->
+<div class="marquee-strip-wrap" aria-hidden="true">
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span>✦ SPATIAL VISUAL CANVAS</span>
+      <span>✦ 150+ UNIVERSAL CONNECTORS</span>
+      <span>✦ 4.2MS EDGE COMPILATION</span>
+      <span>✦ MULTIPLAYER CO-TINKERING</span>
+      <span>✦ ZERO-LOCKIN JSON EXPORT</span>
+      <span>✦ LOCAL-FIRST ENGINE</span>
+      <span>✦ ROLLING ALPHA WAITLIST</span>
+      <span>✦ PRE-ORDER PIONEER TIERS</span>
+      <!-- Duplicate for seamless infinite loop -->
+      <span>✦ SPATIAL VISUAL CANVAS</span>
+      <span>✦ 150+ UNIVERSAL CONNECTORS</span>
+      <span>✦ 4.2MS EDGE COMPILATION</span>
+      <span>✦ MULTIPLAYER CO-TINKERING</span>
+      <span>✦ ZERO-LOCKIN JSON EXPORT</span>
+      <span>✦ LOCAL-FIRST ENGINE</span>
+      <span>✦ ROLLING ALPHA WAITLIST</span>
+      <span>✦ PRE-ORDER PIONEER TIERS</span>
     </div>
-    <script type="application/json" id="tooth-info">{{ {"quadrants": toothChart.quadrants, "types": toothChart.types} | dump | safe }}</script>
+  </div>
+</div>
+
+<!-- ========================================================
+     2. THE PROBLEM STATEMENT
+     ======================================================== -->
+<section id="problem" class="section problem-section">
+  <div class="container">
+    <div class="section-intro">
+      <h2 class="section-title-bold">
+        BUILDING WORKFLOWS SHOULDN'T FEEL LIKE<br>
+        <span class="text-accent-stroke">UNTANGLING A NEST OF FRAGILE CABLES.</span>
+      </h2>
+      <p class="section-desc">
+        Today's software ecosystem promises speed, but makers spend 70% of their time stitching together fragmented dashboards, debugging silent API timeouts, and rewriting glue boilerplate.
+      </p>
+    </div>
+
+    <div class="problem-grid">
+      <!-- Problem Card 1 -->
+      <div class="problem-card">
+        <div class="problem-header-row">
+          <span class="problem-index">01</span>
+          <div class="problem-icon-wrap red-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+              <line x1="6" y1="6" x2="6.01" y2="6"/>
+              <line x1="6" y1="18" x2="6.01" y2="18"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="problem-title">THE 12-TOOL SAAS TRAP</h3>
+        <p class="problem-text">
+          You shouldn't need a separate subscription for forms, database hooks, visual logic, and webhook cron jobs. Context switching between 12 distinct logins destroys creative momentum.
+        </p>
+        <div class="problem-quote">
+          "I spent 6 hours configuring OAuth just to send a customized customer notification."
+        </div>
+      </div>
+
+      <!-- Problem Card 2 -->
+      <div class="problem-card">
+        <div class="problem-header-row">
+          <span class="problem-index">02</span>
+          <div class="problem-icon-wrap amber-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="problem-title">FRAGILE SPAGHETTI PLUMBING</h3>
+        <p class="problem-text">
+          Traditional automation tools hide logic behind labyrinthine dropdowns. When an API payload changes without notice, downstream processes fail silently with opaque error codes.
+        </p>
+        <div class="problem-quote">
+          "A silent payload shift brought down our lead capture for 3 days before anyone noticed."
+        </div>
+      </div>
+
+      <!-- Problem Card 3 -->
+      <div class="problem-card">
+        <div class="problem-header-row">
+          <span class="problem-index">03</span>
+          <div class="problem-icon-wrap purple-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+          </div>
+        </div>
+        <h3 class="problem-title">RIGID WALLS & HEAVY LOCK-IN</h3>
+        <p class="problem-text">
+          Most "no-code" platforms lock you in with proprietary schemas. As soon as your idea needs custom code or high-throughput scaling, you hit an immovable enterprise paywall.
+        </p>
+        <div class="problem-quote">
+          "Either it’s too toy-like for real engineering, or so complex it requires dedicated certified consultants."
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparative Matrix Banner -->
+    <div class="comparison-banner">
+      <div class="comp-col comp-old">
+        <h4>THE FRAGILE PAST</h4>
+        <ul>
+          <li>❌ 10+ tabs open across multiple fragile services</li>
+          <li>❌ Opaque debugging and silent failure states</li>
+          <li>❌ Slow execution with multi-second cloud delays</li>
+          <li>❌ Locked into expensive proprietary ecosystems</li>
+        </ul>
+      </div>
+      <div class="comp-vs">
+        <span>VS</span>
+      </div>
+      <div class="comp-col comp-tinker">
+        <h4>THE TINKER STANDARD</h4>
+        <ul>
+          <li>✅ One fluid, spatial visual canvas for everything</li>
+          <li>✅ Real-time visual node execution & deterministic trails</li>
+          <li>✅ Native 4.2ms edge compilation with zero runtime bloat</li>
+          <li>✅ Fully exportable, local-first data architecture</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Dental Hygiene Topics Section (Evidence-Based Advice) -->
-<section id="topics" class="section advice-section">
-    <div class="container">
-        <div class="advice-head">
-            <h2 class="advice-main-title">
-                Evidence-Based <br>
-                <span class="title-faded">Dental Advice.</span>
-            </h2>
-            <p class="advice-head-desc">Clear, research-backed answers to the questions patients ask Sheena most.</p>
-        </div>
-
-        <div class="advice-windows">
-            {% for a in articles %}
-            <article class="advice-window{% if loop.first %} is-open{% endif %}" style="--k: {{ loop.index0 }}; --h: {{ a.height }}px; --off: {{ a.offset }}px" tabindex="0" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-label="{{ a.title }}">
-                <img src="{{ a.image }}" alt="" loading="lazy">
-                <span class="advice-window-num" aria-hidden="true">0{{ loop.index }}</span>
-                <span class="advice-window-side" aria-hidden="true">{{ a.short }}</span>
-                <div class="advice-window-body">
-                    <p class="advice-meta"><span class="advice-topic">{{ a.topic }}</span><time datetime="{{ a.date }}">{{ a.dateLabel }}</time></p>
-                    <h3 class="advice-window-title">{{ a.title }}</h3>
-                    <p class="advice-window-excerpt">{{ a.excerpt }}</p>
-                    <ul class="advice-window-keys">
-                        {% for p in a.points %}<li>{{ p[0] }}</li>{% endfor %}
-                    </ul>
-                    <button type="button" class="pill-btn advice-read-btn" data-article="{{ loop.index0 }}">
-                        Read article
-                        <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                    </button>
-                </div>
-            </article>
-            {% endfor %}
-        </div>
-
-        {% for a in articles %}
-        <dialog class="advice-reader" id="advice-reader-{{ loop.index0 }}" aria-labelledby="advice-reader-title-{{ loop.index0 }}">
-            <div class="advice-reader-img">
-                <img src="{{ a.image }}" alt="" loading="lazy">
-                <button type="button" class="advice-reader-close" aria-label="Close article">
-                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-            <div class="advice-reader-body">
-                <p class="advice-meta"><span class="advice-topic">{{ a.topic }}</span><time datetime="{{ a.date }}">{{ a.dateLabel }}</time></p>
-                <h3 class="advice-reader-title" id="advice-reader-title-{{ loop.index0 }}">{{ a.title }}</h3>
-                <p class="advice-reader-excerpt">{{ a.excerpt }}</p>
-                <p class="advice-reader-lead">{{ a.lead }}</p>
-                <ul class="advice-reader-points">
-                    {% for p in a.points %}<li><strong>{{ p[0] }}.</strong> {{ p[1] }}</li>{% endfor %}
-                </ul>
-                <button type="button" class="pill-btn" data-nav-open="contact" data-close-reader>
-                    Ask Sheena about this
-                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </button>
-            </div>
-        </dialog>
-        {% endfor %}
+<!-- ========================================================
+     3. PRODUCT REVEAL & CORE BENEFITS
+     ======================================================== -->
+<section id="reveal" class="section reveal-section">
+  <div class="ambient-glow glow-left"></div>
+  <div class="container">
+    <div class="section-intro">
+      <h2 class="section-title-bold">
+        MEET TINKER.<br>
+        <span class="bold-glow-text">THE CREATIVE ENGINE THAT SETS YOU FREE.</span>
+      </h2>
+      <p class="section-desc">
+        Tinker dissolves the friction between your vision and execution. It combines the tactile simplicity of building blocks with the raw horsepower of modern cloud runtimes.
+      </p>
     </div>
+
+    <div class="benefits-grid">
+      <!-- Benefit 1 -->
+      <div class="benefit-card">
+        <div class="benefit-visual visual-canvas">
+          <div class="mini-canvas-node">
+            <span class="node-mini-tag">SPATIAL CANVAS</span>
+            <span class="node-mini-wire"></span>
+            <span class="node-mini-tag active-tag">ZERO LAG</span>
+          </div>
+        </div>
+        <div class="benefit-content">
+          <div class="benefit-num">01</div>
+          <h3 class="benefit-title">SPATIAL CLICK-AND-SNAP CANVAS</h3>
+          <p class="benefit-text">
+            Drag, snap, wire, and branch without limits. Tinker’s infinite spatial canvas gives you the complete aerial view of your data, logic, and external hooks in a single delightful interface.
+          </p>
+          <ul class="benefit-list">
+            <li>Auto-aligning magnetic connectors that never spaghetti</li>
+            <li>Instant type-safety and real-time visual validation</li>
+            <li>Sub-millisecond pan and zoom responsiveness at 120 FPS</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Benefit 2 -->
+      <div class="benefit-card reverse">
+        <div class="benefit-visual visual-engine">
+          <div class="code-preview-box">
+            <div class="code-header">
+              <span class="code-lang">TINKER MICRO-ENGINE // JS + PYTHON</span>
+              <span class="code-badge">⚡ 4.2MS</span>
+            </div>
+            <pre><code><span class="c-key">transform</span> (payload) => {
+  <span class="c-prop">const</span> { order, user } = payload;
+  <span class="c-ret">return</span> {
+    id: order.id,
+    notify: user.isAlphaPioneer,
+    hash: crypto.randomUUID()
+  };
+};</code></pre>
+          </div>
+        </div>
+        <div class="benefit-content">
+          <div class="benefit-num">02</div>
+          <h3 class="benefit-title">CODE WHEN YOU WANT, BLOCKS WHEN YOU DON'T</h3>
+          <p class="benefit-text">
+            Never hit a ceiling. When visual components do the trick, snap them in. When you need custom regex, complex formulas, or custom SDK calls, drop in inline JS/Python without breaking your flow.
+          </p>
+          <ul class="benefit-list">
+            <li>Zero cold-start micro-sandboxes with isolated state</li>
+            <li>First-class package ecosystem integration (npm/PyPI)</li>
+            <li>Bi-directional code and block synchronicity</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Benefit 3 -->
+      <div class="benefit-card">
+        <div class="benefit-visual visual-deploy">
+          <div class="edge-deploy-visual">
+            <div class="globe-pulse"></div>
+            <div class="edge-pill">
+              <span class="live-dot"></span>
+              <span>LIVE EDGE: TINKER.CLICK/GATEWAY</span>
+            </div>
+          </div>
+        </div>
+        <div class="benefit-content">
+          <div class="benefit-num">03</div>
+          <h3 class="benefit-title">ONE-CLICK GLOBAL EDGE DEPLOYMENT</h3>
+          <p class="benefit-text">
+            No provisioning servers, configuring SSL certificates, or maintaining Docker containers. Hit publish and Tinker instantly broadcasts your workflow to 300+ edge locations worldwide.
+          </p>
+          <ul class="benefit-list">
+            <li>Automatic CDN routing & ultra-low latency execution</li>
+            <li>Built-in rate limiting and anti-DDoS shielding</li>
+            <li>Instant atomic rollback to any historical version snapshot</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Recommended Products Section -->
-<section id="products" class="section products-section">
-    <div class="container">
-        <div class="shelf-top">
-            <div class="shelf-head">
-                <h2 class="products-main-title">Recommended <br><span class="title-faded">Oral Care.</span></h2>
-                <p class="shelf-intro">Products Sheena recommends to her own patients, each with her note on who it helps.</p>
-            </div>
-            <div class="shelf-filters" role="group" aria-label="Filter products">
-                {% for f in products.filters %}
-                <button type="button" data-shelf-filter="{{ f.id }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ f.label }}</button>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="shelf-track" id="shelf-track">
-            {% for p in products.items %}
-            <article class="shelf-card" data-group="{{ p.group }}">
-                <div class="shelf-img">
-                    <img src="{{ p.image }}" alt="{{ p.name }}" width="1024" height="1024" loading="lazy">
-                    <div class="shelf-note">
-                        <p>"{{ p.note }}"</p>
-                        <span class="shelf-sig">Sheena</span>
-                    </div>
-                </div>
-                <div class="shelf-body">
-                    <span class="shelf-cat">{{ p.category }}</span>
-                    <h3 class="shelf-name">{{ p.name }}</h3>
-                    <p class="shelf-text">{{ p.description }}</p>
-                    <div class="shelf-row">
-                        <a class="shelf-buy" href="{{ p.url }}" target="_blank" rel="noopener">View on Amazon
-                            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </a>
-                        <button class="shelf-note-btn" type="button" aria-expanded="false">Sheena's note</button>
-                    </div>
-                </div>
-            </article>
-            {% endfor %}
-        </div>
-
-        <div class="shelf-bottom">
-            <div class="shelf-bar" aria-hidden="true"><i></i></div>
-            <div class="shelf-arrows">
-                <button class="shelf-arrow" type="button" data-shelf-dir="-1" aria-label="Scroll products back">
-                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="shelf-arrow" type="button" data-shelf-dir="1" aria-label="Scroll products forward">
-                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-            </div>
-        </div>
+<!-- ========================================================
+     4. FEATURE DEEP-DIVE (BENTO GRID & TABS)
+     ======================================================== -->
+<section id="features" class="section features-section">
+  <div class="container">
+    <div class="section-intro">
+      <h2 class="section-title-bold">
+        ENGINEERED FOR SPEED.<br>
+        <span class="text-accent-stroke">ARCHITECTED FOR MASTER BUILDERS.</span>
+      </h2>
+      <p class="section-desc">
+        Explore the foundational pillars that make Tinker the most responsive, capable platform you will ever use.
+      </p>
     </div>
+
+    <!-- Feature Navigation Tabs -->
+    <div class="feature-tabs-wrap">
+      <div class="feature-tab-list" role="tablist" aria-label="Feature deep-dive tabs">
+        <button type="button" class="feature-tab-btn active" role="tab" aria-selected="true" data-feature-tab="tab-canvas">
+          <span class="tab-icon">🎨</span>
+          <span>VISUAL CANVAS</span>
+        </button>
+        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-connectors">
+          <span class="tab-icon">🔌</span>
+          <span>UNIVERSAL CONNECTORS</span>
+        </button>
+        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-ai">
+          <span class="tab-icon">🤖</span>
+          <span>AI & LOGIC ENGINES</span>
+        </button>
+        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-collab">
+          <span class="tab-icon">👥</span>
+          <span>MULTIPLAYER SYNC</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Feature Panels -->
+    <div class="feature-panels-container">
+      <!-- Panel 1: Canvas -->
+      <div class="feature-panel active" data-feature-panel="tab-canvas">
+        <div class="bento-grid">
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">INFINITE STUDIO</div>
+            <h3>Fluid Pan & Zoom with 120 FPS Rendering</h3>
+            <p>Our custom WebGL canvas engine handles 10,000+ simultaneous nodes without dropping a single frame. Zoom out for an architecture overview or zoom in for atomic logic tweaks.</p>
+            <div class="bento-canvas-preview">
+              <div class="cluster-mock">
+                <span class="cluster-pill">Auth</span>
+                <span class="cluster-line"></span>
+                <span class="cluster-pill">Stripe</span>
+                <span class="cluster-line"></span>
+                <span class="cluster-pill">Email</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">MAGNETIC ROUTING</div>
+            <h3>Smart Snapping</h3>
+            <p>Wires automatically route around obstacles. No messy overlapping noodles, ever.</p>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">LOCAL-FIRST</div>
+            <h3>Offline Resilience</h3>
+            <p>Keep tinkering on airplanes or spotty WiFi. Changes sync cleanly when reconnected.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Connectors -->
+      <div class="feature-panel" data-feature-panel="tab-connectors" hidden>
+        <div class="bento-grid">
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">UNIVERSAL ECOSYSTEM</div>
+            <h3>150+ Plug-and-Play Connectors</h3>
+            <p>Connect natively to Stripe, GitHub, Supabase, PostgreSQL, Airtable, Discord, Slack, Resend, and any REST or GraphQL endpoint with automatic auth token lifecycle management.</p>
+            <div class="connectors-icon-row">
+              <span class="connector-tag">Stripe</span>
+              <span class="connector-tag">GitHub</span>
+              <span class="connector-tag">Supabase</span>
+              <span class="connector-tag">OpenAI</span>
+              <span class="connector-tag">Postgres</span>
+              <span class="connector-tag">GraphQL</span>
+              <span class="connector-tag">+140 more</span>
+            </div>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">ZERO-CONFIG</div>
+            <h3>Webhook Ingestion</h3>
+            <p>Instantly generate unique HTTPS listener endpoints that receive and inspect live payloads.</p>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">TYPE SAFETY</div>
+            <h3>Auto-Schema Discovery</h3>
+            <p>Tinker inspects upstream responses and autocompletes fields downstream automatically.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: AI & Logic Engines -->
+      <div class="feature-panel" data-feature-panel="tab-ai" hidden>
+        <div class="bento-grid">
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">INTELLIGENT AUTOMATION</div>
+            <h3>Native Multi-Model AI Orchestration</h3>
+            <p>Chain multimodal models directly inside your workflows. Extract structured JSON, generate contextual graphics, summarize transcripts, and route support tickets in milliseconds.</p>
+            <div class="ai-flow-strip">
+              <span class="ai-tag">Raw Input</span>
+              <span class="ai-arrow">→</span>
+              <span class="ai-tag ai-pulse">LLM Semantic Parser</span>
+              <span class="ai-arrow">→</span>
+              <span class="ai-tag">Structured Output</span>
+            </div>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">DETERMINISTIC</div>
+            <h3>Formula Engines</h3>
+            <p>Spreadsheet-simple expressions or full TypeScript power right inside node inputs.</p>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">OBSERVABILITY</div>
+            <h3>Step-by-Step Replay</h3>
+            <p>Rewind any production execution step-by-step with zero-downtime mock playback.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Multiplayer Sync -->
+      <div class="feature-panel" data-feature-panel="tab-collab" hidden>
+        <div class="bento-grid">
+          <div class="bento-card bento-wide">
+            <div class="bento-badge">REAL-TIME CANVAS</div>
+            <h3>Collaborative Co-Tinkering</h3>
+            <p>Pair program or design systems together in real time. See teammates' colored cursors, inspect the same node properties, and leave anchored comments right on canvas coordinates.</p>
+            <div class="collab-cursor-demo">
+              <span class="cursor-tag cursor-blue">Alex (Engineering)</span>
+              <span class="cursor-tag cursor-purple">Jordan (Design)</span>
+            </div>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">VERSION HISTORY</div>
+            <h3>Branching & Merging</h3>
+            <p>Branch out experimental workflows and merge them cleanly with automated conflict resolution.</p>
+          </div>
+          <div class="bento-card">
+            <div class="bento-badge">ACCESS CONTROL</div>
+            <h3>Granular Permissions</h3>
+            <p>Role-based access controls for enterprise and studio teams with audit-ready log streams.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- FAQ Section (Fly.io Notepad & Card Layout) -->
+<!-- ========================================================
+     5. PRICING OR PRE-ORDER TIERS
+     ======================================================== -->
+<section id="pricing" class="section pricing-section">
+  <div class="ambient-glow glow-center"></div>
+  <div class="container">
+    <div class="section-intro">
+      <h2 class="section-title-bold">
+        RESERVE YOUR FOUNDER SEAT.<br>
+        <span class="bold-glow-text">LOCK IN PIONEER RATES FOR LIFE.</span>
+      </h2>
+      <p class="section-desc">
+        Join our private Alpha program today. Early pre-order backers receive prioritized invite queuing, exclusive founder Discord access, and grandfathered lifetime rates.
+      </p>
+
+      <!-- Billing Toggle -->
+      <div class="pricing-toggle-wrap">
+        <span class="toggle-label">MONTHLY</span>
+        <label class="switch" for="billing-toggle">
+          <input type="checkbox" id="billing-toggle" checked aria-label="Toggle annual billing discount">
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label">
+          ANNUAL PIONEER
+          <span class="discount-pill">SAVE 25% + LIFETIME LOCK</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Tier 1: Waitlist Pioneer -->
+      <div class="pricing-card tier-pioneer">
+        <div class="card-badge">COMMUNITY TIER</div>
+        <h3 class="tier-name">ALPHA PIONEER</h3>
+        <p class="tier-desc">Ideal for hobbyists, independent hackers, and curious builders exploring Tinker.</p>
+        
+        <div class="tier-price">
+          <span class="currency">$</span>
+          <span class="tier-price-amount" data-annual="0" data-monthly="0">0</span>
+          <span class="tier-price-period">/free during Beta</span>
+        </div>
+
+        <ul class="tier-features">
+          <li><span class="check">✓</span> Rolling waitlist queue access</li>
+          <li><span class="check">✓</span> Up to 3 active visual canvases</li>
+          <li><span class="check">✓</span> 10,000 edge event executions/mo</li>
+          <li><span class="check">✓</span> Standard community templates</li>
+          <li><span class="check">✓</span> Tinker Discord community access</li>
+          <li class="muted-feat"><span class="cross">✕</span> Priority Batch 1 access</li>
+          <li class="muted-feat"><span class="cross">✕</span> Dedicated founder Slack</li>
+        </ul>
+
+        <div class="card-action">
+          <button type="button" class="btn-tier-select" data-select-tier="Alpha Pioneer">
+            JOIN FREE WAITLIST
+          </button>
+        </div>
+      </div>
+
+      <!-- Tier 2: Pro Early-Bird (Highlighted) -->
+      <div class="pricing-card tier-pro featured-card">
+        <div class="featured-badge">MOST POPULAR • PRIORITY BATCH #1</div>
+        <div class="card-badge">FOUNDER PRE-ORDER</div>
+        <h3 class="tier-name">TINKER PRO</h3>
+        <p class="tier-desc">For power builders, freelance creators, and technical founders shipping high-impact tools.</p>
+        
+        <div class="tier-price">
+          <span class="currency">$</span>
+          <span class="tier-price-amount" data-annual="15" data-monthly="19">15</span>
+          <span class="tier-price-period">/month, billed annually</span>
+        </div>
+
+        <ul class="tier-features">
+          <li><span class="check check-highlight">✓</span> <strong>Guaranteed Batch #1 Alpha Invite</strong></li>
+          <li><span class="check">✓</span> <strong>Unlimited</strong> visual canvases & flows</li>
+          <li><span class="check">✓</span> 500,000 edge event executions/mo</li>
+          <li><span class="check">✓</span> Custom domains & branded endpoints</li>
+          <li><span class="check">✓</span> Full AI engine integration & credits</li>
+          <li><span class="check">✓</span> Direct founder private Slack channel</li>
+          <li><span class="check">✓</span> <strong>Grandfathered lifetime 40% discount</strong></li>
+        </ul>
+
+        <div class="card-action">
+          <button type="button" class="btn-primary btn-tier-select" data-select-tier="Tinker Pro Pre-Order">
+            RESERVE PRO PRE-ORDER
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+          </button>
+        </div>
+        <p class="preorder-guarantee">🛡️ 100% refundable prior to account activation.</p>
+      </div>
+
+      <!-- Tier 3: Studio & Teams -->
+      <div class="pricing-card tier-studio">
+        <div class="card-badge">TEAM & STUDIO</div>
+        <h3 class="tier-name">STUDIO TEAM</h3>
+        <p class="tier-desc">For creative agencies, product teams, and studios building unified automation suites.</p>
+        
+        <div class="tier-price">
+          <span class="currency">$</span>
+          <span class="tier-price-amount" data-annual="39" data-monthly="49">39</span>
+          <span class="tier-price-period">/month, billed annually</span>
+        </div>
+
+        <ul class="tier-features">
+          <li><span class="check">✓</span> Everything in Tinker Pro</li>
+          <li><span class="check">✓</span> 5 included collaborator team seats</li>
+          <li><span class="check">✓</span> Real-time multiplayer co-tinkering</li>
+          <li><span class="check">✓</span> 2,500,000 edge event executions/mo</li>
+          <li><span class="check">✓</span> Shared organization component libraries</li>
+          <li><span class="check">✓</span> Audit log history & role permissions</li>
+          <li><span class="check">✓</span> 1-on-1 architecture onboarding call</li>
+        </ul>
+
+        <div class="card-action">
+          <button type="button" class="btn-tier-select" data-select-tier="Studio Pre-Order">
+            RESERVE STUDIO ACCESS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     6. FAQ (OVERCOMING OBJECTIONS)
+     ======================================================== -->
 <section id="faq" class="section faq-section">
-    <div class="container">
-        <div class="faq-fly-layout">
-            <!-- Left Column: Gradient Banner Card -->
-            <div class="faq-banner-card">
-                <h2 class="faq-banner-title">
-                    Frequently Asked <br>
-                    <span class="title-faded">Questions.</span>
-                </h2>
-                <p class="faq-banner-desc">
-                    Discover clinical explanations and evidence behind common dental hygiene practices. Empowering you to make informed decisions for your smile.
-                </p>
-                <a href="#contact" class="pill-btn" data-nav-open="contact">
-                    Ask Sheena
-                    <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </a>
-            </div>
-
-            <!-- Right Column: Lined Notepad Paper Card -->
-            <div class="faq-notepad-card">
-                <div class="notepad-margin-line" aria-hidden="true"></div>
-                <p class="notepad-heading" aria-hidden="true">Notes from Sheena</p>
-                <div class="notepad-accordion">
-
-                    <!-- FAQ Item 1 -->
-                    <details class="notepad-disclosure">
-                        <summary class="notepad-summary">
-                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
-                            <span class="notepad-question">Is charcoal toothpaste safe for daily use?</span>
-                            <span class="notepad-toggle" aria-hidden="true"></span>
-                        </summary>
-                        <div class="notepad-answer">
-                            <p>Clinical dental professionals do <strong>not</strong> recommend charcoal toothpaste for daily use. While it may temporarily scrub away surface stains, activated charcoal is highly abrasive. Over time, it acts like sandpaper, wearing down your protective outer enamel. This exposes yellow dentin underneath, making teeth look darker and significantly more sensitive.</p>
-                        </div>
-                    </details>
-
-                    <!-- FAQ Item 2 -->
-                    <details class="notepad-disclosure">
-                        <summary class="notepad-summary">
-                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
-                            <span class="notepad-question">Why do teeth feel sensitive after a cleaning?</span>
-                            <span class="notepad-toggle" aria-hidden="true"></span>
-                        </summary>
-                        <div class="notepad-answer">
-                            <p>Calculus (tartar) acts like a thick, insulating blanket over exposed tooth roots. When Sheena scales off this buildup, the underlying root surface is exposed to temperature changes in the mouth for the first time in months. The minor sensitivity is normal and usually resolves within a week. Using a sensitivity toothpaste helps speed recovery.</p>
-                        </div>
-                    </details>
-
-                    <!-- FAQ Item 3 -->
-                    <details class="notepad-disclosure">
-                        <summary class="notepad-summary">
-                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
-                            <span class="notepad-question">How is an RDH different from a dentist?</span>
-                            <span class="notepad-toggle" aria-hidden="true"></span>
-                        </summary>
-                        <div class="notepad-answer">
-                            <p>Dental Hygienists (RDH) and Dentists work as a team with distinct scopes of practice. An RDH is a licensed specialist focused entirely on preventive oral health, gum therapy (scaling), and home-care education. Dentists focus on restorative care like fillings, root canals, and crowns. Regular cleanings with your RDH reduce the need for restorative procedures.</p>
-                        </div>
-                    </details>
-
-                    <!-- FAQ Item 4 -->
-                    <details class="notepad-disclosure">
-                        <summary class="notepad-summary">
-                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
-                            <span class="notepad-question">How often should I replace my toothbrush head?</span>
-                            <span class="notepad-toggle" aria-hidden="true"></span>
-                        </summary>
-                        <div class="notepad-answer">
-                            <p>Dental hygienists recommend replacing your manual toothbrush or electric brush head every <strong>3 months</strong>, or sooner if the bristles become frayed. Worn bristles lose flexibility and effectiveness at sweeping away plaque, and can harbor bacterial buildup over time.</p>
-                        </div>
-                    </details>
-
-                    <!-- FAQ Item 5 -->
-                    <details class="notepad-disclosure">
-                        <summary class="notepad-summary">
-                            <span class="notepad-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="notepad-check-ring" d="M12.6 3.4c4.9.2 8.4 4 8.1 8.8-.3 4.6-4.2 8.2-8.8 7.9-4.6-.3-8-4.2-7.7-8.7.3-4.4 3.8-7.8 8.1-7.9"/><path class="notepad-check-tick" d="M7.6 12.4l3.1 3.2 6.6-7.6"/></svg></span>
-                            <span class="notepad-question">Are electric toothbrushes really better than manual ones?</span>
-                            <span class="notepad-toggle" aria-hidden="true"></span>
-                        </summary>
-                        <div class="notepad-answer">
-                            <p>Yes! Clinical studies consistently show that electric toothbrushes (sonic or oscillating) remove up to <strong>21% more plaque</strong> and reduce gingivitis by 11% compared to manual brushing. They also include pressure sensors to protect sensitive gums from aggressive scrubbing.</p>
-                        </div>
-                    </details>
-
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="section-intro">
+      <h2 class="section-title-bold">
+        FREQUENTLY ASKED QUESTIONS.<br>
+        <span class="text-accent-stroke">TRANSPARENT, HONEST CLARITY.</span>
+      </h2>
+      <p class="section-desc">
+        Everything you need to know about the Tinker platform, private Alpha rollout, and pre-order benefits.
+      </p>
     </div>
+
+    <div class="faq-accordion-wrapper">
+      <!-- FAQ 1 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-1">
+          <span class="faq-q-text">What makes Tinker radically different from Zapier, Make, or Retool?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-1" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Traditional tools like Zapier and Make operate on linear, disconnected steps that incur high cloud latency, rigid form fields, and sudden payload breakage. Retool requires heavy SQL and manual frontend wiring.</p>
+            <p>Tinker is a <strong>spatial, reactive visual canvas</strong> powered by a sub-5ms edge engine. It treats data flow visually with instant magnetic snapping, bi-directional code injection (JavaScript/Python), and real-time execution trails. You get the speed of visual building with the raw capabilities of an IDE.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-2">
+          <span class="faq-q-text">When does the private Alpha launch and how do waitlist invites work?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-2" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Private Alpha invites are rolling out in targeted batches starting this month. Users who reserve a Founder Pre-Order tier receive guaranteed <strong>Batch #1 Priority Invites</strong>, while free waitlist entries are invited sequentially as our edge server capacity expands.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-3">
+          <span class="faq-q-text">Is Tinker web-based, local-first, or desktop?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-3" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Tinker gives you the best of both worlds. The core application runs fluidly in any modern web browser via WebAssembly and WebGL, with full offline persistence. We are also shipping companion native desktop apps for macOS, Windows, and Linux during Beta for local file system hooks.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-4">
+          <span class="faq-q-text">Will I be locked into a proprietary platform? Can I export my workflows?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-4" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Never. We believe in open developer sovereignty. Every Tinker canvas can be exported as standard JSON ASTs or compiled directly into standalone TypeScript/Node.js edge workers that you can run on your own infrastructure anytime.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 5 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-5">
+          <span class="faq-q-text">Is my Founder Pre-Order reservation refundable?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-5" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Yes, 100%. If your project priorities change or you decide Tinker isn’t the right fit before your private Alpha key is activated, simply email <a href="mailto:hello@tinker.click">hello@tinker.click</a> for an immediate, no-questions-asked refund.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 6 -->
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-6">
+          <span class="faq-q-text">What happens immediately after I submit my email below?</span>
+          <span class="faq-q-icon" aria-hidden="true">+</span>
+        </button>
+        <div id="faq-ans-6" class="faq-answer" hidden>
+          <div class="faq-answer-inner">
+            <p>Your email will be logged directly into the Tinker waitlist engine at <a href="https://tinker.click/">tinker.click</a>. You will receive an immediate confirmation, followed by periodic insider progress dispatches, sneak peeks of upcoming canvas features, and your private Alpha onboarding link.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+

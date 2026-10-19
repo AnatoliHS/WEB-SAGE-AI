@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   {% include "component/head.njk" %}
-  <body class="{% if bodyClass %}{{ bodyClass }}{% else %}page-light{% endif %}">
-        
-      {% include "component/navbar.njk" %}
-      
-
-      <main style="flex-grow: 1;">
+  <body class="tinker-app">
+    {% include "component/navbar.njk" %}
+    
+    <main id="main-content">
       {{ content | safe }}
-      </main>
+    </main>
 
-      {% include "component/footer.njk" %}
-      {% include "component/scripts.njk" %}
-    </body>
-  </html>
+    {% include "component/footer.njk" %}
+    {% include "component/scripts.njk" %}
+  </body>
+</html>

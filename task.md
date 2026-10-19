@@ -1,7 +1,15 @@
-- [x] Generate Sheena's professional headshot image
-- [x] Redesign `src/assets/css/style.css` with the modern wellness theme
-- [x] Update layout files (`head.njk`, `navbar.njk`, `footer.njk`)
-- [x] Update client-side scripts `scripts.njk`
-- [x] Replace homepage `index.html` content with the dental hygiene profile & portal sections
-- [x] Remove unused real estate pages (`active.html`, `sold.html`, `marketing.html`, `our_test_page.md`)
-- [x] Build the project and verify it compiles successfully
+# Tinker Gateway & Waitlist Website Tasks
+
+- [x] Strip all legacy pages, dental hygiene references, scripts, and media
+- [x] Integrate official Tinker brand wordmarks and favicon from https://tinker.click/
+- [x] Update site metadata and JSON-LD structured data for Tinker
+- [x] Implement modern dark-mode aesthetic with glassmorphism and subtle glowing accents
+- [x] Build sticky navigation header with live status pill and waitlist CTA
+- [x] Implement Hero section with interactive node preview and social proof
+- [x] Implement The Problem Statement with pain-point cards and comparative matrix
+- [x] Implement Product Reveal & Core Benefits with 3 key pillars
+- [x] Implement Feature Deep-Dive with interactive tabs and bento grid
+- [x] Implement Pricing & Pre-Order Tiers with billing period toggle
+- [x] Implement accessible FAQ accordion with answers to common objections
+- [x] Implement primary Waitlist Form at bottom with progressive enhancement & honeypot spam protection
+- [x] Build and verify 11ty compilation without errors

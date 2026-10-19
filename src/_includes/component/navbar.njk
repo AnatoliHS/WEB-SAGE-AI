@@ -1,97 +1,116 @@
 {% set base = "" if (page.url == "/" or page.url == "/index.html") else "/" %}
-{% set navLinks = [
-    { id: "hero", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "portal", label: "Exam Portal" },
-    { id: "smile", label: "Your Smile" },
-    { id: "topics", label: "Hygiene Topics" },
-    { id: "products", label: "Products" },
-    { id: "faq", label: "FAQ" }
-] %}
-<header id="main-header">
-    <div class="nav-left">
-        <a href="{{ base }}#hero" class="nav-mark" aria-label="Sheena Osborne RDH, home">
-            <img src="/assets/lavender-logo.png" alt="">
-        </a>
-        <span class="nav-where" id="nav-where" aria-live="polite"><span>Welcome</span></span>
-    </div>
 
-    <button class="nav-contact" type="button" data-nav-panel="contact" aria-expanded="false" aria-controls="nav-contact-panel" aria-label="Contact">
-        <span class="nav-swap"><span>Contact</span><span>Close</span></span>
-        <span class="nav-contact-ic">
-            <svg class="ic-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <svg class="ic-msg" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7.5L4.5 14v-2.5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-            <svg class="ic-x" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </span>
-    </button>
+<!-- Dynamic Shrinking Brand (Starts in Hero, Shrinks into Top-Left Corner on Scroll) -->
+<a href="{{ base }}#hero" id="dynamic-brand" class="dynamic-corner-brand" aria-label="Tinker Click home">
+  <span class="tinker-word">TINKER</span>
+  <span class="click-word">CLICK</span>
+</a>
 
-    <button class="nav-menu-btn" type="button" data-nav-panel="menu" aria-expanded="false" aria-controls="nav-menu-panel" aria-label="Menu">
-        <span class="nav-swap"><span>Menu</span><span>Close</span></span>
-        <span class="nav-lines" aria-hidden="true"><i></i><i></i></span>
-    </button>
-</header>
+<!-- Floating Join Waitlist CTA Button in Top-Right Corner -->
+<aside class="floating-header-cta" aria-label="Waitlist Access">
+  <button type="button" id="btn-waitlist-trigger" class="btn-waitlist-cta" aria-expanded="false" aria-controls="waitlist-dropdown-drawer" aria-label="Toggle waitlist form">
+    <span class="btn-glow-layer"></span>
+    <span class="btn-label-text">
+      <span class="label-open">Join Waitlist</span>
+      <span class="label-close" style="display: none;">Close</span>
+    </span>
+    <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path class="icon-path-down" d="M3 6l5 5 5-5"/>
+      <path class="icon-path-x" d="M4 4l8 8M12 4l-8 8" style="display: none;"/>
+    </svg>
+  </button>
+</aside>
 
-<div class="nav-scrim" data-nav-close></div>
-
-<nav class="nav-menu-panel" id="nav-menu-panel" aria-label="Site">
-    <ul class="nav-links">
-        {% for link in navLinks %}
-        <li style="--i: {{ loop.index0 }}"><a href="{{ base }}#{{ link.id }}" data-section-link="{{ link.id }}">{{ link.label }}</a></li>
-        {% endfor %}
-        <li style="--i: {{ navLinks | length }}"><a href="{{ base }}#contact" data-section-link="contact" data-nav-open="contact">Contact</a></li>
-    </ul>
-    <div class="nav-menu-aside">
-        <div><h3>Write</h3><p>{{ site.email }}</p></div>
-        <div><h3>Hours</h3><p>Mon to Fri, 8:00 to 17:00</p></div>
-        <div><h3>Where</h3><p>Durham Region, Ontario</p></div>
-        <div><h3>Call</h3><p>{{ site.phone }}</p></div>
-        <span class="nav-sig">Sheena</span>
-    </div>
-</nav>
-
-<div class="nav-contact-panel" id="nav-contact-panel" role="dialog" aria-label="Contact Sheena">
-    <div class="ncp-intro">
-        <p class="ncp-eyebrow ncp" style="--i: 0">Contact</p>
-        <h2 class="ncp-title ncp" style="--i: 1">Book a <em>consultation</em></h2>
-        <p class="ncp-text ncp" style="--i: 2">Tell Sheena a little about what you need, whether that's a cleaning, help with your home-care routine, or a question about products.</p>
-        <dl class="ncp-details ncp" style="--i: 3">
-            <div><dt>Email</dt><dd>{{ site.email }}</dd></div>
-            <div><dt>Hours</dt><dd>Monday to Friday, 8:00 to 17:00</dd></div>
-            <div><dt>Where</dt><dd>Durham Region, Ontario</dd></div>
-        </dl>
-    </div>
-
-    <form class="ncp-form" id="nav-contact-form" novalidate>
-        <div class="ncp-field ncp" style="--i: 2">
-            <input id="ncp-name" name="name" type="text" placeholder=" " autocomplete="name" required>
-            <label for="ncp-name">Your name</label>
+<!-- Top-Down Waitlist Dropdown Drawer -->
+<div id="waitlist-dropdown-drawer" class="waitlist-dropdown-drawer" hidden>
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <div class="drawer-panel">
+    <div class="drawer-ambient-glow"></div>
+    <div id="confetti-container" class="confetti-container" aria-hidden="true"></div>
+    
+    <div class="container drawer-container">
+      <div class="drawer-header-row">
+        <div class="drawer-brand">
+          <picture>
+            <source srcset="/assets/tinker-wordmark-cream-400.png" media="(prefers-color-scheme: dark)">
+            <img src="/assets/tinker-wordmark-navy-400.png" alt="Tinker" width="110" height="28">
+          </picture>
+          <span class="drawer-portal-tag">PORTAL → TINKER.CLICK</span>
         </div>
-        <div class="ncp-field ncp" style="--i: 3">
-            <input id="ncp-email" name="email" type="email" placeholder=" " autocomplete="email" required>
-            <label for="ncp-email">Email</label>
-        </div>
-        <fieldset class="ncp-reasons ncp" style="--i: 4">
-            <legend>I'm interested in</legend>
-            <input type="radio" name="reason" id="ncp-r-clean" value="Cleaning" checked><label for="ncp-r-clean">A cleaning</label>
-            <input type="radio" name="reason" id="ncp-r-coach" value="Home-care coaching"><label for="ncp-r-coach">Home-care coaching</label>
-            <input type="radio" name="reason" id="ncp-r-products" value="Product advice"><label for="ncp-r-products">Product advice</label>
-            <input type="radio" name="reason" id="ncp-r-other" value="Other"><label for="ncp-r-other">Something else</label>
-        </fieldset>
-        <div class="ncp-field wide ncp" style="--i: 5">
-            <textarea id="ncp-msg" name="message" rows="3" placeholder=" "></textarea>
-            <label for="ncp-msg">Message (optional)</label>
-        </div>
-        <div class="ncp-actions ncp" style="--i: 6">
-            <button class="pill-btn" type="submit">
-                Send request
-                <span class="pill-btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close waitlist drawer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-content-box">
+        <h2 class="drawer-title-bold">BE FIRST TO BUILD ON TINKER.</h2>
+        <p class="drawer-subtitle">
+          Enter your email below to reserve your priority position and private Alpha invitation at <span class="url-highlight">tinker.click</span>.
+        </p>
+
+        <!-- Waitlist Submission Form matching tinker.click/subscribe.php -->
+        <form id="signup" class="tinker-signup-form drawer-form" action="https://tinker.click/subscribe.php" method="post" novalidate>
+          <input type="hidden" id="waitlist-tier-pref" name="tier_interest" value="Alpha Waitlist">
+          
+          <label class="sr-only" for="email">Email address</label>
+          <div class="composer">
+            <div class="input-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="M22 6l-10 7L2 6"/>
+              </svg>
+            </div>
+            <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+                   placeholder="you@example.com" required maxlength="254"
+                   aria-label="Enter your email address to join the waitlist">
+            <button type="submit" class="btn-submit">
+              <span>NOTIFY ME</span>
+              <svg class="submit-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
             </button>
-        </div>
-    </form>
+          </div>
 
-    <div class="ncp-done" id="nav-contact-done" hidden>
-        <h3>Thank you, <span id="ncp-done-name"></span>.</h3>
-        <p>Sheena will reply to <span id="ncp-done-email"></span> about scheduling.</p>
-        <button type="button" id="ncp-again">Send another request</button>
+          <!-- Honeypot -->
+          <div class="hp" aria-hidden="true">
+            <label for="website">Leave this empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <!-- Inline Status Feedback -->
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+
+          <p class="fine">
+            Tinker will email you news about Tinker. Unsubscribe any time. No spam, ever.
+          </p>
+        </form>
+
+        <!-- Trust & Waitlist Perks Strip -->
+        <div class="drawer-perks-row">
+          <div class="perk-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span>PRIORITY QUEUE RESERVATION</span>
+          </div>
+          <div class="perk-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>FOUNDER BADGE & PERKS</span>
+          </div>
+          <div class="perk-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>ZERO SPAM • PRIVACY FIRST</span>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

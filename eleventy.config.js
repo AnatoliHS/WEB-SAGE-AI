@@ -13,6 +13,7 @@ module.exports = function(eleventyConfig) {
   // Explicitly map root-level files that need to stay at the root for SEO and icons
   eleventyConfig.addPassthroughCopy({
     "src/assets/favicon.ico": "/favicon.ico",
+    "src/assets/favicon.svg": "/favicon.svg",
     "src/assets/apple-touch-icon.png": "/apple-touch-icon.png",
     "src/assets/favicon-32x32.png": "/favicon-32x32.png",
     "src/assets/favicon-16x16.png": "/favicon-16x16.png",

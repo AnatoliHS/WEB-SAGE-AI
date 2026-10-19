@@ -1,10 +1,10 @@
 {
-  "name": "Sheena RDH",
-  "title": "Registered Dental Hygienist",
-  "association": "Canadian Dental Hygienists Association",
-  "license": "RDH License #99999",
-  "email": "sheena@sheenardh.ca",
-  "phone": "555-019-8822",
-  "address": "Durham Region, Ontario, Canada",
-  "url": "https://sheenardh.ca/"
+  "name": "Tinker",
+  "title": "Tinker — The Creative Playground & Visual Automation Engine",
+  "description": "A gateway to the Tinker app. Build, automate, and orchestrate ideas visually with modular speed. Join the waitlist and pre-order today.",
+  "url": "https://tinker.click",
+  "waitlistUrl": "https://tinker.click/",
+  "subscribeEndpoint": "https://tinker.click/subscribe.php",
+  "twitter": "@tinkerclick",
+  "supportEmail": "hello@tinker.click"
 }

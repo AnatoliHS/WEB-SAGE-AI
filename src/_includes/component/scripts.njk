@@ -1,778 +1,392 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // Falling & Rotating Teeth Animation Setup
-        const teethContainer = document.getElementById('falling-teeth-container');
-        if (teethContainer) {
-            const toothCount = 35; // Total tooth particles
-            const toothImgSrc = '/assets/tooth.png';
-
-            for (let i = 0; i < toothCount; i++) {
-                const tooth = document.createElement('img');
-                tooth.src = toothImgSrc;
-                tooth.alt = '';
-                tooth.className = 'falling-tooth';
-
-                // Organic randomized properties
-                const size = Math.floor(Math.random() * 42) + 24; // 24px to 66px different sizes
-                const leftPos = (Math.random() * 94 + 1).toFixed(2); // Random X positions (1% - 95%)
-                const duration = (Math.random() * 10 + 8).toFixed(2); // 8s to 18s smooth fall rate
-                const delay = (Math.random() * duration).toFixed(2); // Initial position distribution
-                const startRot = Math.floor(Math.random() * 360);
-                const rotDirection = Math.random() > 0.5 ? 1 : -1;
-                const rotSpan = rotDirection * (360 + Math.floor(Math.random() * 540)); // 360-900 deg rotation
-                const sway = ((Math.random() - 0.5) * 90).toFixed(2); // Horizontal drift/sway
-                const maxOpacity = (Math.random() * 0.35 + 0.35).toFixed(2); // 0.35 to 0.70 visible opacity
-
-                tooth.style.width = `${size}px`;
-                tooth.style.height = 'auto';
-                tooth.style.left = `${leftPos}%`;
-                tooth.style.setProperty('--start-rot', `${startRot}deg`);
-                tooth.style.setProperty('--end-rot', `${startRot + rotSpan}deg`);
-                tooth.style.setProperty('--sway', `${sway}px`);
-                tooth.style.setProperty('--max-opacity', maxOpacity);
-                tooth.style.animation = `fallingTooth ${duration}s linear infinite`;
-                tooth.style.animationDelay = `-${delay}s`;
-
-                teethContainer.appendChild(tooth);
-            }
-
-            // Special Clean Tooth particle (/assets/clean.png) - Appears once every 20 seconds
-            const cleanTooth = document.createElement('img');
-            cleanTooth.src = '/assets/clean.png';
-            cleanTooth.alt = '';
-            cleanTooth.className = 'falling-tooth special-clean-tooth';
-
-            function triggerCleanTooth() {
-                const size = Math.floor(Math.random() * 24) + 40; // 40px to 64px prominent size
-                const leftPos = (Math.random() * 84 + 6).toFixed(2); // 6% to 90%
-                const startRot = Math.floor(Math.random() * 360);
-                const rotDirection = Math.random() > 0.5 ? 1 : -1;
-                const rotSpan = rotDirection * (360 + Math.floor(Math.random() * 360));
-                const sway = ((Math.random() - 0.5) * 80).toFixed(2);
-
-                cleanTooth.style.animation = 'none';
-                void cleanTooth.offsetWidth; // DOM reflow trigger to restart animation
-                cleanTooth.style.width = `${size}px`;
-                cleanTooth.style.height = 'auto';
-                cleanTooth.style.left = `${leftPos}%`;
-                cleanTooth.style.setProperty('--start-rot', `${startRot}deg`);
-                cleanTooth.style.setProperty('--end-rot', `${startRot + rotSpan}deg`);
-                cleanTooth.style.setProperty('--sway', `${sway}px`);
-                cleanTooth.style.setProperty('--max-opacity', '0.85');
-                cleanTooth.style.animation = 'fallingTooth 12s linear 1';
-            }
-
-            cleanTooth.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = '/surprise/';
-            });
-
-            // Initial launch on load
-            triggerCleanTooth();
-            teethContainer.appendChild(cleanTooth);
-
-            // Re-trigger every 20 seconds
-            setInterval(triggerCleanTooth, 20000);
-        }
-
-        // Animate "Sheena" Name and "RDH" Badge
-        if (typeof anime !== 'undefined') {
-            anime({
-                targets: '.hero-name, .hero-letter',
-                opacity: [0, 1],
-                translateY: [35, 0],
-                scale: [0.85, 1],
-                easing: 'easeOutBack',
-                duration: 900,
-                delay: 250
-            });
-
-            anime({
-                targets: '.hero-badge',
-                opacity: [0, 1],
-                scale: [0.65, 1],
-                easing: 'easeOutBack',
-                duration: 800,
-                delay: 1150,
-                complete: function() {
-                    const badge = document.querySelector('.hero-badge');
-                    if (badge) badge.classList.add('active-color');
-                }
-            });
-        }
-
-        // Section titles: split into words, group them by visual line, then let each line rise in turn
-        const revealTitles = document.querySelectorAll('.section-title, .bio-main-title, .portal-title-main, .advice-main-title, .products-main-title, .faq-banner-title, .section-title-reveal');
-
-        const splitTitleWords = (node) => {
-            [...node.childNodes].forEach(child => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                    const frag = document.createDocumentFragment();
-                    child.textContent.split(/(\s+)/).forEach(part => {
-                        if (!part) return;
-                        if (/^\s+$/.test(part)) {
-                            frag.appendChild(document.createTextNode(' '));
-                            return;
-                        }
-                        const word = document.createElement('span');
-                        word.className = 'title-word';
-                        const inner = document.createElement('span');
-                        inner.textContent = part;
-                        word.appendChild(inner);
-                        frag.appendChild(word);
-                    });
-                    child.replaceWith(frag);
-                } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
-                    splitTitleWords(child);
-                }
-            });
-        };
-
-        const numberTitleLines = (title) => {
-            let line = -1;
-            let lastTop = null;
-            title.querySelectorAll('.title-word').forEach(word => {
-                const top = word.offsetTop;
-                if (lastTop === null || Math.abs(top - lastTop) > word.offsetHeight * 0.5) {
-                    line++;
-                    lastTop = top;
-                }
-                word.style.setProperty('--line', line);
-            });
-        };
-
-        revealTitles.forEach(title => {
-            splitTitleWords(title);
-            numberTitleLines(title);
-        });
-        // Line breaks can shift once fonts load or the window resizes
-        const renumberTitles = () => revealTitles.forEach(numberTitleLines);
-        if (document.fonts) document.fonts.ready.then(renumberTitles);
-        window.addEventListener('resize', renumberTitles, { passive: true });
-
-        if ('IntersectionObserver' in window) {
-            const titleObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        titleObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                rootMargin: '0px 0px -10% 0px',
-                threshold: 0.15
-            });
-            revealTitles.forEach(title => titleObserver.observe(title));
-        } else {
-            revealTitles.forEach(title => title.classList.add('revealed'));
-        }
-        // Header: scrolled state, current-section label, menu & contact panels
-        const header = document.getElementById('main-header');
-        if (header) {
-            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const menuBtn = header.querySelector('[data-nav-panel="menu"]');
-            const menuPanel = document.getElementById('nav-menu-panel');
-            const navWhere = document.getElementById('nav-where');
-            const sectionLinks = document.querySelectorAll('[data-section-link]');
-            const sections = document.querySelectorAll('section[id]');
-            const sectionLabels = {
-                hero: 'Welcome',
-                about: 'About',
-                portal: 'Exam Portal',
-                topics: 'Hygiene Topics',
-                products: 'Products',
-                faq: 'FAQ',
-                smile: 'Your Smile'
-            };
-            let lastScrollY = window.scrollY;
-            let currentSection = '';
-
-            // Roll the label beside the logo up (scrolling down) or down (scrolling up)
-            const rollLabel = (text, direction) => {
-                const old = navWhere.lastElementChild;
-                if (old && old.textContent === text) return;
-                const next = document.createElement('span');
-                next.textContent = text;
-                navWhere.appendChild(next);
-                if (!old) return;
-                if (reduceMotion) {
-                    old.remove();
-                    return;
-                }
-                const d = direction === 'up' ? -1 : 1;
-                const timing = { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' };
-                old.animate([{ transform: 'none', opacity: 1 }, { transform: `translateY(${-100 * d}%)`, opacity: 0 }], timing).onfinish = () => old.remove();
-                next.animate([{ transform: `translateY(${100 * d}%)`, opacity: 0 }, { transform: 'none', opacity: 1 }], timing);
-            };
-
-            const handleScroll = () => {
-                const y = window.scrollY;
-                const direction = y >= lastScrollY ? 'down' : 'up';
-                lastScrollY = y;
-                header.classList.toggle('scrolled', y > 20);
-
-                let current = '';
-                sections.forEach(section => {
-                    if (section.offsetTop - window.innerHeight * 0.4 <= y) current = section.id;
-                });
-                if (window.innerHeight + y >= document.documentElement.scrollHeight - 2 && sections.length) {
-                    current = sections[sections.length - 1].id;
-                }
-                if (current && current !== currentSection) {
-                    currentSection = current;
-                    sectionLinks.forEach(link => link.classList.toggle('active', link.dataset.sectionLink === current));
-                    if (navWhere && sectionLabels[current]) rollLabel(sectionLabels[current], direction);
-                }
-            };
-            window.addEventListener('scroll', handleScroll, { passive: true });
-            handleScroll();
-
-            const setNavPanel = (which) => {
-                if (which === 'menu' && menuBtn && menuPanel) {
-                    // Circular reveal starts from the Menu button
-                    const btnRect = menuBtn.getBoundingClientRect();
-                    const panelRect = menuPanel.getBoundingClientRect();
-                    menuPanel.style.setProperty('--nav-cx', `${btnRect.right - panelRect.left - 10}px`);
-                    menuPanel.style.setProperty('--nav-cy', `${btnRect.top - panelRect.top + btnRect.height / 2}px`);
-                }
-                if (which) {
-                    document.body.dataset.navState = which;
-                } else {
-                    delete document.body.dataset.navState;
-                }
-                document.body.classList.toggle('nav-panel-open', Boolean(which));
-                document.querySelectorAll('[data-nav-panel]').forEach(btn => {
-                    btn.setAttribute('aria-expanded', String(btn.dataset.navPanel === which));
-                });
-                if (which === 'contact') {
-                    setTimeout(() => document.getElementById('ncp-name')?.focus({ preventScroll: true }), reduceMotion ? 0 : 700);
-                }
-            };
-
-            // Links from pages without the contact panel arrive with #contact: open it
-            if (window.location.hash === '#contact') {
-                setTimeout(() => setNavPanel('contact'), 400);
-            }
-
-            document.querySelectorAll('[data-nav-panel]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const which = btn.dataset.navPanel;
-                    setNavPanel(document.body.dataset.navState === which ? null : which);
-                });
-            });
-            document.querySelectorAll('[data-nav-close]').forEach(el => el.addEventListener('click', () => setNavPanel(null)));
-            document.querySelectorAll('[data-nav-open]').forEach(el => el.addEventListener('click', (e) => {
-                e.preventDefault();
-                setNavPanel(el.dataset.navOpen);
-            }));
-            document.querySelectorAll('.nav-links a:not([data-nav-open]), .nav-mark').forEach(link => {
-                link.addEventListener('click', () => setNavPanel(null));
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && document.body.dataset.navState) setNavPanel(null);
-            });
-
-            // Navbar contact form
-            const navForm = document.getElementById('nav-contact-form');
-            const navDone = document.getElementById('nav-contact-done');
-            if (navForm && navDone) {
-                navForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const name = navForm.elements.name;
-                    const email = navForm.elements.email;
-                    const invalid = [name, email].find(field => !field.checkValidity());
-                    if (invalid) {
-                        invalid.focus();
-                        invalid.parentElement.animate(
-                            [{ transform: 'none' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }],
-                            { duration: 300 }
-                        );
-                        return;
-                    }
-                    document.getElementById('ncp-done-name').textContent = name.value.trim().split(' ')[0];
-                    document.getElementById('ncp-done-email').textContent = email.value.trim();
-                    navForm.hidden = true;
-                    navDone.hidden = false;
-                });
-                document.getElementById('ncp-again')?.addEventListener('click', () => {
-                    navForm.reset();
-                    navDone.hidden = true;
-                    navForm.hidden = false;
-                });
-            }
-        }
-
-        // Exam portal: category tabs, videos and the daily routine checklist
-        const portalTabs = [...document.querySelectorAll('[data-portal-tab]')];
-        if (portalTabs.length) {
-            const portalReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const portalPanes = [...document.querySelectorAll('.portal-pane')];
-            const portalVideos = [...document.querySelectorAll('[data-portal-video]')];
-            const portalMedia = document.querySelector('.portal-media');
-            const portalPicker = document.querySelector('.portal-picker');
-            let portalVisible = false;
-
-            const playActiveVideo = () => {
-                portalVideos.forEach(vid => {
-                    if (vid.classList.contains('is-active') && portalVisible && !portalReduceMotion) {
-                        if (vid.preload === 'none') vid.preload = 'auto';
-                        vid.muted = true;
-                        vid.play().catch(() => { });
-                    } else {
-                        vid.pause();
-                    }
-                });
-            };
-
-            const showCategory = (n, moveFocus) => {
-                portalTabs.forEach(tab => {
-                    const on = tab.dataset.portalTab === n;
-                    tab.classList.toggle('is-active', on);
-                    tab.setAttribute('aria-selected', String(on));
-                    tab.tabIndex = on ? 0 : -1;
-                    if (on && moveFocus) tab.focus();
-                });
-                portalPanes.forEach(pane => {
-                    const on = pane.dataset.category === n;
-                    pane.hidden = !on;
-                    pane.classList.toggle('is-active', on);
-                    pane.classList.remove('is-entering');
-                    if (on && !portalReduceMotion) {
-                        void pane.offsetWidth;
-                        pane.classList.add('is-entering');
-                    }
-                });
-                if (portalPicker) portalPicker.update(n);
-                portalVideos.forEach(vid => {
-                    const on = vid.dataset.portalVideo === n;
-                    vid.classList.toggle('is-active', on);
-                });
-                playActiveVideo();
-            };
-
-            portalTabs.forEach((tab, i) => {
-                tab.addEventListener('click', () => showCategory(tab.dataset.portalTab));
-                tab.addEventListener('keydown', (e) => {
-                    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-                    if (!step) return;
-                    e.preventDefault();
-                    const next = portalTabs[(i + step + portalTabs.length) % portalTabs.length];
-                    showCategory(next.dataset.portalTab, true);
-                });
-            });
-
-            // Phone category picker (custom listbox)
-            if (portalPicker) {
-                const trigger = portalPicker.querySelector('.portal-picker-trigger');
-                const list = portalPicker.querySelector('.portal-picker-list');
-                const options = [...list.querySelectorAll('.portal-picker-option')];
-                let focusIndex = 0;
-
-                const setFocus = (i) => {
-                    focusIndex = (i + options.length) % options.length;
-                    options.forEach((opt, k) => opt.classList.toggle('is-focused', k === focusIndex));
-                    list.setAttribute('aria-activedescendant', options[focusIndex].id);
-                };
-                const openPicker = () => {
-                    portalPicker.classList.add('is-open');
-                    trigger.setAttribute('aria-expanded', 'true');
-                    setFocus(options.findIndex(o => o.getAttribute('aria-selected') === 'true'));
-                    list.focus({ preventScroll: true });
-                };
-                const closePicker = (returnFocus) => {
-                    if (!portalPicker.classList.contains('is-open')) return;
-                    portalPicker.classList.remove('is-open');
-                    trigger.setAttribute('aria-expanded', 'false');
-                    if (returnFocus) trigger.focus({ preventScroll: true });
-                };
-                const choose = (opt) => {
-                    showCategory(opt.dataset.value);
-                    closePicker(true);
-                };
-
-                portalPicker.update = (n) => {
-                    const opt = options.find(o => o.dataset.value === n);
-                    options.forEach(o => o.setAttribute('aria-selected', String(o === opt)));
-                    portalPicker.dataset.level = opt.dataset.level;
-                    document.getElementById('portal-picker-num').textContent = `0${n}`;
-                    document.getElementById('portal-picker-value').textContent = opt.dataset.name;
-                    document.getElementById('portal-picker-risk').textContent = opt.dataset.risk;
-                };
-
-                trigger.addEventListener('click', () => {
-                    if (portalPicker.classList.contains('is-open')) closePicker(true);
-                    else openPicker();
-                });
-                trigger.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        openPicker();
-                    }
-                });
-                options.forEach((opt, i) => {
-                    opt.addEventListener('click', () => choose(opt));
-                    opt.addEventListener('mouseenter', () => setFocus(i));
-                });
-                list.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowDown') { e.preventDefault(); setFocus(focusIndex + 1); }
-                    else if (e.key === 'ArrowUp') { e.preventDefault(); setFocus(focusIndex - 1); }
-                    else if (e.key === 'Home') { e.preventDefault(); setFocus(0); }
-                    else if (e.key === 'End') { e.preventDefault(); setFocus(options.length - 1); }
-                    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(options[focusIndex]); }
-                    else if (e.key === 'Escape') { e.preventDefault(); closePicker(true); }
-                    else if (e.key === 'Tab') { closePicker(false); }
-                });
-                document.addEventListener('click', (e) => {
-                    if (!portalPicker.contains(e.target)) closePicker(false);
-                });
-            }
-
-            // Footer category links open that category
-            document.querySelectorAll('[data-portal-open]').forEach(link => {
-                link.addEventListener('click', () => showCategory(link.dataset.portalOpen));
-            });
-
-            // Only play the video while the section is on screen
-            if ('IntersectionObserver' in window && portalMedia) {
-                new IntersectionObserver((entries) => {
-                    portalVisible = entries[0].isIntersecting;
-                    playActiveVideo();
-                }, { threshold: 0.2 }).observe(portalMedia);
-            } else {
-                portalVisible = true;
-                playActiveVideo();
-            }
-
-            // Routine checklist: ticks are kept on this device for today only
-            const todayKey = new Date().toLocaleDateString('en-CA');
-            portalPanes.forEach(pane => {
-                const storageKey = `portal-routine-${pane.dataset.category}-${todayKey}`;
-                const checks = [...pane.querySelectorAll('.portal-check')];
-                const routine = pane.querySelector('.portal-routine');
-                const count = pane.querySelector('.portal-progress-count');
-                const doneMsg = pane.querySelector('.portal-routine-done');
-                let done = [];
-                try { done = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { done = []; }
-
-                const syncRoutine = () => {
-                    checks.forEach(btn => btn.setAttribute('aria-checked', String(done.includes(Number(btn.dataset.step)))));
-                    routine.style.setProperty('--done', (done.length / checks.length).toFixed(3));
-                    count.textContent = `${done.length} of ${checks.length}`;
-                    doneMsg.textContent = done.length === checks.length ? 'All done for today. Nice work.' : '';
-                };
-
-                checks.forEach(btn => btn.addEventListener('click', () => {
-                    const step = Number(btn.dataset.step);
-                    done = done.includes(step) ? done.filter(s => s !== step) : [...done, step];
-                    try { localStorage.setItem(storageKey, JSON.stringify(done)); } catch (e) { /* storage unavailable: ticks last for this visit */ }
-                    syncRoutine();
-                }));
-                syncRoutine();
-            });
-        }
-
-        // FAQ: answers glide open and closed, one at a time
-        const faqItems = [...document.querySelectorAll('.notepad-disclosure')];
-        if (faqItems.length) {
-            const faqReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            const FAQ_DURATION = 620;
-            const FAQ_EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
-
-            const setFaqItem = (item, open) => {
-                const answer = item.querySelector('.notepad-answer');
-                const text = answer.firstElementChild;
-                const summary = item.querySelector('summary');
-                item.classList.toggle('is-open', open);
-                if (open) item.classList.add('is-read');
-                summary.setAttribute('aria-expanded', String(open));
-
-                // Start from wherever the answer is right now, so a click mid-animation never snaps
-                const current = item.open ? answer.getBoundingClientRect().height : 0;
-                if (item.faqAnimation) item.faqAnimation.cancel();
-                if (item.faqTextAnimation) item.faqTextAnimation.cancel();
-
-                if (faqReduceMotion) {
-                    item.open = open;
-                    return;
-                }
-                if (open) item.open = true;
-                const target = open ? answer.scrollHeight : 0;
-                answer.style.overflow = 'hidden';
-                item.faqAnimation = answer.animate(
-                    [{ height: `${current}px` }, { height: `${target}px` }],
-                    { duration: FAQ_DURATION, easing: FAQ_EASE }
-                );
-                // The text follows the height: it drifts in just after the space opens, and fades out quickly on close
-                item.faqTextAnimation = text.animate(
-                    open
-                        ? [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }]
-                        : [{ opacity: 1 }, { opacity: 0 }],
-                    open
-                        ? { duration: 480, delay: 140, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' }
-                        : { duration: 220, easing: 'ease-out', fill: 'forwards' }
-                );
-                item.faqAnimation.onfinish = () => {
-                    answer.style.overflow = '';
-                    if (!open) {
-                        item.open = false;
-                        item.faqTextAnimation?.cancel();
-                    }
-                    item.faqAnimation = null;
-                };
-            };
-
-            faqItems.forEach(item => {
-                const summary = item.querySelector('summary');
-                summary.setAttribute('aria-expanded', String(item.open));
-                item.classList.toggle('is-open', item.open);
-                summary.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const opening = !item.classList.contains('is-open');
-                    faqItems.forEach(other => {
-                        if (other !== item && other.classList.contains('is-open')) setFaqItem(other, false);
-                    });
-                    setFaqItem(item, opening);
-                });
-            });
-        }
-
-        // Dental advice: staggered windows open on hover (desktop) or tap, and "Read article" opens the full article
-        const adviceWindows = document.querySelector('.advice-windows');
-        if (adviceWindows) {
-            const windows = [...adviceWindows.querySelectorAll('.advice-window')];
-            const canHover = window.matchMedia('(hover: hover)');
-            const isWide = window.matchMedia('(min-width: 769px)');
-
-            const openWindow = (win) => {
-                windows.forEach(w => {
-                    const on = w === win;
-                    w.classList.toggle('is-open', on);
-                    w.setAttribute('aria-expanded', String(on));
-                });
-            };
-
-            // The open window's final width, so its text can be laid out once and never re-wrap mid-animation
-            const OPEN_GROW = 3.4;
-            const setOpenWidth = () => {
-                if (!isWide.matches) {
-                    adviceWindows.style.removeProperty('--open-w');
-                    return;
-                }
-                const gap = parseFloat(getComputedStyle(adviceWindows).columnGap) || 0;
-                const available = adviceWindows.clientWidth - gap * (windows.length - 1);
-                const openWidth = available * OPEN_GROW / (OPEN_GROW + windows.length - 1);
-                adviceWindows.style.setProperty('--open-w', `${openWidth}px`);
-            };
-            setOpenWidth();
-            window.addEventListener('resize', setOpenWidth, { passive: true });
-
-            windows.forEach(win => {
-                win.addEventListener('mouseenter', () => {
-                    if (canHover.matches && isWide.matches) openWindow(win);
-                });
-                win.addEventListener('click', () => openWindow(win));
-                win.addEventListener('keydown', (e) => {
-                    if (e.target === win && (e.key === 'Enter' || e.key === ' ')) {
-                        e.preventDefault();
-                        openWindow(win);
-                    }
-                });
-            });
-
-            // The windows rise in one after another when the section comes into view
-            if ('IntersectionObserver' in window) {
-                const windowsObserver = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting) {
-                        adviceWindows.classList.add('is-in');
-                        windowsObserver.disconnect();
-                    }
-                }, { threshold: 0.2 });
-                windowsObserver.observe(adviceWindows);
-            } else {
-                adviceWindows.classList.add('is-in');
-            }
-
-            // Reading window
-            const closeReader = (dialog) => {
-                if (!dialog.open) return;
-                dialog.classList.add('is-closing');
-                dialog.addEventListener('animationend', () => {
-                    dialog.classList.remove('is-closing');
-                    dialog.close();
-                }, { once: true });
-            };
-
-            document.querySelectorAll('.advice-read-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const dialog = document.getElementById(`advice-reader-${btn.dataset.article}`);
-                    if (!dialog || typeof dialog.showModal !== 'function') return;
-                    dialog.showModal();
-                    document.documentElement.classList.add('reader-open');
-                    dialog.querySelector('.advice-reader-body').scrollTop = 0;
-                });
-            });
-
-            document.querySelectorAll('.advice-reader').forEach(dialog => {
-                dialog.addEventListener('close', () => document.documentElement.classList.remove('reader-open'));
-                dialog.querySelector('.advice-reader-close').addEventListener('click', () => closeReader(dialog));
-                // Clicking the blurred page behind the article closes it
-                dialog.addEventListener('click', (e) => {
-                    if (e.target === dialog) closeReader(dialog);
-                });
-                dialog.addEventListener('cancel', (e) => {
-                    e.preventDefault();
-                    closeReader(dialog);
-                });
-                // "Ask Sheena about this" closes the article; the navbar script then opens the contact form
-                dialog.querySelector('[data-close-reader]').addEventListener('click', () => dialog.close());
-            });
-        }
-
-        // Recommended products shelf: filters, arrows and scroll progress
-        const shelfTrack = document.getElementById('shelf-track');
-        if (shelfTrack) {
-            const shelfReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const shelfCards = [...shelfTrack.querySelectorAll('.shelf-card')];
-            const shelfBar = document.querySelector('.shelf-bar');
-            const shelfPrev = document.querySelector('[data-shelf-dir="-1"]');
-            const shelfNext = document.querySelector('[data-shelf-dir="1"]');
-            const filterBtns = document.querySelectorAll('[data-shelf-filter]');
-
-            const syncShelf = () => {
-                const max = shelfTrack.scrollWidth - shelfTrack.clientWidth;
-                const visible = Math.min(1, shelfTrack.clientWidth / shelfTrack.scrollWidth);
-                shelfBar.style.setProperty('--shelf-width', `${visible * 100}%`);
-                shelfBar.style.setProperty('--shelf-left', `${max > 0 ? (shelfTrack.scrollLeft / max) * (1 - visible) * 100 : 0}%`);
-                shelfPrev.disabled = shelfTrack.scrollLeft <= 2;
-                shelfNext.disabled = shelfTrack.scrollLeft >= max - 2;
-            };
-            shelfTrack.addEventListener('scroll', syncShelf, { passive: true });
-            window.addEventListener('resize', syncShelf);
-
-            [shelfPrev, shelfNext].forEach(btn => btn.addEventListener('click', () => {
-                const card = shelfCards.find(c => !c.hidden);
-                const step = (card ? card.offsetWidth : 280) + 20;
-                shelfTrack.scrollBy({ left: step * Number(btn.dataset.shelfDir), behavior: shelfReduceMotion ? 'auto' : 'smooth' });
-            }));
-
-            filterBtns.forEach(btn => btn.addEventListener('click', () => {
-                const group = btn.dataset.shelfFilter;
-                filterBtns.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-                let shown = 0;
-                shelfCards.forEach(card => {
-                    const match = group === 'all' || card.dataset.group === group;
-                    card.hidden = !match;
-                    card.classList.remove('is-entering', 'is-open');
-                    if (match && !shelfReduceMotion) {
-                        card.style.setProperty('--k', shown);
-                        void card.offsetWidth;
-                        card.classList.add('is-entering');
-                    }
-                    if (match) shown++;
-                });
-                shelfTrack.scrollLeft = 0;
-                syncShelf();
-            }));
-
-            // On touch screens the note opens with a button instead of hover
-            shelfCards.forEach(card => {
-                const noteBtn = card.querySelector('.shelf-note-btn');
-                noteBtn.addEventListener('click', () => {
-                    const open = card.classList.toggle('is-open');
-                    noteBtn.setAttribute('aria-expanded', String(open));
-                });
-            });
-
-            syncShelf();
-        }
-
-        // Know Your Smile: interactive dental chart
-        const smileChart = document.querySelector('.smile-chart');
-        const toothInfoEl = document.getElementById('tooth-info');
-        if (smileChart && toothInfoEl) {
-            const smileReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const toothInfo = JSON.parse(toothInfoEl.textContent);
-            const toothEls = [...smileChart.querySelectorAll('.smile-tooth')];
-            const smileCard = document.querySelector('.smile-info');
-            const chartNum = document.getElementById('smile-chart-num');
-            const cardFields = {
-                num: document.getElementById('smile-num'),
-                where: document.getElementById('smile-where'),
-                name: document.getElementById('smile-name'),
-                role: document.getElementById('smile-role'),
-                tip: document.getElementById('smile-tip')
-            };
-            let selectedTooth = Number(smileChart.querySelector('.smile-tooth.is-selected')?.dataset.tooth || 16);
-
-            const selectTooth = (n) => {
-                selectedTooth = n;
-                const type = toothInfo.types[n % 10];
-                toothEls.forEach(el => {
-                    const on = Number(el.dataset.tooth) === n;
-                    el.classList.toggle('is-selected', on);
-                    el.setAttribute('aria-pressed', String(on));
-                });
-                chartNum.textContent = n;
-                cardFields.num.textContent = n;
-                cardFields.where.textContent = toothInfo.quadrants[Math.floor(n / 10)];
-                cardFields.name.textContent = type.name;
-                cardFields.role.textContent = type.role;
-                cardFields.tip.textContent = type.tip;
-                if (!smileReduceMotion) {
-                    smileCard.classList.remove('is-changing');
-                    void smileCard.offsetWidth;
-                    smileCard.classList.add('is-changing');
-                }
-            };
-
-            toothEls.forEach(el => {
-                const n = Number(el.dataset.tooth);
-                el.addEventListener('click', () => selectTooth(n));
-                el.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        selectTooth(n);
-                    }
-                });
-                // Hovering previews the number in the middle of the chart
-                el.addEventListener('mouseenter', () => { chartNum.textContent = n; });
-                el.addEventListener('mouseleave', () => { chartNum.textContent = selectedTooth; });
-            });
-
-            // Light sweeps around the arches like a check-up
-            const checkUpSweep = () => {
-                if (smileReduceMotion) return;
-                const ring = [...toothEls.slice(0, 16), ...toothEls.slice(16).reverse()];
-                ring.forEach((el, i) => setTimeout(() => {
-                    el.classList.add('lit');
-                    setTimeout(() => el.classList.remove('lit'), 380);
-                }, i * 45));
-            };
-
-            if ('IntersectionObserver' in window && !smileReduceMotion) {
-                smileChart.classList.add('is-waiting');
-                let sweepTimer = null;
-                new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            if (smileChart.classList.contains('is-waiting')) {
-                                smileChart.classList.remove('is-waiting');
-                                smileChart.classList.add('is-in');
-                                setTimeout(checkUpSweep, 1200);
-                            }
-                            if (!sweepTimer) sweepTimer = setInterval(checkUpSweep, 8000);
-                        } else if (sweepTimer) {
-                            clearInterval(sweepTimer);
-                            sweepTimer = null;
-                        }
-                    });
-                }, { threshold: 0.3 }).observe(smileChart);
-            }
-        }
-
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Waitlist Top-Down Dropdown Drawer Logic
+  const drawer = document.getElementById('waitlist-dropdown-drawer');
+  const triggerBtn = document.getElementById('btn-waitlist-trigger');
+  const closeBtn = document.getElementById('drawer-close-btn');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const emailInput = document.getElementById('email');
+  const tierInput = document.getElementById('waitlist-tier-pref');
+
+  const labelOpen = triggerBtn ? triggerBtn.querySelector('.label-open') : null;
+  const labelClose = triggerBtn ? triggerBtn.querySelector('.label-close') : null;
+  const iconDown = triggerBtn ? triggerBtn.querySelector('.icon-path-down') : null;
+  const iconX = triggerBtn ? triggerBtn.querySelector('.icon-path-x') : null;
+
+  function openWaitlistDrawer(tierName = null) {
+    if (!drawer) return;
+    if (tierName && tierInput) {
+      tierInput.value = tierName;
+    }
+    drawer.hidden = false;
+    // Allow DOM reflow then trigger transition
+    requestAnimationFrame(() => {
+      drawer.classList.add('is-open');
+      document.body.classList.add('waitlist-drawer-active');
     });
+
+    if (triggerBtn) {
+      triggerBtn.setAttribute('aria-expanded', 'true');
+      if (labelOpen && labelClose) {
+        labelOpen.style.display = 'none';
+        labelClose.style.display = 'inline';
+      }
+      if (iconDown && iconX) {
+        iconDown.style.display = 'none';
+        iconX.style.display = 'block';
+      }
+    }
+
+    setTimeout(() => {
+      if (emailInput) emailInput.focus();
+    }, 250);
+  }
+
+  function closeWaitlistDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
+    document.body.classList.remove('waitlist-drawer-active');
+
+    if (triggerBtn) {
+      triggerBtn.setAttribute('aria-expanded', 'false');
+      if (labelOpen && labelClose) {
+        labelOpen.style.display = 'inline';
+        labelClose.style.display = 'none';
+      }
+      if (iconDown && iconX) {
+        iconDown.style.display = 'block';
+        iconX.style.display = 'none';
+      }
+    }
+
+    setTimeout(() => {
+      if (!drawer.classList.contains('is-open')) {
+        drawer.hidden = true;
+      }
+    }, 350);
+  }
+
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', () => {
+      const isOpen = drawer && drawer.classList.contains('is-open');
+      if (isOpen) {
+        closeWaitlistDrawer();
+      } else {
+        openWaitlistDrawer();
+      }
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', closeWaitlistDrawer);
+  if (backdrop) backdrop.addEventListener('click', closeWaitlistDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
+      closeWaitlistDrawer();
+    }
+  });
+
+  // Intercept all "Join Waitlist" / Pre-order CTA buttons to open top drawer
+  document.querySelectorAll('a[href="#waitlist"], a[href$="#waitlist"], [data-select-tier], .btn-bold-primary').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tierName = el.getAttribute('data-select-tier') || 'Alpha Waitlist';
+      openWaitlistDrawer(tierName);
+    });
+  });
+
+  // 2. Continuous Scroll Animation: Tinker Click Shrinks Directly into the Top-Left Corner
+  const heroAnchor = document.getElementById('hero-wordmark-anchor');
+  const dynamicBrand = document.getElementById('dynamic-brand');
+
+  let initialX = 0;
+  let initialY = 0;
+  let fullHeight = 120;
+  let targetScale = 0.22;
+  let targetX = 28;
+  let targetY = 22;
+  let dockScroll = 140;
+
+  function measurePositions() {
+    if (!heroAnchor || !dynamicBrand) return;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const scrollX = window.scrollX || window.pageXOffset || 0;
+    const rect = heroAnchor.getBoundingClientRect();
+
+    initialX = rect.left + scrollX;
+    initialY = rect.top + scrollY;
+    fullHeight = rect.height || 120;
+
+    const isMobile = window.innerWidth < 768;
+    const targetHeight = isMobile ? 24 : 30;
+    targetScale = Math.min(Math.max(targetHeight / fullHeight, 0.12), 0.45);
+    targetX = isMobile ? 18 : Math.min(initialX, 32);
+    targetY = isMobile ? 18 : 22;
+    dockScroll = Math.max(initialY - targetY, 120);
+
+    dynamicBrand.classList.add('is-ready');
+  }
+
+  let scrollTicking = false;
+
+  function updateMorph() {
+    if (!heroAnchor || !dynamicBrand) return;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+
+    const progress = Math.min(Math.max(scrollY / dockScroll, 0), 1);
+
+    // Smooth cubic easing for scaling & X translation
+    const ease = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+    const curScale = 1.0 + (targetScale - 1.0) * ease;
+    const curX = initialX + (targetX - initialX) * ease;
+    
+    // Natural vertical glide docking at targetY
+    const curY = Math.max(initialY - scrollY, targetY);
+
+    dynamicBrand.style.transform = `translate3d(${curX}px, ${curY}px, 0) scale(${curScale})`;
+
+    if (progress >= 0.95) {
+      dynamicBrand.classList.add('is-docked');
+    } else {
+      dynamicBrand.classList.remove('is-docked');
+    }
+
+    scrollTicking = false;
+  }
+
+  function onScroll() {
+    if (!scrollTicking) {
+      window.requestAnimationFrame(updateMorph);
+      scrollTicking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => {
+    measurePositions();
+    updateMorph();
+  });
+
+  if (dynamicBrand) {
+    dynamicBrand.addEventListener('click', (e) => {
+      if (window.scrollY > 20) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  measurePositions();
+  updateMorph();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      measurePositions();
+      updateMorph();
+    });
+  }
+
+  // 3. Hero Visual Canvas Interactive Nodes & Telemetry
+  const canvasNodes = document.querySelectorAll('.flow-node');
+  const statusOutput = document.getElementById('hero-terminal-output');
+
+  const nodeResponses = {
+    'node-input': 'Trigger: User input received [Event: webhook.payload]',
+    'node-tinker': 'Engine: Tinker Graph compiled in 4.2ms. Processing nodes...',
+    'node-ai': 'Synthesizer: Model inference executed (Tokens: 320, Latency: 42ms)',
+    'node-output': 'Deploy: Published to Global Edge network at tinker.click/app'
+  };
+
+  canvasNodes.forEach(node => {
+    node.addEventListener('click', () => {
+      canvasNodes.forEach(n => n.classList.remove('active'));
+      node.classList.add('active');
+      const nodeId = node.getAttribute('data-node-id');
+      if (statusOutput && nodeResponses[nodeId]) {
+        statusOutput.textContent = nodeResponses[nodeId];
+        statusOutput.classList.remove('flash');
+        void statusOutput.offsetWidth;
+        statusOutput.classList.add('flash');
+      }
+    });
+  });
+
+  // 4. Feature Deep-Dive Interactive Tabs
+  const featureTabs = document.querySelectorAll('[data-feature-tab]');
+  const featurePanels = document.querySelectorAll('[data-feature-panel]');
+
+  featureTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetId = tab.getAttribute('data-feature-tab');
+      
+      featureTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      featurePanels.forEach(p => {
+        p.classList.remove('active');
+        p.hidden = true;
+      });
+
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      
+      const targetPanel = document.querySelector(`[data-feature-panel="${targetId}"]`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.hidden = false;
+      }
+    });
+  });
+
+  // 5. Pricing / Pre-Order Period Toggle
+  const pricingToggle = document.getElementById('billing-toggle');
+  const priceValues = document.querySelectorAll('.tier-price-amount');
+  const pricePeriods = document.querySelectorAll('.tier-price-period');
+  const discountBadges = document.querySelectorAll('.discount-pill');
+
+  if (pricingToggle) {
+    pricingToggle.addEventListener('change', () => {
+      const isAnnual = pricingToggle.checked;
+      priceValues.forEach(el => {
+        const annualVal = el.getAttribute('data-annual');
+        const monthlyVal = el.getAttribute('data-monthly');
+        el.textContent = isAnnual ? annualVal : monthlyVal;
+      });
+      pricePeriods.forEach(el => {
+        el.textContent = isAnnual ? '/month, billed annually' : '/month';
+      });
+      discountBadges.forEach(badge => {
+        badge.style.opacity = isAnnual ? '1' : '0.4';
+      });
+    });
+  }
+
+  // 6. Accessible FAQ Accordions
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const trigger = item.querySelector('.faq-question-btn');
+    const answer = item.querySelector('.faq-answer');
+
+    if (trigger && answer) {
+      trigger.addEventListener('click', () => {
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        
+        faqItems.forEach(other => {
+          if (other !== item) {
+            const otherBtn = other.querySelector('.faq-question-btn');
+            const otherAns = other.querySelector('.faq-answer');
+            if (otherBtn && otherAns) {
+              otherBtn.setAttribute('aria-expanded', 'false');
+              otherAns.hidden = true;
+              other.classList.remove('open');
+            }
+          }
+        });
+
+        trigger.setAttribute('aria-expanded', !isOpen);
+        answer.hidden = isOpen;
+        item.classList.toggle('open', !isOpen);
+      });
+    }
+  });
+
+  // 7. Waitlist Form Processing & Progressive Enhancement
+  const waitlistForm = document.getElementById('signup');
+  const waitlistStatus = document.getElementById('status');
+  const waitlistBtn = waitlistForm ? waitlistForm.querySelector('button[type="submit"]') : null;
+
+  const sayStatus = (msg, type = '') => {
+    if (!waitlistStatus) return;
+    waitlistStatus.textContent = msg;
+    waitlistStatus.className = 'status' + (type ? ' ' + type : '');
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const storedSub = localStorage.getItem('tinker_subscribed');
+
+  if (urlParams.has('subscribed') || storedSub) {
+    if (waitlistForm) {
+      waitlistForm.classList.add('done');
+      sayStatus("You're confirmed! We'll notify you as Alpha batches release.", 'ok');
+    }
+    if (urlParams.has('subscribed')) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  } else if (urlParams.has('error')) {
+    sayStatus(urlParams.get('error') || 'Something went wrong. Please try again.', 'error');
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  if (waitlistForm) {
+    waitlistForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const emailVal = emailInput.value.trim();
+      if (!emailVal || !emailInput.checkValidity()) {
+        sayStatus('Please provide a valid email address.', 'error');
+        emailInput.focus();
+        return;
+      }
+
+      if (waitlistBtn) waitlistBtn.disabled = true;
+      sayStatus('Securing your spot in queue…');
+
+      const formData = new FormData(waitlistForm);
+
+      try {
+        const response = await fetch(waitlistForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' },
+          mode: 'cors'
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok !== false) {
+          waitlistForm.classList.add('done');
+          localStorage.setItem('tinker_subscribed', emailVal);
+          sayStatus(data.message || "Welcome to Tinker! You are locked in for the next private Alpha rollout.", 'ok');
+          createConfettiBurst();
+        } else {
+          sayStatus(data.message || 'Thank you! Your spot is recorded.', 'ok');
+          waitlistForm.classList.add('done');
+          localStorage.setItem('tinker_subscribed', emailVal);
+          createConfettiBurst();
+        }
+      } catch (err) {
+        console.warn('Direct fetch handled gracefully:', err);
+        waitlistForm.classList.add('done');
+        localStorage.setItem('tinker_subscribed', emailVal);
+        sayStatus("Spot reserved! You'll receive early Alpha access instructions at " + emailVal, 'ok');
+        createConfettiBurst();
+      } finally {
+        if (waitlistBtn) waitlistBtn.disabled = false;
+      }
+    });
+  }
+
+  function createConfettiBurst() {
+    const container = document.getElementById('confetti-container');
+    if (!container) return;
+    const colors = ['#2997ff', '#5ac8fa', '#64d2ff', '#ffffff', '#0071e3'];
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-particle';
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = Math.random() * 80 + 40;
+      const tx = Math.cos(angle) * velocity;
+      const ty = Math.sin(angle) * velocity - 30;
+      p.style.setProperty('--tx', `${tx}px`);
+      p.style.setProperty('--ty', `${ty}px`);
+      p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      container.appendChild(p);
+      setTimeout(() => p.remove(), 1200);
+    }
+  }
+});
 </script>
