@@ -1,10 +1,8 @@
 {
   "name": "Tinker",
-  "title": "Tinker — The Creative Playground & Visual Automation Engine",
-  "description": "A gateway to the Tinker app. Build, automate, and orchestrate ideas visually with modular speed. Join the waitlist and pre-order today.",
+  "title": "Tinker — Make your own apps by describing them",
+  "description": "Tinker turns what you describe into small apps you can play, remix and share. Join the waitlist for the private alpha.",
   "url": "https://tinker.click",
   "waitlistUrl": "https://tinker.click/",
-  "subscribeEndpoint": "https://tinker.click/subscribe.php",
-  "twitter": "@tinkerclick",
-  "supportEmail": "hello@tinker.click"
+  "subscribeEndpoint": "https://tinker.click/subscribe.php"
 }

@@ -1,300 +1,185 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Waitlist Top-Down Dropdown Drawer Logic
-  const drawer = document.getElementById('waitlist-dropdown-drawer');
-  const triggerBtn = document.getElementById('btn-waitlist-trigger');
-  const closeBtn = document.getElementById('drawer-close-btn');
-  const backdrop = document.getElementById('drawer-backdrop');
-  const emailInput = document.getElementById('email');
-  const tierInput = document.getElementById('waitlist-tier-pref');
+  const root = document.documentElement;
+  const storage = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  };
 
-  const labelOpen = triggerBtn ? triggerBtn.querySelector('.label-open') : null;
-  const labelClose = triggerBtn ? triggerBtn.querySelector('.label-close') : null;
-  const iconDown = triggerBtn ? triggerBtn.querySelector('.icon-path-down') : null;
-  const iconX = triggerBtn ? triggerBtn.querySelector('.icon-path-x') : null;
-
-  function openWaitlistDrawer(tierName = null) {
-    if (!drawer) return;
-    if (tierName && tierInput) {
-      tierInput.value = tierName;
-    }
-    drawer.hidden = false;
-    // Allow DOM reflow then trigger transition
-    requestAnimationFrame(() => {
-      drawer.classList.add('is-open');
-      document.body.classList.add('waitlist-drawer-active');
-    });
-
-    if (triggerBtn) {
-      triggerBtn.setAttribute('aria-expanded', 'true');
-      if (labelOpen && labelClose) {
-        labelOpen.style.display = 'none';
-        labelClose.style.display = 'inline';
-      }
-      if (iconDown && iconX) {
-        iconDown.style.display = 'none';
-        iconX.style.display = 'block';
-      }
-    }
-
-    setTimeout(() => {
-      if (emailInput) emailInput.focus();
-    }, 250);
-  }
-
-  function closeWaitlistDrawer() {
-    if (!drawer) return;
-    drawer.classList.remove('is-open');
-    document.body.classList.remove('waitlist-drawer-active');
-
-    if (triggerBtn) {
-      triggerBtn.setAttribute('aria-expanded', 'false');
-      if (labelOpen && labelClose) {
-        labelOpen.style.display = 'inline';
-        labelClose.style.display = 'none';
-      }
-      if (iconDown && iconX) {
-        iconDown.style.display = 'block';
-        iconX.style.display = 'none';
-      }
-    }
-
-    setTimeout(() => {
-      if (!drawer.classList.contains('is-open')) {
-        drawer.hidden = true;
-      }
-    }, 350);
-  }
-
-  if (triggerBtn) {
-    triggerBtn.addEventListener('click', () => {
-      const isOpen = drawer && drawer.classList.contains('is-open');
-      if (isOpen) {
-        closeWaitlistDrawer();
-      } else {
-        openWaitlistDrawer();
-      }
-    });
-  }
-
-  if (closeBtn) closeBtn.addEventListener('click', closeWaitlistDrawer);
-  if (backdrop) backdrop.addEventListener('click', closeWaitlistDrawer);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
-      closeWaitlistDrawer();
-    }
-  });
-
-  // Intercept all "Join Waitlist" / Pre-order CTA buttons to open top drawer
-  document.querySelectorAll('a[href="#waitlist"], a[href$="#waitlist"], [data-select-tier], .btn-bold-primary').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      const tierName = el.getAttribute('data-select-tier') || 'Alpha Waitlist';
-      openWaitlistDrawer(tierName);
-    });
-  });
-
-  // 2. Continuous Scroll Animation: Tinker Click Shrinks Directly into the Top-Left Corner
+  // 1. Dynamic Brand: big in the hero at the top, docks into the corner as soon as scrolling starts
   const heroAnchor = document.getElementById('hero-wordmark-anchor');
   const dynamicBrand = document.getElementById('dynamic-brand');
+  const triggerBtn = document.getElementById('btn-waitlist-trigger');
+  const headerLogo = document.getElementById('header-logo');
 
-  let initialX = 0;
-  let initialY = 0;
-  let fullHeight = 120;
-  let targetScale = 0.22;
-  let targetX = 28;
-  let targetY = 22;
-  let dockScroll = 140;
+  const geo = { x: 0, y: 0, dockX: 24, dockY: 24, dockScale: 0.2 };
+  let isDocked = null;
+  let drawerOpen = false;
 
   function measurePositions() {
     if (!heroAnchor || !dynamicBrand) return;
-    const scrollY = window.scrollY || window.pageYOffset || 0;
-    const scrollX = window.scrollX || window.pageXOffset || 0;
     const rect = heroAnchor.getBoundingClientRect();
+    const scrollY = window.scrollY || 0;
+    const fullHeight = rect.height || 120;
 
-    initialX = rect.left + scrollX;
-    initialY = rect.top + scrollY;
-    fullHeight = rect.height || 120;
+    geo.x = rect.left;
+    geo.y = rect.top + scrollY;
 
+    // Dock vertically centred on the CTA, just right of the logo
     const isMobile = window.innerWidth < 768;
-    const targetHeight = isMobile ? 24 : 30;
-    targetScale = Math.min(Math.max(targetHeight / fullHeight, 0.12), 0.45);
-    targetX = isMobile ? 18 : Math.min(initialX, 32);
-    targetY = isMobile ? 18 : 22;
-    dockScroll = Math.max(initialY - targetY, 120);
-
-    dynamicBrand.classList.add('is-ready');
+    geo.dockScale = (isMobile ? 26 : 32) / fullHeight;
+    const cta = triggerBtn ? triggerBtn.getBoundingClientRect() : null;
+    const ctaCenter = cta ? cta.top + cta.height / 2 : 40;
+    const logo = headerLogo ? headerLogo.getBoundingClientRect() : null;
+    geo.dockX = logo ? logo.right + (isMobile ? 10 : 14) : 24;
+    geo.dockY = ctaCenter - (fullHeight * geo.dockScale) / 2;
   }
 
-  let scrollTicking = false;
+  function applyBrand(animate) {
+    if (!dynamicBrand) return;
+    const docked = (window.scrollY || 0) > 4 || drawerOpen;
+    if (docked === isDocked && animate) return;
+    isDocked = docked;
 
-  function updateMorph() {
-    if (!heroAnchor || !dynamicBrand) return;
-    const scrollY = window.scrollY || window.pageYOffset || 0;
+    if (!animate) dynamicBrand.classList.add('no-transition');
+    dynamicBrand.style.transform = docked
+      ? `translate3d(${geo.dockX}px, ${geo.dockY}px, 0) scale(${geo.dockScale})`
+      : `translate3d(${geo.x}px, ${geo.y}px, 0) scale(1)`;
+    dynamicBrand.classList.toggle('is-docked', docked);
+    root.classList.toggle('brand-docked', docked);
 
-    const progress = Math.min(Math.max(scrollY / dockScroll, 0), 1);
-
-    // Smooth cubic easing for scaling & X translation
-    const ease = progress < 0.5
-      ? 2 * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-    const curScale = 1.0 + (targetScale - 1.0) * ease;
-    const curX = initialX + (targetX - initialX) * ease;
-    
-    // Natural vertical glide docking at targetY
-    const curY = Math.max(initialY - scrollY, targetY);
-
-    dynamicBrand.style.transform = `translate3d(${curX}px, ${curY}px, 0) scale(${curScale})`;
-
-    if (progress >= 0.95) {
-      dynamicBrand.classList.add('is-docked');
-    } else {
-      dynamicBrand.classList.remove('is-docked');
-    }
-
-    scrollTicking = false;
-  }
-
-  function onScroll() {
-    if (!scrollTicking) {
-      window.requestAnimationFrame(updateMorph);
-      scrollTicking = true;
+    if (!animate) {
+      void dynamicBrand.offsetWidth;
+      dynamicBrand.classList.remove('no-transition');
     }
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => {
+  function remeasure() {
     measurePositions();
-    updateMorph();
-  });
+    applyBrand(false);
+  }
 
-  if (dynamicBrand) {
-    dynamicBrand.addEventListener('click', (e) => {
-      if (window.scrollY > 20) {
+  if (heroAnchor && dynamicBrand) {
+    remeasure();
+    dynamicBrand.classList.add('is-ready');
+
+    window.addEventListener('scroll', () => applyBrand(true), { passive: true });
+    window.addEventListener('resize', remeasure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+
+    [dynamicBrand, headerLogo].forEach((link) => {
+      if (!link) return;
+      link.addEventListener('click', (e) => {
+        if (window.scrollY > 4) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  // 2. Waitlist Top-Down Drawer
+  const drawer = document.getElementById('waitlist-dropdown-drawer');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const emailInput = document.getElementById('email');
+
+  function openWaitlistDrawer() {
+    if (!drawer) return;
+    drawer.hidden = false;
+    drawerOpen = true;
+    applyBrand(true);
+    requestAnimationFrame(() => {
+      drawer.classList.add('is-open');
+      root.classList.add('drawer-open');
+    });
+    if (triggerBtn) triggerBtn.setAttribute('aria-expanded', 'true');
+    setTimeout(() => { if (emailInput) emailInput.focus({ preventScroll: true }); }, 350);
+  }
+
+  function closeWaitlistDrawer() {
+    if (!drawer || !drawerOpen) return;
+    drawer.classList.remove('is-open');
+    root.classList.remove('drawer-open');
+    drawerOpen = false;
+    if (triggerBtn) {
+      triggerBtn.setAttribute('aria-expanded', 'false');
+      triggerBtn.focus({ preventScroll: true });
+    }
+    setTimeout(() => {
+      if (!drawer.classList.contains('is-open')) drawer.hidden = true;
+      applyBrand(true);
+    }, 450);
+  }
+
+  if (drawer) {
+    if (triggerBtn) {
+      triggerBtn.addEventListener('click', () => {
+        drawerOpen ? closeWaitlistDrawer() : openWaitlistDrawer();
+      });
+    }
+    if (backdrop) backdrop.addEventListener('click', closeWaitlistDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeWaitlistDrawer();
+    });
+
+    document.querySelectorAll('[data-open-waitlist]').forEach(el => {
+      el.addEventListener('click', (e) => {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+        openWaitlistDrawer();
+      });
     });
+
+    if (window.location.hash === '#waitlist') openWaitlistDrawer();
   }
 
-  measurePositions();
-  updateMorph();
-
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => {
-      measurePositions();
-      updateMorph();
-    });
-  }
-
-  // 3. Hero Visual Canvas Interactive Nodes & Telemetry
-  const canvasNodes = document.querySelectorAll('.flow-node');
-  const statusOutput = document.getElementById('hero-terminal-output');
-
-  const nodeResponses = {
-    'node-input': 'Trigger: User input received [Event: webhook.payload]',
-    'node-tinker': 'Engine: Tinker Graph compiled in 4.2ms. Processing nodes...',
-    'node-ai': 'Synthesizer: Model inference executed (Tokens: 320, Latency: 42ms)',
-    'node-output': 'Deploy: Published to Global Edge network at tinker.click/app'
-  };
-
-  canvasNodes.forEach(node => {
-    node.addEventListener('click', () => {
-      canvasNodes.forEach(n => n.classList.remove('active'));
-      node.classList.add('active');
-      const nodeId = node.getAttribute('data-node-id');
-      if (statusOutput && nodeResponses[nodeId]) {
-        statusOutput.textContent = nodeResponses[nodeId];
-        statusOutput.classList.remove('flash');
-        void statusOutput.offsetWidth;
-        statusOutput.classList.add('flash');
-      }
-    });
-  });
-
-  // 4. Feature Deep-Dive Interactive Tabs
-  const featureTabs = document.querySelectorAll('[data-feature-tab]');
-  const featurePanels = document.querySelectorAll('[data-feature-panel]');
-
-  featureTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const targetId = tab.getAttribute('data-feature-tab');
-      
-      featureTabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      featurePanels.forEach(p => {
-        p.classList.remove('active');
-        p.hidden = true;
-      });
-
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      
-      const targetPanel = document.querySelector(`[data-feature-panel="${targetId}"]`);
-      if (targetPanel) {
-        targetPanel.classList.add('active');
-        targetPanel.hidden = false;
-      }
-    });
-  });
-
-  // 5. Pricing / Pre-Order Period Toggle
-  const pricingToggle = document.getElementById('billing-toggle');
-  const priceValues = document.querySelectorAll('.tier-price-amount');
-  const pricePeriods = document.querySelectorAll('.tier-price-period');
-  const discountBadges = document.querySelectorAll('.discount-pill');
-
-  if (pricingToggle) {
-    pricingToggle.addEventListener('change', () => {
-      const isAnnual = pricingToggle.checked;
-      priceValues.forEach(el => {
-        const annualVal = el.getAttribute('data-annual');
-        const monthlyVal = el.getAttribute('data-monthly');
-        el.textContent = isAnnual ? annualVal : monthlyVal;
-      });
-      pricePeriods.forEach(el => {
-        el.textContent = isAnnual ? '/month, billed annually' : '/month';
-      });
-      discountBadges.forEach(badge => {
-        badge.style.opacity = isAnnual ? '1' : '0.4';
-      });
-    });
-  }
-
-  // 6. Accessible FAQ Accordions
+  // 3. FAQ Accordion
   const faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(item => {
     const trigger = item.querySelector('.faq-question-btn');
     const answer = item.querySelector('.faq-answer');
+    if (!trigger || !answer) return;
 
-    if (trigger && answer) {
-      trigger.addEventListener('click', () => {
-        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-        
-        faqItems.forEach(other => {
-          if (other !== item) {
-            const otherBtn = other.querySelector('.faq-question-btn');
-            const otherAns = other.querySelector('.faq-answer');
-            if (otherBtn && otherAns) {
-              otherBtn.setAttribute('aria-expanded', 'false');
-              otherAns.hidden = true;
-              other.classList.remove('open');
-            }
-          }
-        });
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
 
-        trigger.setAttribute('aria-expanded', !isOpen);
-        answer.hidden = isOpen;
-        item.classList.toggle('open', !isOpen);
+      faqItems.forEach(other => {
+        if (other === item) return;
+        const otherBtn = other.querySelector('.faq-question-btn');
+        const otherAns = other.querySelector('.faq-answer');
+        if (otherBtn && otherAns) {
+          otherBtn.setAttribute('aria-expanded', 'false');
+          otherAns.hidden = true;
+          other.classList.remove('open');
+        }
       });
-    }
+
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+      answer.hidden = isOpen;
+      item.classList.toggle('open', !isOpen);
+    });
   });
 
-  // 7. Waitlist Form Processing & Progressive Enhancement
+  // 4. Scroll Reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    revealEls.forEach(el => {
+      const siblings = Array.from(el.parentElement.children).filter(c => c.classList.contains('reveal'));
+      el.style.transitionDelay = `${Math.min(siblings.indexOf(el), 4) * 70}ms`;
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-in'));
+  }
+
+  // 5. Waitlist Form Processing & Progressive Enhancement
   const waitlistForm = document.getElementById('signup');
   const waitlistStatus = document.getElementById('status');
   const waitlistBtn = waitlistForm ? waitlistForm.querySelector('button[type="submit"]') : null;
@@ -305,17 +190,17 @@ document.addEventListener('DOMContentLoaded', () => {
     waitlistStatus.className = 'status' + (type ? ' ' + type : '');
   };
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const storedSub = localStorage.getItem('tinker_subscribed');
+  const markDone = (email, msg) => {
+    waitlistForm.classList.add('done');
+    if (email) storage.set('tinker_subscribed', email);
+    sayStatus(msg, 'ok');
+  };
 
-  if (urlParams.has('subscribed') || storedSub) {
-    if (waitlistForm) {
-      waitlistForm.classList.add('done');
-      sayStatus("You're confirmed! We'll notify you as Alpha batches release.", 'ok');
-    }
-    if (urlParams.has('subscribed')) {
-      history.replaceState(null, '', window.location.pathname);
-    }
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (waitlistForm && (urlParams.has('subscribed') || storage.get('tinker_subscribed'))) {
+    markDone(null, "You're on the list. We'll email you when Tinker opens to more people.");
+    if (urlParams.has('subscribed')) history.replaceState(null, '', window.location.pathname);
   } else if (urlParams.has('error')) {
     sayStatus(urlParams.get('error') || 'Something went wrong. Please try again.', 'error');
     history.replaceState(null, '', window.location.pathname);
@@ -324,69 +209,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (waitlistForm) {
     waitlistForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const emailVal = emailInput.value.trim();
       if (!emailVal || !emailInput.checkValidity()) {
-        sayStatus('Please provide a valid email address.', 'error');
+        sayStatus('Please enter a valid email address.', 'error');
         emailInput.focus();
         return;
       }
 
       if (waitlistBtn) waitlistBtn.disabled = true;
-      sayStatus('Securing your spot in queue…');
-
-      const formData = new FormData(waitlistForm);
+      sayStatus('Saving your spot…');
 
       try {
         const response = await fetch(waitlistForm.action, {
           method: 'POST',
-          body: formData,
+          body: new FormData(waitlistForm),
           headers: { 'Accept': 'application/json' },
           mode: 'cors'
         });
-
         const data = await response.json().catch(() => ({}));
-
-        if (response.ok && data.ok !== false) {
-          waitlistForm.classList.add('done');
-          localStorage.setItem('tinker_subscribed', emailVal);
-          sayStatus(data.message || "Welcome to Tinker! You are locked in for the next private Alpha rollout.", 'ok');
-          createConfettiBurst();
-        } else {
-          sayStatus(data.message || 'Thank you! Your spot is recorded.', 'ok');
-          waitlistForm.classList.add('done');
-          localStorage.setItem('tinker_subscribed', emailVal);
-          createConfettiBurst();
-        }
+        markDone(emailVal, data.message || "You're on the list. We'll email you when Tinker opens to more people.");
       } catch (err) {
         console.warn('Direct fetch handled gracefully:', err);
-        waitlistForm.classList.add('done');
-        localStorage.setItem('tinker_subscribed', emailVal);
-        sayStatus("Spot reserved! You'll receive early Alpha access instructions at " + emailVal, 'ok');
-        createConfettiBurst();
+        markDone(emailVal, "You're on the list. We'll email " + emailVal + ' when Tinker opens to more people.');
       } finally {
         if (waitlistBtn) waitlistBtn.disabled = false;
       }
     });
-  }
-
-  function createConfettiBurst() {
-    const container = document.getElementById('confetti-container');
-    if (!container) return;
-    const colors = ['#2997ff', '#5ac8fa', '#64d2ff', '#ffffff', '#0071e3'];
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.className = 'confetti-particle';
-      const angle = Math.random() * Math.PI * 2;
-      const velocity = Math.random() * 80 + 40;
-      const tx = Math.cos(angle) * velocity;
-      const ty = Math.sin(angle) * velocity - 30;
-      p.style.setProperty('--tx', `${tx}px`);
-      p.style.setProperty('--ty', `${ty}px`);
-      p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      container.appendChild(p);
-      setTimeout(() => p.remove(), 1200);
-    }
   }
 });
 </script>

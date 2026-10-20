@@ -1,76 +1,52 @@
 {% set base = "" if (page.url == "/" or page.url == "/index.html") else "/" %}
 
-<!-- Dynamic Shrinking Brand (Starts in Hero, Shrinks into Top-Left Corner on Scroll) -->
-<a href="{{ base }}#hero" id="dynamic-brand" class="dynamic-corner-brand" aria-label="Tinker Click home">
+<!-- Header bar that fades in once the brand docks -->
+<div class="site-header-bar" aria-hidden="true"></div>
+
+<!-- Logo mark, top far left -->
+<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Tinker home">
+  <img src="/favicon.svg" alt="" width="32" height="32">
+</a>
+
+<!-- Dynamic brand: sits large in the hero at the top of the page, docks next to the logo once scrolling starts -->
+<a href="{{ base }}#hero" id="dynamic-brand" class="wordmark dynamic-brand" aria-label="Tinker Click home">
   <span class="tinker-word">TINKER</span>
   <span class="click-word">CLICK</span>
 </a>
 
-<!-- Floating Join Waitlist CTA Button in Top-Right Corner -->
-<aside class="floating-header-cta" aria-label="Waitlist Access">
-  <button type="button" id="btn-waitlist-trigger" class="btn-waitlist-cta" aria-expanded="false" aria-controls="waitlist-dropdown-drawer" aria-label="Toggle waitlist form">
-    <span class="btn-glow-layer"></span>
-    <span class="btn-label-text">
-      <span class="label-open">Join Waitlist</span>
-      <span class="label-close" style="display: none;">Close</span>
-    </span>
-    <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path class="icon-path-down" d="M3 6l5 5 5-5"/>
-      <path class="icon-path-x" d="M4 4l8 8M12 4l-8 8" style="display: none;"/>
-    </svg>
-  </button>
-</aside>
+<!-- Waitlist CTA in the top-right corner (also closes the drawer) -->
+<button type="button" id="btn-waitlist-trigger" class="btn header-cta" aria-expanded="false" aria-controls="waitlist-dropdown-drawer">
+  <span class="label-open">Join waitlist</span>
+  <span class="label-close">Close</span>
+  <svg class="cta-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <path d="M7 1.5v11M1.5 7h11"/>
+  </svg>
+</button>
 
-<!-- Top-Down Waitlist Dropdown Drawer -->
-<div id="waitlist-dropdown-drawer" class="waitlist-dropdown-drawer" hidden>
+<!-- Top-down waitlist drawer -->
+<div id="waitlist-dropdown-drawer" class="waitlist-drawer" hidden>
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
-  <div class="drawer-panel">
-    <div class="drawer-ambient-glow"></div>
-    <div id="confetti-container" class="confetti-container" aria-hidden="true"></div>
-    
-    <div class="container drawer-container">
-      <div class="drawer-header-row">
-        <div class="drawer-brand">
-          <picture>
-            <source srcset="/assets/tinker-wordmark-cream-400.png" media="(prefers-color-scheme: dark)">
-            <img src="/assets/tinker-wordmark-navy-400.png" alt="Tinker" width="110" height="28">
-          </picture>
-          <span class="drawer-portal-tag">PORTAL → TINKER.CLICK</span>
-        </div>
-        <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Close waitlist drawer">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+  <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="container drawer-grid">
+      <div class="drawer-intro">
+        <span class="eyebrow">(Waitlist) Private Alpha</span>
+        <h2 class="drawer-title" id="drawer-title">Be first <span class="text-muted">to tinker.</span></h2>
       </div>
 
-      <div class="drawer-content-box">
-        <h2 class="drawer-title-bold">BE FIRST TO BUILD ON TINKER.</h2>
-        <p class="drawer-subtitle">
-          Enter your email below to reserve your priority position and private Alpha invitation at <span class="url-highlight">tinker.click</span>.
+      <div class="drawer-form-col">
+        <p class="drawer-copy">
+          Tinker is in private alpha. Join the waitlist at <strong>tinker.click</strong> and we'll email you when it opens to more people.
         </p>
 
-        <!-- Waitlist Submission Form matching tinker.click/subscribe.php -->
-        <form id="signup" class="tinker-signup-form drawer-form" action="https://tinker.click/subscribe.php" method="post" novalidate>
-          <input type="hidden" id="waitlist-tier-pref" name="tier_interest" value="Alpha Waitlist">
-          
+        <form id="signup" class="signup-form" action="https://tinker.click/subscribe.php" method="post" novalidate>
+
           <label class="sr-only" for="email">Email address</label>
           <div class="composer">
-            <div class="input-icon-wrap">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M22 6l-10 7L2 6"/>
-              </svg>
-            </div>
             <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
-                   placeholder="you@example.com" required maxlength="254"
-                   aria-label="Enter your email address to join the waitlist">
-            <button type="submit" class="btn-submit">
-              <span>NOTIFY ME</span>
-              <svg class="submit-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M3 8h10M9 4l4 4-4 4"/>
-              </svg>
+                   placeholder="you@example.com" required maxlength="254">
+            <button type="submit" class="btn btn-primary btn-submit">
+              Notify me
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
           </div>
 
@@ -80,36 +56,10 @@
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
 
-          <!-- Inline Status Feedback -->
           <p id="status" class="status" role="status" aria-live="polite"></p>
-
-          <p class="fine">
-            Tinker will email you news about Tinker. Unsubscribe any time. No spam, ever.
-          </p>
         </form>
 
-        <!-- Trust & Waitlist Perks Strip -->
-        <div class="drawer-perks-row">
-          <div class="perk-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span>PRIORITY QUEUE RESERVATION</span>
-          </div>
-          <div class="perk-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            <span>FOUNDER BADGE & PERKS</span>
-          </div>
-          <div class="perk-item">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-            <span>ZERO SPAM • PRIVACY FIRST</span>
-          </div>
-        </div>
+        <p class="drawer-fine">Tinker will email you news about Tinker. Unsubscribe any time.</p>
       </div>
     </div>
   </div>

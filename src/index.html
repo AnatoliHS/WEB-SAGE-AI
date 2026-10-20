@@ -1,796 +1,245 @@
 ---
 layout: default.njk
-title: Tinker — The Bold Creative Playground & Visual Automation Engine
-description: Tinker is the gateway to friction-free creative workflows and intelligent visual automations. Join the waitlist for private Alpha access at tinker.click.
+title: Tinker — Make your own apps by describing them
+description: Tinker turns what you describe into small apps you can play, remix and share. Runs on Windows, macOS and Linux, with starter apps that work offline. Join the waitlist at tinker.click.
+heroSphere: true
 ---
 
 <!-- ========================================================
-     1. HERO SECTION (BOLD EDITORIAL AESTHETIC)
+     1. HERO + THINKING SPHERE STAGE
      ======================================================== -->
-<section id="hero" class="hero-section bold-hero">
-  <div class="ambient-glow glow-center"></div>
-  <div class="ambient-glow glow-top-right"></div>
-  
-  <div class="container hero-container">
+{% include "component/hero.njk" %}
 
-    <!-- Massive Bold Hero Wordmark Layout Anchor (Reserves exact space for dynamic shrinking brand) -->
-    <div class="hero-giant-wordmark-wrap" id="hero-wordmark-anchor">
-      <div class="hero-giant-wordmark hero-wordmark-ghost" aria-hidden="true">
-        TINKER <span class="hero-submark-click">CLICK</span>
-      </div>
-    </div>
-
-    <!-- Bold Architectural Line Divider (Outfit / Nakula style) -->
-    <div class="hero-architectural-line"></div>
-
-    <!-- Editorial Sub-Grid -->
-    <div class="hero-editorial-grid">
-      <!-- Col 1: Status & Discipline -->
-      <div class="editorial-col col-index">
-        <div class="editorial-meta-stack">
-          <span class="meta-label">DISCIPLINE</span>
-          <span class="meta-val">Visual Automation & Canvas</span>
-          <span class="meta-label">SPEED</span>
-          <span class="meta-val">4.2ms Edge Execution</span>
-        </div>
+<section class="stage stage-sphere" data-stage data-steps="{{ flow.length }}" data-compact-below="760" aria-label="How Tinker works">
+  <div class="stage-pin">
+    <div class="container stage-inner">
+      <div class="stage-top">
+        <span class="eyebrow">(Live) How Tinker works</span>
+        <span class="stage-counter" data-stage-counter>01 / 04</span>
       </div>
 
-      <!-- Col 2: Punchy Bold Statement & Subtitle -->
-      <div class="editorial-col col-statement">
-        <h2 class="editorial-headline">
-          STOP WRESTLING BROKEN TOOLS.<br>
-          <span class="bold-glow-text">START TINKERING.</span>
-        </h2>
-        <p class="editorial-paragraph">
-          The frictionless visual workspace and automation engine for modern builders. Connect APIs, intelligent logic graphs, and dynamic data pipelines in minutes—without brittle spaghetti code.
-        </p>
-      </div>
-
-      <!-- Col 3: CTAs & Conversion -->
-      <div class="editorial-col col-actions">
-        <a href="#waitlist" class="btn-bold-primary">
-          <span>JOIN ALPHA WAITLIST</span>
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </a>
-        <a href="#reveal" class="btn-bold-secondary">
-          <span>EXPLORE ENGINE</span>
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M8 3v10M4 9l4 4 4-4"/>
-          </svg>
-        </a>
-        <div class="editorial-counter">
-          <div class="pulse-counter-dot"></div>
-          <span>4,200+ BUILDERS IN QUEUE</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hero Interactive Canvas / Application Preview Window -->
-    <div class="hero-mockup-wrapper">
-      <div class="mockup-window">
-        <div class="mockup-titlebar">
-          <div class="window-controls">
-            <span class="ctrl-dot red"></span>
-            <span class="ctrl-dot yellow"></span>
-            <span class="ctrl-dot green"></span>
-          </div>
-          <div class="window-title">
-            <span class="title-icon">⚡</span>
-            <span>TINKER STUDIO // WORKSPACE PREVIEW</span>
-          </div>
-          <div class="window-status">
-            <span class="status-live-dot"></span>
-            <span>4.2MS EDGE ENGINE</span>
-          </div>
-        </div>
-
-        <div class="mockup-canvas">
-          <div class="canvas-grid-pattern"></div>
-          
-          <div class="canvas-nodes-container">
-            <!-- Node 1 -->
-            <button type="button" class="flow-node active" data-node-id="node-input" aria-label="Inspect webhook trigger node">
-              <div class="node-header">
-                <span class="node-pill">TRIGGER</span>
-                <span class="node-indicator"></span>
-              </div>
-              <div class="node-body">
-                <span class="node-icon">⚡</span>
-                <div class="node-info">
-                  <strong>Stripe Webhook</strong>
-                  <span>POST /order.created</span>
-                </div>
-              </div>
-              <div class="node-port port-right"></div>
-            </button>
-
-            <!-- Connector 1 -->
-            <div class="flow-wire wire-1">
-              <span class="wire-pulse"></span>
-            </div>
-
-            <!-- Node 2 -->
-            <button type="button" class="flow-node" data-node-id="node-tinker" aria-label="Inspect Tinker core transformer node">
-              <div class="node-header">
-                <span class="node-pill pill-purple">ENGINE</span>
-                <span class="node-indicator"></span>
-              </div>
-              <div class="node-body">
-                <span class="node-icon">🧩</span>
-                <div class="node-info">
-                  <strong>Tinker Graph</strong>
-                  <span>Transform & Validate</span>
-                </div>
-              </div>
-              <div class="node-port port-left"></div>
-              <div class="node-port port-right"></div>
-            </button>
-
-            <!-- Connector 2 -->
-            <div class="flow-wire wire-2">
-              <span class="wire-pulse"></span>
-            </div>
-
-            <!-- Node 3 -->
-            <button type="button" class="flow-node" data-node-id="node-ai" aria-label="Inspect AI synthesis node">
-              <div class="node-header">
-                <span class="node-pill pill-cyan">SYNTHESIS</span>
-                <span class="node-indicator"></span>
-              </div>
-              <div class="node-body">
-                <span class="node-icon">✨</span>
-                <div class="node-info">
-                  <strong>AI Smart Router</strong>
-                  <span>Classify & Enrich</span>
-                </div>
-              </div>
-              <div class="node-port port-left"></div>
-              <div class="node-port port-right"></div>
-            </button>
-
-            <!-- Connector 3 -->
-            <div class="flow-wire wire-3">
-              <span class="wire-pulse"></span>
-            </div>
-
-            <!-- Node 4 -->
-            <button type="button" class="flow-node" data-node-id="node-output" aria-label="Inspect Edge deploy node">
-              <div class="node-header">
-                <span class="node-pill pill-green">DEPLOY</span>
-                <span class="node-indicator"></span>
-              </div>
-              <div class="node-body">
-                <span class="node-icon">🚀</span>
-                <div class="node-info">
-                  <strong>Global Edge</strong>
-                  <span>tinker.click/app</span>
-                </div>
-              </div>
-              <div class="node-port port-left"></div>
-            </button>
-          </div>
-
-          <!-- Bottom Console Ribbon -->
-          <div class="mockup-terminal">
-            <span class="terminal-prompt">$ tinker --status:</span>
-            <span class="terminal-text" id="hero-terminal-output">Trigger: User input received [Event: webhook.payload]</span>
-            <span class="terminal-hint">(Click any node above to inspect execution)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================
-     BOLD TICKER / MARQUEE STRIP (NAKULA & OUTFIT STYLE)
-     ======================================================== -->
-<div class="marquee-strip-wrap" aria-hidden="true">
-  <div class="marquee-strip">
-    <div class="marquee-track">
-      <span>✦ SPATIAL VISUAL CANVAS</span>
-      <span>✦ 150+ UNIVERSAL CONNECTORS</span>
-      <span>✦ 4.2MS EDGE COMPILATION</span>
-      <span>✦ MULTIPLAYER CO-TINKERING</span>
-      <span>✦ ZERO-LOCKIN JSON EXPORT</span>
-      <span>✦ LOCAL-FIRST ENGINE</span>
-      <span>✦ ROLLING ALPHA WAITLIST</span>
-      <span>✦ PRE-ORDER PIONEER TIERS</span>
-      <!-- Duplicate for seamless infinite loop -->
-      <span>✦ SPATIAL VISUAL CANVAS</span>
-      <span>✦ 150+ UNIVERSAL CONNECTORS</span>
-      <span>✦ 4.2MS EDGE COMPILATION</span>
-      <span>✦ MULTIPLAYER CO-TINKERING</span>
-      <span>✦ ZERO-LOCKIN JSON EXPORT</span>
-      <span>✦ LOCAL-FIRST ENGINE</span>
-      <span>✦ ROLLING ALPHA WAITLIST</span>
-      <span>✦ PRE-ORDER PIONEER TIERS</span>
-    </div>
-  </div>
-</div>
-
-<!-- ========================================================
-     2. THE PROBLEM STATEMENT
-     ======================================================== -->
-<section id="problem" class="section problem-section">
-  <div class="container">
-    <div class="section-intro">
-      <h2 class="section-title-bold">
-        BUILDING WORKFLOWS SHOULDN'T FEEL LIKE<br>
-        <span class="text-accent-stroke">UNTANGLING A NEST OF FRAGILE CABLES.</span>
-      </h2>
-      <p class="section-desc">
-        Today's software ecosystem promises speed, but makers spend 70% of their time stitching together fragmented dashboards, debugging silent API timeouts, and rewriting glue boilerplate.
-      </p>
-    </div>
-
-    <div class="problem-grid">
-      <!-- Problem Card 1 -->
-      <div class="problem-card">
-        <div class="problem-header-row">
-          <span class="problem-index">01</span>
-          <div class="problem-icon-wrap red-glow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
-              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
-              <line x1="6" y1="6" x2="6.01" y2="6"/>
-              <line x1="6" y1="18" x2="6.01" y2="18"/>
-            </svg>
-          </div>
-        </div>
-        <h3 class="problem-title">THE 12-TOOL SAAS TRAP</h3>
-        <p class="problem-text">
-          You shouldn't need a separate subscription for forms, database hooks, visual logic, and webhook cron jobs. Context switching between 12 distinct logins destroys creative momentum.
-        </p>
-        <div class="problem-quote">
-          "I spent 6 hours configuring OAuth just to send a customized customer notification."
-        </div>
-      </div>
-
-      <!-- Problem Card 2 -->
-      <div class="problem-card">
-        <div class="problem-header-row">
-          <span class="problem-index">02</span>
-          <div class="problem-icon-wrap amber-glow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-          </div>
-        </div>
-        <h3 class="problem-title">FRAGILE SPAGHETTI PLUMBING</h3>
-        <p class="problem-text">
-          Traditional automation tools hide logic behind labyrinthine dropdowns. When an API payload changes without notice, downstream processes fail silently with opaque error codes.
-        </p>
-        <div class="problem-quote">
-          "A silent payload shift brought down our lead capture for 3 days before anyone noticed."
-        </div>
-      </div>
-
-      <!-- Problem Card 3 -->
-      <div class="problem-card">
-        <div class="problem-header-row">
-          <span class="problem-index">03</span>
-          <div class="problem-icon-wrap purple-glow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-            </svg>
-          </div>
-        </div>
-        <h3 class="problem-title">RIGID WALLS & HEAVY LOCK-IN</h3>
-        <p class="problem-text">
-          Most "no-code" platforms lock you in with proprietary schemas. As soon as your idea needs custom code or high-throughput scaling, you hit an immovable enterprise paywall.
-        </p>
-        <div class="problem-quote">
-          "Either it’s too toy-like for real engineering, or so complex it requires dedicated certified consultants."
-        </div>
-      </div>
-    </div>
-
-    <!-- Comparative Matrix Banner -->
-    <div class="comparison-banner">
-      <div class="comp-col comp-old">
-        <h4>THE FRAGILE PAST</h4>
-        <ul>
-          <li>❌ 10+ tabs open across multiple fragile services</li>
-          <li>❌ Opaque debugging and silent failure states</li>
-          <li>❌ Slow execution with multi-second cloud delays</li>
-          <li>❌ Locked into expensive proprietary ecosystems</li>
-        </ul>
-      </div>
-      <div class="comp-vs">
-        <span>VS</span>
-      </div>
-      <div class="comp-col comp-tinker">
-        <h4>THE TINKER STANDARD</h4>
-        <ul>
-          <li>✅ One fluid, spatial visual canvas for everything</li>
-          <li>✅ Real-time visual node execution & deterministic trails</li>
-          <li>✅ Native 4.2ms edge compilation with zero runtime bloat</li>
-          <li>✅ Fully exportable, local-first data architecture</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================
-     3. PRODUCT REVEAL & CORE BENEFITS
-     ======================================================== -->
-<section id="reveal" class="section reveal-section">
-  <div class="ambient-glow glow-left"></div>
-  <div class="container">
-    <div class="section-intro">
-      <h2 class="section-title-bold">
-        MEET TINKER.<br>
-        <span class="bold-glow-text">THE CREATIVE ENGINE THAT SETS YOU FREE.</span>
-      </h2>
-      <p class="section-desc">
-        Tinker dissolves the friction between your vision and execution. It combines the tactile simplicity of building blocks with the raw horsepower of modern cloud runtimes.
-      </p>
-    </div>
-
-    <div class="benefits-grid">
-      <!-- Benefit 1 -->
-      <div class="benefit-card">
-        <div class="benefit-visual visual-canvas">
-          <div class="mini-canvas-node">
-            <span class="node-mini-tag">SPATIAL CANVAS</span>
-            <span class="node-mini-wire"></span>
-            <span class="node-mini-tag active-tag">ZERO LAG</span>
-          </div>
-        </div>
-        <div class="benefit-content">
-          <div class="benefit-num">01</div>
-          <h3 class="benefit-title">SPATIAL CLICK-AND-SNAP CANVAS</h3>
-          <p class="benefit-text">
-            Drag, snap, wire, and branch without limits. Tinker’s infinite spatial canvas gives you the complete aerial view of your data, logic, and external hooks in a single delightful interface.
-          </p>
-          <ul class="benefit-list">
-            <li>Auto-aligning magnetic connectors that never spaghetti</li>
-            <li>Instant type-safety and real-time visual validation</li>
-            <li>Sub-millisecond pan and zoom responsiveness at 120 FPS</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Benefit 2 -->
-      <div class="benefit-card reverse">
-        <div class="benefit-visual visual-engine">
-          <div class="code-preview-box">
-            <div class="code-header">
-              <span class="code-lang">TINKER MICRO-ENGINE // JS + PYTHON</span>
-              <span class="code-badge">⚡ 4.2MS</span>
-            </div>
-            <pre><code><span class="c-key">transform</span> (payload) => {
-  <span class="c-prop">const</span> { order, user } = payload;
-  <span class="c-ret">return</span> {
-    id: order.id,
-    notify: user.isAlphaPioneer,
-    hash: crypto.randomUUID()
-  };
-};</code></pre>
-          </div>
-        </div>
-        <div class="benefit-content">
-          <div class="benefit-num">02</div>
-          <h3 class="benefit-title">CODE WHEN YOU WANT, BLOCKS WHEN YOU DON'T</h3>
-          <p class="benefit-text">
-            Never hit a ceiling. When visual components do the trick, snap them in. When you need custom regex, complex formulas, or custom SDK calls, drop in inline JS/Python without breaking your flow.
-          </p>
-          <ul class="benefit-list">
-            <li>Zero cold-start micro-sandboxes with isolated state</li>
-            <li>First-class package ecosystem integration (npm/PyPI)</li>
-            <li>Bi-directional code and block synchronicity</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Benefit 3 -->
-      <div class="benefit-card">
-        <div class="benefit-visual visual-deploy">
-          <div class="edge-deploy-visual">
-            <div class="globe-pulse"></div>
-            <div class="edge-pill">
-              <span class="live-dot"></span>
-              <span>LIVE EDGE: TINKER.CLICK/GATEWAY</span>
-            </div>
-          </div>
-        </div>
-        <div class="benefit-content">
-          <div class="benefit-num">03</div>
-          <h3 class="benefit-title">ONE-CLICK GLOBAL EDGE DEPLOYMENT</h3>
-          <p class="benefit-text">
-            No provisioning servers, configuring SSL certificates, or maintaining Docker containers. Hit publish and Tinker instantly broadcasts your workflow to 300+ edge locations worldwide.
-          </p>
-          <ul class="benefit-list">
-            <li>Automatic CDN routing & ultra-low latency execution</li>
-            <li>Built-in rate limiting and anti-DDoS shielding</li>
-            <li>Instant atomic rollback to any historical version snapshot</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================
-     4. FEATURE DEEP-DIVE (BENTO GRID & TABS)
-     ======================================================== -->
-<section id="features" class="section features-section">
-  <div class="container">
-    <div class="section-intro">
-      <h2 class="section-title-bold">
-        ENGINEERED FOR SPEED.<br>
-        <span class="text-accent-stroke">ARCHITECTED FOR MASTER BUILDERS.</span>
-      </h2>
-      <p class="section-desc">
-        Explore the foundational pillars that make Tinker the most responsive, capable platform you will ever use.
-      </p>
-    </div>
-
-    <!-- Feature Navigation Tabs -->
-    <div class="feature-tabs-wrap">
-      <div class="feature-tab-list" role="tablist" aria-label="Feature deep-dive tabs">
-        <button type="button" class="feature-tab-btn active" role="tab" aria-selected="true" data-feature-tab="tab-canvas">
-          <span class="tab-icon">🎨</span>
-          <span>VISUAL CANVAS</span>
+      <div class="sphere-layout">
+        {% for node in flow %}
+        <button type="button" class="flow-card flow-card-{{ loop.index }}" data-step="{{ loop.index0 }}" data-status="{{ node.status }}">
+          <span class="node-kind">{{ node.kind }}</span>
+          <strong>{{ node.name }}</strong>
+          <span class="node-sub">{{ node.sub }}</span>
         </button>
-        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-connectors">
-          <span class="tab-icon">🔌</span>
-          <span>UNIVERSAL CONNECTORS</span>
-        </button>
-        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-ai">
-          <span class="tab-icon">🤖</span>
-          <span>AI & LOGIC ENGINES</span>
-        </button>
-        <button type="button" class="feature-tab-btn" role="tab" aria-selected="false" data-feature-tab="tab-collab">
-          <span class="tab-icon">👥</span>
-          <span>MULTIPLAYER SYNC</span>
-        </button>
+        {% endfor %}
+        <div class="sphere-target" data-stage-target>
+          <canvas class="sphere-canvas" aria-hidden="true"></canvas>
+        </div>
+      </div>
+
+      <p class="stage-status">
+        <span class="stage-status-label">Status</span>
+        <span data-stage-status>{{ flow[0].status }}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     2. THE IDEA
+     ======================================================== -->
+<section id="idea" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">(01) The idea</span>
+      <div>
+        <h2 class="section-title">Software you can make, <span class="text-muted">not just use.</span></h2>
+        <p class="section-lede">Most apps are made for you. Tinker lets you make your own: describe what you want, and it builds a small app you can play with, change and keep.</p>
       </div>
     </div>
 
-    <!-- Feature Panels -->
-    <div class="feature-panels-container">
-      <!-- Panel 1: Canvas -->
-      <div class="feature-panel active" data-feature-panel="tab-canvas">
-        <div class="bento-grid">
-          <div class="bento-card bento-wide">
-            <div class="bento-badge">INFINITE STUDIO</div>
-            <h3>Fluid Pan & Zoom with 120 FPS Rendering</h3>
-            <p>Our custom WebGL canvas engine handles 10,000+ simultaneous nodes without dropping a single frame. Zoom out for an architecture overview or zoom in for atomic logic tweaks.</p>
-            <div class="bento-canvas-preview">
-              <div class="cluster-mock">
-                <span class="cluster-pill">Auth</span>
-                <span class="cluster-line"></span>
-                <span class="cluster-pill">Stripe</span>
-                <span class="cluster-line"></span>
-                <span class="cluster-pill">Email</span>
-              </div>
-            </div>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">MAGNETIC ROUTING</div>
-            <h3>Smart Snapping</h3>
-            <p>Wires automatically route around obstacles. No messy overlapping noodles, ever.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">LOCAL-FIRST</div>
-            <h3>Offline Resilience</h3>
-            <p>Keep tinkering on airplanes or spotty WiFi. Changes sync cleanly when reconnected.</p>
-          </div>
-        </div>
-      </div>
+    <ol class="index-list">
+      <li class="reveal">
+        <span class="index-num">01</span>
+        <h3>Start with an idea</h3>
+        <p>Describe a game, a tool or a presentation in your own words. Tinker builds it for you, from a bill splitter to a scientific calculator.</p>
+      </li>
+      <li class="reveal">
+        <span class="index-num">02</span>
+        <h3>Play right away</h3>
+        <p>Tinker comes with starter apps, like a cat-and-fish game and a dinner bill splitter, that work even without an internet connection.</p>
+      </li>
+      <li class="reveal">
+        <span class="index-num">03</span>
+        <h3>Keep what you make</h3>
+        <p>Everything you create lives in My apps, sorted into categories, with a cover image you can update in one click.</p>
+      </li>
+    </ol>
+  </div>
+</section>
 
-      <!-- Panel 2: Connectors -->
-      <div class="feature-panel" data-feature-panel="tab-connectors" hidden>
-        <div class="bento-grid">
-          <div class="bento-card bento-wide">
-            <div class="bento-badge">UNIVERSAL ECOSYSTEM</div>
-            <h3>150+ Plug-and-Play Connectors</h3>
-            <p>Connect natively to Stripe, GitHub, Supabase, PostgreSQL, Airtable, Discord, Slack, Resend, and any REST or GraphQL endpoint with automatic auth token lifecycle management.</p>
-            <div class="connectors-icon-row">
-              <span class="connector-tag">Stripe</span>
-              <span class="connector-tag">GitHub</span>
-              <span class="connector-tag">Supabase</span>
-              <span class="connector-tag">OpenAI</span>
-              <span class="connector-tag">Postgres</span>
-              <span class="connector-tag">GraphQL</span>
-              <span class="connector-tag">+140 more</span>
-            </div>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">ZERO-CONFIG</div>
-            <h3>Webhook Ingestion</h3>
-            <p>Instantly generate unique HTTPS listener endpoints that receive and inspect live payloads.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">TYPE SAFETY</div>
-            <h3>Auto-Schema Discovery</h3>
-            <p>Tinker inspects upstream responses and autocompletes fields downstream automatically.</p>
-          </div>
-        </div>
+<!-- ========================================================
+     3. MEET TINKER
+     ======================================================== -->
+<section id="tinker" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">(02) Meet Tinker</span>
+      <div>
+        <h2 class="section-title">Make it. Remix it. <span class="text-muted">Share it.</span></h2>
+        <p class="section-lede">From a game of Go to a working copy of Winamp, the apps people make in Tinker run right inside it.</p>
       </div>
+    </div>
 
-      <!-- Panel 3: AI & Logic Engines -->
-      <div class="feature-panel" data-feature-panel="tab-ai" hidden>
-        <div class="bento-grid">
-          <div class="bento-card bento-wide">
-            <div class="bento-badge">INTELLIGENT AUTOMATION</div>
-            <h3>Native Multi-Model AI Orchestration</h3>
-            <p>Chain multimodal models directly inside your workflows. Extract structured JSON, generate contextual graphics, summarize transcripts, and route support tickets in milliseconds.</p>
-            <div class="ai-flow-strip">
-              <span class="ai-tag">Raw Input</span>
-              <span class="ai-arrow">→</span>
-              <span class="ai-tag ai-pulse">LLM Semantic Parser</span>
-              <span class="ai-arrow">→</span>
-              <span class="ai-tag">Structured Output</span>
-            </div>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">DETERMINISTIC</div>
-            <h3>Formula Engines</h3>
-            <p>Spreadsheet-simple expressions or full TypeScript power right inside node inputs.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">OBSERVABILITY</div>
-            <h3>Step-by-Step Replay</h3>
-            <p>Rewind any production execution step-by-step with zero-downtime mock playback.</p>
-          </div>
-        </div>
+    <div class="pillars">
+      <article class="pillar reveal">
+        <span class="index-num">01</span>
+        <h3>Discover</h3>
+        <p>Browse the public gallery of apps other people have made, sorted into categories, and open any of them in a click.</p>
+      </article>
+      <article class="pillar reveal">
+        <span class="index-num">02</span>
+        <h3>Remix</h3>
+        <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
+      </article>
+      <article class="pillar reveal">
+        <span class="index-num">03</span>
+        <h3>Work offline</h3>
+        <p>Run Tinker offline with your own AI model. The starter apps keep working without a connection.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     4. FEATURES
+     ======================================================== -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">(03) Features</span>
+      <div>
+        <h2 class="section-title">Made for tinkerers, families <span class="text-muted">and classrooms.</span></h2>
       </div>
+    </div>
 
-      <!-- Panel 4: Multiplayer Sync -->
-      <div class="feature-panel" data-feature-panel="tab-collab" hidden>
-        <div class="bento-grid">
-          <div class="bento-card bento-wide">
-            <div class="bento-badge">REAL-TIME CANVAS</div>
-            <h3>Collaborative Co-Tinkering</h3>
-            <p>Pair program or design systems together in real time. See teammates' colored cursors, inspect the same node properties, and leave anchored comments right on canvas coordinates.</p>
-            <div class="collab-cursor-demo">
-              <span class="cursor-tag cursor-blue">Alex (Engineering)</span>
-              <span class="cursor-tag cursor-purple">Jordan (Design)</span>
-            </div>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">VERSION HISTORY</div>
-            <h3>Branching & Merging</h3>
-            <p>Branch out experimental workflows and merge them cleanly with automated conflict resolution.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-badge">ACCESS CONTROL</div>
-            <h3>Granular Permissions</h3>
-            <p>Role-based access controls for enterprise and studio teams with audit-ready log streams.</p>
-          </div>
-        </div>
+    <dl class="stats stats-words reveal">
+      <div><dt>Desktop app</dt><dd>Windows</dd></div>
+      <div><dt>Desktop app</dt><dd>macOS</dd></div>
+      <div><dt>Desktop app</dt><dd>Linux</dd></div>
+      <div><dt>In progress</dt><dd>iPad</dd></div>
+    </dl>
+
+    <div class="feature-grid">
+      <div class="feature reveal">
+        <h3>Your language</h3>
+        <p>The whole app is translated, and commands work in your own language too.</p>
+      </div>
+      <div class="feature reveal">
+        <h3>One-click covers</h3>
+        <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
+      </div>
+      <div class="feature reveal">
+        <h3>Export to PowerPoint</h3>
+        <p>Turn a presentation into slides, or get a deck that explains how an app works.</p>
+      </div>
+      <div class="feature reveal">
+        <h3>Split screen</h3>
+        <p>Run apps side by side and resize them to fit the way you work.</p>
+      </div>
+      <div class="feature reveal">
+        <h3>Your choice of server</h3>
+        <p>Sign in with Sage, connect your own Tinker server, or bring your own AI model.</p>
+      </div>
+      <div class="feature reveal">
+        <h3>Slash commands</h3>
+        <p>Type commands like /status and /login to move around faster.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ========================================================
-     5. PRICING OR PRE-ORDER TIERS
+     5. FAQ
      ======================================================== -->
-<section id="pricing" class="section pricing-section">
-  <div class="ambient-glow glow-center"></div>
-  <div class="container">
-    <div class="section-intro">
-      <h2 class="section-title-bold">
-        RESERVE YOUR FOUNDER SEAT.<br>
-        <span class="bold-glow-text">LOCK IN PIONEER RATES FOR LIFE.</span>
-      </h2>
-      <p class="section-desc">
-        Join our private Alpha program today. Early pre-order backers receive prioritized invite queuing, exclusive founder Discord access, and grandfathered lifetime rates.
-      </p>
-
-      <!-- Billing Toggle -->
-      <div class="pricing-toggle-wrap">
-        <span class="toggle-label">MONTHLY</span>
-        <label class="switch" for="billing-toggle">
-          <input type="checkbox" id="billing-toggle" checked aria-label="Toggle annual billing discount">
-          <span class="slider round"></span>
-        </label>
-        <span class="toggle-label">
-          ANNUAL PIONEER
-          <span class="discount-pill">SAVE 25% + LIFETIME LOCK</span>
-        </span>
-      </div>
+<section id="faq" class="section">
+  <div class="container faq-layout">
+    <div class="section-head-stack reveal">
+      <span class="eyebrow">(04) FAQ</span>
+      <h2 class="section-title">Questions, <span class="text-muted">answered.</span></h2>
     </div>
 
-    <div class="pricing-grid">
-      <!-- Tier 1: Waitlist Pioneer -->
-      <div class="pricing-card tier-pioneer">
-        <div class="card-badge">COMMUNITY TIER</div>
-        <h3 class="tier-name">ALPHA PIONEER</h3>
-        <p class="tier-desc">Ideal for hobbyists, independent hackers, and curious builders exploring Tinker.</p>
-        
-        <div class="tier-price">
-          <span class="currency">$</span>
-          <span class="tier-price-amount" data-annual="0" data-monthly="0">0</span>
-          <span class="tier-price-period">/free during Beta</span>
-        </div>
-
-        <ul class="tier-features">
-          <li><span class="check">✓</span> Rolling waitlist queue access</li>
-          <li><span class="check">✓</span> Up to 3 active visual canvases</li>
-          <li><span class="check">✓</span> 10,000 edge event executions/mo</li>
-          <li><span class="check">✓</span> Standard community templates</li>
-          <li><span class="check">✓</span> Tinker Discord community access</li>
-          <li class="muted-feat"><span class="cross">✕</span> Priority Batch 1 access</li>
-          <li class="muted-feat"><span class="cross">✕</span> Dedicated founder Slack</li>
-        </ul>
-
-        <div class="card-action">
-          <button type="button" class="btn-tier-select" data-select-tier="Alpha Pioneer">
-            JOIN FREE WAITLIST
-          </button>
-        </div>
-      </div>
-
-      <!-- Tier 2: Pro Early-Bird (Highlighted) -->
-      <div class="pricing-card tier-pro featured-card">
-        <div class="featured-badge">MOST POPULAR • PRIORITY BATCH #1</div>
-        <div class="card-badge">FOUNDER PRE-ORDER</div>
-        <h3 class="tier-name">TINKER PRO</h3>
-        <p class="tier-desc">For power builders, freelance creators, and technical founders shipping high-impact tools.</p>
-        
-        <div class="tier-price">
-          <span class="currency">$</span>
-          <span class="tier-price-amount" data-annual="15" data-monthly="19">15</span>
-          <span class="tier-price-period">/month, billed annually</span>
-        </div>
-
-        <ul class="tier-features">
-          <li><span class="check check-highlight">✓</span> <strong>Guaranteed Batch #1 Alpha Invite</strong></li>
-          <li><span class="check">✓</span> <strong>Unlimited</strong> visual canvases & flows</li>
-          <li><span class="check">✓</span> 500,000 edge event executions/mo</li>
-          <li><span class="check">✓</span> Custom domains & branded endpoints</li>
-          <li><span class="check">✓</span> Full AI engine integration & credits</li>
-          <li><span class="check">✓</span> Direct founder private Slack channel</li>
-          <li><span class="check">✓</span> <strong>Grandfathered lifetime 40% discount</strong></li>
-        </ul>
-
-        <div class="card-action">
-          <button type="button" class="btn-primary btn-tier-select" data-select-tier="Tinker Pro Pre-Order">
-            RESERVE PRO PRE-ORDER
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M3 8h10M9 4l4 4-4 4"/>
-            </svg>
-          </button>
-        </div>
-        <p class="preorder-guarantee">🛡️ 100% refundable prior to account activation.</p>
-      </div>
-
-      <!-- Tier 3: Studio & Teams -->
-      <div class="pricing-card tier-studio">
-        <div class="card-badge">TEAM & STUDIO</div>
-        <h3 class="tier-name">STUDIO TEAM</h3>
-        <p class="tier-desc">For creative agencies, product teams, and studios building unified automation suites.</p>
-        
-        <div class="tier-price">
-          <span class="currency">$</span>
-          <span class="tier-price-amount" data-annual="39" data-monthly="49">39</span>
-          <span class="tier-price-period">/month, billed annually</span>
-        </div>
-
-        <ul class="tier-features">
-          <li><span class="check">✓</span> Everything in Tinker Pro</li>
-          <li><span class="check">✓</span> 5 included collaborator team seats</li>
-          <li><span class="check">✓</span> Real-time multiplayer co-tinkering</li>
-          <li><span class="check">✓</span> 2,500,000 edge event executions/mo</li>
-          <li><span class="check">✓</span> Shared organization component libraries</li>
-          <li><span class="check">✓</span> Audit log history & role permissions</li>
-          <li><span class="check">✓</span> 1-on-1 architecture onboarding call</li>
-        </ul>
-
-        <div class="card-action">
-          <button type="button" class="btn-tier-select" data-select-tier="Studio Pre-Order">
-            RESERVE STUDIO ACCESS
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================
-     6. FAQ (OVERCOMING OBJECTIONS)
-     ======================================================== -->
-<section id="faq" class="section faq-section">
-  <div class="container">
-    <div class="section-intro">
-      <h2 class="section-title-bold">
-        FREQUENTLY ASKED QUESTIONS.<br>
-        <span class="text-accent-stroke">TRANSPARENT, HONEST CLARITY.</span>
-      </h2>
-      <p class="section-desc">
-        Everything you need to know about the Tinker platform, private Alpha rollout, and pre-order benefits.
-      </p>
-    </div>
-
-    <div class="faq-accordion-wrapper">
-      <!-- FAQ 1 -->
+    <div class="faq-list reveal">
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-1">
-          <span class="faq-q-text">What makes Tinker radically different from Zapier, Make, or Retool?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>What is Tinker?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-1" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Traditional tools like Zapier and Make operate on linear, disconnected steps that incur high cloud latency, rigid form fields, and sudden payload breakage. Retool requires heavy SQL and manual frontend wiring.</p>
-            <p>Tinker is a <strong>spatial, reactive visual canvas</strong> powered by a sub-5ms edge engine. It treats data flow visually with instant magnetic snapping, bi-directional code injection (JavaScript/Python), and real-time execution trails. You get the speed of visual building with the raw capabilities of an IDE.</p>
-          </div>
+          <p>Tinker is an app for making your own small apps by describing them: games, tools, presentations and more.</p>
+          <p>You can keep what you make, remix apps other people have made, and share your own in the public gallery.</p>
         </div>
       </div>
 
-      <!-- FAQ 2 -->
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-2">
-          <span class="faq-q-text">When does the private Alpha launch and how do waitlist invites work?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>Do I need an account?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-2" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Private Alpha invites are rolling out in targeted batches starting this month. Users who reserve a Founder Pre-Order tier receive guaranteed <strong>Batch #1 Priority Invites</strong>, while free waitlist entries are invited sequentially as our edge server capacity expands.</p>
-          </div>
+          <p>No. You can open Tinker and play the built-in starter apps straight away. Create an account when you want to make and save your own, or choose to run Tinker offline instead.</p>
         </div>
       </div>
 
-      <!-- FAQ 3 -->
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-3">
-          <span class="faq-q-text">Is Tinker web-based, local-first, or desktop?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>Does it work without internet?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-3" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Tinker gives you the best of both worlds. The core application runs fluidly in any modern web browser via WebAssembly and WebGL, with full offline persistence. We are also shipping companion native desktop apps for macOS, Windows, and Linux during Beta for local file system hooks.</p>
-          </div>
+          <p>Yes. The starter apps work offline, and you can run Tinker fully offline with your own AI model. Browsing the public gallery needs a connection.</p>
         </div>
       </div>
 
-      <!-- FAQ 4 -->
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-4">
-          <span class="faq-q-text">Will I be locked into a proprietary platform? Can I export my workflows?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>Which devices does it run on?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-4" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Never. We believe in open developer sovereignty. Every Tinker canvas can be exported as standard JSON ASTs or compiled directly into standalone TypeScript/Node.js edge workers that you can run on your own infrastructure anytime.</p>
-          </div>
+          <p>Windows, macOS and Linux. An iPad version is in progress, and mobile versions are planned.</p>
         </div>
       </div>
 
-      <!-- FAQ 5 -->
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-5">
-          <span class="faq-q-text">Is my Founder Pre-Order reservation refundable?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>Can I use it in my own language?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-5" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Yes, 100%. If your project priorities change or you decide Tinker isn’t the right fit before your private Alpha key is activated, simply email <a href="mailto:hello@tinker.click">hello@tinker.click</a> for an immediate, no-questions-asked refund.</p>
-          </div>
+          <p>Yes. Tinker is fully translated, and commands work in your language as well as in English. It tends to work best in English and Chinese, and early testers have had great results in German.</p>
         </div>
       </div>
 
-      <!-- FAQ 6 -->
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-6">
-          <span class="faq-q-text">What happens immediately after I submit my email below?</span>
-          <span class="faq-q-icon" aria-hidden="true">+</span>
+          <span>When can I try it?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-6" class="faq-answer" hidden>
-          <div class="faq-answer-inner">
-            <p>Your email will be logged directly into the Tinker waitlist engine at <a href="https://tinker.click/">tinker.click</a>. You will receive an immediate confirmation, followed by periodic insider progress dispatches, sneak peeks of upcoming canvas features, and your private Alpha onboarding link.</p>
-          </div>
+          <p>Tinker is in private alpha with a small group of testers. Join the waitlist and we'll email you when it opens to more people.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ========================================================
+     6. CLOSING CTA
+     ======================================================== -->
+<section id="waitlist" class="section closing">
+  <div class="container">
+    <div class="closing-inner reveal">
+      <span class="eyebrow">(05) Private alpha</span>
+      <h2 class="closing-title">Be first <span class="text-muted">to tinker.</span></h2>
+      <a href="#waitlist" class="btn btn-primary btn-lg" data-open-waitlist>
+        Join the waitlist
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+    </div>
+  </div>
+</section>

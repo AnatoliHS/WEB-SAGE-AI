@@ -10,5 +10,9 @@
 
     {% include "component/footer.njk" %}
     {% include "component/scripts.njk" %}
+    {% if heroSphere %}
+    <script src="/assets/js/hero-stage.js"></script>
+    <script src="/assets/js/sphere.js"></script>
+    {% endif %}
   </body>
 </html>

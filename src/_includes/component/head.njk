@@ -1,10 +1,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ title or "Tinker — The Bold Creative Playground & Visual Automation Engine" }}</title>
+  <title>{{ title or "Tinker — Make your own apps by describing them" }}</title>
 
-  <meta name="description" content="{{ description or 'Tinker is the gateway to friction-free creative workflows and intelligent visual automations. Join the waitlist for private Alpha access.' }}" />
-  <meta name="keywords" content="Tinker, visual canvas, automations, workflow engine, developer tools, creative playground, no-code, tinker app, tinker.click" />
+  <meta name="description" content="{{ description or 'Tinker turns what you describe into small apps you can play, remix and share. Join the waitlist for the private alpha.' }}" />
+  <meta name="keywords" content="Tinker, make your own apps, AI app maker, remix apps, app gallery, offline apps, creative playground, tinker app, tinker.click" />
   <meta name="author" content="Tinker" />
   <meta name="robots" content="index, follow" />
 
@@ -14,15 +14,15 @@
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tinker.click{{ page.url }}" />
-  <meta property="og:title" content="{{ title or 'Tinker — The Bold Creative Playground & Visual Automation Engine' }}" />
-  <meta property="og:description" content="{{ description or 'Tinker is coming. Explore the next generation of visual flow engineering and reserve your priority early access.' }}" />
+  <meta property="og:title" content="{{ title or 'Tinker — Make your own apps by describing them' }}" />
+  <meta property="og:description" content="{{ description or 'Tinker turns what you describe into small apps you can play, remix and share. Join the waitlist for the private alpha.' }}" />
   <meta property="og:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
 
   <!-- Twitter Card -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://tinker.click{{ page.url }}" />
-  <meta property="twitter:title" content="{{ title or 'Tinker — The Bold Creative Playground & Visual Automation Engine' }}" />
-  <meta property="twitter:description" content="{{ description or 'Tinker is coming. Explore the next generation of visual flow engineering and reserve your priority early access.' }}" />
+  <meta property="twitter:title" content="{{ title or 'Tinker — Make your own apps by describing them' }}" />
+  <meta property="twitter:description" content="{{ description or 'Tinker turns what you describe into small apps you can play, remix and share. Join the waitlist for the private alpha.' }}" />
   <meta property="twitter:image" content="https://tinker.click/assets/tinker-wordmark-cream-400.png" />
 
   <!-- Structured Data: SoftwareApplication -->
@@ -31,22 +31,19 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Tinker",
-    "operatingSystem": "Web, macOS, Windows, Linux",
-    "applicationCategory": "DeveloperApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0.00",
-      "priceCurrency": "USD"
-    },
-    "description": "Tinker is a next-generation visual automation canvas and creative playground that lets builders, developers, and creators assemble logic, pipelines, and workflows at the speed of thought.",
+    "operatingSystem": "Windows, macOS, Linux",
+    "description": "Tinker is an app for making your own small apps by describing them, with a public gallery to play, remix and share them.",
     "url": "https://tinker.click"
   }
   </script>
 
-  <!-- Google Fonts: Anton (Bold Display), Geist (Editorial Grotesque Body), JetBrains Mono (Tech Accent) -->
+  <!-- Flag JS early so reveal animations never hide content without it -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Google Fonts: Anton (wordmark only), Geist (everything else) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="/assets/css/style.css">
@@ -56,6 +53,6 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0e0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eee9e2" media="(prefers-color-scheme: light)">
 </head>

@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "Describe",
+    "name": "Your idea",
+    "sub": "“A cat-and-fish game”",
+    "status": "Idea received: a cat-and-fish game"
+  },
+  {
+    "kind": "Build",
+    "name": "Tinker makes it",
+    "sub": "A working app, built for you",
+    "status": "Building your app"
+  },
+  {
+    "kind": "Remix",
+    "name": "Make it yours",
+    "sub": "Change it, translate it",
+    "status": "Your copy is ready, now in German"
+  },
+  {
+    "kind": "Share",
+    "name": "Public gallery",
+    "sub": "For others to play and remix",
+    "status": "Shared to the Tinker gallery"
+  }
+]
