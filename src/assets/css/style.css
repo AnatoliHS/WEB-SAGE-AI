@@ -155,8 +155,13 @@ button {
   color: var(--ink-2);
 }
 
-.text-muted {
-  color: var(--muted);
+.text-accent {
+  color: var(--accent);
+}
+
+/* Matches the orange plus in the logo mark (assets/tinker-mark.svg) */
+.text-orange {
+  color: #ff5f00;
 }
 
 /* ==========================================================================
@@ -909,9 +914,37 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   color: var(--ink-2);
 }
 
+/* Row screenshots */
+.index-thumb {
+  grid-column: 3 / -1;
+  max-width: 560px;
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+
+.index-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 1.1s var(--ease);
+}
+
+.index-list h3 {
+  transition: color 0.4s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .index-list li:hover h3 { color: var(--accent); }
+  .index-list li:hover .index-thumb img { transform: scale(1.04); }
+}
+
 @media (max-width: 760px) {
   .index-list li { grid-template-columns: 1fr; }
-  .index-list p { grid-column: 1; }
+  .index-list p,
+  .index-thumb { grid-column: 1; }
 }
 
 /* Pillars */
@@ -984,36 +1017,464 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .stats { grid-template-columns: 1fr 1fr; }
 }
 
-/* Feature grid */
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: var(--gutter);
-}
-
-.feature {
-  padding: 24px 0 40px;
+/* Platform row: logo above each name */
+.platforms > div {
+  padding-top: 20px;
   border-top: 1px solid var(--line);
 }
 
-.feature h3 {
-  margin-bottom: 8px;
-  font-size: 1.125rem;
+.platform-logo {
+  display: block;
+  width: clamp(32px, 3.4vw, 48px);
+  height: clamp(32px, 3.4vw, 48px);
+  margin-bottom: clamp(20px, 3vw, 40px);
+  fill: currentColor;
+  color: var(--ink);
+  transition: color 0.4s ease, transform 0.6s var(--ease);
+}
+
+.platforms > div:hover .platform-logo {
+  color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.platforms .is-upcoming dd,
+.platforms .is-upcoming .platform-logo {
+  color: var(--muted);
+}
+
+/* Feature bento: icon and title wear the frame's colour; on hover the colour rises to fill the frame */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(220px, auto);
+  gap: 12px;
+}
+
+.bento-cell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.bento-big { grid-column: span 2; grid-row: span 2; }
+.bento-wide { grid-column: span 2; }
+
+.bento-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c);
+  transform: translateY(101%);
+  transition: transform 0.65s var(--ease);
+}
+
+.bento-icon {
+  color: var(--c);
+  transition: color 0.45s ease, transform 0.6s var(--ease);
+}
+
+.bento-cell h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--c);
+  transition: color 0.45s ease;
+}
+
+.bento-cell p {
+  margin-top: 6px;
+  max-width: 40ch;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  transition: color 0.45s ease;
+}
+
+/* "Make me a game" cycling through languages */
+.bento-say {
+  position: relative;
+  height: 1.15em;
+  overflow: hidden;
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  color: var(--ink);
+  transition: color 0.45s ease;
+}
+
+.bento-say span {
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+  transform: translateY(105%);
+  transition: transform 0.8s var(--ease), color 0.45s ease;
+}
+
+/* Each language gets its own colour from the bento palette */
+.bento-say span:nth-child(1) { color: #4a6bff; }
+.bento-say span:nth-child(2) { color: #e24a12; }
+.bento-say span:nth-child(3) { color: #8f5cff; }
+.bento-say span:nth-child(4) { color: #e0457b; }
+.bento-say span:nth-child(5) { color: #0e936c; }
+
+.bento-say span.is-in { transform: none; }
+.bento-say span.is-out { transform: translateY(-105%); }
+
+.bento-cmds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bento-cmds code {
+  padding: 6px 12px;
+  border: 1px solid var(--c);
+  border-radius: 999px;
+  color: var(--c);
+  font: 500 0.9375rem/1 var(--font-body);
+  transition: color 0.45s ease, border-color 0.45s ease, transform 0.5s var(--ease);
+}
+
+@media (hover: hover) {
+  .bento-cell:hover .bento-fill { transform: none; }
+  .bento-cell:hover .bento-icon { transform: translateY(-4px); }
+
+  .bento-cell:hover .bento-icon,
+  .bento-cell:hover h3,
+  .bento-cell:hover p,
+  .bento-cell:hover .bento-say,
+  .bento-cell:hover .bento-say span {
+    color: #121212;
+  }
+
+  .bento-cell:hover .bento-cmds code {
+    color: #121212;
+    border-color: #121212;
+    transform: translateY(-4px);
+  }
+
+  .bento-cell:hover .bento-cmds code:nth-child(2) { transition-delay: 0.06s; }
+  .bento-cell:hover .bento-cmds code:nth-child(3) { transition-delay: 0.12s; }
+}
+
+@media (max-width: 860px) {
+  .bento { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .bento-big, .bento-wide { grid-column: auto; grid-row: auto; }
+}
+
+/* Remix chain (Meet Tinker): app cards above the pillars, a carousel on small screens */
+.chain-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 28px var(--gutter);
+}
+
+/* Keep each pillar's title tucked right under its card, no rule between them */
+.chain .pillar {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.chain .pillar h3 {
+  margin-top: 16px;
+}
+
+.chain-step {
+  grid-row: span 2;
+  display: grid;
+  grid-template-rows: subgrid;
+}
+
+.app-card {
+  position: relative;
+  padding: 12px 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-raised);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease), border-color 0.4s;
+}
+
+.app-card.is-dim {
+  opacity: 0.3;
+  transform: translateY(10px);
+}
+
+.app-card.is-focus {
+  border-color: var(--accent);
+}
+
+.app-cover {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--a), var(--b));
+  color: #fff;
+  font-size: 2.75rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  transition: background 0.8s var(--ease);
+}
+
+.app-name {
+  display: block;
+  margin-top: 12px;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
 
-.feature p {
-  max-width: 36ch;
+.app-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.app-chip {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.app-ask {
+  margin-top: 12px;
+  font-size: 0.875rem;
   color: var(--ink-2);
 }
 
-@media (max-width: 860px) {
-  .feature-grid { grid-template-columns: 1fr 1fr; }
+/* Step icon sitting on the card's top edge; fills with the accent on the active step */
+.chain-tag {
+  position: absolute;
+  top: -15px;
+  left: 14px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--ink);
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-@media (max-width: 560px) {
-  .feature-grid { grid-template-columns: 1fr; }
+.app-card.is-focus .chain-tag {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px var(--accent);
+}
+
+/* Dashed connector drawn across the gutter to the next card */
+.chain-link {
+  position: absolute;
+  top: 34%;
+  left: 100%;
+  width: var(--gutter);
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+
+.chain-link.is-on {
+  transform: scaleX(1);
+}
+
+.chain-ask {
+  min-height: 2.9em;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 0.875rem;
+}
+
+.chain-caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -2px;
+  background: var(--ink);
+  animation: chain-blink 1s steps(1) infinite;
+}
+
+@keyframes chain-blink {
+  50% { opacity: 0; }
+}
+
+.chain-share {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 0.875rem;
+}
+
+.chain-switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background 0.4s;
+}
+
+.chain-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s var(--ease);
+}
+
+.chain-switch.is-on {
+  background: var(--accent);
+}
+
+.chain-switch.is-on::after {
+  transform: translateX(16px);
+}
+
+.chain-count {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+.chain-count b {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.chain-nav {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  /* Swipeable slides: card + its pillar, with the next slide peeking in */
+  .chain-track {
+    display: flex;
+    gap: 16px;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 12px var(--gutter) 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .chain-track::-webkit-scrollbar { display: none; }
+
+  .chain-step {
+    flex: 0 0 86%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    scroll-snap-align: start;
+  }
+
+  .app-card.is-dim {
+    opacity: 1;
+    transform: none;
+  }
+
+  .chain-link { display: none; }
+
+  .chain-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+  }
+
+  .chain-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chain-dots button {
+    position: relative;
+    width: 28px;
+    height: 24px;
+  }
+
+  /* Each dot is a short bar that fills while its slide is showing */
+  .chain-dots button::before,
+  .chain-dots span {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    margin-top: -1.5px;
+    border-radius: 3px;
+    background: var(--line);
+  }
+
+  .chain-dots span {
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .chain-dots button.is-done span { transform: scaleX(1); }
+  .chain-dots button.is-running span { animation: chain-fill 5s linear forwards; }
+  .chain-dots button[aria-current="true"]:not(.is-running) span { transform: scaleX(1); }
+
+  .chain-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    transition: opacity 0.5s ease;
+  }
+
+  .chain-hint svg { animation: chain-nudge 1.6s var(--ease) infinite; }
+  .chain.is-swiped .chain-hint { opacity: 0; }
+}
+
+@keyframes chain-fill {
+  to { transform: scaleX(1); }
+}
+
+@keyframes chain-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
 }
 
 /* ==========================================================================
@@ -1028,6 +1489,13 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .section-head-stack {
   padding-top: 20px;
   border-top: 1px solid var(--line);
+}
+
+/* FAQ heading stays in view, just under the header, while the questions scroll past */
+.faq-layout .section-head-stack {
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+  align-self: start;
 }
 
 .section-head-stack .section-title {
@@ -1106,6 +1574,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 @media (max-width: 860px) {
   .faq-layout { grid-template-columns: 1fr; }
+  .faq-layout .section-head-stack { position: static; }
   .faq-list { grid-column: 1; }
 }
 

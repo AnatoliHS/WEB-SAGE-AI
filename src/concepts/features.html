@@ -1,0 +1,434 @@
+---
+layout: policy.njk
+title: Features concepts — Tinker
+description: Five layout concepts for the Features grid, side by side.
+noindex: true
+permalink: /concepts/features/
+features:
+  - { title: "Your language", text: "The whole app is translated, and commands work in your own language too.", c: "#2b4dff", on: "#fff", icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>' }
+  - { title: "One-click covers", text: "Snap a fresh cover image for any app with one click, even for 3D games like chess.", c: "#f2541b", on: "#fff", icon: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>' }
+  - { title: "Export to PowerPoint", text: "Turn a presentation into slides, or get a deck that explains how an app works.", c: "#ff6b8b", on: "#121212", icon: '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4"/>' }
+  - { title: "Split screen", text: "Run apps side by side and resize them to fit the way you work.", c: "#0f9f72", on: "#fff", icon: '<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/>' }
+  - { title: "Your choice of server", text: "Use the official Tinker server, host your own, or bring your own AI model.", c: "#7a3cff", on: "#fff", icon: '<rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/>' }
+  - { title: "Slash commands", text: "Type commands like /discover, /status and /login to move around faster.", c: "#ffb020", on: "#121212", icon: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M14 7l-4 10"/>' }
+  - { title: "Works with your files", text: "Tinker can read documents on your computer and reach out to the web, using tools the app makes available to the AI.", c: "#3fd3a0", on: "#121212", icon: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/>' }
+  - { title: "Under the hood", text: "Edit the system prompt and add your own tools to change how Tinker thinks and what it can do.", c: "#0e3a5c", on: "#fff", icon: '<path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>' }
+  - { title: "Open source", text: "Tinker is built in the open. Read the code, run it yourself and help shape it on GitHub.", c: "#e4c440", on: "#121212", icon: '<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>' }
+---
+
+{% macro icon(f, size) %}<svg class="fx-icon" width="{{ size or 28 }}" height="{{ size or 28 }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ f.icon | safe }}</svg>{% endmacro %}
+{% macro arrow() %}<svg class="fx-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14 14 6M7 6h7v7"/></svg>{% endmacro %}
+
+<style>
+  /* Page chrome (same as the Meet Tinker concepts page) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 36px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+
+  /* Shared: every frame carries its own colour (--c) and text colour on that colour (--on) */
+  .fx { --c: var(--accent); --on: #fff; position: relative; isolation: isolate; overflow: hidden; color: var(--ink); transition: color .45s ease; }
+  .fx-fill { position: absolute; inset: 0; z-index: -1; background: var(--c); }
+  .fx h3 { font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
+  .fx p { color: var(--ink-2); transition: color .45s ease; }
+  .fx.is-on, .fx.is-on p { color: var(--on); }
+  .fx-icon { flex: none; transition: transform .6s var(--ease); }
+  .fx-arrow { transition: transform .6s var(--ease), opacity .4s ease; }
+
+  /* ---------- A. Colour Tiles (fill follows the cursor's entry edge) ---------- */
+  .fa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .fa-tile { display: flex; flex-direction: column; min-height: 240px; padding: 24px; border: 1px solid var(--line); border-radius: 20px; }
+  .fa-tile .fx-fill { transition: transform .55s var(--ease); }
+  .fa-tile header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .fa-tile .fx-arrow { opacity: 0; transform: translate(-6px, 6px); }
+  .fa-tile.is-on .fx-arrow { opacity: 1; transform: none; }
+  .fa-tile.is-on .fx-icon { transform: rotate(-8deg) scale(1.12); }
+  .fa-tile h3 { margin-top: auto; padding-top: 40px; font-size: 1.375rem; }
+  .fa-tile p { margin-top: 8px; max-width: 34ch; }
+  @media (max-width: 860px) { .fa-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .fa-grid { grid-template-columns: 1fr; } .fa-tile { min-height: 0; } }
+
+  /* ---------- B. Index Rows (left-to-right wipe) ---------- */
+  .fb-list { list-style: none; border-bottom: 1px solid var(--line); }
+  .fb-row { display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) 32px; gap: var(--gutter); align-items: center; padding: 22px 16px; border-top: 1px solid var(--line); }
+  .fb-row .fx-fill { transform: scaleX(0); transform-origin: right; transition: transform .7s var(--ease); }
+  .fb-row:hover .fx-fill { transform: scaleX(1); transform-origin: left; }
+  .fb-num { font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .45s; }
+  .fb-row h3 { display: flex; gap: 16px; align-items: center; font-size: clamp(1.375rem, 2.8vw, 2.25rem); letter-spacing: -0.04em; transition: transform .7s var(--ease); }
+  .fb-row:hover h3 { transform: translateX(14px); }
+  .fb-row:hover .fb-num { color: var(--on); }
+  .fb-row .fx-arrow { justify-self: end; opacity: 0; transform: translateX(-10px) rotate(45deg); }
+  .fb-row:hover .fx-arrow { opacity: 1; transform: rotate(45deg); }
+  @media (max-width: 760px) {
+    .fb-row { grid-template-columns: 40px 1fr; }
+    .fb-row p { grid-column: 2; }
+    .fb-row .fx-arrow { display: none; }
+  }
+
+  /* ---------- C. Bento (fill rises from below, each frame has a small demo) ---------- */
+  .fc-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(210px, auto); gap: 12px; }
+  .fc-cell { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; padding: 24px; border-radius: 20px; background: var(--bg-raised); }
+  .fc-cell .fx-fill { transform: translateY(101%); transition: transform .65s var(--ease); }
+  .fc-cell:hover .fx-fill { transform: none; }
+  .fc-cell:hover .fx-icon { transform: translateY(-4px); }
+  .fc-cell h3 { font-size: 1.25rem; }
+  .fc-cell p { margin-top: 6px; font-size: 0.9375rem; max-width: 40ch; }
+  .fc-big { grid-column: span 2; grid-row: span 2; }
+  .fc-wide { grid-column: span 2; }
+  .fc-full { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+  .fc-say { position: relative; height: 1.1em; overflow: hidden; font-size: clamp(2.25rem, 4.6vw, 4rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.1; }
+  .fc-say span { position: absolute; inset: 0; white-space: nowrap; transform: translateY(105%); transition: transform .8s var(--ease); }
+  .fc-say span.is-in { transform: none; }
+  .fc-say span.is-out { transform: translateY(-105%); }
+  .fc-cmds { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fc-cmds code { padding: 6px 12px; border: 1px solid currentColor; border-radius: 999px; font: 500 0.9375rem/1 var(--font-body); opacity: .75; transition: transform .5s var(--ease); }
+  .fc-cell:hover .fc-cmds code:nth-child(1) { transform: translateY(-4px); }
+  .fc-cell:hover .fc-cmds code:nth-child(2) { transform: translateY(-4px); transition-delay: .06s; }
+  .fc-cell:hover .fc-cmds code:nth-child(3) { transform: translateY(-4px); transition-delay: .12s; }
+  .fc-panes { display: flex; gap: 4px; height: 44px; }
+  .fc-panes i { flex: 1; border: 1.5px solid currentColor; border-radius: 6px; opacity: .7; transition: flex .7s var(--ease); }
+  .fc-cell:hover .fc-panes i:first-child { flex: 2.2; }
+  .fc-full .fc-cta { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; padding: 10px 18px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.875rem; font-weight: 500; white-space: nowrap; }
+  @media (max-width: 860px) {
+    .fc-grid { grid-template-columns: 1fr 1fr; }
+    .fc-full { flex-direction: column; align-items: flex-start; }
+    .fc-full .fc-cta { margin-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .fc-grid { grid-template-columns: 1fr; }
+    .fc-big, .fc-wide { grid-column: auto; grid-row: auto; }
+  }
+
+  /* ---------- D. Strips (hovered strip widens and floods with colour) ---------- */
+  .fd-strips { display: flex; gap: 8px; height: 440px; }
+  .fd-strip { flex: 1 1 0; min-width: 0; padding: 20px 16px; border: 1px solid var(--line); border-radius: 18px; transition: flex-grow .8s var(--ease), color .45s ease; cursor: default; }
+  .fd-strip .fx-fill { transform: translateY(-101%); transition: transform .7s var(--ease); }
+  .fd-strip.is-on { flex-grow: 4.5; }
+  .fd-strip.is-on .fx-fill { transform: none; }
+  .fd-num { display: block; font-size: 0.8125rem; color: inherit; opacity: .6; margin-bottom: 14px; }
+  .fd-vert { position: absolute; left: 16px; bottom: 20px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 1.125rem; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; transition: opacity .3s ease; }
+  .fd-open { position: absolute; left: 20px; bottom: 20px; width: min(340px, calc(100% - 40px)); opacity: 0; transform: translateY(12px); transition: opacity .3s ease, transform .5s var(--ease); }
+  .fd-open h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -0.04em; }
+  .fd-open p { margin-top: 10px; }
+  .fd-strip.is-on .fd-vert { opacity: 0; }
+  .fd-strip.is-on .fd-open { opacity: 1; transform: none; transition-delay: .25s; }
+  @media (max-width: 860px) {
+    .fd-strips { flex-direction: column; height: auto; }
+    .fd-strip { flex: none; min-height: 72px; transition: min-height .7s var(--ease), color .45s ease; }
+    .fd-strip.is-on { min-height: 220px; }
+    .fd-strip .fd-num { display: inline; margin-right: 12px; }
+    .fd-strip .fx-icon { display: none; }
+    .fd-vert { writing-mode: horizontal-tb; transform: none; top: 22px; left: 52px; bottom: auto; }
+  }
+
+  /* ---------- E. Spotlight (a single frame rolls to the hovered feature) ---------- */
+  .fe-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--gutter); align-items: center; }
+  .fe-list { list-style: none; }
+  .fe-list button { display: flex; gap: 16px; align-items: baseline; width: 100%; padding: 10px 0; text-align: left; font-size: clamp(1.25rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; color: var(--muted); transition: color .4s ease, transform .6s var(--ease); }
+  .fe-list small { font-size: 0.75rem; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+  .fe-list button.is-on { color: var(--ink); transform: translateX(10px); }
+  .fe-list button.is-on small { color: var(--accent); }
+  .fe-frame { position: relative; aspect-ratio: 1; max-height: 560px; width: 100%; border-radius: 24px; overflow: hidden; }
+  .fe-reel { height: 100%; transition: transform .9s var(--ease); }
+  .fe-panel { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: clamp(24px, 4vw, 44px); background: var(--c); color: var(--on); }
+  .fe-panel .fx-icon { width: clamp(56px, 8vw, 96px); height: clamp(56px, 8vw, 96px); stroke-width: 1.2; }
+  .fe-panel h3 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.02; }
+  .fe-panel p { margin-top: 12px; max-width: 34ch; font-size: 1.0625rem; opacity: .85; }
+  @media (max-width: 860px) {
+    .fe-wrap { grid-template-columns: 1fr; }
+    .fe-frame { order: -1; aspect-ratio: 4 / 3; }
+  }
+
+  /* Comparison */
+  .cx-compare { margin-top: clamp(80px, 10vw, 140px); }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) Features</span>
+  <h1>Five ways to make the features <span class="text-accent">come alive.</span></h1>
+  <p>Each layout gives every feature its own colour, which slides into its frame on hover, in the spirit of Outfit. Hover over everything, and try a narrow window too. All nine features and their copy are unchanged.</p>
+  <ul class="cx-jump">
+    <li><a href="#concept-a"><b>A</b> Colour Tiles</a></li>
+    <li><a href="#concept-b"><b>B</b> Index Rows</a></li>
+    <li><a href="#concept-c"><b>C</b> Bento</a></li>
+    <li><a href="#concept-d"><b>D</b> Strips</a></li>
+    <li><a href="#concept-e"><b>E</b> Spotlight</a></li>
+    <li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+<!-- ===================== A. COLOUR TILES ===================== -->
+<section class="cx-concept" id="concept-a">
+  <div class="cx-concept-head">
+    <span class="cx-letter">A</span>
+    <div>
+      <h2>Colour Tiles</h2>
+      <p>The current three-column grid becomes nine framed tiles. On hover, the colour slides in from whichever edge your cursor came from and leaves through the edge it exits. The icon tilts and an arrow appears. It's the closest match to Outfit's hover feel.</p>
+      <ul class="cx-tags"><li>Direction-aware slide</li><li>Familiar grid</li><li>Lowest risk</li></ul>
+    </div>
+  </div>
+  <div class="fa-grid">
+    {% for f in features %}
+    <article class="fx fa-tile" style="--c: {{ f.c }}; --on: {{ f.on }}" data-fx-direction>
+      <span class="fx-fill"></span>
+      <header>{{ icon(f) }}{{ arrow() }}</header>
+      <h3>{{ f.title }}</h3>
+      <p>{{ f.text }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===================== B. INDEX ROWS ===================== -->
+<section class="cx-concept" id="concept-b">
+  <div class="cx-concept-head">
+    <span class="cx-letter">B</span>
+    <div>
+      <h2>Index Rows</h2>
+      <p>An editorial list with big titles, matching the numbered rows in "The idea". On hover, the row's colour wipes in from the left, the title glides right and an arrow appears. On leaving, the colour exits to the right, like a page turning.</p>
+      <ul class="cx-tags"><li>Big type</li><li>Wipe left → right</li><li>Echoes "The idea"</li></ul>
+    </div>
+  </div>
+  <ol class="fb-list">
+    {% for f in features %}
+    <li class="fx fb-row" style="--c: {{ f.c }}; --on: {{ f.on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      <span class="fb-num">0{{ loop.index }}</span>
+      <h3>{{ icon(f, 26) }}{{ f.title }}</h3>
+      <p>{{ f.text }}</p>
+      {{ arrow() }}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<!-- ===================== C. BENTO ===================== -->
+<section class="cx-concept" id="concept-c">
+  <div class="cx-concept-head">
+    <span class="cx-letter">C</span>
+    <div>
+      <h2>Bento</h2>
+      <p>Frames of different sizes give the features a pecking order. "Your language" gets the hero tile and cycles one request through five languages. On hover, colour rises from the bottom of each frame, and small demos react: the split-screen panes resize and the slash commands hop.</p>
+      <ul class="cx-tags"><li>Hierarchy</li><li>Mini demos</li><li>Fill rises from below</li></ul>
+    </div>
+  </div>
+  {% set f = features %}
+  <div class="fc-grid">
+    <article class="fx fc-cell fc-big" style="--c: {{ f[0].c }}; --on: {{ f[0].on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      {{ icon(f[0], 32) }}
+      <div class="fc-say" data-say aria-label="Make me a game, in five languages">
+        <span class="is-in">Make me a game</span><span>Mach mir ein Spiel</span><span>Fais-moi un jeu</span><span>给我做个游戏</span><span>Hazme un juego</span>
+      </div>
+      <div><h3>{{ f[0].title }}</h3><p>{{ f[0].text }}</p></div>
+    </article>
+    {% for i in [1, 2, 3, 4] %}
+    <article class="fx fc-cell" style="--c: {{ f[i].c }}; --on: {{ f[i].on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      {% if i == 3 %}<div class="fc-panes" aria-hidden="true"><i></i><i></i></div>{% else %}{{ icon(f[i]) }}{% endif %}
+      <div><h3>{{ f[i].title }}</h3><p>{{ f[i].text }}</p></div>
+    </article>
+    {% endfor %}
+    <article class="fx fc-cell fc-wide" style="--c: {{ f[5].c }}; --on: {{ f[5].on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      <div class="fc-cmds" aria-hidden="true"><code>/discover</code><code>/status</code><code>/login</code></div>
+      <div><h3>{{ f[5].title }}</h3><p>{{ f[5].text }}</p></div>
+    </article>
+    {% for i in [6, 7] %}
+    <article class="fx fc-cell" style="--c: {{ f[i].c }}; --on: {{ f[i].on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      {{ icon(f[i]) }}
+      <div><h3>{{ f[i].title }}</h3><p>{{ f[i].text }}</p></div>
+    </article>
+    {% endfor %}
+    <article class="fx fc-cell fc-full" style="--c: {{ f[8].c }}; --on: {{ f[8].on }}" data-fx-hover>
+      <span class="fx-fill"></span>
+      {{ icon(f[8], 40) }}
+      <div><h3>{{ f[8].title }}</h3><p>{{ f[8].text }}</p></div>
+      <span class="fc-cta">View on GitHub {{ arrow() }}</span>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== D. STRIPS ===================== -->
+<section class="cx-concept" id="concept-d">
+  <div class="cx-concept-head">
+    <span class="cx-letter">D</span>
+    <div>
+      <h2>Strips</h2>
+      <p>Nine tall strips stand side by side with their titles running vertically. The hovered strip widens smoothly, colour pours down from the top, and its description fades in. Hovering across the row feels like flicking through a rack of fabric swatches. On phones it becomes an accordion that opens with a tap.</p>
+      <ul class="cx-tags"><li>Most playful</li><li>Expanding panels</li><li>Fill pours from top</li></ul>
+    </div>
+  </div>
+  <div class="fd-strips" data-strips>
+    {% for f in features %}
+    <article class="fx fd-strip{% if loop.first %} is-on{% endif %}" style="--c: {{ f.c }}; --on: {{ f.on }}" tabindex="0">
+      <span class="fx-fill"></span>
+      <span class="fd-num">0{{ loop.index }}</span>
+      {{ icon(f, 24) }}
+      <span class="fd-vert" aria-hidden="true">{{ f.title }}</span>
+      <div class="fd-open"><h3>{{ f.title }}</h3><p>{{ f.text }}</p></div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===================== E. SPOTLIGHT ===================== -->
+<section class="cx-concept" id="concept-e">
+  <div class="cx-concept-head">
+    <span class="cx-letter">E</span>
+    <div>
+      <h2>Spotlight</h2>
+      <p>A list of feature names sits beside one large colour frame. Hovering a name rolls the frame, like a slot machine, to that feature's colour, big icon and description. The frame is always visible and never pops up at the cursor. Out of view it auto-plays, so phones get the effect too.</p>
+      <ul class="cx-tags"><li>One big frame</li><li>Rolls vertically</li><li>Auto-plays on phones</li></ul>
+    </div>
+  </div>
+  <div class="fe-wrap" data-spotlight>
+    <ol class="fe-list">
+      {% for f in features %}
+      <li><button type="button"{% if loop.first %} class="is-on"{% endif %}><small>0{{ loop.index }}</small>{{ f.title }}</button></li>
+      {% endfor %}
+    </ol>
+    <div class="fe-frame" aria-live="polite">
+      <div class="fe-reel">
+        {% for f in features %}
+        <div class="fe-panel" style="--c: {{ f.c }}; --on: {{ f.on }}"{% if not loop.first %} aria-hidden="true"{% endif %}>
+          {{ icon(f) }}
+          <div><h3>{{ f.title }}</h3><p>{{ f.text }}</p></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARISON ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side.</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead>
+        <tr><th>Concept</th><th>Hover motion</th><th>Feels like</th><th>Outfit-ness</th><th>Phones</th><th>Effort</th><th>Watch out for</th></tr>
+      </thead>
+      <tbody>
+        <tr><th><b>A</b>Colour Tiles</th><td>Fill enters from the cursor's edge</td><td>Polished, product-y</td><td><span class="cx-dots">●●●●●</span></td><td>Static tiles, no colour</td><td>Low</td><td>Nine strong colours at once can feel busy</td></tr>
+        <tr><th><b>B</b>Index Rows</th><td>Wipe left → right, title glides</td><td>Editorial, confident</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Good, clean list</td><td>Low</td><td>Long list, so the section gets taller</td></tr>
+        <tr><th><b>C</b>Bento</th><td>Fill rises, mini demos react</td><td>Rich, "Apple keynote"</td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Good, stacks</td><td>Medium</td><td>Most custom work per feature</td></tr>
+        <tr><th><b>D</b>Strips</th><td>Panel widens, colour pours down</td><td>Playful, tactile</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Tap accordion</td><td>Medium</td><td>Hides eight of nine descriptions at a time</td></tr>
+        <tr><th><b>E</b>Spotlight</th><td>Frame rolls to a new colour</td><td>Calm, focused</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Auto-plays</td><td>Medium</td><td>Only one feature visible in full at a time</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: A, Colour Tiles</strong>, or <strong>B, Index Rows</strong> for a more editorial feel. Both keep all nine features readable at a glance, and their hover is pure Outfit. A swaps straight into the current grid. B echoes the numbered rows in "The idea". If you want the section to be a showpiece, D is the most memorable.</p>
+</section>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = window.matchMedia('(hover: hover)').matches;
+
+  // Hover state for rows and bento cells (CSS handles the motion)
+  document.querySelectorAll('[data-fx-hover]').forEach(el => {
+    el.addEventListener('mouseenter', () => el.classList.add('is-on'));
+    el.addEventListener('mouseleave', () => el.classList.remove('is-on'));
+  });
+
+  // A. Fill slides in from the edge the cursor entered, out through the edge it left
+  const offsets = { top: 'translateY(-101%)', bottom: 'translateY(101%)', left: 'translateX(-101%)', right: 'translateX(101%)' };
+  function edge(el, e) {
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) / r.width;
+    const y = (e.clientY - r.top - r.height / 2) / r.height;
+    return Math.abs(x) > Math.abs(y) ? (x > 0 ? 'right' : 'left') : (y > 0 ? 'bottom' : 'top');
+  }
+  document.querySelectorAll('[data-fx-direction]').forEach(el => {
+    const fill = el.querySelector('.fx-fill');
+    fill.style.transform = offsets.bottom;
+    el.addEventListener('mouseenter', e => {
+      fill.style.transition = 'none';
+      fill.style.transform = offsets[edge(el, e)];
+      void fill.offsetWidth;
+      fill.style.transition = '';
+      fill.style.transform = 'none';
+      el.classList.add('is-on');
+    });
+    el.addEventListener('mouseleave', e => {
+      fill.style.transform = offsets[edge(el, e)];
+      el.classList.remove('is-on');
+    });
+  });
+
+  // C. Cycle "Make me a game" through languages
+  const say = document.querySelector('[data-say]');
+  if (say && !reduced) {
+    const words = Array.from(say.children);
+    let i = 0;
+    setInterval(() => {
+      const prev = words[i];
+      i = (i + 1) % words.length;
+      prev.classList.replace('is-in', 'is-out');
+      words[i].classList.remove('is-out');
+      words[i].classList.add('is-in');
+      setTimeout(() => prev.classList.remove('is-out'), 900);
+    }, 2200);
+  }
+
+  // D. Hover (or tap / focus) opens a strip; the last one opened stays open
+  const strips = document.querySelectorAll('[data-strips] .fd-strip');
+  const openStrip = (s) => strips.forEach(x => x.classList.toggle('is-on', x === s));
+  strips.forEach(s => {
+    s.addEventListener(canHover ? 'mouseenter' : 'click', () => openStrip(s));
+    s.addEventListener('focus', () => openStrip(s));
+  });
+
+  // E. Roll the frame to the hovered feature; auto-play when nobody is pointing at it
+  const spot = document.querySelector('[data-spotlight]');
+  if (spot) {
+    const buttons = Array.from(spot.querySelectorAll('.fe-list button'));
+    const reel = spot.querySelector('.fe-reel');
+    const panels = Array.from(reel.children);
+    let current = 0, timer = null, hovering = false;
+    const show = (i) => {
+      current = i;
+      reel.style.transform = `translateY(-${i * 100}%)`;
+      buttons.forEach((b, n) => b.classList.toggle('is-on', n === i));
+      panels.forEach((p, n) => p.toggleAttribute('aria-hidden', n !== i));
+    };
+    const autoplay = () => {
+      clearInterval(timer);
+      if (!reduced) timer = setInterval(() => { if (!hovering) show((current + 1) % buttons.length); }, 3000);
+    };
+    buttons.forEach((b, i) => {
+      b.addEventListener('mouseenter', () => show(i));
+      b.addEventListener('focus', () => show(i));
+      b.addEventListener('click', () => { show(i); autoplay(); });
+    });
+    spot.addEventListener('mouseenter', () => { hovering = true; });
+    spot.addEventListener('mouseleave', () => { hovering = false; });
+    new IntersectionObserver(([e]) => e.isIntersecting ? autoplay() : clearInterval(timer), { threshold: 0.3 }).observe(spot);
+  }
+})();
+</script>

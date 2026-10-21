@@ -1,0 +1,601 @@
+---
+layout: policy.njk
+title: Meet Tinker concepts — Tinker
+description: Four design concepts for the Meet Tinker section, side by side.
+noindex: true
+permalink: /concepts/meet-tinker/
+apps:
+  - { name: "Winamp Classic Player", cat: "Music", by: "Alexander", ask: "A Winamp-style music player with a pixelated 90s interface", l: "W", a: "#2b4dff", b: "#7a3cff" }
+  - { name: "Maze Muncher", cat: "Games", by: "You", ask: "A maze game where you eat dots and dodge ghosts", l: "M", a: "#ffb020", b: "#f2541b" }
+  - { name: "Scientific Calculator", cat: "Tools", by: "You", ask: "I want a scientific calculator", l: "S", a: "#4b4842", b: "#121212" }
+  - { name: "Oboe Lessons", cat: "Music", by: "You", ask: "Teach me to play the oboe", l: "O", a: "#7a3cff", b: "#d63cff" }
+  - { name: "Chess", cat: "Games", by: "You", ask: "I want to play chess", l: "C", a: "#a0743c", b: "#4b2e14" }
+  - { name: "Dinner Bill Splitter", cat: "Tools", by: "Tinker", ask: "Split a dinner bill between friends", l: "B", a: "#0f9f72", b: "#3fd3a0" }
+  - { name: "Dive Watch", cat: "Other", by: "You", ask: "Create a luxury dive watch", l: "D", a: "#0e3a5c", b: "#2b4dff" }
+  - { name: "Cube Builder", cat: "Other", by: "Alexander", ask: "Double-click a cube's face to extend it", l: "C", a: "#3fd3a0", b: "#2b4dff" }
+  - { name: "Knowledge Tree", cat: "Other", by: "Alexander", ask: "Prune branches and graft them elsewhere", l: "K", a: "#e4c440", b: "#5cc45c" }
+  - { name: "Hüpf-Abenteuer", cat: "Games", by: "You", ask: "Ich will ein Jump-and-Run spielen", l: "H", a: "#ff6b8b", b: "#f2541b" }
+  - { name: "Markdown Slideshow", cat: "Tools", by: "Alexander", ask: "A markdown-powered slideshow presenter", l: "M", a: "#7a3cff", b: "#2b4dff" }
+  - { name: "Fireworks over a City", cat: "Other", by: "Tinker", ask: "Fireworks over a city at night", l: "F", a: "#1b1340", b: "#7a3cff" }
+---
+
+{% macro cover(app, size) %}<span class="cx-cover {{ size }}" style="--a: {{ app.a }}; --b: {{ app.b }}" aria-hidden="true">{{ app.l }}</span>{% endmacro %}
+
+{% macro sectionHead() %}
+<div class="section-head">
+  <span class="eyebrow">(02) Meet Tinker</span>
+  <div>
+    <h2 class="section-title">Make it. Remix it. <span class="text-accent">Share it.</span></h2>
+    <p class="section-lede">Think of it as a music library for apps, where you can add your own tracks. From a game of Go to a working copy of Winamp, the apps people make in Tinker run right inside it.</p>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro pillars() %}
+<div class="pillars">
+  <article class="pillar">
+    <span class="index-num">01</span>
+    <h3>Discover</h3>
+    <p>Hundreds of public apps are ready to use as starting points. Type /discover or open the Gallery to explore a world of ideas.</p>
+  </article>
+  <article class="pillar">
+    <span class="index-num">02</span>
+    <h3>Remix</h3>
+    <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
+  </article>
+  <article class="pillar">
+    <span class="index-num">03</span>
+    <h3>Share when you're ready</h3>
+    <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
+  </article>
+</div>
+{% endmacro %}
+
+<style>
+  /* Concept page chrome */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 28px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+
+  /* "In context" frame: the real section, boxed */
+  .cx-frame { position: relative; padding: clamp(28px, 4vw, 56px) 0 clamp(36px, 5vw, 64px); border: 1px dashed var(--line); border-radius: var(--radius); overflow: hidden; }
+  .cx-frame::before { content: "In context"; position: absolute; top: 12px; right: 16px; font-size: 0.75rem; color: var(--muted); }
+  .cx-frame > .container { max-width: none; }
+  .cx-frame .section-head { margin-bottom: clamp(36px, 5vw, 64px); }
+  .cx-slot { position: relative; margin-bottom: clamp(36px, 5vw, 64px); }
+  .cx-slot::after { content: ""; position: absolute; inset: -14px calc(var(--gutter) * -0.5); border-radius: 14px; outline: 1.5px solid var(--accent); opacity: 0.35; pointer-events: none; }
+
+  /* Shared app pieces */
+  .cx-cover { --a: #2b4dff; --b: #7a3cff; display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 10px; background: linear-gradient(135deg, var(--a), var(--b)); color: #fff; font-size: 2.75rem; font-weight: 500; letter-spacing: -0.04em; transition: background .8s var(--ease); }
+  .cx-cover.sm { width: 44px; aspect-ratio: 1; border-radius: 8px; font-size: 1rem; flex: none; }
+  .cx-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); font-size: 0.75rem; font-weight: 500; }
+  .cx-card { background: var(--bg-raised); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 16px; }
+  .cx-card-name { display: block; margin-top: 12px; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cx-card-meta { display: flex; gap: 8px; align-items: center; margin-top: 4px; font-size: 0.8125rem; color: var(--muted); }
+  .cx-card-ask { margin-top: 8px; font-size: 0.8125rem; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* ---------- A. The Shelf ---------- */
+  .cx-shelf { display: grid; gap: 16px; margin-inline: calc(var(--gutter) * -1); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .cx-shelf-row { overflow: hidden; }
+  .cx-shelf-track { display: flex; gap: 16px; width: max-content; animation: cx-scroll 60s linear infinite; }
+  .cx-shelf-row.reverse .cx-shelf-track { animation-direction: reverse; animation-duration: 70s; }
+  .cx-shelf:hover .cx-shelf-track { animation-play-state: paused; }
+  .cx-shelf .cx-card { width: 240px; transition: transform .5s var(--ease), border-color .3s; }
+  .cx-shelf .cx-card:hover { transform: translateY(-6px) rotate(-1deg); border-color: var(--accent); }
+  @keyframes cx-scroll { to { transform: translateX(-50%); } }
+
+  /* ---------- B. Now Playing ---------- */
+  .cx-player { display: grid; grid-template-columns: minmax(200px, 300px) 1fr minmax(220px, 300px); gap: clamp(20px, 3vw, 40px); align-items: center; padding: clamp(16px, 2vw, 24px); background: var(--bg-raised); border: 1px solid var(--line); border-radius: 24px; }
+  .cx-player .cx-cover { font-size: clamp(4rem, 8vw, 7rem); border-radius: 16px; box-shadow: 0 24px 48px -24px var(--b); }
+  .cx-np-eyebrow { display: flex; align-items: center; gap: 10px; font-size: 0.8125rem; color: var(--muted); }
+  .cx-eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; }
+  .cx-eq i { width: 3px; background: var(--accent); border-radius: 1px; animation: cx-eq .9s ease-in-out infinite alternate; }
+  .cx-eq i:nth-child(2) { animation-delay: -.3s; } .cx-eq i:nth-child(3) { animation-delay: -.6s; }
+  .cx-player.is-paused .cx-eq i { animation-play-state: paused; }
+  @keyframes cx-eq { from { height: 3px; } to { height: 12px; } }
+  .cx-np-title { margin-top: 10px; font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.02; }
+  .cx-np-meta { margin-top: 8px; display: flex; gap: 10px; align-items: center; color: var(--ink-2); font-size: 0.9375rem; }
+  .cx-np-ask { margin-top: 16px; color: var(--ink-2); font-size: 1.0625rem; max-width: 40ch; }
+  .cx-np-ask::before { content: "“"; } .cx-np-ask::after { content: "”"; }
+  .cx-progress { margin-top: 24px; height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .cx-progress span { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+  .cx-progress span.run { animation: cx-progress 5s linear forwards; }
+  .cx-player.is-paused .cx-progress span, .cx-player:hover .cx-progress span { animation-play-state: paused; }
+  @keyframes cx-progress { to { transform: scaleX(1); } }
+  .cx-controls { margin-top: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cx-ctrl { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); transition: border-color .3s, background .3s, color .3s; }
+  .cx-ctrl:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-ctrl.play { width: 52px; height: 52px; background: var(--ink); color: var(--bg); border: 0; }
+  .cx-pill { height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.875rem; font-weight: 500; transition: border-color .3s, color .3s, background .3s; }
+  .cx-pill.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .cx-pill:hover { border-color: var(--accent); }
+  .cx-queue h4 { font-size: 0.8125rem; font-weight: 500; color: var(--muted); margin-bottom: 8px; }
+  .cx-queue ol { list-style: none; display: grid; gap: 4px; }
+  .cx-queue button { display: flex; gap: 12px; align-items: center; width: 100%; padding: 6px; border-radius: 10px; text-align: left; transition: background .3s; }
+  .cx-queue button:hover { background: var(--bg); }
+  .cx-queue strong { display: block; font-weight: 500; font-size: 0.9375rem; letter-spacing: -0.015em; }
+  .cx-queue small { color: var(--muted); font-size: 0.8125rem; }
+  .cx-swap { animation: cx-swap .6s var(--ease); }
+  @keyframes cx-swap { from { opacity: 0; transform: translateY(8px); } }
+  @media (max-width: 960px) {
+    .cx-player { grid-template-columns: 160px 1fr; }
+    .cx-queue { grid-column: 1 / -1; }
+    .cx-queue ol { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .cx-player { grid-template-columns: 1fr; }
+    .cx-player .cx-cover { max-width: 220px; }
+    .cx-queue ol { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- C. Remix Chain ---------- */
+  .cx-chain { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); position: relative; }
+  .cx-link { position: absolute; top: 34%; height: 2px; width: calc(var(--gutter) + 8px); background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); z-index: 1; }
+  .cx-link.l1 { left: calc((100% - 2 * var(--gutter)) / 3 - 4px); }
+  .cx-link.l2 { left: calc((100% - 2 * var(--gutter)) / 3 * 2 + var(--gutter) - 4px); }
+  .cx-link.on { transform: scaleX(1); }
+  .cx-chain .cx-card { position: relative; transition: opacity .6s ease, transform .6s var(--ease), border-color .4s; }
+  .cx-chain .cx-card.dim { opacity: 0.3; transform: translateY(10px); }
+  .cx-chain .cx-card.focus { border-color: var(--accent); }
+  .cx-step { position: absolute; top: -10px; left: 14px; padding: 1px 8px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.75rem; font-weight: 500; z-index: 1; }
+  .cx-ask-bubble { margin-top: 12px; min-height: 2.9em; padding: 8px 12px; border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 12px; font-size: 0.875rem; background: var(--bg); }
+  .cx-caret { display: inline-block; width: 1px; height: 1em; margin-left: 1px; vertical-align: -2px; background: var(--ink); animation: cx-blink 1s steps(1) infinite; }
+  @keyframes cx-blink { 50% { opacity: 0; } }
+  .cx-share { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; }
+  .cx-switch { width: 40px; height: 24px; border-radius: 999px; background: var(--line); position: relative; transition: background .4s; }
+  .cx-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .4s var(--ease); }
+  .cx-switch.on { background: var(--accent); }
+  .cx-switch.on::after { transform: translateX(16px); }
+  .cx-count { margin-top: 10px; font-size: 0.875rem; color: var(--ink-2); }
+  .cx-count b { font-size: 1.5rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  @media (max-width: 860px) {
+    .cx-chain { grid-template-columns: 1fr; max-width: 420px; }
+    .cx-link { display: none; }
+  }
+
+  /* ---------- D. /discover ---------- */
+  .cx-discover { display: grid; gap: 20px; }
+  .cx-prompt { display: flex; align-items: center; gap: 12px; max-width: 680px; height: 56px; padding: 0 8px 0 18px; border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 16px; background: var(--bg-raised); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 10%, transparent); }
+  .cx-prompt-text { flex: 1; font-size: 1.0625rem; white-space: nowrap; overflow: hidden; }
+  .cx-prompt-text .cmd { color: var(--accent); font-weight: 500; }
+  .cx-prompt-send { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--accent); color: #fff; }
+  .cx-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cx-chips button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: background .3s, color .3s, border-color .3s; }
+  .cx-chips button:hover { border-color: var(--accent); }
+  .cx-chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .cx-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .cx-grid .cx-card { transition: opacity .5s ease, filter .5s ease, transform .6s var(--ease), border-color .4s; }
+  .cx-grid .cx-card.out { opacity: 0.18; filter: grayscale(1); transform: scale(0.96); }
+  .cx-grid .cx-card.hit { border-color: var(--accent); transform: translateY(-4px); }
+  @media (max-width: 760px) { .cx-grid { grid-template-columns: 1fr 1fr; } .cx-prompt-text { font-size: 0.9375rem; } }
+
+  /* Comparison */
+  .cx-compare { margin-top: clamp(80px, 10vw, 140px); }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cx-shelf-track { animation: none !important; }
+    .cx-shelf-row { overflow-x: auto; }
+  }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) Meet Tinker</span>
+  <h1>Four ways to <span class="text-accent">bring the gallery to life.</span></h1>
+  <p>Each concept fills the space between the Meet Tinker title and the 01 / 02 / 03 pillars. They're shown in place with the real section around them, and the slot is outlined in blue. App names, prompts and categories come from the Tinker screenshots.</p>
+  <ul class="cx-jump">
+    <li><a href="#concept-a"><b>A</b> The Shelf</a></li>
+    <li><a href="#concept-b"><b>B</b> Now Playing</a></li>
+    <li><a href="#concept-c"><b>C</b> Remix Chain</a></li>
+    <li><a href="#concept-d"><b>D</b> /discover</a></li>
+    <li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+<!-- ===================== A. THE SHELF ===================== -->
+<section class="cx-concept" id="concept-a">
+  <div class="cx-concept-head">
+    <span class="cx-letter">A</span>
+    <div>
+      <h2>The Shelf</h2>
+      <p>Two rows of app cards drift past in opposite directions, like records on a shelf. Every card shows the sentence that made it, so the takeaway is "every app started as one line". Hovering pauses the shelf and lifts a card.</p>
+      <ul class="cx-tags"><li>Ambient motion</li><li>Hover to pause</li><li>Shows breadth</li></ul>
+    </div>
+  </div>
+
+  <div class="cx-frame"><div class="container">
+    {{ sectionHead() }}
+    <div class="cx-slot">
+      <div class="cx-shelf">
+        {% for row in [0, 1] %}
+        <div class="cx-shelf-row{% if row %} reverse{% endif %}">
+          <div class="cx-shelf-track">
+            {% for pass in [0, 1] %}
+            {% for app in (apps.slice(6).concat(apps.slice(0, 6)) if row else apps) %}
+            <article class="cx-card"{% if pass %} aria-hidden="true"{% endif %}>
+              {{ cover(app) }}
+              <span class="cx-card-name">{{ app.name }}</span>
+              <span class="cx-card-meta"><span class="cx-chip">{{ app.cat }}</span>{{ app.by }}</span>
+              <p class="cx-card-ask">“{{ app.ask }}”</p>
+            </article>
+            {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {{ pillars() }}
+  </div></div>
+</section>
+
+<!-- ===================== B. NOW PLAYING ===================== -->
+<section class="cx-concept" id="concept-b">
+  <div class="cx-concept-head">
+    <span class="cx-letter">B</span>
+    <div>
+      <h2>Now Playing</h2>
+      <p>This takes the "music library for apps" line literally. A player cycles through public apps like tracks, with a cover, the maker, the original ask and a progress bar. Visitors can skip, pause or pick from the queue, and the Remix button points straight at pillar 02.</p>
+      <ul class="cx-tags"><li>Owns the metaphor</li><li>Interactive</li><li>One app at a time</li></ul>
+    </div>
+  </div>
+
+  <div class="cx-frame"><div class="container">
+    {{ sectionHead() }}
+    <div class="cx-slot">
+      <div class="cx-player" data-player>
+        <span class="cx-cover" data-np-cover aria-hidden="true"></span>
+        <div>
+          <div class="cx-np-eyebrow"><span class="cx-eq" aria-hidden="true"><i></i><i></i><i></i></span><span data-np-count>Now playing</span></div>
+          <div data-np-body aria-live="polite">
+            <h3 class="cx-np-title" data-np-title></h3>
+            <div class="cx-np-meta"><span class="cx-chip" data-np-cat></span><span data-np-by></span></div>
+            <p class="cx-np-ask" data-np-ask></p>
+          </div>
+          <div class="cx-progress"><span data-np-progress></span></div>
+          <div class="cx-controls">
+            <button type="button" class="cx-ctrl" data-np-prev aria-label="Previous app"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+            <button type="button" class="cx-ctrl play" data-np-toggle aria-label="Pause"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" data-icon-pause><path d="M4 2h3v12H4zM9 2h3v12H9z"/></svg><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" data-icon-play hidden><path d="M4 2l10 6-10 6z"/></svg></button>
+            <button type="button" class="cx-ctrl" data-np-next aria-label="Next app"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+            <button type="button" class="cx-pill primary">Remix this app</button>
+          </div>
+        </div>
+        <div class="cx-queue">
+          <h4>Up next</h4>
+          <ol data-np-queue></ol>
+        </div>
+      </div>
+    </div>
+    {{ pillars() }}
+  </div></div>
+</section>
+
+<!-- ===================== C. REMIX CHAIN ===================== -->
+<section class="cx-concept" id="concept-c">
+  <div class="cx-concept-head">
+    <span class="cx-letter">C</span>
+    <div>
+      <h2>Remix Chain</h2>
+      <p>One app's journey, played out in three cards that line up with the pillars below. Someone's public game is copied into your library, a typed request turns it pink and German, and a switch flips it public while the remix count climbs. It replays whenever it scrolls into view.</p>
+      <ul class="cx-tags"><li>Tells a story</li><li>Maps 1:1 to pillars</li><li>Scroll-triggered</li></ul>
+    </div>
+  </div>
+
+  <div class="cx-frame"><div class="container">
+    {{ sectionHead() }}
+    <div class="cx-slot">
+      <div class="cx-chain" data-chain>
+        <span class="cx-link l1" aria-hidden="true"></span>
+        <span class="cx-link l2" aria-hidden="true"></span>
+
+        <article class="cx-card focus" data-chain-card>
+          <span class="cx-step">Discover</span>
+          {{ cover(apps[1]) }}
+          <span class="cx-card-name">Maze Muncher</span>
+          <span class="cx-card-meta"><span class="cx-chip">Games</span>Alexander · Public</span>
+          <p class="cx-card-ask">“A maze game where you eat dots and dodge ghosts”</p>
+        </article>
+
+        <article class="cx-card dim" data-chain-card>
+          <span class="cx-step">Remix</span>
+          <span class="cx-cover" style="--a: #ffb020; --b: #f2541b" data-chain-cover aria-hidden="true">M</span>
+          <span class="cx-card-name" data-chain-name>Maze Muncher</span>
+          <span class="cx-card-meta"><span class="cx-chip">Games</span>Your copy · Private</span>
+          <div class="cx-ask-bubble"><span data-chain-typed></span><span class="cx-caret"></span></div>
+        </article>
+
+        <article class="cx-card dim" data-chain-card>
+          <span class="cx-step">Share</span>
+          <span class="cx-cover" style="--a: #ff6bd5; --b: #7a3cff" aria-hidden="true">L</span>
+          <span class="cx-card-name">Labyrinth-Mampfer</span>
+          <span class="cx-card-meta"><span class="cx-chip">Games</span>You</span>
+          <div class="cx-share"><span data-chain-vis>Private</span><span class="cx-switch" data-chain-switch aria-hidden="true"></span></div>
+          <p class="cx-count"><b data-chain-count>0</b> people remixed this</p>
+        </article>
+      </div>
+    </div>
+    {{ pillars() }}
+  </div></div>
+</section>
+
+<!-- ===================== D. /DISCOVER ===================== -->
+<section class="cx-concept" id="concept-d">
+  <div class="cx-concept-head">
+    <span class="cx-letter">D</span>
+    <div>
+      <h2>/discover</h2>
+      <p>A replica of Tinker's own prompt bar types <code>/discover games</code>, then <code>music</code>, then <code>tools</code>, and the gallery below filters to match. It shows the real product interface and the slash command in one go. Clicking a category takes over from the autoplay.</p>
+      <ul class="cx-tags"><li>Real product UI</li><li>Teaches a feature</li><li>Interactive filter</li></ul>
+    </div>
+  </div>
+
+  <div class="cx-frame"><div class="container">
+    {{ sectionHead() }}
+    <div class="cx-slot">
+      <div class="cx-discover" data-discover>
+        <div class="cx-prompt">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" style="color: var(--muted)"><path d="M3 5h12M3 9h12M3 13h12"/></svg>
+          <span class="cx-prompt-text"><span data-discover-typed></span><span class="cx-caret"></span></span>
+          <span class="cx-prompt-send" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 13V3M4 7l4-4 4 4"/></svg></span>
+        </div>
+        <div class="cx-chips" role="group" aria-label="Filter by category">
+          {% for c in ["All", "Games", "Music", "Tools", "Other"] %}
+          <button type="button" data-cat="{{ c }}" aria-pressed="{{ 'true' if c == 'All' else 'false' }}">{{ c }}</button>
+          {% endfor %}
+        </div>
+        <div class="cx-grid">
+          {% for app in apps.slice(0, 8) %}
+          <article class="cx-card" data-cat="{{ app.cat }}">
+            {{ cover(app) }}
+            <span class="cx-card-name">{{ app.name }}</span>
+            <span class="cx-card-meta"><span class="cx-chip">{{ app.cat }}</span>{{ app.by }}</span>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {{ pillars() }}
+  </div></div>
+</section>
+
+<!-- ===================== COMPARISON ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side.</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead>
+        <tr><th>Concept</th><th>What it says</th><th>Motion</th><th>Fits the brand</th><th>Effort</th><th>Phones</th><th>Watch out for</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th><b>A</b>The Shelf</th>
+          <td>"There's a lot here, and it all started as a sentence."</td>
+          <td>Constant, ambient</td>
+          <td><span class="cx-dots">●●●<i>●●</i></span></td>
+          <td>Low</td>
+          <td>Great, swipe-friendly</td>
+          <td>Can feel generic, since many sites use marquees</td>
+        </tr>
+        <tr>
+          <th><b>B</b>Now Playing</th>
+          <td>"It's a library for apps, so press play."</td>
+          <td>Timed, every 5s</td>
+          <td><span class="cx-dots">●●●●<i>●</i></span></td>
+          <td>Medium</td>
+          <td>Good, stacks vertically</td>
+          <td>Shows one app at a time, so less sense of scale</td>
+        </tr>
+        <tr>
+          <th><b>C</b>Remix Chain</th>
+          <td>"Here's exactly how Discover, Remix and Share work."</td>
+          <td>Scripted story, loops</td>
+          <td><span class="cx-dots">●●●●●</span></td>
+          <td>Medium</td>
+          <td>Good, cards stack</td>
+          <td>Repeats the pillar text, so trim the pillar copy</td>
+        </tr>
+        <tr>
+          <th><b>D</b>/discover</th>
+          <td>"This is the real app, and it's this easy to find things."</td>
+          <td>Typing, then filtering</td>
+          <td><span class="cx-dots">●●●●<i>●</i></span></td>
+          <td>Medium</td>
+          <td>OK, 2-column grid</td>
+          <td>Needs real cover images to feel authentic</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: C, Remix Chain.</strong> It's the only concept that explains the three pillars rather than decorating them. Its cards sit directly above 01, 02 and 03, and it shows remixing and translation, which are Tinker's most distinctive features. A works well as a lighter fallback, or as a separate full-width band elsewhere on the page.</p>
+</section>
+
+<script>
+(() => {
+  const apps = {{ apps | dump | safe }};
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+  const onVisible = (el, fn) => {
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => fn(e.isIntersecting));
+    }, { threshold: 0.35 }).observe(el);
+  };
+
+  // B. Now Playing
+  const player = document.querySelector('[data-player]');
+  if (player) {
+    const $ = (s) => player.querySelector(s);
+    const cover = $('[data-np-cover]'), body = $('[data-np-body]'), bar = $('[data-np-progress]');
+    const toggle = $('[data-np-toggle]'), queue = $('[data-np-queue]');
+    let index = 0, paused = reduced, visible = false;
+
+    function render() {
+      const app = apps[index];
+      cover.textContent = app.l;
+      cover.style.setProperty('--a', app.a);
+      cover.style.setProperty('--b', app.b);
+      $('[data-np-title]').textContent = app.name;
+      $('[data-np-cat]').textContent = app.cat;
+      $('[data-np-by]').textContent = 'by ' + app.by;
+      $('[data-np-ask]').textContent = app.ask;
+      $('[data-np-count]').textContent = `Now playing · ${String(index + 1).padStart(2, '0')} / ${apps.length}`;
+      body.classList.remove('cx-swap'); void body.offsetWidth; body.classList.add('cx-swap');
+      queue.innerHTML = '';
+      for (let i = 1; i <= 4; i++) {
+        const n = (index + i) % apps.length, q = apps[n];
+        const li = document.createElement('li');
+        li.innerHTML = `<button type="button"><span class="cx-cover sm" style="--a:${q.a};--b:${q.b}" aria-hidden="true">${q.l}</span><span><strong></strong><small></small></span></button>`;
+        li.querySelector('strong').textContent = q.name;
+        li.querySelector('small').textContent = q.cat + ' · ' + q.by;
+        li.querySelector('button').addEventListener('click', () => go(n));
+        queue.appendChild(li);
+      }
+      bar.classList.remove('run'); void bar.offsetWidth;
+      if (!reduced) bar.classList.add('run');
+    }
+    function go(n) { index = (n + apps.length) % apps.length; render(); }
+    function setPaused(p) {
+      paused = p;
+      player.classList.toggle('is-paused', p || !visible);
+      toggle.setAttribute('aria-label', p ? 'Play' : 'Pause');
+      toggle.querySelector('[data-icon-pause]').hidden = p;
+      toggle.querySelector('[data-icon-play]').hidden = !p;
+    }
+    bar.addEventListener('animationend', () => { if (!paused) go(index + 1); });
+    $('[data-np-prev]').addEventListener('click', () => go(index - 1));
+    $('[data-np-next]').addEventListener('click', () => go(index + 1));
+    toggle.addEventListener('click', () => setPaused(!paused));
+    onVisible(player, (v) => { visible = v; setPaused(paused); });
+    render();
+    setPaused(paused);
+  }
+
+  // C. Remix Chain
+  const chain = document.querySelector('[data-chain]');
+  if (chain) {
+    const cards = chain.querySelectorAll('[data-chain-card]');
+    const links = chain.querySelectorAll('.cx-link');
+    const typed = chain.querySelector('[data-chain-typed]');
+    const remixCover = chain.querySelector('[data-chain-cover]');
+    const remixName = chain.querySelector('[data-chain-name]');
+    const sw = chain.querySelector('[data-chain-switch]');
+    const vis = chain.querySelector('[data-chain-vis]');
+    const count = chain.querySelector('[data-chain-count]');
+    const ask = 'Make the ghosts pink and translate it into German';
+    let run = 0, visible = false;
+
+    function focus(i) { cards.forEach((c, n) => { c.classList.toggle('dim', n > i); c.classList.toggle('focus', n === i); }); }
+    function reset() {
+      focus(0);
+      links.forEach(l => l.classList.remove('on'));
+      typed.textContent = '';
+      remixCover.style.setProperty('--a', '#ffb020'); remixCover.style.setProperty('--b', '#f2541b');
+      remixName.textContent = 'Maze Muncher';
+      sw.classList.remove('on'); vis.textContent = 'Private'; count.textContent = '0';
+    }
+    function finalState() {
+      focus(2); cards.forEach(c => c.classList.remove('dim'));
+      links.forEach(l => l.classList.add('on'));
+      typed.textContent = ask;
+      remixCover.style.setProperty('--a', '#ff6bd5'); remixCover.style.setProperty('--b', '#7a3cff');
+      remixName.textContent = 'Labyrinth-Mampfer';
+      sw.classList.add('on'); vis.textContent = 'Public'; count.textContent = '128';
+    }
+    async function play(id) {
+      const alive = () => id === run && visible;
+      reset();
+      await wait(900); if (!alive()) return;
+      links[0].classList.add('on'); await wait(500); focus(1);
+      await wait(700);
+      for (const ch of ask) { if (!alive()) return; typed.textContent += ch; await wait(38); }
+      await wait(400); if (!alive()) return;
+      remixCover.style.setProperty('--a', '#ff6bd5'); remixCover.style.setProperty('--b', '#7a3cff');
+      remixName.textContent = 'Labyrinth-Mampfer';
+      await wait(1100); if (!alive()) return;
+      links[1].classList.add('on'); await wait(500); focus(2);
+      await wait(700); if (!alive()) return;
+      sw.classList.add('on'); vis.textContent = 'Public';
+      const start = performance.now();
+      await new Promise(done => {
+        (function step(t) {
+          const k = Math.min((t - start) / 1400, 1);
+          count.textContent = Math.round(128 * (1 - Math.pow(1 - k, 3)));
+          k < 1 && alive() ? requestAnimationFrame(step) : done();
+        })(start);
+      });
+      await wait(3500);
+      if (alive()) play(id);
+    }
+    if (reduced) finalState();
+    else onVisible(chain, (v) => { visible = v; if (v) play(++run); });
+  }
+
+  // D. /discover
+  const disc = document.querySelector('[data-discover]');
+  if (disc) {
+    const typed = disc.querySelector('[data-discover-typed]');
+    const chips = disc.querySelectorAll('[data-cat]:is(button)');
+    const tiles = disc.querySelectorAll('.cx-card');
+    const order = ['Games', 'Music', 'Tools', 'Other', 'All'];
+    let auto = !reduced, visible = false, run = 0;
+
+    function filter(cat) {
+      chips.forEach(c => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
+      tiles.forEach(t => {
+        const hit = cat === 'All' || t.dataset.cat === cat;
+        t.classList.toggle('out', !hit);
+        t.classList.toggle('hit', hit && cat !== 'All');
+      });
+    }
+    function show(text) {
+      typed.innerHTML = '<span class="cmd">/discover</span>' + (text.length > 9 ? text.slice(9).replace(/</g, '&lt;') : '');
+      if (text.length < 9) typed.innerHTML = '<span class="cmd">' + text + '</span>';
+    }
+    async function loop(id) {
+      const alive = () => id === run && auto && visible;
+      let i = 0;
+      while (alive()) {
+        const cat = order[i % order.length];
+        const full = cat === 'All' ? '/discover' : '/discover ' + cat.toLowerCase();
+        for (let n = 1; n <= full.length; n++) { if (!alive()) return; show(full.slice(0, n)); await wait(55); }
+        await wait(350); if (!alive()) return;
+        filter(cat);
+        await wait(2600);
+        for (let n = full.length; n >= 0; n--) { if (!alive()) return; show(full.slice(0, n)); await wait(18); }
+        await wait(300);
+        i++;
+      }
+    }
+    chips.forEach(c => c.addEventListener('click', () => {
+      auto = false; run++;
+      show(c.dataset.cat === 'All' ? '/discover' : '/discover ' + c.dataset.cat.toLowerCase());
+      filter(c.dataset.cat);
+    }));
+    show('/discover');
+    if (!reduced) onVisible(disc, (v) => { visible = v; if (v && auto) loop(++run); });
+  }
+})();
+</script>

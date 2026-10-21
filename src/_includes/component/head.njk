@@ -6,7 +6,7 @@
   <meta name="description" content="{{ description or 'Tinker turns what you describe into small apps you can play, remix and share. Join the waitlist for the private alpha.' }}" />
   <meta name="keywords" content="Tinker, make your own apps, AI app maker, remix apps, app gallery, offline apps, creative playground, tinker app, tinker.click" />
   <meta name="author" content="Tinker" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="{{ 'noindex, nofollow' if noindex else 'index, follow' }}" />
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://tinker.click{{ page.url }}" />
@@ -32,7 +32,7 @@
     "@type": "SoftwareApplication",
     "name": "Tinker",
     "operatingSystem": "Windows, macOS, Linux",
-    "description": "Tinker is an app for making your own small apps by describing them, with a public gallery to play, remix and share them.",
+    "description": "Tinker is an open-source desktop app for making focused apps, games, documents, charts and dashboards by describing them, with a public gallery to discover, remix and share them.",
     "url": "https://tinker.click"
   }
   </script>

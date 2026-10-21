@@ -170,8 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-in');
-          io.unobserve(entry.target);
-        }
+          io.unobserve(entry.target);        }
       });
     }, { rootMargin: '0px 0px -8% 0px' });
     revealEls.forEach(el => io.observe(el));
@@ -179,7 +178,176 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach(el => el.classList.add('is-in'));
   }
 
-  // 5. Waitlist Form Processing & Progressive Enhancement
+  // 5. Remix Chain: plays Discover → Remix → Share in sequence; on small screens it's a carousel
+  //    that advances every 5s and can be swiped at any time
+  const chain = document.querySelector('[data-chain]');
+  if (chain) {
+    const track = chain.querySelector('[data-chain-track]');
+    const steps = Array.from(chain.querySelectorAll('[data-chain-step]'));
+    const cards = Array.from(chain.querySelectorAll('[data-chain-card]'));
+    const links = Array.from(chain.querySelectorAll('.chain-link'));
+    const dots = Array.from(chain.querySelectorAll('[data-chain-dot]'));
+    const typed = chain.querySelector('[data-chain-typed]');
+    const remixCover = chain.querySelector('[data-chain-cover]');
+    const remixName = chain.querySelector('[data-chain-name]');
+    const sw = chain.querySelector('[data-chain-switch]');
+    const vis = chain.querySelector('[data-chain-vis]');
+    const count = chain.querySelector('[data-chain-count]');
+    const ask = 'Make the ghosts pink and translate it into German';
+    const mobileMq = window.matchMedia('(max-width: 860px)');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+    let run = 0, visible = false, current = 0, timer = null;
+
+    function focus(i) {
+      cards.forEach((c, n) => { c.classList.toggle('is-dim', n > i); c.classList.toggle('is-focus', n === i); });
+      links.forEach((l, n) => l.classList.toggle('is-on', n < i));
+    }
+    function remixState(done) {
+      typed.textContent = done ? ask : '';
+      remixCover.style.setProperty('--a', done ? '#ff6bd5' : '#ffb020');
+      remixCover.style.setProperty('--b', done ? '#7a3cff' : '#f2541b');
+      remixName.textContent = done ? 'Labyrinth-Mampfer' : 'Maze Muncher';
+    }
+    function shareState(done) {
+      sw.classList.toggle('is-on', done);
+      vis.textContent = done ? 'Public' : 'Private';
+      count.textContent = done ? '128' : '0';
+    }
+    async function playRemix(alive) {
+      remixState(false);
+      await wait(600);
+      for (const ch of ask) { if (!alive()) return; typed.textContent += ch; await wait(32); }
+      await wait(400);
+      if (alive()) remixState(true);
+    }
+    async function playShare(alive) {
+      shareState(false);
+      await wait(600); if (!alive()) return;
+      sw.classList.add('is-on'); vis.textContent = 'Public';
+      const start = performance.now();
+      await new Promise(done => {
+        (function tick(t) {
+          const k = Math.min((t - start) / 1400, 1);
+          count.textContent = Math.round(128 * (1 - Math.pow(1 - k, 3)));
+          k < 1 && alive() ? requestAnimationFrame(tick) : done();
+        })(start);
+      });
+    }
+
+    // Wide screens: one scripted run across all three cards, looping while in view
+    async function playDesktop(id) {
+      const alive = () => id === run && visible && !mobileMq.matches;
+      focus(0); remixState(false); shareState(false);
+      await wait(900); if (!alive()) return;
+      focus(1);
+      await playRemix(alive);
+      await wait(1100); if (!alive()) return;
+      focus(2);
+      await playShare(alive);
+      await wait(3500);
+      if (alive()) playDesktop(id);
+    }
+
+    // Small screens: one slide at a time
+    function scrollToStep(i) {
+      const max = track.scrollWidth - track.clientWidth;
+      const left = Math.min(steps[i].offsetLeft - steps[0].offsetLeft, max);
+      track.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' });
+    }
+    function nearestStep() {
+      const max = track.scrollWidth - track.clientWidth;
+      let best = 0, bestDist = Infinity;
+      steps.forEach((s, i) => {
+        const d = Math.abs(Math.min(s.offsetLeft - steps[0].offsetLeft, max) - track.scrollLeft);
+        if (d < bestDist) { best = i; bestDist = d; }
+      });
+      return best;
+    }
+    function activate(i, scroll) {
+      const id = ++run;
+      const alive = () => id === run && mobileMq.matches;
+      clearTimeout(timer);
+      current = i;
+      if (scroll) scrollToStep(i);
+      cards.forEach((c, n) => c.classList.toggle('is-focus', n === i));
+      dots.forEach((d, n) => {
+        if (n === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+        d.classList.toggle('is-done', n < i);
+        d.classList.remove('is-running');
+      });
+      if (reduced) { remixState(true); shareState(true); return; }
+      if (i === 0) { remixState(false); shareState(false); }
+      if (i === 1) { shareState(false); playRemix(alive); }
+      if (i === 2) { remixState(true); playShare(alive); }
+      if (!visible) return;
+      void dots[i].offsetWidth;
+      dots[i].classList.add('is-running');
+      timer = setTimeout(() => { if (alive()) activate((i + 1) % steps.length, true); }, 5000);
+    }
+
+    let scrollIdle = null;
+    track.addEventListener('scroll', () => {
+      if (!mobileMq.matches) return;
+      clearTimeout(scrollIdle);
+      scrollIdle = setTimeout(() => {
+        const i = nearestStep();
+        if (i !== current) activate(i, false);
+      }, 120);
+    }, { passive: true });
+    ['touchstart', 'pointerdown', 'wheel'].forEach(ev =>
+      track.addEventListener(ev, () => chain.classList.add('is-swiped'), { passive: true }));
+    dots.forEach((d, i) => d.addEventListener('click', () => { chain.classList.add('is-swiped'); activate(i, true); }));
+
+    function start() {
+      clearTimeout(timer);
+      run++;
+      if (mobileMq.matches) {
+        cards.forEach(c => c.classList.remove('is-dim'));
+        activate(nearestStep(), false);
+      } else if (reduced) {
+        focus(2); cards.forEach(c => c.classList.remove('is-dim'));
+        remixState(true); shareState(true);
+      } else if (visible) {
+        playDesktop(run);
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting === visible) return;
+          visible = e.isIntersecting;
+          if (visible) start(); else { run++; clearTimeout(timer); }
+        });
+      }, { threshold: 0.35 }).observe(chain);
+    }
+    mobileMq.addEventListener('change', start);
+    start();
+  }
+
+  // 6. Bento: cycle "Make me a game" through languages
+  const say = document.querySelector('[data-bento-say]');
+  if (say && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const words = Array.from(say.children);
+    let w = 0;
+    setInterval(() => {
+      const prev = words[w];
+      w = (w + 1) % words.length;
+      prev.classList.replace('is-in', 'is-out');
+      words[w].classList.remove('is-out');
+      words[w].classList.add('is-in');
+      // Park the old phrase back below without animating, so it doesn't slide down through view
+      setTimeout(() => {
+        prev.style.transition = 'none';
+        prev.classList.remove('is-out');
+        void prev.offsetWidth;
+        prev.style.transition = '';
+      }, 900);
+    }, 2200);
+  }
+
+  // 7. Waitlist Form Processing & Progressive Enhancement
   const waitlistForm = document.getElementById('signup');
   const waitlistStatus = document.getElementById('status');
   const waitlistBtn = waitlistForm ? waitlistForm.querySelector('button[type="submit"]') : null;

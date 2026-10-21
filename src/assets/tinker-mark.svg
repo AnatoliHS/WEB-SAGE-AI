@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Tinker mark for the navbar: blue top plus, orange bottom plus (favicon.svg keeps the original colours) -->
+  <g fill="#126cfd">
+    <rect x="14.4" y="9.1" width="9.8" height="32.6" rx="2.2"/>
+    <rect x="3" y="20.5" width="32.6" height="9.8" rx="2.2"/>
+  </g>
+  <g fill="#ff5f00">
+    <rect x="39.5" y="22.1" width="9.8" height="32.6" rx="2.2"/>
+    <rect x="28.1" y="33.5" width="32.6" height="9.8" rx="2.2"/>
+  </g>
+</svg>
