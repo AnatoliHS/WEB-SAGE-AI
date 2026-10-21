@@ -4,8 +4,9 @@
     <!-- Reserves the exact space the dynamic brand (navbar.njk) occupies at the top of the page -->
     <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
       <div class="wordmark hero-wordmark-ghost" aria-hidden="true">
-        <span class="tinker-word">TINKER</span>
-        <span class="click-word">CLICK</span>
+        <!-- Split into letters like the dynamic brand, so both measure exactly the same -->
+        <span class="tinker-word">{% for ch in "TINKER" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+        <span class="click-word">{% for ch in "CLICK" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
       </div>
     </div>
 
@@ -13,14 +14,14 @@
 
     <div class="hero-grid">
       <div class="hero-meta">
-        <span class="eyebrow">(Tinker)</span>
+        <span class="eyebrow">(Tinker Click)</span>
         <p>Make it. Use it.<br>Move on.</p>
       </div>
 
       <div class="hero-statement">
         <h1 class="hero-title">Your next tool is <span class="text-orange">one thought away.</span></h1>
         <p class="hero-lede">
-          Tell Tinker what you need, in your own words, and get a focused app built for that one job, ready to use right on your desktop. Apps, games, documents, charts, dashboards and more. No setup, no templates, no technical know-how.
+          Tell Tinker Click what you need, in your own words, and get a focused app built for that one job, ready to use right on your desktop. Apps, games, documents, charts, dashboards and more. No setup, no templates, no technical know-how.
         </p>
       </div>
 

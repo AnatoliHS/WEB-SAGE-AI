@@ -16,7 +16,7 @@
   --on-ink: #eee9e2;
   --danger: #c8321e;
 
-  /* Flow node colours (the sphere takes on the active node's colour) */
+  /* Step colours (the Live Interface in Meet Tinker takes on the active step's colour) */
   --node-1: #2b4dff;
   --node-2: #7a3cff;
   --node-3: #f2541b;
@@ -159,6 +159,11 @@ button {
   color: var(--accent);
 }
 
+/* Keeps a phrase on one line */
+.nowrap {
+  white-space: nowrap;
+}
+
 /* Matches the orange plus in the logo mark (assets/tinker-mark.svg) */
 .text-orange {
   color: #ff5f00;
@@ -239,6 +244,25 @@ button {
   font-size: 0.4em;
   letter-spacing: 0.02em;
   color: var(--accent);
+}
+
+/* Letters: each sits in a box clipped at its bottom edge, so it rises up into view */
+.wordmark .ltr {
+  display: inline-block;
+  clip-path: inset(-50% -20% -0.1em -20%);
+}
+
+.wordmark .ltr > span {
+  display: inline-block;
+}
+
+.js .dynamic-brand .ltr > span {
+  transform: translateY(120%);
+}
+
+.js .dynamic-brand.is-ready .ltr > span {
+  transform: none;
+  transition: transform 0.9s var(--ease) calc(0.1s + var(--i) * 0.055s);
 }
 
 .hero-wordmark-ghost {
@@ -564,6 +588,22 @@ button {
   color: var(--ink-2);
 }
 
+/* On load the title, then the paragraph, slide in from the left while the wordmark letters rise */
+.js .hero-title,
+.js .hero-lede {
+  animation: hero-slide-in 1.1s var(--ease) both;
+}
+
+.js .hero-title { animation-delay: 0.35s; }
+.js .hero-lede { animation-delay: 0.5s; }
+
+@keyframes hero-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+}
+
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr 1fr; }
   .hero-statement { grid-column: 1 / -1; grid-row: 1; }
@@ -592,11 +632,14 @@ button {
 }
 
 /* ==========================================================================
-   HERO STAGE: the thinking sphere (assets/js/hero-stage.js + assets/js/sphere.js)
+   HERO STAGE: the thinking sphere and "Make it. Use it. Move on."
+   (assets/js/hero-stage.js + assets/js/sphere.js)
    ========================================================================== */
 .stage {
   position: relative;
-  height: 340vh;
+  height: 420vh;
+  /* The next section rises in while the orb's particles are still flying apart */
+  margin-bottom: -50vh;
 }
 
 .stage-pin {
@@ -609,115 +652,18 @@ button {
 }
 
 .stage-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  place-items: center;
 }
 
-.stage-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.stage-counter {
-  font-size: 0.8125rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.stage-status {
-  display: flex;
-  gap: 12px;
-  font-size: 0.875rem;
-  color: var(--ink-2);
-}
-
-.stage-status-label {
-  color: var(--muted);
-}
-
-[data-stage-status].flash {
-  animation: flash 0.5s ease;
-}
-
-@keyframes flash {
-  from { opacity: 0; transform: translateY(4px); }
-}
-
-html:not(.js) .stage { height: auto; }
+html:not(.js) .stage { height: auto; margin-bottom: 0; }
 html:not(.js) .stage-pin { position: static; height: auto; }
 
-/* Flow cards (node data) */
-.flow-card {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: min(100%, 260px);
-  padding: 16px 18px;
-  text-align: left;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.5s ease, transform 0.6s var(--ease);
-}
-
-.flow-card:hover {
-  border-color: var(--ink);
-}
-
-.flow-card.is-active {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 1px var(--ink);
-}
-
-.node-kind {
-  margin-bottom: 6px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.is-active .node-kind {
-  color: var(--node, var(--accent));
-}
-
-.flow-card strong {
-  font-size: 0.9375rem;
-  font-weight: 500;
-}
-
-.node-sub {
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-
-/* Thinking sphere */
-.sphere-layout {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas: "a s b" "d s c";
-  gap: 16px var(--gutter);
-}
-
+/* Where the sphere lands; the canvas itself covers the viewport so the words can run edge to edge */
 .sphere-target {
-  grid-area: s;
-  align-self: center;
   width: min(60vh, 540px, 46vw);
   aspect-ratio: 1;
 }
-
-.flow-card-1 { grid-area: a; align-self: start; --node: var(--node-1); }
-.flow-card-2 { grid-area: b; align-self: start; justify-self: end; --node: var(--node-2); }
-.flow-card-3 { grid-area: c; align-self: end; justify-self: end; --node: var(--node-3); }
-.flow-card-4 { grid-area: d; align-self: end; --node: var(--node-4); }
 
 .sphere-canvas { display: none; }
 
@@ -725,63 +671,23 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   display: block;
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  /* % of the viewport box (not 100vh, which on phones includes the hidden address bar area) */
+  width: 100%;
+  height: 100%;
   z-index: 800;
   pointer-events: none;
 }
 
-.js .stage:not(.is-landed) .flow-card {
-  opacity: 0;
-  transform: translateY(12px);
-  pointer-events: none;
-}
-
-/* Stage header waits for the sphere to land: the line draws across, then the labels fade in */
-.js .stage-sphere .stage-top {
-  position: relative;
-  border-top: 0;
-}
-
-.js .stage-sphere .stage-top::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: var(--line);
-  transform-origin: left;
-  transition: transform 0.8s var(--ease-in-out);
-}
-
-.js .stage-sphere .stage-top > * {
-  transition: opacity 0.5s ease 0.35s, transform 0.6s var(--ease) 0.35s;
-}
-
-.js .stage-sphere:not(.is-landed) .stage-top::before {
-  transform: scaleX(0);
-}
-
-.js .stage-sphere:not(.is-landed) .stage-top > * {
-  opacity: 0;
-  transform: translateY(6px);
-  transition-delay: 0s;
-}
-
-.js .stage.is-landed .flow-card-2 { transition-delay: 0.08s; }
-.js .stage.is-landed .flow-card-3 { transition-delay: 0.16s; }
-.js .stage.is-landed .flow-card-4 { transition-delay: 0.24s; }
-
 /* Phones: the sphere keeps one size. It starts right under the hero text, glides to the
-   middle of the screen and waits while the hero scrolls out, then the cards animate in,
-   two above and two below. Swiping on through the pinned stage steps through the nodes. */
+   middle of the screen and waits while the hero scrolls out, then the words glide through. */
 @media (max-width: 760px) {
   .stage-sphere {
-    --sphere-size: min(100%, 340px, 38svh);
-    /* One screen for the pin plus ~35% of a screen of swiping per node */
-    height: 240vh;
-    height: 240svh;
-    /* Start a little higher, so the stage pins (and the cards appear) as the last of the
-       hero text slides under the header */
+    /* Clearly narrower than the words, so the lens doesn't stretch across the whole line */
+    --sphere-size: min(58vw, 240px, 30svh);
+    height: 300vh;
+    height: 300svh;
+    margin-bottom: -40svh;
+    /* Start a little higher, so the stage pins as the last of the hero text slides under the header */
     margin-top: -96px;
   }
 
@@ -789,38 +695,13 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     padding: calc(var(--header-h) + 8px) 0 16px;
   }
 
-  .stage-sphere .stage-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Header at the top, status at the bottom, cards hugging the sphere in between */
-    grid-template-rows: auto 1fr auto auto auto 1fr auto;
-    grid-template-areas: "top top" ". ." "a b" "s s" "d c" ". ." "st st";
-    gap: 10px;
-  }
-
-  .stage-sphere .sphere-layout { display: contents; }
-  .stage-sphere .stage-top { grid-area: top; }
-  /* Room for two lines so the layout doesn't shift as the status text changes */
-  .stage-sphere .stage-status { grid-area: st; min-height: 3.2em; }
-
   .sphere-target {
     width: var(--sphere-size);
-    justify-self: center;
-    align-self: center;
   }
-
-  .flow-card { width: 100%; padding: 12px 14px; }
-  .flow-card-1, .flow-card-2, .flow-card-3, .flow-card-4 { justify-self: stretch; align-self: stretch; }
-
-  /* Top cards drop in from above, bottom cards rise from below, toward the sphere */
-  .js .stage-sphere:not(.is-landed) .flow-card-1,
-  .js .stage-sphere:not(.is-landed) .flow-card-2 { transform: translateY(-16px); }
-  .js .stage-sphere:not(.is-landed) .flow-card-3,
-  .js .stage-sphere:not(.is-landed) .flow-card-4 { transform: translateY(16px); }
 
   /* The starting slot matches the stage's sphere exactly, so it glides without resizing */
   .tinker-app:has(.stage-sphere) .hero-slot {
-    --sphere-size: min(100%, 340px, 38svh);
+    --sphere-size: min(58vw, 240px, 30svh);
     grid-column: 1 / -1;
     justify-self: center;
     width: var(--sphere-size);
@@ -831,9 +712,6 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   }
 
   .tinker-app:has(.stage-sphere) .hero { padding-bottom: 8px; }
-
-  .js .stage-sphere .stage-status { transition: opacity 0.5s ease 0.3s; }
-  .js .stage-sphere:not(.is-landed) .stage-status { opacity: 0; transition-delay: 0s; }
 }
 
 /* ==========================================================================
@@ -872,26 +750,49 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   color: var(--ink-2);
 }
 
+/* Split heading: eyebrow on top, title on the left, lede on the right lined up with the title's last line */
+.section-head-split {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  column-gap: clamp(32px, 5vw, 96px);
+  align-items: end;
+}
+
+.section-head-split .section-title {
+  max-width: none;
+}
+
+.section-head-split .eyebrow {
+  grid-column: 1 / -1;
+}
+
+.section-head-split .section-lede {
+  justify-self: end;
+  max-width: 56ch;
+  margin-top: 0;
+}
+
+/* Meet Tinker Click on desktop: the same columns as the animation + steps below (.live),
+   so the title centres over the animation and the lede starts where the 01–04 steps do */
+@media (min-width: 1024px) {
+  #tinker .section-head-split {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    column-gap: clamp(32px, 5vw, 80px);
+  }
+
+  #tinker .section-head-split .section-title {
+    justify-self: center;
+    text-align: center;
+  }
+
+  #tinker .section-head-split .section-lede {
+    justify-self: start;
+  }
+}
+
 @media (max-width: 760px) {
   .section-head { grid-template-columns: 1fr; }
   .section-head > div { grid-column: 1; }
-}
-
-/* Numbered rows */
-.index-list {
-  list-style: none;
-}
-
-.index-list li {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px var(--gutter);
-  padding: 28px 0;
-  border-top: 1px solid var(--line);
-}
-
-.index-list li:last-child {
-  border-bottom: 1px solid var(--line);
+  .section-head-split .section-lede { justify-self: start; }
 }
 
 .index-num {
@@ -899,82 +800,6 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   font-weight: 500;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
-}
-
-.index-list h3 {
-  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-}
-
-.index-list p {
-  grid-column: 3 / -1;
-  max-width: 52ch;
-  color: var(--ink-2);
-}
-
-/* Row screenshots */
-.index-thumb {
-  grid-column: 3 / -1;
-  max-width: 560px;
-  margin-top: 8px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--bg-raised);
-}
-
-.index-thumb img {
-  display: block;
-  width: 100%;
-  height: auto;
-  transition: transform 1.1s var(--ease);
-}
-
-.index-list h3 {
-  transition: color 0.4s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .index-list li:hover h3 { color: var(--accent); }
-  .index-list li:hover .index-thumb img { transform: scale(1.04); }
-}
-
-@media (max-width: 760px) {
-  .index-list li { grid-template-columns: 1fr; }
-  .index-list p,
-  .index-thumb { grid-column: 1; }
-}
-
-/* Pillars */
-.pillars {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 48px var(--gutter);
-}
-
-.pillar {
-  padding-top: 20px;
-  border-top: 1px solid var(--ink);
-}
-
-.pillar h3 {
-  margin: clamp(40px, 6vw, 96px) 0 12px;
-  font-size: clamp(1.375rem, 2vw, 1.75rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-}
-
-.pillar p {
-  max-width: 38ch;
-  color: var(--ink-2);
-}
-
-@media (max-width: 860px) {
-  .pillars { grid-template-columns: 1fr; }
-  .pillar h3 { margin-top: 24px; }
 }
 
 /* Stats */
@@ -1017,7 +842,11 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .stats { grid-template-columns: 1fr 1fr; }
 }
 
-/* Platform row: logo above each name */
+/* Platform row: logo above each name; sits under the feature bento */
+.platforms {
+  margin: clamp(64px, 9vw, 128px) 0 0;
+}
+
 .platforms > div {
   padding-top: 20px;
   border-top: 1px solid var(--line);
@@ -1175,306 +1004,270 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .bento-big, .bento-wide { grid-column: auto; grid-row: auto; }
 }
 
-/* Remix chain (Meet Tinker): app cards above the pillars, a carousel on small screens */
-.chain-track {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
-  gap: 28px var(--gutter);
-}
-
-/* Keep each pillar's title tucked right under its card, no rule between them */
-.chain .pillar {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.chain .pillar h3 {
-  margin-top: 16px;
-}
-
-.chain-step {
-  grid-row: span 2;
-  display: grid;
-  grid-template-rows: subgrid;
-}
-
-.app-card {
+/* Live interface (Meet Tinker): an abstract app that assembles and evolves; --c is the active step's colour */
+.live-stage {
+  --c: var(--node-1);
   position: relative;
-  padding: 12px 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--bg-raised);
-  transition: opacity 0.6s ease, transform 0.6s var(--ease), border-color 0.4s;
+  aspect-ratio: 16 / 9;
+  /* Sized from the viewport height so the stage and the steps under it fit on one screen */
+  width: min(100%, max(480px, calc((100svh - 340px) * 16 / 9)));
+  margin-inline: auto;
 }
 
-.app-card.is-dim {
-  opacity: 0.3;
-  transform: translateY(10px);
-}
-
-.app-card.is-focus {
-  border-color: var(--accent);
-}
-
-.app-cover {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 10;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--a), var(--b));
-  color: #fff;
-  font-size: 2.75rem;
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  transition: background 0.8s var(--ease);
-}
-
-.app-name {
-  display: block;
-  margin-top: 12px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-.app-meta {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-top: 4px;
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-
-.app-chip {
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--accent);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.app-ask {
-  margin-top: 12px;
-  font-size: 0.875rem;
-  color: var(--ink-2);
-}
-
-/* Step icon sitting on the card's top edge; fills with the accent on the active step */
-.chain-tag {
+.live-stage > * {
   position: absolute;
-  top: -15px;
-  left: 14px;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
-  border-radius: 50%;
+  box-sizing: border-box;
+  transition: left 0.9s var(--ease), top 0.9s var(--ease), width 0.9s var(--ease), height 0.9s var(--ease),
+    opacity 0.5s ease, background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+.ui-frame {
+  border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent);
+  border-radius: 14px;
   background: var(--bg);
-  color: var(--ink);
-  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 30px 60px -30px rgba(18, 18, 18, 0.35);
 }
 
-.app-card.is-focus .chain-tag {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  box-shadow: 0 6px 16px -6px var(--accent);
-}
-
-/* Dashed connector drawn across the gutter to the next card */
-.chain-link {
-  position: absolute;
-  top: 34%;
-  left: 100%;
-  width: var(--gutter);
-  height: 2px;
-  background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s var(--ease);
-}
-
-.chain-link.is-on {
-  transform: scaleX(1);
-}
-
-.chain-ask {
-  min-height: 2.9em;
-  margin-top: 12px;
-  padding: 8px 12px;
-  border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
+.ui-ghost {
+  border: 1.5px dashed color-mix(in srgb, var(--c) 55%, transparent);
   border-radius: 12px;
+  background: repeating-linear-gradient(180deg, transparent 0 18%, color-mix(in srgb, var(--c) 14%, transparent) 18% 30%);
+}
+
+.ui-head {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--c);
+  color: #fff;
+  font-size: clamp(0.6875rem, 1.3vw, 0.9375rem);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ui-tile {
+  overflow: hidden;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--c) 18%, var(--bg-raised));
+}
+
+.ui-tile::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  top: 16%;
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c);
+  opacity: 0.85;
+  transition: background-color 0.6s ease;
+}
+
+.ui-tile:nth-of-type(odd)::before {
+  border-radius: 6px;
+}
+
+.ui-tile::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 24%;
+  bottom: 18%;
+  height: 11%;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--c) 40%, transparent);
+}
+
+.ui-prompt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  overflow: hidden;
+  border: 1.5px solid var(--c);
+  border-radius: 999px;
   background: var(--bg);
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 1.6vw, 1.0625rem);
+  white-space: nowrap;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 12%, transparent);
 }
 
-.chain-caret {
+.ui-caret {
   display: inline-block;
-  width: 1px;
-  height: 1em;
-  margin-left: 1px;
-  vertical-align: -2px;
-  background: var(--ink);
-  animation: chain-blink 1s steps(1) infinite;
+  width: 1.5px;
+  height: 1.1em;
+  background: var(--c);
+  animation: ui-blink 1s steps(1) infinite;
 }
 
-@keyframes chain-blink {
+@keyframes ui-blink {
   50% { opacity: 0; }
 }
 
-.chain-share {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  font-size: 0.875rem;
-}
-
-.chain-switch {
-  position: relative;
-  width: 40px;
-  height: 24px;
+.ui-badge {
+  display: grid;
+  place-items: center;
   border-radius: 999px;
-  background: var(--line);
-  transition: background 0.4s;
+  background: var(--c);
+  color: #fff;
+  font-size: clamp(0.625rem, 1.2vw, 0.8125rem);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.chain-switch::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  transition: transform 0.4s var(--ease);
-}
-
-.chain-switch.is-on {
-  background: var(--accent);
-}
-
-.chain-switch.is-on::after {
-  transform: translateX(16px);
-}
-
-.chain-count {
-  margin-top: 10px;
-  font-size: 0.875rem;
-  color: var(--ink-2);
-}
-
-.chain-count b {
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--ink);
+.live-stage .live-counter {
+  top: 16px;
+  right: 18px;
+  font-size: 0.8125rem;
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
 
-.chain-nav {
+/* Steps under the stage: the active one is full strength, the rest wait in the background */
+.live-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px var(--gutter);
+  margin-top: clamp(24px, 3vw, 36px);
+  list-style: none;
+}
+
+.live-step {
+  display: block;
+  width: 100%;
+  text-align: left;
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+}
+
+.live-step[aria-current] {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .live-step:hover { opacity: 1; }
+}
+
+.live-step[aria-current] .index-num {
+  color: var(--node);
+}
+
+.live-step h3 {
+  margin: 12px 0 10px;
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.live-step p {
+  max-width: 36ch;
+  color: var(--ink-2);
+}
+
+.live-nav {
   display: none;
 }
 
+/* Desktop: animation on the left, the steps stacked beside it */
+@media (min-width: 1024px) {
+  .live {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  .live-stage {
+    aspect-ratio: 4 / 3;
+    width: min(100%, calc((100svh - 180px) * 4 / 3));
+  }
+
+  .live-steps {
+    grid-template-columns: 1fr;
+    gap: clamp(20px, 2.4vw, 32px);
+    margin-top: 0;
+  }
+
+  .live-step h3 { margin-top: 6px; }
+  .live-step p { max-width: 44ch; }
+}
+
 @media (max-width: 860px) {
-  /* Swipeable slides: card + its pillar, with the next slide peeking in */
-  .chain-track {
-    display: flex;
-    gap: 16px;
-    margin: 0 calc(var(--gutter) * -1);
-    padding: 12px var(--gutter) 4px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
+  .live-stage { aspect-ratio: 1; width: min(100%, max(280px, calc(100svh - 440px))); }
+
+  /* One step at a time under the animation: all four share one spot and cross-fade */
+  .live-steps { grid-template-columns: 1fr; }
+  .live-steps > li { grid-area: 1 / 1; }
+
+  .live-step {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.6s var(--ease);
   }
 
-  .chain-track::-webkit-scrollbar { display: none; }
-
-  .chain-step {
-    flex: 0 0 86%;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    scroll-snap-align: start;
-  }
-
-  .app-card.is-dim {
+  .live-step[aria-current] {
     opacity: 1;
     transform: none;
+    pointer-events: auto;
+    transition-delay: 0.15s;
   }
-
-  .chain-link { display: none; }
-
-  .chain-nav {
+  /* Previous / next arrows with a dot per step between them */
+  .live-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 28px;
+    gap: 16px;
+    margin-top: 24px;
   }
 
-  .chain-dots {
+  .live-arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .live-arrow:active {
+    background: var(--bg-raised);
+  }
+
+  .live-dots {
     display: flex;
-    gap: 6px;
+    gap: 4px;
   }
 
-  .chain-dots button {
+  .live-dot {
     position: relative;
     width: 28px;
-    height: 24px;
+    height: 28px;
   }
 
-  /* Each dot is a short bar that fills while its slide is showing */
-  .chain-dots button::before,
-  .chain-dots span {
+  .live-dot::after {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
     top: 50%;
-    height: 3px;
-    margin-top: -1.5px;
-    border-radius: 3px;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 999px;
     background: var(--line);
+    transition: width 0.4s var(--ease), margin 0.4s var(--ease), background 0.4s ease;
   }
 
-  .chain-dots span {
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
+  .live-dot[aria-current]::after {
+    width: 22px;
+    margin-left: -11px;
+    background: var(--node);
   }
-
-  .chain-dots button.is-done span { transform: scaleX(1); }
-  .chain-dots button.is-running span { animation: chain-fill 5s linear forwards; }
-  .chain-dots button[aria-current="true"]:not(.is-running) span { transform: scaleX(1); }
-
-  .chain-hint {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8125rem;
-    color: var(--muted);
-    transition: opacity 0.5s ease;
-  }
-
-  .chain-hint svg { animation: chain-nudge 1.6s var(--ease) infinite; }
-  .chain.is-swiped .chain-hint { opacity: 0; }
-}
-
-@keyframes chain-fill {
-  to { transform: scaleX(1); }
-}
-
-@keyframes chain-nudge {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(6px); }
 }
 
 /* ==========================================================================
@@ -1578,25 +1371,9 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .faq-list { grid-column: 1; }
 }
 
-/* ==========================================================================
-   CLOSING CTA
-   ========================================================================== */
-.closing {
+/* Last section before the footer keeps breathing room above it */
+.section-last {
   padding-bottom: clamp(80px, 11vw, 160px);
-}
-
-.closing-inner {
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.closing-title {
-  margin: clamp(32px, 5vw, 64px) 0 clamp(32px, 4vw, 48px);
-  font-size: clamp(3rem, 10vw, 10rem);
-  font-weight: 500;
-  line-height: 0.92;
-  letter-spacing: -0.06em;
-  text-wrap: balance;
 }
 
 /* ==========================================================================
@@ -1608,72 +1385,70 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .footer-statement {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   padding-top: 24px;
   border-top: 4px solid var(--ink);
 }
 
-.footer-headline,
-.footer-mark {
+.footer-headline {
   font-size: clamp(2.25rem, 6vw, 5.5rem);
   font-weight: 500;
   line-height: 0.95;
   letter-spacing: -0.05em;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px var(--gutter);
-  margin-top: clamp(64px, 9vw, 128px);
-  font-size: 0.875rem;
+/* Oversized year mark, its top lined up with "Built to tinker." */
+.footer-mark {
+  margin-top: -0.06em;
+  font-size: clamp(3.5rem, 13vw, 12rem);
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
 }
 
-.footer-brand {
-  font-weight: 600;
+.footer-cta {
+  margin-top: clamp(24px, 3vw, 40px);
 }
 
-.footer-about p {
-  margin-top: 6px;
-  max-width: 30ch;
+/* Sits just above the bottom line */
+.footer-blurb {
+  max-width: 62ch;
+  margin-top: clamp(56px, 8vw, 112px);
+  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
   color: var(--ink-2);
-}
-
-.footer-heading {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--muted);
-}
-
-.footer-col ul {
-  list-style: none;
-}
-
-.footer-col li {
-  padding: 2px 0;
-}
-
-.footer-col a:hover,
-.footer-bottom a:hover {
-  color: var(--accent);
+  text-wrap: pretty;
 }
 
 .footer-bottom {
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 48px;
+  margin-top: 24px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
   font-size: 0.8125rem;
   color: var(--muted);
 }
 
+.footer-legal {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-legal a:hover,
+.footer-credit a:hover {
+  color: var(--accent);
+}
+
+.footer-credit a {
+  color: var(--ink-2);
+}
+
 @media (max-width: 760px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .footer-about { grid-column: 1 / -1; }
   .footer-bottom { flex-direction: column; }
 }
 

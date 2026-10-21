@@ -1,7 +1,7 @@
 ---
 layout: default.njk
-title: Tinker — Make your own apps by describing them
-description: Tell Tinker what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS and Linux. Join the waitlist at tinker.click.
+title: Tinker Click — Make your own apps by describing them
+description: Tell Tinker Click what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS and Linux. Join the waitlist at tinker.click.
 heroSphere: true
 ---
 
@@ -10,170 +10,103 @@ heroSphere: true
      ======================================================== -->
 {% include "component/hero.njk" %}
 
-<section class="stage stage-sphere" data-stage data-steps="{{ flow.length }}" data-compact-below="760" aria-label="How Tinker works">
+<section class="stage stage-sphere" data-stage data-compact-below="760" aria-label="Make it. Use it. Move on.">
   <div class="stage-pin">
     <div class="container stage-inner">
-      <div class="stage-top">
-        <span class="eyebrow">(Live) How Tinker works</span>
-        <span class="stage-counter" data-stage-counter>01 / 04</span>
+      <!-- The words are drawn on the canvas with the orb (assets/js/sphere.js); this is their text -->
+      <h2 class="sr-only">Make it. Use it. Move on.</h2>
+      <div class="sphere-target" data-stage-target>
+        <canvas class="sphere-canvas" aria-hidden="true"></canvas>
       </div>
-
-      <div class="sphere-layout">
-        {% for node in flow %}
-        <button type="button" class="flow-card flow-card-{{ loop.index }}" data-step="{{ loop.index0 }}" data-status="{{ node.status }}">
-          <span class="node-kind">{{ node.kind }}</span>
-          <strong>{{ node.name }}</strong>
-          <span class="node-sub">{{ node.sub }}</span>
-        </button>
-        {% endfor %}
-        <div class="sphere-target" data-stage-target>
-          <canvas class="sphere-canvas" aria-hidden="true"></canvas>
-        </div>
-      </div>
-
-      <p class="stage-status">
-        <span class="stage-status-label">Status</span>
-        <span data-stage-status>{{ flow[0].status }}</span>
-      </p>
     </div>
   </div>
 </section>
 
 <!-- ========================================================
-     2. THE IDEA
-     ======================================================== -->
-<section id="idea" class="section">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">(01) The idea</span>
-      <div>
-        <h2 class="section-title">Software you can make, <span class="text-accent">not just use.</span></h2>
-        <p class="section-lede">Most software is built for everyone, so it fits no one exactly. Tinker builds a focused app for the job in front of you. Use it, keep it, or move on to the next idea. The only limit is your imagination.</p>
-      </div>
-    </div>
-
-    <ol class="index-list">
-      <li class="reveal">
-        <span class="index-num">01</span>
-        <h3>Start with a simple ask</h3>
-        <p>Describe the job in your own words and your own language. Tinker builds it for you, from a dinner bill splitter to a scientific calculator.</p>
-        <figure class="index-thumb"><img src="/assets/img/app-prompt.jpg" alt="The Tinker home screen: a single prompt box with suggestions like Split a dinner bill" width="1400" height="1053" loading="lazy" decoding="async"></figure>
-      </li>
-      <li class="reveal">
-        <span class="index-num">02</span>
-        <h3>Bring your own material</h3>
-        <p>Add documents, images or raw data, then shape them into a web page, an app concept, a chart, a PDF or a PowerPoint deck.</p>
-        <figure class="index-thumb"><img src="/assets/img/app-workspace.jpg" alt="The Tinker workspace with an app’s source code, a story animation and a music player side by side" width="1400" height="752" loading="lazy" decoding="async"></figure>
-      </li>
-      <li class="reveal">
-        <span class="index-num">03</span>
-        <h3>Refine until it fits</h3>
-        <p>Keep asking for changes until it works exactly the way you want. Everything you make lives in My apps, ready whenever you need it again.</p>
-        <figure class="index-thumb"><img src="/assets/img/app-library.jpg" alt="A grid of apps in Tinker, from a Winamp-style player to chess and Pac-Man" width="1400" height="1106" loading="lazy" decoding="async"></figure>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ========================================================
-     3. MEET TINKER
+     2. MEET TINKER
      ======================================================== -->
 <section id="tinker" class="section">
   <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">(02) Meet Tinker</span>
-      <div>
-        <h2 class="section-title">Make it. Remix it. <span class="text-accent">Share it.</span></h2>
-        <p class="section-lede">Think of it as a music library for apps, where you can add your own tracks. From a game of Go to a working copy of Winamp, the apps people make in Tinker run right inside it.</p>
-      </div>
+    <div class="section-head section-head-split reveal">
+      <span class="eyebrow">(01) Meet Tinker Click</span>
+      <h2 class="section-title">One sentence in. <span class="text-accent nowrap">A working app out.</span></h2>
+      <p class="section-lede">Think of it as a music library for apps, where you can add your own tracks. From a game of Go to a working copy of Winamp, the apps people make in Tinker Click run right inside it.</p>
     </div>
 
-    <!-- Remix chain: one app's journey above each pillar; a swipeable carousel on small screens -->
-    <div class="chain reveal" data-chain>
-      <div class="chain-track" data-chain-track tabindex="0" aria-roledescription="carousel" aria-label="Discover, remix and share">
-        <div class="chain-step" data-chain-step>
-          <div class="app-card is-focus" data-chain-card aria-hidden="true">
-            <span class="chain-tag"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 10.5 13 13"/><circle cx="6.5" cy="6.5" r="4.5"/></svg></span>
-            <span class="app-cover" style="--a: #ffb020; --b: #f2541b">M</span>
-            <span class="app-name">Maze Muncher</span>
-            <span class="app-meta"><span class="app-chip">Games</span>Alexander · Public</span>
-            <p class="app-ask">“A maze game where you eat dots and dodge ghosts”</p>
-            <span class="chain-link"></span>
-          </div>
-          <article class="pillar">
-            <span class="index-num">01</span>
-            <h3>Discover</h3>
-            <p>Hundreds of public apps are ready to use as starting points. Type /discover or open the Gallery to explore a world of ideas.</p>
-          </article>
-        </div>
-
-        <div class="chain-step" data-chain-step>
-          <div class="app-card is-dim" data-chain-card aria-hidden="true">
-            <span class="chain-tag"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h9.5L9 2.5M12 9H2.5L5 11.5"/></svg></span>
-            <span class="app-cover" data-chain-cover style="--a: #ffb020; --b: #f2541b">M</span>
-            <span class="app-name" data-chain-name>Maze Muncher</span>
-            <span class="app-meta"><span class="app-chip">Games</span>Your copy · Private</span>
-            <div class="chain-ask"><span data-chain-typed></span><span class="chain-caret"></span></div>
-            <span class="chain-link"></span>
-          </div>
-          <article class="pillar">
-            <span class="index-num">02</span>
-            <h3>Remix</h3>
-            <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
-          </article>
-        </div>
-
-        <div class="chain-step" data-chain-step>
-          <div class="app-card is-dim" data-chain-card aria-hidden="true">
-            <span class="chain-tag"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V1.5M4 4.5l3-3 3 3M2 8v3.5a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8"/></svg></span>
-            <span class="app-cover" style="--a: #ff6bd5; --b: #7a3cff">L</span>
-            <span class="app-name">Labyrinth-Mampfer</span>
-            <span class="app-meta"><span class="app-chip">Games</span>You</span>
-            <div class="chain-share"><span data-chain-vis>Private</span><span class="chain-switch" data-chain-switch></span></div>
-            <p class="chain-count"><b data-chain-count>0</b> people remixed this</p>
-          </div>
-          <article class="pillar">
-            <span class="index-num">03</span>
-            <h3>Share when you're ready</h3>
-            <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
-          </article>
-        </div>
+    <!-- Live interface: an abstract app that assembles and evolves through Describe → Build → Remix → Share.
+         The steps below drive it (auto-advancing while on screen); blocks are positioned in % by the script. -->
+    <div class="live reveal" data-live>
+      <div class="live-stage" aria-hidden="true">
+        <div class="ui-ghost" data-ui="ghostL"></div>
+        <div class="ui-ghost" data-ui="ghostR"></div>
+        <div class="ui-frame" data-ui="frame"></div>
+        <div class="ui-head" data-ui="head"><span data-ui="headText"></span></div>
+        <div class="ui-tile" data-ui="tile"></div>
+        <div class="ui-tile" data-ui="tile"></div>
+        <div class="ui-tile" data-ui="tile"></div>
+        <div class="ui-tile" data-ui="tile"></div>
+        <div class="ui-prompt" data-ui="prompt"><span data-ui="promptText"></span><span class="ui-caret"></span></div>
+        <div class="ui-badge" data-ui="badge"></div>
+        <span class="live-counter" data-live-counter>01 / 04</span>
       </div>
 
-      <div class="chain-nav">
-        <div class="chain-dots">
-          <button type="button" data-chain-dot aria-label="Show step 1, Discover" aria-current="true"><span></span></button>
-          <button type="button" data-chain-dot aria-label="Show step 2, Remix"><span></span></button>
-          <button type="button" data-chain-dot aria-label="Show step 3, Share"><span></span></button>
+      <ol class="live-steps">
+        <li>
+          <button type="button" class="live-step" data-live-step style="--node: var(--node-1)" aria-current="step">
+            <span class="index-num">01</span>
+            <h3>Describe <span class="text-orange">your idea</span></h3>
+            <p>Type what you want in plain words, in any language. No templates, no setup.</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="live-step" data-live-step style="--node: var(--node-2)">
+            <span class="index-num">02</span>
+            <h3>Watch it <span class="text-orange">build</span></h3>
+            <p>Tinker Click assembles a working app around your idea, ready to use right on your desktop.</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="live-step" data-live-step style="--node: var(--node-3)">
+            <span class="index-num">03</span>
+            <h3>Remix <span class="text-orange">anything</span></h3>
+            <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="live-step" data-live-step style="--node: var(--node-4)">
+            <span class="index-num">04</span>
+            <h3>Share <span class="text-orange">when you’re ready</span></h3>
+            <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
+          </button>
+        </li>
+      </ol>
+
+      <!-- Phones: step through by hand (only one step's text shows at a time) -->
+      <div class="live-nav">
+        <button type="button" class="live-arrow" data-live-prev aria-label="Previous step"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+        <div class="live-dots">
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-1)" aria-label="Step 1, Describe"></button>
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-2)" aria-label="Step 2, Build"></button>
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-3)" aria-label="Step 3, Remix"></button>
+          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-4)" aria-label="Step 4, Share"></button>
         </div>
-        <span class="chain-hint" aria-hidden="true">
-          Swipe
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h15M11 1l5 5-5 5"/></svg>
-        </span>
+        <button type="button" class="live-arrow" data-live-next aria-label="Next step"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ========================================================
-     4. FEATURES
+     3. FEATURES
      ======================================================== -->
 <section id="features" class="section">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">(03) Features</span>
+      <span class="eyebrow">(02) Features</span>
       <div>
         <h2 class="section-title">Made for tinkerers, families <span class="text-accent">and classrooms.</span></h2>
       </div>
     </div>
-
-    {% include "component/platform-logos.njk" %}
-    <dl class="stats stats-words platforms reveal">
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-windows"/></svg>Desktop app</dt><dd>Windows</dd></div>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-apple"/></svg>Desktop app</dt><dd>macOS</dd></div>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-linux"/></svg>Desktop app</dt><dd>Linux</dd></div>
-      <div class="is-upcoming"><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-tablet"/></svg>In progress</dt><dd>iPad</dd></div>
-    </dl>
 
     <!-- Bento: each frame has its own colour (--c); it tints the icon and title, then floods the frame on hover -->
     <div class="bento">
@@ -199,7 +132,7 @@ heroSphere: true
         <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg>
         <div>
           <h3>Your choice of server</h3>
-          <p>Use the official Tinker server, host your own, or bring your own AI model.</p>
+          <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
         </div>
       </article>
       <article class="bento-cell reveal" style="--c: #0e936c">
@@ -207,7 +140,7 @@ heroSphere: true
         <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>
         <div>
           <h3>Works with your files</h3>
-          <p>Tinker can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
+          <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
         </div>
       </article>
       <article class="bento-cell reveal" style="--c: #e0457b">
@@ -215,7 +148,7 @@ heroSphere: true
         <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
         <div>
           <h3>Under the hood</h3>
-          <p>Edit the system prompt and add your own tools to change how Tinker thinks and what it can do.</p>
+          <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
         </div>
       </article>
       <article class="bento-cell bento-wide reveal" style="--c: #b27a00">
@@ -231,31 +164,39 @@ heroSphere: true
         <svg class="bento-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
         <div>
           <h3>Open source</h3>
-          <p>Tinker is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
+          <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
         </div>
       </article>
     </div>
+
+    {% include "component/platform-logos.njk" %}
+    <dl class="stats stats-words platforms reveal">
+      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-windows"/></svg>Desktop app</dt><dd>Windows</dd></div>
+      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-apple"/></svg>Desktop app</dt><dd>macOS</dd></div>
+      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-linux"/></svg>Desktop app</dt><dd>Linux</dd></div>
+      <div class="is-upcoming"><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-tablet"/></svg>In progress</dt><dd>iPad</dd></div>
+    </dl>
   </div>
 </section>
 
 <!-- ========================================================
-     5. FAQ
+     4. FAQ
      ======================================================== -->
-<section id="faq" class="section">
+<section id="faq" class="section section-last">
   <div class="container faq-layout">
     <div class="section-head-stack reveal">
-      <span class="eyebrow">(04) FAQ</span>
+      <span class="eyebrow">(03) FAQ</span>
       <h2 class="section-title">Questions, <span class="text-accent">answered.</span></h2>
     </div>
 
     <div class="faq-list reveal">
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-1">
-          <span>What is Tinker?</span>
+          <span>What is Tinker Click?</span>
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-1" class="faq-answer" hidden>
-          <p>Tinker is a desktop app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
+          <p>Tinker Click is a desktop app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
           <p>It's like a code-sharing platform for people who don't write code. Keep what you make, remix apps other people have made, and share your own in the public gallery.</p>
         </div>
       </div>
@@ -266,7 +207,7 @@ heroSphere: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-7" class="faq-answer" hidden>
-          <p>Not at all. Describe what you want in plain words and Tinker does the rest. If you do code, you can go further: edit the system prompt, add your own tools, or host your own server.</p>
+          <p>Not at all. Describe what you want in plain words and Tinker Click does the rest. If you do code, you can go further: edit the system prompt, add your own tools, or host your own server.</p>
         </div>
       </div>
 
@@ -282,11 +223,11 @@ heroSphere: true
 
       <div class="faq-item">
         <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-9">
-          <span>Is Tinker open source?</span>
+          <span>Is Tinker Click open source?</span>
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-9" class="faq-answer" hidden>
-          <p>Yes. Tinker is developed in the open on GitHub. You can use the official Tinker server or run your own.</p>
+          <p>Yes. Tinker Click is developed in the open on GitHub. You can use the official Tinker Click server or run your own.</p>
         </div>
       </div>
 
@@ -296,7 +237,7 @@ heroSphere: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-2" class="faq-answer" hidden>
-          <p>No. You can open Tinker and play the built-in starter apps straight away. Create an account when you want to make and save your own, or choose to run Tinker offline instead.</p>
+          <p>No. You can open Tinker Click and play the built-in starter apps straight away. Create an account when you want to make and save your own, or choose to run Tinker Click offline instead.</p>
         </div>
       </div>
 
@@ -306,7 +247,7 @@ heroSphere: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-3" class="faq-answer" hidden>
-          <p>Yes. The starter apps work offline, and you can run Tinker fully offline with your own AI model. Browsing the public gallery needs a connection.</p>
+          <p>Yes. The starter apps work offline, and you can run Tinker Click fully offline with your own AI model. Browsing the public gallery needs a connection.</p>
         </div>
       </div>
 
@@ -316,25 +257,9 @@ heroSphere: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-6" class="faq-answer" hidden>
-          <p>Tinker is in private alpha with a small group of testers. Join the waitlist and we'll email you when it opens to more people.</p>
+          <p>Tinker Click is in private alpha with a small group of testers. Join the waitlist and we'll email you when it opens to more people.</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================
-     6. CLOSING CTA
-     ======================================================== -->
-<section id="waitlist" class="section closing">
-  <div class="container">
-    <div class="closing-inner reveal">
-      <span class="eyebrow">(05) Private alpha</span>
-      <h2 class="closing-title">Be first <span class="text-accent">to tinker.</span></h2>
-      <a href="#waitlist" class="btn btn-primary btn-lg" data-open-waitlist>
-        Join the waitlist
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
     </div>
   </div>
 </section>

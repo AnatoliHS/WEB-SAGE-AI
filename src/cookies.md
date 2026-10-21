@@ -1,12 +1,12 @@
 ---
 layout: policy.njk
-title: Cookie Policy — Tinker
+title: Cookie Policy — Tinker Click
 ---
 
 <section class="policy-section">
   <div class="policy-header">
     <h1>Cookie Policy</h1>
-    <p class="policy-meta">Last updated: October 2026 • Tinker (tinker.click)</p>
+    <p class="policy-meta">Last updated: October 2026 • Tinker Click (tinker.click)</p>
   </div>
   
   <div class="policy-body">
@@ -16,8 +16,8 @@ title: Cookie Policy — Tinker
     </div>
 
     <div class="policy-card">
-      <h2>2. How Tinker Uses Cookies</h2>
-      <p>Tinker prioritizes minimal, privacy-centric design. We use strictly essential cookies and local storage tokens to:</p>
+      <h2>2. How Tinker Click Uses Cookies</h2>
+      <p>Tinker Click prioritizes minimal, privacy-centric design. We use strictly essential cookies and local storage tokens to:</p>
       <ul>
         <li>Preserve your theme preference (Dark Mode / Light Mode).</li>
         <li>Remember your waitlist submission state so you don't receive duplicate prompts.</li>

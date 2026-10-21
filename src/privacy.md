@@ -1,18 +1,18 @@
 ---
 layout: policy.njk
-title: Privacy Policy — Tinker
+title: Privacy Policy — Tinker Click
 ---
 
 <section class="policy-section">
   <div class="policy-header">
     <h1>Privacy Policy</h1>
-    <p class="policy-meta">Last updated: October 2026 • Effective for Tinker (tinker.click)</p>
+    <p class="policy-meta">Last updated: October 2026 • Effective for Tinker Click (tinker.click)</p>
   </div>
   
   <div class="policy-body">
     <div class="policy-card">
       <h2>1. Overview & Commitment</h2>
-      <p>Tinker ("we", "our", or "us") is dedicated to providing creative workflow tools while protecting your personal privacy. This Privacy Policy details how we handle information collected through our gateway website at <a href="https://tinker.click/">tinker.click</a>, our waitlist, and early-access services.</p>
+      <p>Tinker Click ("we", "our", or "us") is dedicated to providing creative workflow tools while protecting your personal privacy. This Privacy Policy details how we handle information collected through our gateway website at <a href="https://tinker.click/">tinker.click</a>, our waitlist, and early-access services.</p>
     </div>
 
     <div class="policy-card">
@@ -29,7 +29,7 @@ title: Privacy Policy — Tinker
       <p>We use your contact email strictly to:</p>
       <ul>
         <li>Send you exclusive product milestone updates, early-access keys, and Alpha/Beta invitations.</li>
-        <li>Coordinate pre-order benefits and onboarding details for the Tinker application.</li>
+        <li>Coordinate pre-order benefits and onboarding details for the Tinker Click application.</li>
         <li>Respond to your feedback, questions, or support inquiries.</li>
       </ul>
       <p>We will never sell, rent, or monetize your contact information with third-party advertisers or data brokers.</p>
@@ -47,7 +47,7 @@ title: Privacy Policy — Tinker
 
     <div class="policy-card highlight">
       <h2>Contact Us</h2>
-      <p>If you have any questions regarding this Privacy Policy or your data, reach out to the Tinker team at <a href="mailto:hello@tinker.click">hello@tinker.click</a>.</p>
+      <p>If you have any questions regarding this Privacy Policy or your data, reach out to the Tinker Click team at <a href="mailto:hello@tinker.click">hello@tinker.click</a>.</p>
     </div>
   </div>
 </section>

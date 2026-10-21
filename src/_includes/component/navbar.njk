@@ -4,14 +4,16 @@
 <div class="site-header-bar" aria-hidden="true"></div>
 
 <!-- Logo mark, top far left -->
-<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Tinker home">
+<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Tinker Click home">
   <img src="/assets/tinker-mark.svg" alt="" width="32" height="32">
 </a>
 
 <!-- Dynamic brand: sits large in the hero at the top of the page, docks next to the logo once scrolling starts -->
 <a href="{{ base }}#hero" id="dynamic-brand" class="wordmark dynamic-brand" aria-label="Tinker Click home">
-  <span class="tinker-word">TINKER</span>
-  <span class="click-word">CLICK</span>
+  <!-- Each letter rises into place on load in a fixed scattered order: --i is its stagger slot (see .ltr in style.css) -->
+  {% set order = [4, 0, 7, 2, 9, 5, 1, 8, 3, 10, 6] %}
+  <span class="tinker-word">{% for ch in "TINKER" | list %}<span class="ltr" style="--i: {{ order[loop.index0] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
+  <span class="click-word">{% for ch in "CLICK" | list %}<span class="ltr" style="--i: {{ order[loop.index0 + 6] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
 </a>
 
 <!-- Waitlist CTA in the top-right corner (also closes the drawer) -->
@@ -35,7 +37,7 @@
 
       <div class="drawer-form-col">
         <p class="drawer-copy">
-          Tinker is in private alpha. Join the waitlist at <strong>tinker.click</strong> and we'll email you when it opens to more people.
+          Tinker Click is in private alpha. Join the waitlist at <strong>tinker.click</strong> and we'll email you when it opens to more people.
         </p>
 
         <form id="signup" class="signup-form" action="https://tinker.click/subscribe.php" method="post" novalidate>
@@ -59,7 +61,7 @@
           <p id="status" class="status" role="status" aria-live="polite"></p>
         </form>
 
-        <p class="drawer-fine">Tinker will email you news about Tinker. Unsubscribe any time.</p>
+        <p class="drawer-fine">Tinker Click will email you news about Tinker Click. Unsubscribe any time.</p>
       </div>
     </div>
   </div>

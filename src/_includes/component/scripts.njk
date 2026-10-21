@@ -178,152 +178,88 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach(el => el.classList.add('is-in'));
   }
 
-  // 5. Remix Chain: plays Discover → Remix → Share in sequence; on small screens it's a carousel
-  //    that advances every 5s and can be swiped at any time
-  const chain = document.querySelector('[data-chain]');
-  if (chain) {
-    const track = chain.querySelector('[data-chain-track]');
-    const steps = Array.from(chain.querySelectorAll('[data-chain-step]'));
-    const cards = Array.from(chain.querySelectorAll('[data-chain-card]'));
-    const links = Array.from(chain.querySelectorAll('.chain-link'));
-    const dots = Array.from(chain.querySelectorAll('[data-chain-dot]'));
-    const typed = chain.querySelector('[data-chain-typed]');
-    const remixCover = chain.querySelector('[data-chain-cover]');
-    const remixName = chain.querySelector('[data-chain-name]');
-    const sw = chain.querySelector('[data-chain-switch]');
-    const vis = chain.querySelector('[data-chain-vis]');
-    const count = chain.querySelector('[data-chain-count]');
-    const ask = 'Make the ghosts pink and translate it into German';
-    const mobileMq = window.matchMedia('(max-width: 860px)');
+  // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive an abstract
+  //    app whose blocks are placed in % of the stage; it auto-advances every 4.5s while on screen.
+  const live = document.querySelector('[data-live]');
+  if (live) {
+    const stage = live.querySelector('.live-stage');
+    const one = (n) => stage.querySelector(`[data-ui="${n}"]`);
+    const tiles = Array.from(stage.querySelectorAll('[data-ui="tile"]'));
+    const steps = Array.from(live.querySelectorAll('[data-live-step]'));
+    const counter = live.querySelector('[data-live-counter]');
+    const dots = Array.from(live.querySelectorAll('[data-live-dot]'));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const wait = (ms) => new Promise(r => setTimeout(r, ms));
-    let run = 0, visible = false, current = 0, timer = null;
 
-    function focus(i) {
-      cards.forEach((c, n) => { c.classList.toggle('is-dim', n > i); c.classList.toggle('is-focus', n === i); });
-      links.forEach((l, n) => l.classList.toggle('is-on', n < i));
-    }
-    function remixState(done) {
-      typed.textContent = done ? ask : '';
-      remixCover.style.setProperty('--a', done ? '#ff6bd5' : '#ffb020');
-      remixCover.style.setProperty('--b', done ? '#7a3cff' : '#f2541b');
-      remixName.textContent = done ? 'Labyrinth-Mampfer' : 'Maze Muncher';
-    }
-    function shareState(done) {
-      sw.classList.toggle('is-on', done);
-      vis.textContent = done ? 'Public' : 'Private';
-      count.textContent = done ? '128' : '0';
-    }
-    async function playRemix(alive) {
-      remixState(false);
-      await wait(600);
-      for (const ch of ask) { if (!alive()) return; typed.textContent += ch; await wait(32); }
-      await wait(400);
-      if (alive()) remixState(true);
-    }
-    async function playShare(alive) {
-      shareState(false);
-      await wait(600); if (!alive()) return;
-      sw.classList.add('is-on'); vis.textContent = 'Public';
-      const start = performance.now();
-      await new Promise(done => {
-        (function tick(t) {
-          const k = Math.min((t - start) / 1400, 1);
-          count.textContent = Math.round(128 * (1 - Math.pow(1 - k, 3)));
-          k < 1 && alive() ? requestAnimationFrame(tick) : done();
-        })(start);
+    // The app window's rect for each step, and its parts' rects relative to it
+    const FRAMES = [{ x: 25, y: 18, w: 50, h: 64 }, { x: 22, y: 8, w: 56, h: 84 }, { x: 22, y: 8, w: 56, h: 84 }, { x: 37, y: 12, w: 26, h: 68 }];
+    const SLOTS = [[0.05, 0.2, 0.43, 0.3], [0.52, 0.2, 0.43, 0.3], [0.05, 0.53, 0.43, 0.3], [0.52, 0.53, 0.43, 0.3]];
+    const HEAD_TEXT = ['', 'Cat & Fish', 'Katze & Fisch', 'Katze & Fisch'];
+    const PROMPT_TEXT = ['A cat-and-fish game', 'Building your app…', 'Translate it into German', ''];
+    const rel = (F, r) => ({ x: F.x + r[0] * F.w, y: F.y + r[1] * F.h, w: r[2] * F.w, h: r[3] * F.h });
+    const put = (el, r, opacity, delay = 0) => {
+      Object.assign(el.style, {
+        left: r.x + '%', top: r.y + '%', width: r.w + '%', height: r.h + '%', opacity,
+        transitionDelay: `${delay}s, ${delay}s, ${delay}s, ${delay}s, ${delay}s, 0s, 0s, 0s`
       });
+    };
+
+    let typing = null;
+    function type(text, animate) {
+      const out = one('promptText');
+      clearInterval(typing);
+      if (!animate || reduced) { out.textContent = text; return; }
+      out.textContent = '';
+      let n = 0;
+      typing = setInterval(() => {
+        out.textContent = text.slice(0, ++n);
+        if (n >= text.length) clearInterval(typing);
+      }, 45);
     }
 
-    // Wide screens: one scripted run across all three cards, looping while in view
-    async function playDesktop(id) {
-      const alive = () => id === run && visible && !mobileMq.matches;
-      focus(0); remixState(false); shareState(false);
-      await wait(900); if (!alive()) return;
-      focus(1);
-      await playRemix(alive);
-      await wait(1100); if (!alive()) return;
-      focus(2);
-      await playShare(alive);
-      await wait(3500);
-      if (alive()) playDesktop(id);
+    function layout(step, animate) {
+      const F = FRAMES[step];
+      const app = FRAMES[Math.max(step, 1)];
+      const shared = step === 3;
+      stage.style.setProperty('--c', `var(--node-${step + 1})`);
+      put(one('frame'), F, step ? 1 : 0);
+      put(one('ghostL'), shared ? { x: 5, y: 18, w: 24, h: 62 } : FRAMES[3], shared ? 0.6 : 0, shared ? 0.35 : 0);
+      put(one('ghostR'), shared ? { x: 71, y: 18, w: 24, h: 62 } : FRAMES[3], shared ? 0.6 : 0, shared ? 0.45 : 0);
+      put(one('head'), rel(app, [0.05, 0.05, 0.9, 0.1]), step ? 1 : 0, step === 1 ? 0.15 : 0);
+      const order = step >= 2 ? [3, 2, 1, 0] : [0, 1, 2, 3];
+      tiles.forEach((el, i) => put(el, rel(app, SLOTS[order[i]]), step ? 1 : 0, step === 1 ? 0.3 + i * 0.1 : i * 0.06));
+      put(one('prompt'), step === 0 ? { x: 16, y: 43, w: 68, h: 14 } : rel(F, [0.05, 0.86, 0.9, 0.09]), shared ? 0 : 1);
+      put(one('badge'), shared ? rel(F, [0.15, 1.04, 0.7, 0.08]) : rel(F, [0.74, -0.06, 0.24, 0.07]), step >= 2 ? 1 : 0, step >= 2 ? 0.4 : 0);
+      one('badge').textContent = shared ? '✓ Public' : 'DE';
+      one('headText').textContent = HEAD_TEXT[step];
+      type(PROMPT_TEXT[step], animate);
+      counter.textContent = `0${step + 1} / 0${steps.length}`;
+      [steps, dots].forEach((list) => list.forEach((el, i) => (i === step ? el.setAttribute('aria-current', 'step') : el.removeAttribute('aria-current'))));
     }
 
-    // Small screens: one slide at a time
-    function scrollToStep(i) {
-      const max = track.scrollWidth - track.clientWidth;
-      const left = Math.min(steps[i].offsetLeft - steps[0].offsetLeft, max);
-      track.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' });
-    }
-    function nearestStep() {
-      const max = track.scrollWidth - track.clientWidth;
-      let best = 0, bestDist = Infinity;
-      steps.forEach((s, i) => {
-        const d = Math.abs(Math.min(s.offsetLeft - steps[0].offsetLeft, max) - track.scrollLeft);
-        if (d < bestDist) { best = i; bestDist = d; }
-      });
-      return best;
-    }
-    function activate(i, scroll) {
-      const id = ++run;
-      const alive = () => id === run && mobileMq.matches;
+    let current = 0, timer = null, visible = false, started = false;
+    function go(step) {
+      current = step;
+      layout(step, true);
       clearTimeout(timer);
-      current = i;
-      if (scroll) scrollToStep(i);
-      cards.forEach((c, n) => c.classList.toggle('is-focus', n === i));
-      dots.forEach((d, n) => {
-        if (n === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
-        d.classList.toggle('is-done', n < i);
-        d.classList.remove('is-running');
-      });
-      if (reduced) { remixState(true); shareState(true); return; }
-      if (i === 0) { remixState(false); shareState(false); }
-      if (i === 1) { shareState(false); playRemix(alive); }
-      if (i === 2) { remixState(true); playShare(alive); }
-      if (!visible) return;
-      void dots[i].offsetWidth;
-      dots[i].classList.add('is-running');
-      timer = setTimeout(() => { if (alive()) activate((i + 1) % steps.length, true); }, 5000);
+      if (visible && !reduced) timer = setTimeout(() => go((current + 1) % steps.length), 4500);
     }
-
-    let scrollIdle = null;
-    track.addEventListener('scroll', () => {
-      if (!mobileMq.matches) return;
-      clearTimeout(scrollIdle);
-      scrollIdle = setTimeout(() => {
-        const i = nearestStep();
-        if (i !== current) activate(i, false);
-      }, 120);
-    }, { passive: true });
-    ['touchstart', 'pointerdown', 'wheel'].forEach(ev =>
-      track.addEventListener(ev, () => chain.classList.add('is-swiped'), { passive: true }));
-    dots.forEach((d, i) => d.addEventListener('click', () => { chain.classList.add('is-swiped'); activate(i, true); }));
-
-    function start() {
-      clearTimeout(timer);
-      run++;
-      if (mobileMq.matches) {
-        cards.forEach(c => c.classList.remove('is-dim'));
-        activate(nearestStep(), false);
-      } else if (reduced) {
-        focus(2); cards.forEach(c => c.classList.remove('is-dim'));
-        remixState(true); shareState(true);
-      } else if (visible) {
-        playDesktop(run);
-      }
-    }
+    steps.forEach((el, i) => el.addEventListener('click', () => go(i)));
+    // Tapping the animation moves on to the next step (handy on phones, where only one step shows)
+    stage.addEventListener('click', () => go((current + 1) % steps.length));
+    dots.forEach((el, i) => el.addEventListener('click', () => go(i)));
+    live.querySelector('[data-live-prev]').addEventListener('click', () => go((current + steps.length - 1) % steps.length));
+    live.querySelector('[data-live-next]').addEventListener('click', () => go((current + 1) % steps.length));
+    layout(0, false);
 
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting === visible) return;
-          visible = e.isIntersecting;
-          if (visible) start(); else { run++; clearTimeout(timer); }
-        });
-      }, { threshold: 0.35 }).observe(chain);
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (!visible) { clearTimeout(timer); return; }
+        // Replay the typing the first time it comes into view, then carry on from where it was
+        go(started ? current : 0);
+        started = true;
+      }, { threshold: 0.35 }).observe(live);
     }
-    mobileMq.addEventListener('change', start);
-    start();
   }
 
   // 6. Bento: cycle "Make me a game" through languages
@@ -367,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
 
   if (waitlistForm && (urlParams.has('subscribed') || storage.get('tinker_subscribed'))) {
-    markDone(null, "You're on the list. We'll email you when Tinker opens to more people.");
+    markDone(null, "You're on the list. We'll email you when Tinker Click opens to more people.");
     if (urlParams.has('subscribed')) history.replaceState(null, '', window.location.pathname);
   } else if (urlParams.has('error')) {
     sayStatus(urlParams.get('error') || 'Something went wrong. Please try again.', 'error');
@@ -396,10 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
           mode: 'cors'
         });
         const data = await response.json().catch(() => ({}));
-        markDone(emailVal, data.message || "You're on the list. We'll email you when Tinker opens to more people.");
+        markDone(emailVal, data.message || "You're on the list. We'll email you when Tinker Click opens to more people.");
       } catch (err) {
         console.warn('Direct fetch handled gracefully:', err);
-        markDone(emailVal, "You're on the list. We'll email " + emailVal + ' when Tinker opens to more people.');
+        markDone(emailVal, "You're on the list. We'll email " + emailVal + ' when Tinker Click opens to more people.');
       } finally {
         if (waitlistBtn) waitlistBtn.disabled = false;
       }

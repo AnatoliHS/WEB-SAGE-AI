@@ -1,0 +1,486 @@
+---
+layout: policy.njk
+title: The idea concepts — Tinker
+description: Five tech-oriented designs for the three steps in The idea, side by side.
+noindex: true
+permalink: /concepts/idea/
+steps:
+  - num: "01"
+    short: "Ask"
+    title: "Start with a simple ask"
+    text: "Describe the job in your own words and your own language. Tinker builds it for you, from a dinner bill splitter to a scientific calculator."
+    img: "app-prompt.jpg"
+    w: 1400
+    h: 1053
+    alt: "The Tinker home screen: a single prompt box with suggestions like Split a dinner bill"
+    win: "Tinker — New app"
+    log: [["›", "Split a dinner bill between four friends"], ["✓", "Dinner Bill Splitter is ready"]]
+    notes: [{ x: 50, y: 50, label: "Describe it in your words" }, { x: 58, y: 56.5, label: "Or start from a suggestion" }]
+  - num: "02"
+    short: "Bring"
+    title: "Bring your own material"
+    text: "Add documents, images or raw data, then shape them into a web page, an app concept, a chart, a PDF or a PowerPoint deck."
+    img: "app-workspace.jpg"
+    w: 1400
+    h: 752
+    alt: "The Tinker workspace with an app’s source code, a story animation and a music player side by side"
+    win: "Tinker — Workspace"
+    log: [["+", "menu.pdf · receipt.jpg attached"], ["›", "Turn these into a one-page summary"]]
+    notes: [{ x: 24, y: 40, label: "Source, if you want it" }, { x: 62, y: 36, label: "Live preview" }, { x: 87, y: 62, label: "Apps side by side" }, { x: 50, y: 93, label: "Ask for changes" }]
+  - num: "03"
+    short: "Refine"
+    title: "Refine until it fits"
+    text: "Keep asking for changes until it works exactly the way you want. Everything you make lives in My apps, ready whenever you need it again."
+    img: "app-library.jpg"
+    w: 1400
+    h: 1106
+    alt: "A grid of apps in Tinker, from a Winamp-style player to chess and Pac-Man"
+    win: "Tinker — My apps"
+    log: [["↻", "Add a 15% tip and a share button"], ["✓", "Saved to My apps · version 3"]]
+    notes: [{ x: 32, y: 11.5, label: "Search by name or request" }, { x: 76, y: 11.5, label: "Filter by category" }, { x: 20, y: 42, label: "Every app keeps its original ask" }]
+---
+
+{% macro win(s, cls) %}
+<div class="win {{ cls }}">
+  <div class="win-bar" aria-hidden="true"><i></i><i></i><i></i><span>{{ s.win }}</span></div>
+  <img src="/assets/img/{{ s.img }}" alt="{{ s.alt }}" width="{{ s.w }}" height="{{ s.h }}" loading="lazy" decoding="async">
+</div>
+{% endmacro %}
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 40px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+
+  /* Shared pieces */
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+  .win { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #f6f6f6; box-shadow: 0 30px 60px -30px rgba(18, 18, 18, 0.35); }
+  .win-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; background: #ececec; border-bottom: 1px solid rgba(0, 0, 0, 0.08); }
+  .win-bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+  .win-bar i:nth-child(2) { background: #febc2e; } .win-bar i:nth-child(3) { background: #28c840; }
+  .win-bar span { flex: 1; margin-right: 42px; text-align: center; font-size: 0.75rem; color: #6b6b6b; }
+  .win img { width: 100%; }
+  .step-num { color: var(--accent); }
+  .step h3 { font-size: clamp(1.375rem, 2.4vw, 2rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; margin-top: 10px; }
+  .step p { margin-top: 12px; max-width: 44ch; color: var(--ink-2); }
+
+  /* ---------- A. Sticky Showcase ---------- */
+  .ia { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 80px); }
+  .ia-steps { position: relative; padding-left: 36px; }
+  .ia-rail { position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .ia-rail span { position: absolute; inset: 0 0 auto; height: 0; background: var(--accent); transition: height .8s var(--ease); }
+  .ia-step { position: relative; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; opacity: .3; transition: opacity .6s ease; }
+  .ia-step::before { content: ""; position: absolute; left: -36px; top: calc(50% - 60px); width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); background: var(--bg); transition: border-color .4s, background .4s, box-shadow .4s; }
+  .ia-step.is-on { opacity: 1; }
+  .ia-step.is-on::before { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .ia-step .win { display: none; margin-top: 24px; }
+  .ia-stage { position: sticky; top: calc(var(--header-h) + 40px); align-self: start; height: min(70vh, 620px); display: grid; place-items: center; }
+  .ia-stage .win { grid-area: 1 / 1; width: 100%; opacity: 0; transform: translateY(40px) scale(.96); transition: opacity .7s ease, transform .9s var(--ease); }
+  .ia-stage .win.is-on { opacity: 1; transform: none; }
+  @media (max-width: 860px) {
+    .ia { grid-template-columns: 1fr; }
+    .ia-stage { display: none; }
+    .ia-step { min-height: 0; padding: 32px 0; opacity: 1; }
+    .ia-step .win { display: block; }
+  }
+
+  /* ---------- B. Tabbed Window ---------- */
+  .ib-window { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--bg-raised); }
+  .ib-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+  .ib-tab { position: relative; display: flex; gap: 12px; align-items: baseline; padding: 18px 20px; text-align: left; color: var(--muted); transition: color .4s, background .4s; }
+  .ib-tab + .ib-tab { border-left: 1px solid var(--line); }
+  .ib-tab strong { font-weight: 500; font-size: 1.0625rem; letter-spacing: -0.02em; }
+  .ib-tab.is-on { color: var(--ink); background: var(--bg); }
+  .ib-tab.is-on .mono { color: var(--accent); }
+  .ib-tab i { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+  .ib-tab.is-on i { animation: ib-fill 6s linear forwards; }
+  .ib-window:hover .ib-tab.is-on i { animation-play-state: paused; }
+  @keyframes ib-fill { to { transform: scaleX(1); } }
+  .ib-body { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(24px, 4vw, 48px); }
+  .ib-copy { position: relative; min-height: 220px; }
+  .ib-copy .step { position: absolute; inset: 0; opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .7s var(--ease); pointer-events: none; }
+  .ib-copy .step.is-on { opacity: 1; transform: none; transition-delay: .15s; pointer-events: auto; }
+  .ib-viewport { overflow: hidden; border-radius: 14px; }
+  .ib-track { display: flex; transition: transform .9s var(--ease); }
+  .ib-track .win { flex: 0 0 100%; aspect-ratio: 16 / 11; box-shadow: none; }
+  .ib-track .win img { height: calc(100% - 34px); object-fit: cover; object-position: top center; }
+  @media (max-width: 860px) {
+    .ib-tab { padding: 14px 12px; flex-direction: column; gap: 2px; }
+    .ib-tab strong { font-size: 0.9375rem; }
+    .ib-body { grid-template-columns: 1fr; }
+    .ib-viewport { order: -1; }
+    .ib-copy { min-height: 180px; }
+  }
+
+  /* ---------- C. Prompt Timeline ---------- */
+  .ic { position: relative; display: grid; gap: clamp(56px, 8vw, 112px); padding-left: 48px; }
+  .ic-line { position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .ic-line span { position: absolute; inset: 0 0 auto; height: 0; background: linear-gradient(var(--accent), #ff5f00); }
+  .ic-row { position: relative; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+  .ic-node { position: absolute; left: -48px; top: 6px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: border-color .4s, box-shadow .4s; }
+  .ic-node::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background .4s; }
+  .ic-row.is-on .ic-node { border-color: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 15%, transparent); }
+  .ic-row.is-on .ic-node::after { background: var(--accent); }
+  .ic-log { margin-top: 20px; padding: 14px 16px; border-radius: 12px; background: #121212; color: #eee9e2; display: grid; gap: 6px; }
+  .ic-log div { display: flex; gap: 10px; opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .5s var(--ease); }
+  .ic-log b { color: #7590ff; font-weight: 500; }
+  .ic-log div:last-child b { color: #3fd3a0; }
+  .ic-row.is-on .ic-log div { opacity: 1; transform: none; }
+  .ic-row.is-on .ic-log div:nth-child(2) { transition-delay: .5s; }
+  .ic-tilt { perspective: 1200px; }
+  .ic-tilt .win { transition: transform .6s var(--ease); transform-style: preserve-3d; }
+  @media (max-width: 860px) {
+    .ic { padding-left: 36px; }
+    .ic-line { left: 7px; }
+    .ic-node { left: -36px; width: 16px; height: 16px; }
+    .ic-node::after { width: 6px; height: 6px; }
+    .ic-row { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- D. Blueprint ---------- */
+  .id { --bp: #0b1b3f; --bp-line: rgba(117, 144, 255, 0.16); display: grid; gap: clamp(48px, 7vw, 96px); padding: clamp(28px, 5vw, 64px); border-radius: 24px; color: #eef1ff; background-color: var(--bp); background-image: linear-gradient(var(--bp-line) 1px, transparent 1px), linear-gradient(90deg, var(--bp-line) 1px, transparent 1px); background-size: 32px 32px; }
+  .id-row { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+  .id-row:nth-child(even) .step { order: 2; }
+  .id .step-num { color: #7590ff; }
+  .id .step p { color: rgba(238, 241, 255, 0.7); }
+  .id-spec { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .id-spec span { padding: 3px 8px; border: 1px dashed rgba(117, 144, 255, 0.5); border-radius: 6px; color: #9fb0ff; }
+  .id-shot { position: relative; padding: 10px; border: 1px dashed rgba(117, 144, 255, 0.45); border-radius: 16px; }
+  .id-shot img { width: 100%; border-radius: 8px; }
+  .id-note { position: absolute; left: calc(10px + (100% - 20px) * var(--x) / 100); top: calc(10px + (100% - 20px) * var(--y) / 100); }
+  .id-note::before { content: ""; position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: #ff5f00; box-shadow: 0 0 0 5px rgba(255, 95, 0, 0.25); transform: scale(0); transition: transform .5s var(--ease) var(--d); }
+  .id-note span { position: absolute; left: 12px; bottom: 12px; padding: 4px 10px; border-radius: 6px; background: #ff5f00; color: #121212; font-weight: 500; white-space: nowrap; opacity: 0; transform: translateY(6px); transition: opacity .4s ease calc(var(--d) + .15s), transform .5s var(--ease) calc(var(--d) + .15s); }
+  .id-note.flip span { left: auto; right: 12px; }
+  .id-row.is-on .id-note::before { transform: scale(1); }
+  .id-row.is-on .id-note span { opacity: 1; transform: none; }
+  @media (max-width: 860px) {
+    .id-row { grid-template-columns: 1fr; }
+    .id-row:nth-child(even) .step { order: 0; }
+    .id-note span { font-size: 0.6875rem; padding: 2px 6px; }
+  }
+
+  /* ---------- E. 3D Deck ---------- */
+  .ie { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .ie-list { list-style: none; display: grid; gap: 8px; }
+  .ie-list button { position: relative; overflow: hidden; display: block; width: 100%; padding: 20px 22px; text-align: left; border: 1px solid var(--line); border-radius: 16px; transition: border-color .4s, background .4s; }
+  .ie-list button .step h3 { margin-top: 6px; font-size: 1.25rem; }
+  .ie-list button .step p { display: grid; grid-template-rows: 0fr; margin-top: 0; transition: grid-template-rows .6s var(--ease), margin .6s var(--ease); }
+  .ie-list button .step p > span { overflow: hidden; }
+  .ie-list button.is-on { border-color: var(--accent); background: var(--bg-raised); }
+  .ie-list button.is-on .step p { grid-template-rows: 1fr; margin-top: 8px; }
+  .ie-list button i { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+  .ie-list button.is-on i { animation: ib-fill 5s linear forwards; }
+  .ie-stage { position: relative; perspective: 1400px; aspect-ratio: 4 / 3.2; }
+  .ie-card { position: absolute; inset: 8% 4% auto; transform-origin: 50% 100%; transition: transform 1s var(--ease), opacity .7s ease, filter .7s ease; }
+  .ie-card .win img { aspect-ratio: 16 / 11; object-fit: cover; object-position: top center; }
+  @media (max-width: 860px) {
+    .ie { grid-template-columns: 1fr; }
+    .ie-stage { order: -1; }
+  }
+
+  /* Comparison */
+  .cx-compare { margin-top: clamp(80px, 10vw, 140px); }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) The idea</span>
+  <h1>Five product-style ways <span class="text-accent">to show the three steps.</span></h1>
+  <p>Each design replaces the 01–03 rows under "Software you can make, not just use." They all use the three real Tinker screenshots and the current copy. Scroll slowly, hover, and try a narrow window.</p>
+  <ul class="cx-jump">
+    <li><a href="#concept-a"><b>A</b> Sticky Showcase</a></li>
+    <li><a href="#concept-b"><b>B</b> Tabbed Window</a></li>
+    <li><a href="#concept-c"><b>C</b> Prompt Timeline</a></li>
+    <li><a href="#concept-d"><b>D</b> Blueprint</a></li>
+    <li><a href="#concept-e"><b>E</b> 3D Deck</a></li>
+    <li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+<!-- ===================== A. STICKY SHOWCASE ===================== -->
+<section class="cx-concept" id="concept-a">
+  <div class="cx-concept-head">
+    <span class="cx-letter">A</span>
+    <div>
+      <h2>Sticky Showcase</h2>
+      <p>The classic product-site scroll story, as on Linear, Vercel and Stripe. The steps scroll past on the left along a progress rail, while one app window stays pinned on the right and swaps to each step's screenshot as you reach it. On phones each screenshot sits under its step.</p>
+      <ul class="cx-tags"><li>Scroll-driven</li><li>Pinned window</li><li>Progress rail</li></ul>
+    </div>
+  </div>
+  <div class="ia" data-ia>
+    <div class="ia-steps">
+      <div class="ia-rail" aria-hidden="true"><span data-ia-rail></span></div>
+      {% for s in steps %}
+      <div class="ia-step{% if loop.first %} is-on{% endif %}" data-ia-step>
+        <div class="step"><span class="mono step-num">{{ s.num }} / {{ s.short | upper }}</span><h3>{{ s.title }}</h3><p>{{ s.text }}</p></div>
+        {{ win(s) }}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="ia-stage" aria-hidden="true">
+      {% for s in steps %}{{ win(s, "is-on" if loop.first else "") }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== B. TABBED WINDOW ===================== -->
+<section class="cx-concept" id="concept-b">
+  <div class="cx-concept-head">
+    <span class="cx-letter">B</span>
+    <div>
+      <h2>Tabbed Window</h2>
+      <p>One wide panel with the three steps as tabs, in the style of Raycast or Arc. A thin bar under the active tab fills over 6 seconds, then the screenshot slides to the next step and the copy cross-fades. Click any tab to jump, and hover to pause. It's compact and uses the least vertical space.</p>
+      <ul class="cx-tags"><li>Compact</li><li>Auto-advancing</li><li>Slide transition</li></ul>
+    </div>
+  </div>
+  <div class="ib-window" data-ib>
+    <div class="ib-tabs" role="tablist">
+      {% for s in steps %}
+      <button type="button" class="ib-tab{% if loop.first %} is-on{% endif %}" role="tab" aria-selected="{{ 'true' if loop.first else 'false' }}"><span class="mono">{{ s.num }}</span><strong>{{ s.title }}</strong><i></i></button>
+      {% endfor %}
+    </div>
+    <div class="ib-body">
+      <div class="ib-copy">
+        {% for s in steps %}
+        <div class="step{% if loop.first %} is-on{% endif %}"><span class="mono step-num">{{ s.num }} / {{ s.short | upper }}</span><h3>{{ s.title }}</h3><p>{{ s.text }}</p></div>
+        {% endfor %}
+      </div>
+      <div class="ib-viewport"><div class="ib-track">{% for s in steps %}{{ win(s) }}{% endfor %}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== C. PROMPT TIMELINE ===================== -->
+<section class="cx-concept" id="concept-c">
+  <div class="cx-concept-head">
+    <span class="cx-letter">C</span>
+    <div>
+      <h2>Prompt Timeline</h2>
+      <p>A vertical timeline whose line fills from blue to orange as you scroll. Each step lights up its node and plays a short dark "prompt log" showing what you'd actually type and what Tinker answers. The screenshots tilt in 3D toward the cursor.</p>
+      <ul class="cx-tags"><li>Developer-tool feel</li><li>Shows real prompts</li><li>3D tilt</li></ul>
+    </div>
+  </div>
+  <div class="ic" data-ic>
+    <div class="ic-line" aria-hidden="true"><span data-ic-line></span></div>
+    {% for s in steps %}
+    <div class="ic-row" data-ic-row>
+      <span class="ic-node" aria-hidden="true"></span>
+      <div class="step">
+        <span class="mono step-num">{{ s.num }} / {{ s.short | upper }}</span><h3>{{ s.title }}</h3><p>{{ s.text }}</p>
+        <div class="ic-log mono" aria-hidden="true">{% for l in s.log %}<div><b>{{ l[0] }}</b><span>{{ l[1] }}</span></div>{% endfor %}</div>
+      </div>
+      <div class="ic-tilt" data-tilt>{{ win(s) }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===================== D. BLUEPRINT ===================== -->
+<section class="cx-concept" id="concept-d">
+  <div class="cx-concept-head">
+    <span class="cx-letter">D</span>
+    <div>
+      <h2>Blueprint</h2>
+      <p>An engineering-drawing panel with a grid background and dashed frames. When each screenshot scrolls into view, orange markers pop onto the parts of the interface that matter, such as "Describe it in your words" and "Live preview", like annotated specs. Rows alternate sides.</p>
+      <ul class="cx-tags"><li>Annotated UI</li><li>Explains the product</li><li>Dark panel</li></ul>
+    </div>
+  </div>
+  <div class="id">
+    {% for s in steps %}
+    <div class="id-row" data-id-row>
+      <div class="step">
+        <span class="mono step-num">{{ s.num }} / {{ s.short | upper }}</span><h3>{{ s.title }}</h3><p>{{ s.text }}</p>
+        <div class="id-spec mono" aria-hidden="true">{% for n in s.notes %}<span>{{ loop.index }} · {{ n.label }}</span>{% endfor %}</div>
+      </div>
+      <div class="id-shot">
+        <img src="/assets/img/{{ s.img }}" alt="{{ s.alt }}" width="{{ s.w }}" height="{{ s.h }}" loading="lazy" decoding="async">
+        {% for n in s.notes %}
+        <span class="id-note mono{% if n.x > 60 %} flip{% endif %}" style="--x: {{ n.x }}; --y: {{ n.y }}; --d: {{ loop.index0 * 0.18 }}s" aria-hidden="true"><span>{{ n.label }}</span></span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===================== E. 3D DECK ===================== -->
+<section class="cx-concept" id="concept-e">
+  <div class="cx-concept-head">
+    <span class="cx-letter">E</span>
+    <div>
+      <h2>3D Deck</h2>
+      <p>The three screenshots stand in a perspective stack, like cards on a desk. Choosing a step, or waiting 5 seconds, flips the front card up and away and brings the next one forward. The step list beside it works as an accordion, so only the active step shows its description.</p>
+      <ul class="cx-tags"><li>Most futuristic</li><li>Depth & perspective</li><li>Accordion steps</li></ul>
+    </div>
+  </div>
+  <div class="ie" data-ie>
+    <ol class="ie-list">
+      {% for s in steps %}
+      <li><button type="button"{% if loop.first %} class="is-on"{% endif %}><div class="step"><span class="mono step-num">{{ s.num }} / {{ s.short | upper }}</span><h3>{{ s.title }}</h3><p><span>{{ s.text }}</span></p></div><i></i></button></li>
+      {% endfor %}
+    </ol>
+    <div class="ie-stage" aria-hidden="true">
+      {% for s in steps %}<div class="ie-card">{{ win(s) }}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARISON ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side.</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead>
+        <tr><th>Concept</th><th>Interaction</th><th>Tech feel</th><th>Height on page</th><th>Phones</th><th>Effort</th><th>Watch out for</th></tr>
+      </thead>
+      <tbody>
+        <tr><th><b>A</b>Sticky Showcase</th><td>Scroll</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Tall (≈ 3 screens)</td><td>Good, stacks</td><td>Medium</td><td>Long scroll with the hero sphere stage already above it</td></tr>
+        <tr><th><b>B</b>Tabbed Window</th><td>Auto / click tabs</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Short (1 screen)</td><td>Good</td><td>Low</td><td>Screenshots are cropped to one frame size</td></tr>
+        <tr><th><b>C</b>Prompt Timeline</th><td>Scroll + hover tilt</td><td><span class="cx-dots">●●●●●</span></td><td>Medium</td><td>Good</td><td>Medium</td><td>The prompt-log text needs to stay true to the product</td></tr>
+        <tr><th><b>D</b>Blueprint</th><td>Scroll reveals notes</td><td><span class="cx-dots">●●●●●</span></td><td>Medium</td><td>OK, labels get small</td><td>Medium</td><td>Notes are pinned to screenshot positions, so redo them if the screenshots change</td></tr>
+        <tr><th><b>E</b>3D Deck</th><td>Auto / click steps</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td>Short (1 screen)</td><td>Good, deck on top</td><td>Medium</td><td>Only one screenshot fully visible at a time</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: C, Prompt Timeline.</strong> It's the most tech-flavoured, and the prompt logs show how plain-language Tinker is without extra copy. It also echoes the blue-to-orange of the logo. <strong>B</strong> is the safe, compact choice if the page is getting long. <strong>D</strong>'s annotations could also be layered onto C later.</p>
+</section>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // A. The step nearest the middle of the screen drives the pinned window and the rail
+  const ia = document.querySelector('[data-ia]');
+  if (ia) {
+    const steps = Array.from(ia.querySelectorAll('[data-ia-step]'));
+    const wins = Array.from(ia.querySelectorAll('.ia-stage .win'));
+    const rail = ia.querySelector('[data-ia-rail]');
+    const show = (i) => {
+      steps.forEach((s, n) => s.classList.toggle('is-on', n === i));
+      wins.forEach((w, n) => w.classList.toggle('is-on', n === i));
+      rail.style.height = `${(i / (steps.length - 1)) * 100}%`;
+    };
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) show(steps.indexOf(e.target)); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(s => io.observe(s));
+  }
+
+  // B. Tabs advance every 6s (the bar's animation), pause on hover, jump on click
+  const ib = document.querySelector('[data-ib]');
+  if (ib) {
+    const tabs = Array.from(ib.querySelectorAll('.ib-tab'));
+    const copies = Array.from(ib.querySelectorAll('.ib-copy .step'));
+    const track = ib.querySelector('.ib-track');
+    const show = (i) => {
+      tabs.forEach((t, n) => { t.classList.toggle('is-on', n === i); t.setAttribute('aria-selected', String(n === i)); });
+      copies.forEach((c, n) => c.classList.toggle('is-on', n === i));
+      track.style.transform = `translateX(-${i * 100}%)`;
+      const bar = tabs[i].querySelector('i');
+      bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      if (!reduced) t.querySelector('i').addEventListener('animationend', () => show((i + 1) % tabs.length));
+    });
+  }
+
+  // C. Line fills with scroll progress; rows light up as they pass the middle; screenshots tilt toward the cursor
+  const ic = document.querySelector('[data-ic]');
+  if (ic) {
+    const line = ic.querySelector('[data-ic-line]');
+    const rows = Array.from(ic.querySelectorAll('[data-ic-row]'));
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = ic.getBoundingClientRect();
+      const mid = window.innerHeight * 0.55;
+      const p = Math.min(Math.max((mid - r.top) / r.height, 0), 1);
+      line.style.height = `${p * 100}%`;
+      rows.forEach(row => row.classList.toggle('is-on', row.getBoundingClientRect().top < mid));
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+    if (canHover && !reduced) {
+      ic.querySelectorAll('[data-tilt]').forEach(el => {
+        const w = el.firstElementChild;
+        el.addEventListener('mousemove', e => {
+          const b = el.getBoundingClientRect();
+          const x = (e.clientX - b.left) / b.width - 0.5, y = (e.clientY - b.top) / b.height - 0.5;
+          w.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 8}deg)`;
+        });
+        el.addEventListener('mouseleave', () => { w.style.transform = ''; });
+      });
+    }
+  }
+
+  // D. Annotations pop in once each row is well into view
+  const idRows = document.querySelectorAll('[data-id-row]');
+  const idIo = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-on'); idIo.unobserve(e.target); } });
+  }, { threshold: 0.5 });
+  idRows.forEach(r => idIo.observe(r));
+
+  // E. Cards stack in depth; the active one sits in front, earlier ones flip up and away
+  const ie = document.querySelector('[data-ie]');
+  if (ie) {
+    const buttons = Array.from(ie.querySelectorAll('.ie-list button'));
+    const cards = Array.from(ie.querySelectorAll('.ie-card'));
+    let visible = false;
+    const show = (i) => {
+      buttons.forEach((b, n) => b.classList.toggle('is-on', n === i));
+      cards.forEach((c, n) => {
+        const d = n - i;
+        if (d < 0) {
+          c.style.transform = 'translate3d(0, -30%, 120px) rotateX(-60deg)';
+          c.style.opacity = '0';
+        } else {
+          c.style.transform = `translate3d(0, ${-d * 9}%, ${-d * 140}px) rotateX(${d ? 8 : 0}deg)`;
+          c.style.opacity = String(1 - d * 0.25);
+          c.style.filter = d ? 'saturate(.6)' : 'none';
+        }
+        c.style.zIndex = String(10 - Math.abs(d));
+      });
+      const bar = buttons[i].querySelector('i');
+      bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+      if (!visible || reduced) bar.style.animationPlayState = 'paused';
+    };
+    buttons.forEach((b, i) => {
+      b.addEventListener('click', () => show(i));
+      b.addEventListener('mouseenter', () => { if (canHover) show(i); });
+      if (!reduced) b.querySelector('i').addEventListener('animationend', () => show((i + 1) % buttons.length));
+    });
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      const bar = ie.querySelector('.ie-list button.is-on i');
+      if (bar && !reduced) bar.style.animationPlayState = visible ? 'running' : 'paused';
+    }, { threshold: 0.4 }).observe(ie);
+    show(0);
+  }
+})();
+</script>
