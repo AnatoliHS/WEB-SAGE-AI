@@ -61,7 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (heroAnchor && dynamicBrand) {
     remeasure();
-    dynamicBrand.classList.add('is-ready');
+    // Letters rise once the intro (component/intro.njk) has finished, or straight away without it
+    const showBrand = () => dynamicBrand.classList.add('is-ready');
+    if (root.classList.contains('has-intro')) document.addEventListener('tinker:intro-done', showBrand, { once: true });
+    else showBrand();
 
     window.addEventListener('scroll', () => applyBrand(true), { passive: true });
     window.addEventListener('resize', remeasure);
@@ -179,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive an abstract
-  //    app whose blocks are placed in % of the stage; it auto-advances every 4.5s while on screen.
+  //    app whose blocks are placed in % of the stage; it auto-advances every 3s while on screen.
   const live = document.querySelector('[data-live]');
   if (live) {
     const stage = live.querySelector('.live-stage');
@@ -241,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
       current = step;
       layout(step, true);
       clearTimeout(timer);
-      if (visible && !reduced) timer = setTimeout(() => go((current + 1) % steps.length), 4500);
+      if (visible && !reduced) timer = setTimeout(() => go((current + 1) % steps.length), 3000);
     }
     steps.forEach((el, i) => el.addEventListener('click', () => go(i)));
     // Tapping the animation moves on to the next step (handy on phones, where only one step shows)

@@ -2,6 +2,7 @@
 <html lang="en">
   {% include "component/head.njk" %}
   <body class="tinker-app">
+    {% if intro %}{% include "component/intro.njk" %}{% endif %}
     {% include "component/navbar.njk" %}
     
     <main id="main-content">
@@ -9,7 +10,9 @@
     </main>
 
     {% include "component/footer.njk" %}
+    {% if intro %}<script src="/assets/js/intro.js"></script>{% endif %}
     {% include "component/scripts.njk" %}
+    {% if bentoLens %}<script src="/assets/js/bento-lens.js"></script>{% endif %}
     {% if heroSphere %}
     <script src="/assets/js/hero-stage.js"></script>
     <script src="/assets/js/sphere.js"></script>

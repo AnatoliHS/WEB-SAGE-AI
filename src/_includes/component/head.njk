@@ -39,6 +39,10 @@
 
   <!-- Flag JS early so reveal animations never hide content without it -->
   <script>document.documentElement.classList.add('js');</script>
+  {% if intro %}
+  <!-- Intro (component/intro.njk): plays on every load, except with reduced motion -->
+  <script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('has-intro');</script>
+  {% endif %}
 
   <!-- Google Fonts: Anton (wordmark only), Geist (everything else) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

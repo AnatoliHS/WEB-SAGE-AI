@@ -246,10 +246,10 @@ button {
   color: var(--accent);
 }
 
-/* Letters: each sits in a box clipped at its bottom edge, so it rises up into view */
+/* Letters: each sits in a box clipped at the hero rule (its margin-top below), so it rises from behind it */
 .wordmark .ltr {
   display: inline-block;
-  clip-path: inset(-50% -20% -0.1em -20%);
+  clip-path: inset(-50% -20% calc(-1 * clamp(12px, 1.6vw, 24px)) -20%);
 }
 
 .wordmark .ltr > span {
@@ -562,10 +562,75 @@ button {
   grid-template-columns: repeat(4, 1fr);
   gap: 32px var(--gutter);
   padding-top: 20px;
+  transition: opacity 0.8s var(--ease) 0.35s, transform 0.8s var(--ease) 0.35s;
+}
+
+/* ==========================================================================
+   INTRO: words rise from behind the hero rule before the wordmark does (assets/js/intro.js)
+   ========================================================================== */
+.intro {
+  display: none;
+}
+
+html.has-intro {
+  overflow: hidden;
+}
+
+html.has-intro .intro {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  transition: opacity 0.25s;
+}
+
+html.has-intro .intro.is-out {
+  opacity: 0;
+}
+
+html.has-intro .hero-grid {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.intro-stack {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+/* 0.6 × the wordmark size, resting the same distance above the rule as the wordmark */
+.intro-word {
+  position: absolute;
+  left: 0;
+  bottom: var(--gap);
+  font-family: var(--font-display);
+  font-size: calc((min(100vw, 1440px) - 2 * var(--gutter)) / 3.34 * 0.6);
+  line-height: 0.84;
+  text-transform: uppercase;
+  color: var(--ink);
+  transform: translateY(calc(100% + var(--gap) + 0.25em));
+}
+
+.intro.is-play .intro-word {
+  animation: intro-rise 0.6s var(--d) both;
+}
+
+@keyframes intro-rise {
+  0% { transform: translateY(calc(100% + var(--gap) + 0.25em)); animation-timing-function: var(--ease); }
+  45%, 70% { transform: none; animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0); }
+  100% { transform: translateY(calc(100% + var(--gap) + 0.25em)); }
+}
+
+.intro-line {
+  position: absolute;
+  width: 0;
+  background: var(--ink);
+  transition: width 0.7s var(--ease-in-out);
 }
 
 .hero-meta p {
-  margin-top: 6px;
   font-size: 0.9375rem;
   line-height: 1.4;
 }
@@ -632,7 +697,7 @@ button {
 }
 
 /* ==========================================================================
-   HERO STAGE: the thinking sphere and "Make it. Use it. Move on."
+   HERO STAGE: the thinking sphere and "Make it. Use it. Share it."
    (assets/js/hero-stage.js + assets/js/sphere.js)
    ========================================================================== */
 .stage {
@@ -734,6 +799,16 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   grid-column: 2 / -1;
 }
 
+/* Features heading spans the full row, centred */
+#features .section-head > div {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+#features .section-title {
+  margin-inline: auto;
+}
+
 .section-title {
   font-size: clamp(2rem, 4.6vw, 4.25rem);
   font-weight: 500;
@@ -750,7 +825,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   color: var(--ink-2);
 }
 
-/* Split heading: eyebrow on top, title on the left, lede on the right lined up with the title's last line */
+/* Split heading: title on the left, lede on the right lined up with the title's last line */
 .section-head-split {
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   column-gap: clamp(32px, 5vw, 96px);
@@ -759,10 +834,6 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .section-head-split .section-title {
   max-width: none;
-}
-
-.section-head-split .eyebrow {
-  grid-column: 1 / -1;
 }
 
 .section-head-split .section-lede {
@@ -973,26 +1044,94 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   transition: color 0.45s ease, border-color 0.45s ease, transform 0.5s var(--ease);
 }
 
+/* Per-frame hover fill, used wherever the magnifier below isn't running */
 @media (hover: hover) {
-  .bento-cell:hover .bento-fill { transform: none; }
-  .bento-cell:hover .bento-icon { transform: translateY(-4px); }
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-fill { transform: none; }
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-icon { transform: translateY(-4px); }
 
-  .bento-cell:hover .bento-icon,
-  .bento-cell:hover h3,
-  .bento-cell:hover p,
-  .bento-cell:hover .bento-say,
-  .bento-cell:hover .bento-say span {
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-icon,
+  .bento-stage:not(.has-lens) .bento-cell:hover h3,
+  .bento-stage:not(.has-lens) .bento-cell:hover p,
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-say,
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-say span {
     color: #121212;
   }
 
-  .bento-cell:hover .bento-cmds code {
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-cmds code {
     color: #121212;
     border-color: #121212;
     transform: translateY(-4px);
   }
 
-  .bento-cell:hover .bento-cmds code:nth-child(2) { transition-delay: 0.06s; }
-  .bento-cell:hover .bento-cmds code:nth-child(3) { transition-delay: 0.12s; }
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-cmds code:nth-child(2) { transition-delay: 0.06s; }
+  .bento-stage:not(.has-lens) .bento-cell:hover .bento-cmds code:nth-child(3) { transition-delay: 0.12s; }
+}
+
+/* Magnifier (assets/js/bento-lens.js): a copy of the grid, every frame flooded and zoomed 1.14×,
+   seen through a circle at the cursor; --lens-x/-y/-r are set in px on .bento-stage */
+.bento-stage {
+  position: relative;
+}
+
+/* Touch screens (no lens): the frame at the middle of the screen floods with its colour
+   through a circle growing from its centre, and drains again as it scrolls on */
+.bento-stage.is-touch .bento-fill {
+  transform: none;
+  clip-path: circle(0 at 50% 50%);
+  transition: clip-path 0.8s var(--ease);
+}
+
+.bento-stage.is-touch .bento-cell.is-focus .bento-fill {
+  clip-path: circle(75% at 50% 50%);
+}
+
+.bento-stage.is-touch .bento-cell.is-focus :is(.bento-icon, h3, p, .bento-say),
+.bento-stage.is-touch .bento-cell.is-focus .bento-say span {
+  color: #121212;
+}
+
+.bento-stage.is-touch .bento-cell.is-focus .bento-cmds code {
+  color: #121212;
+  border-color: #121212;
+}
+
+.bento-lens {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: circle(var(--lens-r, 0px) at var(--lens-x, 50%) var(--lens-y, 50%));
+}
+
+.bento-lens .bento {
+  transform: scale(1.14);
+  transform-origin: var(--lens-x, 50%) var(--lens-y, 50%);
+}
+
+.bento-lens .bento-fill {
+  transform: none;
+}
+
+.bento-lens :is(.bento-icon, h3, p, .bento-say),
+.bento-lens .bento-say span {
+  color: #121212;
+}
+
+.bento-lens .bento-cmds code {
+  color: #121212;
+  border-color: #121212;
+}
+
+.bento-ring {
+  position: absolute;
+  left: var(--lens-x, 50%);
+  top: var(--lens-y, 50%);
+  width: calc(var(--lens-r, 0px) * 2);
+  height: calc(var(--lens-r, 0px) * 2);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
 }
 
 @media (max-width: 860px) {

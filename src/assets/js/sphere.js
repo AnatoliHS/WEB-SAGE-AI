@@ -1,5 +1,5 @@
 // Thinking sphere: a rotating point cloud that grows from the hero slot into the stage, then
-// carries "Make it. Use it. Move on." as a lens:
+// carries "Make it. Use it. Share it." as a lens:
 //   - the three lines are set huge behind the orb and glide in one after another with the scroll
 //     (through a spring, so they ease rather than jump); the first slides in from the right as the
 //     orb lands. Inside the orb they're magnified and blue
@@ -16,7 +16,7 @@
   const root = document.documentElement;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Move', ' on.']];
+  const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Share', ' it.']];
   const LINES_END = 0.74; // the lines take the first 74% of the pinned scroll, the explosion the rest
   const BASE_SPIN = 0.35; // rad/s when nobody is scrolling
 

@@ -1,0 +1,422 @@
+---
+layout: policy.njk
+title: Loader concepts — Tinker
+description: Four line loaders that play before the hero and become its divider, side by side.
+noindex: true
+permalink: /concepts/loader/
+words: ["Idea", "Build", "Remix", "Share"]
+---
+
+{# A small copy of the real hero, which every loader hands over to #}
+{% macro hero() %}
+<div class="lx-hero" aria-hidden="true">
+  <div class="lx-word"><span class="lx-tinker">{% for ch in "TINKER" | list %}<b style="--i: {{ loop.index0 }}">{{ ch }}</b>{% endfor %}</span><span class="lx-click">{% for ch in "CLICK" | list %}<b style="--i: {{ loop.index0 + 6 }}">{{ ch }}</b>{% endfor %}</span></div>
+  <div class="lx-rule"></div>
+  <div class="lx-grid">
+    <p class="lx-meta">Make it. Use it.<br>Move on.</p>
+    <p class="lx-title">Your next tool is <span class="text-orange">one thought away.</span></p>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro controls() %}
+<div class="lx-controls">
+  <button type="button" class="lx-replay" data-lx-replay>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>
+    Replay
+  </button>
+  <span class="mono lx-time" data-lx-time>0.0s</span>
+</div>
+{% endmacro %}
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 40px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* ---------- Shared stage: a mini viewport with the hero underneath and the loader on top ---------- */
+  .lx-stage { position: relative; container-type: inline-size; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); isolation: isolate; }
+  .lx-load { position: absolute; inset: 0; z-index: 2; overflow: hidden; background: var(--bg); transition: opacity .25s; }
+  .is-out .lx-load { opacity: 0; }
+  .lx-controls { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+  .lx-replay { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: 0.875rem; cursor: pointer; transition: border-color .3s, color .3s; }
+  .lx-replay:hover { border-color: var(--accent); color: var(--accent); }
+  .lx-time { color: var(--muted); }
+
+  .lx-hero { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; padding: 3cqw; background: var(--bg); }
+  .lx-word { display: flex; align-items: baseline; gap: 0.06em; overflow: hidden; font-family: var(--font-display); font-size: calc(90cqw / 3.34); line-height: 0.84; padding-top: 0.04em; }
+  .lx-word > span { flex: none; white-space: nowrap; }
+  .lx-word b { display: inline-block; font-weight: 400; transform: translateY(105%); }
+  .lx-click { font-size: 0.4em; letter-spacing: 0.02em; color: var(--accent); }
+  /* The rule is never animated: each loader's line lands on it and becomes it */
+  .lx-rule { height: 1px; margin-top: 2.4cqw; background: var(--line); }
+  .lx-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 3cqw; padding-top: 2cqw; opacity: 0; transform: translateY(1.5cqw); }
+  .lx-meta { font-size: max(10px, 1.4cqw); line-height: 1.4; }
+  .lx-title { font-size: 3.6cqw; font-weight: 500; line-height: 1.04; letter-spacing: -0.04em; }
+  .is-revealed .lx-word b { transform: none; transition: transform .9s var(--ease) calc(var(--i) * 40ms); }
+  .is-revealed .lx-grid { opacity: 1; transform: none; transition: opacity .8s var(--ease) .35s, transform .8s var(--ease) .35s; }
+
+  /* The line, and the move every concept ends on: stretch to the margins and glide onto the hero rule */
+  .lx-line { position: absolute; left: 50%; top: 50%; width: 0; height: 1px; background: var(--ink); }
+  .lx-stage .lx-line.is-settle { transition: left .7s var(--ease-in-out), width .7s var(--ease-in-out), top .7s var(--ease-in-out), height .7s var(--ease-in-out), background-color .7s; }
+  .lx-display { font-family: var(--font-display); font-weight: 400; line-height: 1; text-transform: uppercase; }
+  .lx-swap { display: inline-block; animation: lx-swap .5s var(--ease); }
+  @keyframes lx-swap { from { opacity: 0; transform: translateY(40%); } }
+
+  /* ---------- A. Rule ---------- */
+  .la { --lw: 36cqw; }
+  .la .lx-line { transition: left 1.5s var(--ease-in-out), width 1.5s var(--ease-in-out); }
+  .la-words { position: absolute; left: 0; right: 0; bottom: calc(50% + 1.6cqw); height: 6cqw; overflow: hidden; text-align: center; font-size: 6cqw; }
+  .la-words ul { list-style: none; transform: translateY(25%); transition: transform .55s var(--ease); }
+  .la-words li { height: 6cqw; }
+  .la-count { position: absolute; top: 50%; left: calc(50% + var(--lw) / 2 + 14px); transform: translateY(-50%); color: var(--muted); opacity: 0; transition: opacity .4s .3s; }
+  .is-play .la-count { opacity: 1; }
+  .la-count.is-gone { opacity: 0; transition-delay: 0s; }
+
+  /* ---------- B. Timeline ---------- */
+  .lb .lx-line { left: 3%; }
+  .lb-mark { position: absolute; top: calc(50% - 3cqw); left: calc(3% + 94% * var(--q)); height: 3cqw; }
+  .lb-mark::before { content: ''; position: absolute; left: 0; bottom: 0; width: 1px; height: 0; background: var(--ink); transition: height .4s var(--ease); }
+  .lb-mark span { display: block; padding-left: 0.9cqw; font-size: 2.4cqw; opacity: 0; transform: translateY(40%); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+  .lb-mark.is-on::before { height: 100%; }
+  .lb-mark.is-on span { opacity: 1; transform: none; }
+  .lb.is-done .lb-mark { opacity: 0; transform: translateY(-1cqw); transition: opacity .35s, transform .35s var(--ease); }
+
+  /* ---------- C. Rise ---------- */
+  .lc .lx-line { left: 3%; transition: width .7s var(--ease-in-out), background-color .5s; }
+  .lc-stack { position: absolute; left: 3cqw; right: 3cqw; top: 0; overflow: hidden; }
+  .lc-word { position: absolute; left: 0; bottom: 2.4cqw; font-size: 16cqw; line-height: .84; transform: translateY(125%); }
+  .is-play .lc-word { animation: lc-rise .5s var(--d) both; }
+  @keyframes lc-rise {
+    0% { transform: translateY(125%); animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
+    45%, 70% { transform: none; animation-timing-function: cubic-bezier(.7, 0, .84, 0); }
+    100% { transform: translateY(125%); }
+  }
+
+  /* ---------- D. Underline ---------- */
+  .ld-word { position: absolute; left: 0; right: 0; top: calc(50% - 7cqw); text-align: center; font-size: 6cqw; transition: opacity .3s, transform .3s var(--ease); }
+  .ld-word.is-gone { opacity: 0; transform: translateY(-30%); }
+  .ld .lx-line { top: calc(50% + .4cqw); height: 2px; transition: left .45s var(--ease), width .45s var(--ease), background-color .3s; }
+  .ld .lx-line.is-settle { height: 1px; }
+
+  @media (max-width: 640px) {
+    .lx-stage { aspect-ratio: 4 / 5; }
+    .lx-grid { grid-template-columns: 1fr; }
+    .lx-title { font-size: 7cqw; }
+    .lx-meta { order: 2; }
+    .la { --lw: 64cqw; }
+    .la-words, .la-words li { height: 12cqw; }
+    .la-words { font-size: 12cqw; bottom: calc(50% + 3cqw); }
+    .lb-mark { top: calc(50% - 6cqw); height: 6cqw; }
+    .lb-mark span { font-size: 4.4cqw; }
+    .lc-word { font-size: 26cqw; }
+    .ld-word { font-size: 12cqw; top: calc(50% - 14cqw); }
+  }
+
+  /* ---------- Comparison ---------- */
+  .cx-compare { margin-top: clamp(80px, 11vw, 160px); scroll-margin-top: 24px; }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+  .cx-pick + .cx-pick { margin-top: 16px; }
+  .cx-pick ul { margin: 10px 0 0 18px; color: var(--ink-2); }
+  .cx-pick li + li { margin-top: 6px; }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) Loader</span>
+  <h1>Four line loaders <span class="text-accent">that become the page.</span></h1>
+  <p>Each one is just a thin line and the four words, Idea, Build, Remix and Share, in Anton, the same face as the wordmark. Every loader ends the same way: the line stretches to the margins and glides into place as the hero's divider, and TINKER CLICK rises above it. The loader never really leaves; it turns into the layout.</p>
+  <p>Each one plays when you scroll to it, and Replay runs it again.</p>
+  <ul class="cx-jump">
+    <li><a href="#concept-a"><b>A</b> Rule</a></li>
+    <li><a href="#concept-b"><b>B</b> Timeline</a></li>
+    <li><a href="#concept-c"><b>C</b> Rise</a></li>
+    <li><a href="#concept-d"><b>D</b> Underline</a></li>
+    <li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+<!-- ===================== A. RULE ===================== -->
+<section class="cx-concept" id="concept-a">
+  <div class="cx-concept-head">
+    <span class="cx-letter">A</span>
+    <div>
+      <h2>Rule</h2>
+      <p>The version you picked, now in Anton. The words roll up one at a time above a line that grows out from the centre, with a small step count at its end. Then the words slip away and the line glides up into place.</p>
+      <ul class="cx-tags"><li>Centred</li><li>Word roll</li><li>Step count</li></ul>
+    </div>
+  </div>
+  <div class="lx-stage la" data-lx="a">
+    <div class="lx-load">
+      <div class="la-words lx-display"><ul data-la-words>{% for w in words %}<li>{{ w }}</li>{% endfor %}</ul></div>
+      <i class="lx-line" data-line></i>
+      <span class="mono la-count" data-la-count>01</span>
+    </div>
+    {{ hero() }}
+  </div>
+  {{ controls() }}
+</section>
+
+<!-- ===================== B. TIMELINE ===================== -->
+<section class="cx-concept" id="concept-b">
+  <div class="cx-concept-head">
+    <span class="cx-letter">B</span>
+    <div>
+      <h2>Timeline</h2>
+      <p>The line draws once from margin to margin, like a ruler. Each time it reaches a quarter, a small tick rises and the next word sits on top of it, so the four steps read left to right. When the line reaches the end, the labels lift away and the full-width line simply moves up into place.</p>
+      <ul class="cx-tags"><li>Reads as a journey</li><li>Full width</li><li>One straight move</li></ul>
+    </div>
+  </div>
+  <div class="lx-stage lb" data-lx="b">
+    <div class="lx-load">
+      {% for w in words %}<div class="lb-mark" style="--q: {{ loop.index0 / 4 }}"><span class="lx-display">{{ w }}</span></div>{% endfor %}
+      <i class="lx-line" data-line></i>
+    </div>
+    {{ hero() }}
+  </div>
+  {{ controls() }}
+</section>
+
+<!-- ===================== C. RISE ===================== -->
+<section class="cx-concept" id="concept-c">
+  <div class="cx-concept-head">
+    <span class="cx-letter">C</span>
+    <div>
+      <h2>Rise</h2>
+      <p>The line draws in at the exact height of the hero's divider and never moves. Each word rises out from behind it, holds for a beat and sinks back down. After Share, TINKER CLICK rises from the same line in the same way, so the loader and the hero are one continuous motion.</p>
+      <ul class="cx-tags"><li>Line stays put</li><li>Rise + sink</li><li>Seamless</li></ul>
+    </div>
+  </div>
+  <div class="lx-stage lc" data-lx="c">
+    <div class="lx-load">
+      <div class="lc-stack" data-lc-stack>
+        {% for w in words %}<span class="lc-word lx-display" style="--d: {{ 450 + loop.index0 * 500 }}ms">{{ w }}</span>{% endfor %}
+      </div>
+      <i class="lx-line" data-line></i>
+    </div>
+    {{ hero() }}
+  </div>
+  {{ controls() }}
+</section>
+
+<!-- ===================== D. UNDERLINE ===================== -->
+<section class="cx-concept" id="concept-d">
+  <div class="cx-concept-head">
+    <span class="cx-letter">D</span>
+    <div>
+      <h2>Underline</h2>
+      <p>One word at a time in the centre, with an underline that resizes to fit each word, like a tab indicator, and takes on that step's colour. It's the only one with colour, and only on the line. After Share, the word lifts away, the underline returns to ink, and it stretches out into the divider.</p>
+      <ul class="cx-tags"><li>Colour accent</li><li>Springy underline</li><li>Compact</li></ul>
+    </div>
+  </div>
+  <div class="lx-stage ld" data-lx="d">
+    <div class="lx-load">
+      <div class="ld-word lx-display" data-ld-box><span data-ld-word></span></div>
+      <i class="lx-line" data-line></i>
+    </div>
+    {{ hero() }}
+  </div>
+  {{ controls() }}
+</section>
+
+<!-- ===================== COMPARISON ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side.</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead>
+        <tr><th>Concept</th><th>Length</th><th>Calm</th><th>Tells the story</th><th>Hand-over</th><th>Effort</th><th>Watch out for</th></tr>
+      </thead>
+      <tbody>
+        <tr><th><b>A</b>Rule</th><td>≈ 2.6s</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Line travels up</td><td>Low</td><td>Two moves at the end (stretch, then rise) can feel busier than B or C</td></tr>
+        <tr><th><b>B</b>Timeline</th><td>≈ 2.8s</td><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●●●</span></td><td>Straight up, one move</td><td>Low</td><td>The labels get small on phones</td></tr>
+        <tr><th><b>C</b>Rise</th><td>≈ 2.7s</td><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>None needed, the line is already there</td><td>Low</td><td>Each word only holds for a beat, so it has to stay fast</td></tr>
+        <tr><th><b>D</b>Underline</th><td>≈ 2.6s</td><td><span class="cx-dots">●●●<i>●●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Line travels up</td><td>Low</td><td>The colour changes make it the least quiet of the four</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: C, Rise.</strong> It's the simplest, with one line that never moves, and it uses the same motion as the wordmark, so there's no visible hand-over at all: the loader is the hero's opening. <strong>B</strong> is the pick if you want the four words to read as a sequence.</p>
+  <div class="cx-pick">
+    <strong>Whichever we pick, when it goes live:</strong>
+    <ul>
+      <li>Play it once per session (sessionStorage), not on every return to the page.</li>
+      <li>Skip it entirely for visitors who have turned on reduced motion.</li>
+      <li>Draw it over the hero that's already rendered, so search engines and screen readers still get the page straight away.</li>
+      <li>The line must land on the real hero rule, so measure the rule's position at runtime rather than hard-coding it.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp01 = t => Math.min(Math.max(t, 0), 1);
+  const easeInOut = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const WORDS = ['Idea', 'Build', 'Remix', 'Share'];
+  const NODES = ['var(--node-1)', 'var(--node-2)', 'var(--node-3)', 'var(--node-4)'];
+
+  // Each run gets a tiny timeline: timeouts and a frame loop that are all cancelled on replay
+  const timeline = () => {
+    const timers = [];
+    let frame = 0;
+    return {
+      at: (ms, fn) => timers.push(setTimeout(fn, ms)),
+      loop: fn => {
+        const t0 = performance.now();
+        const tick = now => { if (fn(now - t0) !== false) frame = requestAnimationFrame(tick); };
+        frame = requestAnimationFrame(tick);
+      },
+      cancel: () => { timers.forEach(clearTimeout); cancelAnimationFrame(frame); }
+    };
+  };
+
+  // Replace a label's text with a soft rise
+  const swap = (el, text) => { el.textContent = text; el.classList.remove('lx-swap'); void el.offsetWidth; el.classList.add('lx-swap'); };
+
+  // Stretch the line to the margins and glide it onto the hero rule (0.7s)
+  const settle = (stage, line) => {
+    line.classList.add('is-settle');
+    line.style.left = '3%';
+    line.style.width = '94%';
+    line.style.top = `${stage.querySelector('.lx-hero .lx-rule').offsetTop}px`;
+    line.style.backgroundColor = 'var(--line)';
+  };
+
+  // Hand-over shared by every concept: the loader layer fades (its line already sits on the rule), hero letters rise
+  const finish = (stage, tl, outAt) => {
+    stage.dataset.end = outAt + 250;
+    tl.at(outAt, () => stage.classList.add('is-out', 'is-revealed'));
+  };
+
+  const concepts = {
+    // A. Words roll above a line growing from the centre; then the line becomes the rule
+    a(stage, tl) {
+      const list = stage.querySelector('[data-la-words]');
+      const line = stage.querySelector('[data-line]');
+      const count = stage.querySelector('[data-la-count]');
+      const step = 380;
+      tl.at(50, () => { line.style.left = 'calc(50% - var(--lw) / 2)'; line.style.width = 'var(--lw)'; });
+      WORDS.forEach((w, i) => tl.at(100 + i * step, () => {
+        list.style.transform = `translateY(${-i * 25}%)`;
+        count.textContent = `0${i + 1}`;
+      }));
+      const end = 100 + 4 * step + 100;
+      tl.at(end, () => { list.style.transform = 'translateY(-100%)'; count.classList.add('is-gone'); });
+      tl.at(end + 50, () => settle(stage, line));
+      finish(stage, tl, end + 50 + 700);
+    },
+
+    // B. One margin-to-margin draw; a tick and word appear at each quarter; then the line moves straight up
+    b(stage, tl) {
+      const load = stage.querySelector('.lx-load');
+      const line = stage.querySelector('[data-line]');
+      const marks = Array.from(stage.querySelectorAll('.lb-mark'));
+      const W = load.clientWidth * 0.94;
+      const start = 100, dur = 1700;
+      tl.loop(t => {
+        const p = easeInOut(clamp01((t - start) / dur));
+        line.style.width = `${p * W}px`;
+        marks.forEach((m, i) => m.classList.toggle('is-on', p > i / 4 + 0.01));
+        return t < start + dur;
+      });
+      tl.at(start + dur + 100, () => { stage.classList.add('is-done'); settle(stage, line); });
+      finish(stage, tl, start + dur + 100 + 700);
+    },
+
+    // C. The line draws at the rule's height; words rise from behind it and sink (CSS); then the wordmark rises
+    c(stage, tl) {
+      const line = stage.querySelector('[data-line]');
+      const stack = stage.querySelector('[data-lc-stack]');
+      const top = stage.querySelector('.lx-hero .lx-rule').offsetTop;
+      line.style.top = `${top}px`;
+      stack.style.height = `${top}px`;
+      tl.at(50, () => { line.style.width = '94%'; });
+      const end = 450 + 4 * 500;
+      tl.at(end - 400, () => { line.style.backgroundColor = 'var(--line)'; });
+      finish(stage, tl, end);
+    },
+
+    // D. The underline resizes to each word and takes its colour; then it returns to ink and becomes the rule
+    d(stage, tl) {
+      const box = stage.querySelector('[data-ld-box]');
+      const word = stage.querySelector('[data-ld-word]');
+      const line = stage.querySelector('[data-line]');
+      const step = 420;
+      WORDS.forEach((w, i) => tl.at(80 + i * step, () => {
+        swap(word, w);
+        const px = word.offsetWidth;
+        line.style.width = `${px}px`;
+        line.style.left = `calc(50% - ${px / 2}px)`;
+        line.style.backgroundColor = NODES[i];
+      }));
+      const end = 80 + 4 * step;
+      tl.at(end, () => { box.classList.add('is-gone'); line.style.backgroundColor = 'var(--ink)'; });
+      tl.at(end + 150, () => settle(stage, line));
+      finish(stage, tl, end + 150 + 700);
+    }
+  };
+
+  // Reset a stage to its first frame by putting the pristine markup back
+  document.querySelectorAll('[data-lx]').forEach(stage => {
+    const id = stage.dataset.lx;
+    const pristine = stage.innerHTML;
+    const section = stage.closest('section');
+    const time = section.querySelector('[data-lx-time]');
+    let tl = null, clock = 0;
+
+    const run = () => {
+      if (tl) tl.cancel();
+      cancelAnimationFrame(clock);
+      stage.className = `lx-stage l${id}`;
+      stage.innerHTML = pristine;
+      void stage.offsetWidth;
+      stage.classList.add('is-play');
+      tl = timeline();
+      concepts[id](stage, tl);
+      // Stopwatch: runs until the loader layer has gone
+      const t0 = performance.now();
+      const watch = now => {
+        const t = Math.min(now - t0, +stage.dataset.end);
+        time.textContent = `${(t / 1000).toFixed(1)}s`;
+        if (t < +stage.dataset.end) clock = requestAnimationFrame(watch);
+      };
+      clock = requestAnimationFrame(watch);
+    };
+
+    section.querySelector('[data-lx-replay]').addEventListener('click', run);
+    if (reduced) {
+      stage.classList.add('is-out', 'is-revealed'); // reduced motion: show the hero; Replay still plays the loader
+    } else {
+      const io = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { io.disconnect(); run(); }
+      }, { threshold: 0.6 });
+      io.observe(stage);
+    }
+  });
+})();
+</script>
