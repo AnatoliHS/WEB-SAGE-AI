@@ -1068,7 +1068,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 /* Magnifier (assets/js/bento-lens.js): a copy of the grid, every frame flooded and zoomed 1.14×,
-   seen through a circle at the cursor; --lens-x/-y/-r are set in px on .bento-stage */
+   seen through a wandering circle; --lens-x/-y/-r are set in px on .bento-stage */
 .bento-stage {
   position: relative;
 }

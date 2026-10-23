@@ -1,8 +1,8 @@
 // Bento magnifier (Features): a circle over the bento shows a copy of the grid inside it, each card
 // filled with its own colour and zoomed slightly, like a magnifying glass. The copy is cut to the
 // circle with clip-path (see .bento-lens in style.css) and replaces the per-card hover fill.
-// The circle wanders on its own while the grid is on screen, takes over when the mouse enters and
-// hands back when it leaves (reduced motion: mouse only, no wandering).
+// The circle wanders on a random path while the grid is on screen; the mouse doesn't steer it
+// (reduced motion: no lens, frames flood on hover).
 // Touch screens get no lens, since it would cover what's being read. Instead, the frame passing the
 // middle of the screen floods with its colour through a circle growing from its centre (.is-focus).
 (() => {
@@ -32,7 +32,8 @@
     return;
   }
 
-  const wander = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Reduced motion: no lens; frames flood on hover instead (see .bento-stage:not(.has-lens) in style.css)
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   // The lit copy: same cards, invisible to assistive tech
   const copy = grid.cloneNode(true);
@@ -64,65 +65,51 @@
     })).observe(say, { subtree: true, attributes: true, attributeFilter: ['class'] });
   }
 
-  const s = { x: 0, y: 0, tx: 0, ty: 0, r: 0, tr: 0, placed: false };
-  let hovering = false;
-  let released = -Infinity; // when the mouse last left; wandering resumes a moment later
+  // The lens steers towards a random point on the grid and picks a new one as it gets close, so
+  // its path curves and never repeats
+  const s = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, r: 0, placed: false };
   let visible = false;
   let frame = 0;
+  let last = 0;
   const radius = () => Math.min(190, Math.max(110, stage.clientWidth * 0.16));
-  const wandering = (now) => wander && visible && !hovering && now - released > 900;
+  const pick = (w, h) => {
+    const pad = Math.min(radius() * 0.5, w / 4, h / 4);
+    // A few tries for a point well away from where the lens is, so it doesn't dither in one spot
+    for (let i = 0; i < 6; i++) {
+      s.tx = pad + Math.random() * (w - pad * 2);
+      s.ty = pad + Math.random() * (h - pad * 2);
+      if (Math.hypot(s.tx - s.x, s.ty - s.y) > Math.min(w, h) * 0.35) break;
+    }
+  };
 
   const tick = (now) => {
     const w = stage.clientWidth, h = stage.clientHeight;
-    const drifting = wandering(now);
-    if (drifting) {
-      // A slow, aimless loop across the grid
-      const t = now / 1000;
-      s.tx = w * (0.5 + 0.32 * Math.cos(t * 0.5));
-      s.ty = h * (0.5 + 0.3 * Math.sin(t * 0.8));
-      s.tr = radius();
-      if (!s.placed) { s.x = s.tx; s.y = s.ty; s.placed = true; }
+    // Capped, so a frame after a long pause doesn't jump
+    const dt = Math.min(0.05, (now - (last || now)) / 1000);
+    last = now;
+    if (!s.placed) {
+      s.x = w * Math.random(); s.y = h * Math.random();
+      pick(w, h);
+      s.placed = true;
     }
-    // The mouse is followed closely; the wander is lazier
-    const k = hovering ? 0.2 : 0.06;
-    s.x += (s.tx - s.x) * k;
-    s.y += (s.ty - s.y) * k;
-    s.r += (s.tr - s.r) * 0.1;
-    const moving = Math.abs(s.tx - s.x) > 0.3 || Math.abs(s.ty - s.y) > 0.3 || Math.abs(s.tr - s.r) > 0.3;
-    // Settle exactly on the target, so a closed lens leaves no sub-pixel dot behind
-    if (!moving) { s.x = s.tx; s.y = s.ty; s.r = s.tr; }
+    if (Math.hypot(s.tx - s.x, s.ty - s.y) < radius() * 0.5) pick(w, h);
+    // Ease the velocity towards the target's direction at a steady pace
+    const dx = s.tx - s.x, dy = s.ty - s.y, d = Math.hypot(dx, dy) || 1;
+    const speed = 170;
+    s.vx += (dx / d * speed - s.vx) * Math.min(1, dt * 1.2);
+    s.vy += (dy / d * speed - s.vy) * Math.min(1, dt * 1.2);
+    s.x = Math.min(w, Math.max(0, s.x + s.vx * dt));
+    s.y = Math.min(h, Math.max(0, s.y + s.vy * dt));
+    s.r += (radius() - s.r) * Math.min(1, dt * 6);
     stage.style.setProperty('--lens-x', `${s.x}px`);
     stage.style.setProperty('--lens-y', `${s.y}px`);
     stage.style.setProperty('--lens-r', `${s.r}px`);
     ring.style.opacity = s.r > 1 ? '1' : '0';
-    // Keep going while anything moves, or while the grid is on screen and waiting to wander again
-    frame = moving || drifting || (wander && visible && !hovering) ? requestAnimationFrame(tick) : 0;
+    frame = visible ? requestAnimationFrame(tick) : 0;
   };
-  const run = () => { if (!frame) frame = requestAnimationFrame(tick); };
 
   new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
-    if (visible) run();
+    if (visible && !frame) { last = 0; frame = requestAnimationFrame(tick); }
   }).observe(stage);
-
-  const aim = (e) => {
-    const b = stage.getBoundingClientRect();
-    s.tx = e.clientX - b.left;
-    s.ty = e.clientY - b.top;
-  };
-  stage.addEventListener('pointerenter', (e) => {
-    hovering = true;
-    aim(e);
-    // Grow in at the cursor if the lens was closed; otherwise glide over from where it was wandering
-    if (s.r < 1) { s.x = s.tx; s.y = s.ty; }
-    s.tr = radius();
-    run();
-  });
-  stage.addEventListener('pointermove', (e) => { aim(e); run(); });
-  stage.addEventListener('pointerleave', () => {
-    hovering = false;
-    released = performance.now();
-    if (!wander) s.tr = 0;
-    run();
-  });
 })();
