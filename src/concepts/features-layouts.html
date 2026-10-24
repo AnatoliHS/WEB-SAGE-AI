@@ -1,0 +1,525 @@
+---
+layout: policy.njk
+title: Features layout concepts — Tinker
+description: Five ways to present "Made for tinkerers, families and classrooms." without the bento and its magnifier, side by side.
+noindex: true
+permalink: /concepts/features-layouts/
+features:
+  - { title: "Your language", text: "The whole app is translated, and commands work in your own language too.", ask: "Mach mir ein Spiel" }
+  - { title: "One-click covers", text: "Snap a fresh cover image for any app with one click, even for 3D games like chess.", ask: "Give my chess game a new cover" }
+  - { title: "Your choice of server", text: "Use the official Tinker Click server, host your own, or bring your own AI model.", ask: "Can I use my own AI model?" }
+  - { title: "Works with your files", text: "Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.", ask: "Read my notes and plan the week" }
+  - { title: "Under the hood", text: "Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.", ask: "How do I change how you think?" }
+  - { title: "Slash commands", text: "Type commands like /discover, /status and /login to move around faster.", ask: "/discover" }
+  - { title: "Open source", text: "Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.", ask: "Where's the code?" }
+---
+
+{% set variants = [
+  { id: "a", key: "index", name: "Index", text: "An editorial list: each feature is a numbered row with a large title and its line of copy, ruled off like the hero. The row passing the middle of the screen (or under the mouse) lights up in the accent. Calm, typographic and fast to scan, a quiet beat after the animated sections above.", tags: ["Typographic", "Scannable", "No animation to watch"] },
+  { id: "b", key: "spotlight", name: "Spotlight", text: "The features as a list beside one large panel that shows the selected one with a small live example: the phrase changing language, a cover being snapped, the server options, commands typed out. It moves on by itself, with a progress line under the current item; click any to jump.", tags: ["Shows, not tells", "Auto-advancing", "Click to jump"] },
+  { id: "c", key: "chat", name: "Conversation", text: "The features told the way the product works: as a chat with Tinker Click. Someone asks something, Tinker answers with the feature. Messages arrive one by one with a typing indicator, then the conversation starts again. The questions here are placeholder copy.", tags: ["On-brand", "Plays like the product", "Copy to write"] },
+  { id: "d", key: "orbit", name: "Orbit", text: "The hero halo comes back at the centre with the seven features around it. One at a time, a feature lights up, a thin line reaches out to it from the halo and its description shows alongside; the halo takes the feature's colour. Click any label to jump.", tags: ["Uses the halo", "Ties the page together", "Click to jump"] },
+  { id: "e", key: "ticker", name: "Ticker", text: "Two big rows in the wordmark's typeface: who it's for, and what they ask for, in a few languages. The scroll drives them: scrolling down slides them in opposite directions, scrolling up runs them back. Underneath, a plain three-column list of the features.", tags: ["Bold", "Scroll-driven", "Details stay plain"] }
+] %}
+
+{% macro icon(i, size = 24) %}
+<svg class="fx-icon" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {%- if i == 0 %}<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>
+  {%- elif i == 1 %}<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>
+  {%- elif i == 2 %}<rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/>
+  {%- elif i == 3 %}<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/>
+  {%- elif i == 4 %}<path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>
+  {%- elif i == 5 %}<path d="M7 20 17 4"/>
+  {%- else %}<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>{% endif -%}
+</svg>
+{% endmacro %}
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 40px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* Each concept sits under the section's real title, as it would on the page */
+  .fx-title { margin-bottom: clamp(32px, 4vw, 56px); text-align: center; font-size: clamp(2rem, 4.4vw, 3.5rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.02; }
+  .fx-frame { padding: clamp(24px, 4vw, 56px) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .fx-icon { flex: none; }
+
+  /* ---------- A. Index ---------- */
+  .fa { list-style: none; border-top: 1px solid var(--line); }
+  .fa-row { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) 28px; gap: 12px 24px; align-items: center; padding: clamp(18px, 2.4vw, 28px) 0; border-bottom: 1px solid var(--line); }
+  .fa-row::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 0; height: 1px; background: var(--accent); transition: width .7s var(--ease); }
+  .fa-num { color: var(--muted); }
+  .fa-title { font-size: clamp(1.5rem, 3.2vw, 2.6rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; transition: color .4s ease, transform .6s var(--ease); }
+  .fa-text { color: var(--ink-2); max-width: 46ch; }
+  .fa-row .fx-icon { color: var(--muted); transition: color .4s ease, transform .6s var(--ease); }
+  .fa-row.is-on::after { width: 100%; }
+  .fa-row.is-on .fa-title { color: var(--accent); transform: translateX(8px); }
+  .fa-row.is-on .fx-icon { color: var(--accent); transform: rotate(-8deg) scale(1.1); }
+  @media (max-width: 760px) {
+    .fa-row { grid-template-columns: 40px 1fr; }
+    .fa-text { grid-column: 2; }
+    .fa-row .fx-icon { display: none; }
+  }
+
+  /* ---------- B. Spotlight ---------- */
+  .fb { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: clamp(24px, 4vw, 64px); align-items: stretch; }
+  .fb-list { list-style: none; display: grid; align-content: center; }
+  .fb-tab { position: relative; display: flex; gap: 14px; align-items: center; width: 100%; padding: 14px 0; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--muted); font: inherit; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.02em; text-align: left; cursor: pointer; transition: color .3s ease; }
+  .fb-tab:hover, .fb-tab[aria-selected="true"] { color: var(--ink); }
+  .fb-tab[aria-selected="true"] .fx-icon { color: var(--accent); }
+  .fb-tab::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 0; height: 1px; background: var(--accent); }
+  .fb-tab[aria-selected="true"]::after { animation: fb-progress var(--fb-dur, 5s) linear forwards; }
+  @keyframes fb-progress { to { width: 100%; } }
+  .fb-panel { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 440px; padding: clamp(24px, 3.5vw, 48px); border-radius: var(--radius); background: var(--bg-raised); overflow: hidden; }
+  .fb-stage { position: relative; flex: 1; display: grid; place-items: center; min-height: 200px; }
+  .fb-show { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .6s var(--ease); pointer-events: none; }
+  .fb-show.is-on { opacity: 1; transform: none; }
+  .fb-copy h3 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; }
+  .fb-copy p { margin-top: 8px; max-width: 52ch; color: var(--ink-2); }
+  /* The little examples */
+  .fb-say { font-size: clamp(2rem, 4.4vw, 3.5rem); font-weight: 500; letter-spacing: -0.045em; color: var(--accent); text-align: center; }
+  .fb-covers { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+  .fb-covers i { aspect-ratio: 3 / 4; border-radius: 8px; background: color-mix(in srgb, var(--accent) 16%, var(--bg)); }
+  .fb-covers i:nth-child(5) { animation: fb-flash 2.4s ease infinite; }
+  @keyframes fb-flash { 0%, 40% { background: color-mix(in srgb, var(--accent) 16%, var(--bg)); box-shadow: none; } 45% { background: #fff; box-shadow: 0 0 40px #fff; } 60%, 100% { background: var(--accent); box-shadow: none; } }
+  .fb-opts { display: grid; gap: 10px; min-width: min(320px, 100%); }
+  .fb-opts span { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border: 1px solid var(--line); border-radius: 999px; }
+  .fb-opts span::before { content: ""; width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 50%; }
+  .fb-opts span.is-on { border-color: var(--accent); }
+  .fb-opts span.is-on::before { border-color: var(--accent); background: radial-gradient(var(--accent) 45%, transparent 50%); }
+  .fb-files { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .fb-files span { padding: 8px 14px; border-radius: 8px; background: var(--bg); font-size: 0.9375rem; animation: fb-bob 3s ease-in-out infinite; }
+  .fb-files span:nth-child(2) { animation-delay: .4s; } .fb-files span:nth-child(3) { animation-delay: .8s; }
+  @keyframes fb-bob { 50% { transform: translateY(-8px); } }
+  .fb-code { padding: 18px 22px; border-radius: 10px; background: var(--bg); font-size: 0.875rem; line-height: 1.8; color: var(--ink-2); }
+  .fb-code b { color: var(--accent); font-weight: 500; }
+  .fb-cmd { display: flex; gap: 8px; align-items: center; padding: 14px 22px; min-width: min(340px, 100%); border: 1.5px solid var(--accent); border-radius: 999px; background: var(--bg); font-size: 1.0625rem; }
+  .fb-cmd::after { content: ""; width: 1.5px; height: 1.1em; background: var(--accent); animation: ui-blink 1s steps(1) infinite; }
+  .fb-graph { width: min(320px, 100%); color: var(--accent); }
+  @media (max-width: 860px) {
+    .fb { grid-template-columns: 1fr; }
+    .fb-panel { min-height: 380px; }
+  }
+
+  /* ---------- C. Conversation ---------- */
+  .fc { max-width: 760px; margin-inline: auto; }
+  .fc-window { display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; height: 520px; padding: clamp(18px, 3vw, 32px); overflow: hidden; border-radius: var(--radius); background: var(--bg-raised); mask-image: linear-gradient(transparent, #000 22%); -webkit-mask-image: linear-gradient(transparent, #000 22%); }
+  .fc-msg { max-width: 78%; padding: 12px 16px; border-radius: 18px; line-height: 1.45; animation: fc-in .5s var(--ease) both; }
+  .fc-msg.is-you { align-self: flex-end; border-bottom-right-radius: 6px; background: var(--accent); color: #fff; }
+  .fc-msg.is-tinker { align-self: flex-start; border-bottom-left-radius: 6px; background: var(--bg); }
+  .fc-msg.is-tinker b { display: flex; gap: 8px; align-items: center; margin-bottom: 2px; font-weight: 500; color: var(--accent); }
+  .fc-typing { display: inline-flex; gap: 4px; }
+  .fc-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: fc-dot 1s ease-in-out infinite; }
+  .fc-typing i:nth-child(2) { animation-delay: .15s; } .fc-typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes fc-in { from { opacity: 0; transform: translateY(12px); } }
+  @keyframes fc-dot { 50% { transform: translateY(-4px); opacity: .5; } }
+  .fc-bar { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 14px 20px; border: 1.5px solid var(--line); border-radius: 999px; color: var(--muted); }
+
+  /* ---------- D. Orbit ---------- */
+  .fd { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+  .fd-stage { position: relative; aspect-ratio: 1; max-width: 560px; width: 100%; margin-inline: auto; }
+  .fd-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fd-label { position: absolute; display: inline-flex; gap: 8px; align-items: center; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--muted); font: inherit; font-size: 0.875rem; font-weight: 500; white-space: nowrap; transform: translate(-50%, -50%); cursor: pointer; transition: color .4s ease, border-color .4s ease; }
+  .fd-label.is-on { color: var(--fd-c); border-color: var(--fd-c); }
+  .fd-copy h3 { font-size: clamp(1.75rem, 3vw, 2.75rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; color: var(--fd-c); transition: color .4s ease; }
+  .fd-copy p { margin-top: 12px; max-width: 44ch; color: var(--ink-2); font-size: 1.0625rem; }
+  .fd-copy .mono { color: var(--muted); }
+  @media (max-width: 860px) {
+    .fd { grid-template-columns: 1fr; }
+    .fd-label span { display: none; }
+  }
+
+  /* ---------- E. Ticker ---------- */
+  .fe-rows { display: grid; gap: 4px; overflow: hidden; margin-inline: calc(50% - 50vw); }
+  /* Moved by the scroll (script below), in opposite directions */
+  .fe-row { display: flex; width: max-content; will-change: transform; }
+  .fe-row span { display: inline-flex; align-items: center; gap: 0.4em; padding-right: 0.4em; font-family: var(--font-display); font-size: clamp(3rem, 9vw, 8rem); line-height: 1.05; text-transform: uppercase; white-space: nowrap; }
+  /* The logo mark (tinker-mark.svg) between the words */
+  .fe-mark { flex: none; width: 0.5em; height: 0.5em; }
+  .fe-row:nth-child(2) span { color: transparent; -webkit-text-stroke: 1px var(--ink); }
+  .fe-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px var(--gutter); margin-top: clamp(40px, 5vw, 72px); list-style: none; }
+  .fe-list li { padding-top: 16px; border-top: 1px solid var(--line); }
+  .fe-list h3 { display: flex; gap: 10px; align-items: center; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.02em; }
+  .fe-list h3 .fx-icon { color: var(--accent); }
+  .fe-list p { margin-top: 6px; color: var(--ink-2); font-size: 0.9375rem; }
+  @media (max-width: 860px) { .fe-list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .fe-list { grid-template-columns: 1fr; } }
+
+  /* ---------- Comparison ---------- */
+  .cx-compare { margin-top: clamp(80px, 11vw, 160px); scroll-margin-top: 24px; }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) Features</span>
+  <h1>Five ways to show the features <span class="text-accent">without the bento.</span></h1>
+  <p>Same seven features and copy, presented differently. Each sits under the section's real title, as it would on the page. Only one of them brings the halo back.</p>
+  <ul class="cx-jump">
+    {% for v in variants %}<li><a href="#concept-{{ v.id }}"><b>{{ v.id | upper }}</b> {{ v.name }}</a></li>
+    {% endfor %}<li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+{% for v in variants %}
+<!-- ===================== {{ v.id | upper }}. {{ v.name | upper }} ===================== -->
+<section class="cx-concept" id="concept-{{ v.id }}">
+  <div class="cx-concept-head">
+    <span class="cx-letter">{{ v.id | upper }}</span>
+    <div>
+      <h2>{{ v.name }}</h2>
+      <p>{{ v.text }}</p>
+      <ul class="cx-tags">{% for t in v.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="fx-frame">
+    <h3 class="fx-title">Made for tinkerers, families <span class="text-accent">and classrooms.</span></h3>
+
+    {% if v.key == "index" %}
+    <ol class="fa" data-fa>
+      {% for f in features %}
+      <li class="fa-row">
+        <span class="mono fa-num">0{{ loop.index }}</span>
+        <h4 class="fa-title">{{ f.title }}</h4>
+        <p class="fa-text">{{ f.text }}</p>
+        {{ icon(loop.index0, 28) }}
+      </li>
+      {% endfor %}
+    </ol>
+
+    {% elif v.key == "spotlight" %}
+    <div class="fb" data-fb>
+      <ul class="fb-list" role="tablist">
+        {% for f in features %}<li><button type="button" class="fb-tab" role="tab" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ icon(loop.index0, 20) }}{{ f.title }}</button></li>{% endfor %}
+      </ul>
+      <div class="fb-panel">
+        <div class="fb-stage">
+          <div class="fb-show is-on"><div class="fb-say" data-fb-say>Make me a game</div></div>
+          <div class="fb-show"><div class="fb-covers"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="fb-show"><div class="fb-opts" data-fb-opts><span class="is-on">Tinker Click server</span><span>Your own server</span><span>Your own AI model</span></div></div>
+          <div class="fb-show"><div class="fb-files"><span>notes.md</span><span>budget.xlsx</span><span>timetable.pdf</span><span>the web</span></div></div>
+          <div class="fb-show"><pre class="fb-code mono"><b>system:</b> You are a patient maths tutor.
+<b>tools:</b> calculator, timetable, quiz
+<b>tone:</b> friendly, short answers</pre></div>
+          <div class="fb-show"><div class="fb-cmd mono" data-fb-cmd>/discover</div></div>
+          <div class="fb-show"><svg class="fb-graph" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 60h300M60 60c20 0 20-34 40-34h80c20 0 20 34 40 34M140 60c20 0 20 34 40 34h40c20 0 20-34 40-34" opacity=".5"/><g fill="currentColor" stroke="none"><circle cx="10" cy="60" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="100" cy="26" r="6"/><circle cx="180" cy="26" r="6"/><circle cx="140" cy="60" r="6"/><circle cx="180" cy="94" r="6"/><circle cx="220" cy="60" r="6"/><circle cx="260" cy="60" r="6"/><circle cx="310" cy="60" r="6"/></g></svg></div>
+        </div>
+        <div class="fb-copy" data-fb-copy><h3>{{ features[0].title }}</h3><p>{{ features[0].text }}</p></div>
+      </div>
+    </div>
+
+    {% elif v.key == "chat" %}
+    <div class="fc">
+      <div class="fc-window" data-fc aria-live="off"></div>
+      <div class="fc-bar mono">Ask Tinker Click anything…</div>
+    </div>
+
+    {% elif v.key == "orbit" %}
+    <div class="fd" data-fd>
+      <div class="fd-stage">
+        <canvas aria-hidden="true"></canvas>
+        {% for f in features %}<button type="button" class="fd-label">{{ icon(loop.index0, 16) }}<span>{{ f.title }}</span></button>{% endfor %}
+      </div>
+      <div class="fd-copy" data-fd-copy><span class="mono">01 / 07</span><h3>{{ features[0].title }}</h3><p>{{ features[0].text }}</p></div>
+    </div>
+
+    {% else %}
+    {# Who it's for, and what they ask for; repeated so the rows never run out while they slide #}
+    <div class="fe-rows" data-fe aria-hidden="true">
+      {% for row in [["Tinkerers", "Families", "Classrooms"], ["Make me a game", "Fais-moi un jeu", "给我做个游戏"]] %}
+      <div class="fe-row">{% for pass in [0, 1, 2, 3] %}{% for word in row %}<span>{{ word }}<svg class="fe-mark" viewBox="0 0 64 64"><g fill="#126cfd"><rect x="14.4" y="9.1" width="9.8" height="32.6" rx="2.2"/><rect x="3" y="20.5" width="32.6" height="9.8" rx="2.2"/></g><g fill="#ff5f00"><rect x="39.5" y="22.1" width="9.8" height="32.6" rx="2.2"/><rect x="28.1" y="33.5" width="32.6" height="9.8" rx="2.2"/></g></svg></span>{% endfor %}{% endfor %}</div>
+      {% endfor %}
+    </div>
+    <ul class="fe-list">
+      {% for f in features %}<li><h3>{{ icon(loop.index0, 20) }}{{ f.title }}</h3><p>{{ f.text }}</p></li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endfor %}
+
+<!-- ===================== COMPARE ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead><tr><th>Concept</th><th>Easy to scan</th><th>Shows the product</th><th>Calm after the orb</th><th>On phones</th><th>Watch out for</th></tr></thead>
+      <tbody>
+        <tr><th><b>A</b>Index</th><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●<i>●●●●</i></span></td><td><span class="cx-dots">●●●●●</span></td><td>Rows light as they pass the middle</td><td>Plain; depends on great type and copy</td></tr>
+        <tr><th><b>B</b>Spotlight</th><td><span class="cx-dots">●●●<i>●●</i></span></td><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>List stacks above the panel</td><td>Same list-plus-stage pattern as Meet Tinker</td></tr>
+        <tr><th><b>C</b>Conversation</th><td><span class="cx-dots">●●<i>●●●</i></span></td><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Works as is</td><td>You wait for messages; needs real questions written</td></tr>
+        <tr><th><b>D</b>Orbit</th><td><span class="cx-dots">●●●<i>●●</i></span></td><td><span class="cx-dots">●●<i>●●●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Labels shrink to icons</td><td>A third halo moment on the page</td></tr>
+        <tr><th><b>E</b>Ticker</th><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●<i>●●●●</i></span></td><td><span class="cx-dots">●●<i>●●●</i></span></td><td>Big rows still read well</td><td>Moving type is hard to read; the list does the work</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: A, Index.</strong> After two animated sections, a calm, typographic list gives the eye a rest, reads in seconds, and matches the big type and thin rules of the hero. If you want this section to show the product rather than describe it, <strong>C</strong> is the most on-brand, once the questions are written properly.</p>
+</section>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FEATURES = {{ features | dump | safe }};
+  const onScreen = (el, fn) => new IntersectionObserver(([e]) => fn(e.isIntersecting)).observe(el);
+
+  /* ----- A. Index: the row under the mouse, or else the one crossing the middle of the screen ----- */
+  document.querySelectorAll('[data-fa]').forEach((list) => {
+    const rows = [...list.children];
+    let hovered = null;
+    const update = () => {
+      const mid = window.innerHeight / 2;
+      const near = rows.reduce((best, r) => {
+        const b = r.getBoundingClientRect();
+        const d = Math.abs(b.top + b.height / 2 - mid);
+        return d < best.d ? { r, d } : best;
+      }, { r: null, d: Infinity });
+      const on = hovered || (near.d < window.innerHeight * 0.35 ? near.r : null);
+      rows.forEach((r) => r.classList.toggle('is-on', r === on));
+    };
+    rows.forEach((r) => {
+      r.addEventListener('mouseenter', () => { hovered = r; update(); });
+      r.addEventListener('mouseleave', () => { hovered = null; update(); });
+    });
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  });
+
+  /* ----- B. Spotlight: moves on every 5s while on screen; clicking jumps ----- */
+  document.querySelectorAll('[data-fb]').forEach((root) => {
+    const tabs = [...root.querySelectorAll('.fb-tab')];
+    const shows = [...root.querySelectorAll('.fb-show')];
+    const copy = root.querySelector('[data-fb-copy]');
+    const say = root.querySelector('[data-fb-say]');
+    const opts = [...root.querySelectorAll('[data-fb-opts] span')];
+    const cmd = root.querySelector('[data-fb-cmd]');
+    const SAYS = ['Make me a game', 'Mach mir ein Spiel', 'Fais-moi un jeu', '给我做个游戏', 'Hazme un juego'];
+    const CMDS = ['/discover', '/status', '/login'];
+    let current = 0, timer = 0, tick = 0, visible = false;
+    function go(i) {
+      current = (i + tabs.length) % tabs.length;
+      tabs.forEach((t, n) => t.setAttribute('aria-selected', String(n === current)));
+      shows.forEach((s, n) => s.classList.toggle('is-on', n === current));
+      copy.innerHTML = `<h3>${FEATURES[current].title}</h3><p>${FEATURES[current].text}</p>`;
+      // Restart the progress line under the selected tab
+      const tab = tabs[current];
+      tab.style.animation = 'none';
+      void tab.offsetWidth;
+      tab.style.animation = '';
+      clearTimeout(timer);
+      if (visible && !reduced) timer = setTimeout(() => go(current + 1), 5000);
+    }
+    tabs.forEach((t, i) => t.addEventListener('click', () => go(i)));
+    // The small examples tick along on their own
+    setInterval(() => {
+      tick++;
+      say.textContent = SAYS[tick % SAYS.length];
+      opts.forEach((o, n) => o.classList.toggle('is-on', n === tick % opts.length));
+      cmd.textContent = CMDS[tick % CMDS.length];
+    }, 1200);
+    onScreen(root, (v) => { visible = v; go(current); });
+  });
+
+  /* ----- C. Conversation: question, typing, answer, one feature after another, then again ----- */
+  document.querySelectorAll('[data-fc]').forEach((win) => {
+    let i = 0, timers = [], visible = false;
+    const add = (cls, html) => {
+      const m = document.createElement('div');
+      m.className = `fc-msg ${cls}`;
+      m.innerHTML = html;
+      win.appendChild(m);
+      while (win.children.length > 8) win.firstChild.remove();
+      return m;
+    };
+    function next() {
+      if (!visible) return;
+      if (i === FEATURES.length) {
+        timers.push(setTimeout(() => { win.innerHTML = ''; i = 0; next(); }, 2600));
+        return;
+      }
+      const f = FEATURES[i++];
+      add('is-you', f.ask);
+      timers.push(setTimeout(() => {
+        const t = add('is-tinker', '<span class="fc-typing"><i></i><i></i><i></i></span>');
+        timers.push(setTimeout(() => {
+          t.innerHTML = `<b>${f.title}</b>${f.text}`;
+          timers.push(setTimeout(next, reduced ? 1200 : 2000));
+        }, reduced ? 0 : 1100));
+      }, 500));
+    }
+    onScreen(win, (v) => {
+      visible = v;
+      timers.forEach(clearTimeout);
+      timers = [];
+      if (v) next();
+    });
+  });
+
+  /* ----- E. Ticker: the scroll slides the rows, the first one left and the second right ----- */
+  document.querySelectorAll('[data-fe]').forEach((root) => {
+    const [top, bottom] = root.querySelectorAll('.fe-row');
+    const SPEED = 0.45; // px of sideways travel per px scrolled
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const b = root.getBoundingClientRect();
+      if (b.bottom < -200 || b.top > window.innerHeight + 200) return;
+      // How far the rows have scrolled up since they came in at the bottom of the screen
+      const d = (window.innerHeight - b.top) * SPEED;
+      // The second row starts shifted left, so it has room to travel right
+      const start = bottom.scrollWidth / 2;
+      top.style.transform = `translateX(${-d}px)`;
+      bottom.style.transform = `translateX(${d - start}px)`;
+    };
+    const request = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    update();
+  });
+
+  /* ----- D. Orbit: the hero halo in the middle, features round it, one lit at a time ----- */
+  document.querySelectorAll('[data-fd]').forEach((root) => {
+    const canvas = root.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const labels = [...root.querySelectorAll('.fd-label')];
+    const copy = root.querySelector('[data-fd-copy]');
+    const cs = getComputedStyle(document.documentElement);
+    const COLORS = [1, 2, 3, 4].map((n) => cs.getPropertyValue(`--node-${n}`).trim());
+    const toRgb = (c) => {
+      const n = parseInt(c.replace('#', ''), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const PI = Math.PI;
+    const TAU = PI * 2;
+    const SAMPLES = 60;
+    const rand = (i, s) => {
+      const v = Math.sin(i * 91.7 + s * 47.3) * 43758.5453;
+      return v - Math.floor(v);
+    };
+    // A lighter copy of the hero halo: comets on wobbling, slightly off-centre loops
+    const strands = Array.from({ length: 110 }, (_, k) => ({
+      r0: 0.42 + 0.56 * rand(k, 1), a0: rand(k, 2) * TAU, len: 1.2 + 2 * rand(k, 3), drift: 0.22 + 0.33 * rand(k, 4),
+      ph: rand(k, 5) * TAU, sq: 0.8 + 0.2 * rand(k, 6), turn: rand(k, 7) * TAU,
+      alpha: 0.08 + 0.82 * Math.pow(rand(k, 8), 2.4), width: 0.6 + 0.9 * rand(k, 9)
+    }));
+    let current = 0, timer = 0, visible = false, t = 20, color = toRgb(COLORS[0]), last = null, w = 0, h = 0;
+
+    function place() {
+      // Labels on a ring round the halo, starting at the top
+      labels.forEach((l, i) => {
+        const a = -PI / 2 + (i / labels.length) * TAU;
+        l.style.left = `${50 + Math.cos(a) * 40}%`;
+        l.style.top = `${50 + Math.sin(a) * 40}%`;
+      });
+    }
+    function go(i) {
+      current = (i + labels.length) % labels.length;
+      const c = COLORS[current % 4];
+      root.style.setProperty('--fd-c', c);
+      labels.forEach((l, n) => l.classList.toggle('is-on', n === current));
+      copy.innerHTML = `<span class="mono">0${current + 1} / 07</span><h3>${FEATURES[current].title}</h3><p>${FEATURES[current].text}</p>`;
+      clearTimeout(timer);
+      if (visible && !reduced) timer = setTimeout(() => go(current + 1), 3800);
+    }
+    labels.forEach((l, i) => l.addEventListener('click', () => go(i)));
+
+    function frame(now) {
+      if (!visible) { last = null; return; }
+      requestAnimationFrame(frame);
+      const dt = last === null ? 0 : Math.min((now - last) / 1000, 0.1);
+      last = now;
+      if (!reduced) t += dt * 1.4;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (canvas.clientWidth !== w || canvas.clientHeight !== h) {
+        w = canvas.clientWidth;
+        h = canvas.clientHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      const target = toRgb(COLORS[current % 4]);
+      color = color.map((c, i) => c + (target[i] - c) * (1 - Math.exp(-dt * 3)));
+      const rgb = `rgb(${color.map(Math.round).join(',')})`;
+      const cx = w / 2;
+      const cy = h / 2;
+      const R = w * 0.2;
+
+      // A thin line from the halo out to the lit label
+      const a = -PI / 2 + (current / labels.length) * TAU;
+      ctx.strokeStyle = rgb;
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R * 1.1, cy + Math.sin(a) * R * 1.1);
+      ctx.lineTo(cx + Math.cos(a) * w * 0.34, cy + Math.sin(a) * h * 0.34);
+      ctx.stroke();
+
+      ctx.globalCompositeOperation = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'lighter' : 'source-over';
+      ctx.fillStyle = rgb;
+      ctx.lineCap = 'round';
+      strands.forEach((s) => {
+        const turn = s.turn + t * 0.015;
+        const pts = [];
+        for (let i = 0; i < SAMPLES; i++) {
+          const th = s.a0 + s.drift * t + (i / (SAMPLES - 1)) * s.len;
+          const r = s.r0 + 0.04 * Math.sin(3 * th + s.ph + t * 0.3) + 0.02 * Math.sin(5 * th - t * 0.4);
+          const ex = Math.cos(th) * r;
+          const ey = Math.sin(th) * r * s.sq;
+          pts.push([cx + (ex * Math.cos(turn) - ey * Math.sin(turn)) * R, cy + (ex * Math.sin(turn) + ey * Math.cos(turn)) * R]);
+        }
+        ctx.lineWidth = s.width * 0.9;
+        for (let c = 0; c < SAMPLES - 1; c += 5) {
+          const end = Math.min(c + 5, SAMPLES - 1);
+          ctx.globalAlpha = s.alpha * Math.pow(((c + end) / 2) / (SAMPLES - 1), 1.7);
+          ctx.beginPath();
+          ctx.moveTo(...pts[c]);
+          for (let i = c + 1; i <= end; i++) ctx.lineTo(...pts[i]);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = Math.min(1, s.alpha * 1.2);
+        ctx.beginPath();
+        ctx.arc(...pts[SAMPLES - 1], s.width, 0, TAU);
+        ctx.fill();
+      });
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+
+    place();
+    onScreen(root, (v) => {
+      visible = v;
+      go(current);
+      if (v) requestAnimationFrame(frame);
+    });
+  });
+})();
+</script>

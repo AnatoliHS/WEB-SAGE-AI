@@ -288,25 +288,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 6. Bento: cycle "Make me a game" through languages
-  const say = document.querySelector('[data-bento-say]');
-  if (say && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const words = Array.from(say.children);
-    let w = 0;
-    setInterval(() => {
-      const prev = words[w];
-      w = (w + 1) % words.length;
-      prev.classList.replace('is-in', 'is-out');
-      words[w].classList.remove('is-out');
-      words[w].classList.add('is-in');
-      // Park the old phrase back below without animating, so it doesn't slide down through view
-      setTimeout(() => {
-        prev.style.transition = 'none';
-        prev.classList.remove('is-out');
-        void prev.offsetWidth;
-        prev.style.transition = '';
-      }, 900);
-    }, 2200);
+  // 6. Features ticker: the scroll slides the two rows, the first left and the second right, by how far
+  //    they've come up the screen, so scrolling back up runs them back
+  const ticker = document.querySelector('[data-ticker]');
+  if (ticker) {
+    const [first, second] = ticker.querySelectorAll('.ticker-row');
+    const SPEED = 0.45; // px sideways per px scrolled
+    let ticking = false;
+    const slide = () => {
+      ticking = false;
+      const b = ticker.getBoundingClientRect();
+      if (b.bottom < -200 || b.top > window.innerHeight + 200) return;
+      const d = (window.innerHeight - b.top) * SPEED;
+      first.style.transform = `translateX(${-d}px)`;
+      // The second row starts half its width to the left, so it has room to travel right
+      second.style.transform = `translateX(${d - second.scrollWidth / 2}px)`;
+    };
+    const request = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(slide);
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    slide();
   }
 
   // 7. Waitlist Form Processing & Progressive Enhancement

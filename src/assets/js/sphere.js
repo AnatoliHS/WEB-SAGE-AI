@@ -132,6 +132,30 @@
      rects: strands running round the edges of the given boxes
      scatter: particles flung far out (the explosion's end) */
 
+  // The point d along a box's outline, following its rounded corners (b.r), clockwise from the top
+  function outlinePoint(b, d) {
+    const r = Math.min(b.r || 0, b.w / 2, b.h / 2);
+    const sw = b.w - 2 * r;
+    const sh = b.h - 2 * r;
+    const q = (PI / 2) * r;
+    const arc = (cx, cy, a0, t) => {
+      const a = a0 + (t / (q || 1)) * (PI / 2);
+      return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+    };
+    if (d < sw) return [b.x + r + d, b.y];
+    if ((d -= sw) < q) return arc(b.x + b.w - r, b.y + r, -PI / 2, d);
+    if ((d -= q) < sh) return [b.x + b.w, b.y + r + d];
+    if ((d -= sh) < q) return arc(b.x + b.w - r, b.y + b.h - r, 0, d);
+    if ((d -= q) < sw) return [b.x + b.w - r - d, b.y + b.h];
+    if ((d -= sw) < q) return arc(b.x + r, b.y + b.h - r, PI / 2, d);
+    if ((d -= q) < sh) return [b.x, b.y + b.h - r - d];
+    return arc(b.x + r, b.y + r, PI, d - sh);
+  }
+  const outlineLength = (b) => {
+    const r = Math.min(b.r || 0, b.w / 2, b.h / 2);
+    return 2 * (b.w + b.h - 4 * r) + 2 * PI * r;
+  };
+
   function fillPose(pose, k, s, t, xs, ys, vw, vh) {
     if (pose.type === 'halo' || pose.type === 'halos') {
       const h = pose.type === 'halo' ? pose : pose.list[k % pose.list.length];
@@ -143,19 +167,11 @@
     } else if (pose.type === 'rects') {
       // A stretch of each box's outline, sliding round it
       const b = pose.list[k % pose.list.length];
-      const P = 2 * (b.w + b.h);
+      const P = outlineLength(b);
       const len = P * (0.12 + 0.2 * rand(k, 52));
       const start = rand(k, 51) * P + t * P * (0.04 + 0.04 * rand(k, 53));
       for (let i = 0; i < SAMPLES; i++) {
-        let d = (start + (i / (SAMPLES - 1)) * len) % P;
-        let x;
-        let y;
-        if (d < b.w) { x = b.x + d; y = b.y; }
-        else if ((d -= b.w) < b.h) { x = b.x + b.w; y = b.y + d; }
-        else if ((d -= b.h) < b.w) { x = b.x + b.w - d; y = b.y + b.h; }
-        else { d -= b.w; x = b.x; y = b.y + b.h - d; }
-        xs[i] = x;
-        ys[i] = y;
+        [xs[i], ys[i]] = outlinePoint(b, (start + (i / (SAMPLES - 1)) * len) % P);
       }
     } else {
       // Every particle somewhere of its own, so they fly in separately rather than as strands
@@ -169,11 +185,17 @@
     }
   }
 
-  // The demo's parts on screen (they move with CSS transitions, so they're measured every frame)
+  // The demo's parts on screen (they move with CSS transitions, so they're measured every frame;
+  // their corner radii don't change, so those are read once)
+  const radii = new Map();
+  const radiusOf = (el) => {
+    if (!radii.has(el)) radii.set(el, parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0);
+    return radii.get(el);
+  };
   function liveRects(stage) {
     const box = (el) => {
       const b = el.getBoundingClientRect();
-      return { x: b.left, y: b.top, w: b.width, h: b.height };
+      return { x: b.left, y: b.top, w: b.width, h: b.height, r: radiusOf(el) };
     };
     const one = (n) => box(stage.querySelector(`[data-ui="${n}"]`));
     const tiles = [...stage.querySelectorAll('[data-ui="tile"]')].map(box);
@@ -185,8 +207,8 @@
       S, dock: box(dock), frame: one('frame'), head: one('head'),
       cards: [card(0.05), card(0.71)], tiles,
       // The text bar in each tile (.ui-tile::after: 12% in from the left, 24% from the right,
-      // 18% up from the bottom, 11% tall): the blocks of text the Remix translates
-      bars: tiles.map((b) => ({ x: b.x + b.w * 0.12, y: b.y + b.h * 0.71, w: b.w * 0.64, h: b.h * 0.11 }))
+      // 18% up from the bottom, 11% tall, 4px corners): the blocks of text the Remix translates
+      bars: tiles.map((b) => ({ x: b.x + b.w * 0.12, y: b.y + b.h * 0.71, w: b.w * 0.64, h: b.h * 0.11, r: 4 }))
     };
   }
 
@@ -406,7 +428,8 @@
   }
 
   // The demo's strands, between two poses (seg from liveSegment); arriving from the scatter, or when
-  // the segment says particles, they fly as particles that turn back into strands as they land
+  // the segment says particles, they fly as particles that turn back into strands as they land.
+  // lineScale sizes the lines running round the app's boxes
   function drawLive(seg, t, vw, vh, color, lineScale) {
     ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
     ctx.strokeStyle = color;
@@ -418,6 +441,14 @@
     // separately instead of keeping their strand's shape, and the strands only re-form at the end
     const own = seg.particles;
     const arriving = scattered || own;
+    // Lines, heads and particles sized as for the hero halo when they make up a (small) halo
+    const R = (p) => (p.type === 'halo' ? p.R : p.type === 'halos' ? p.list[0].R : null);
+    const lineOf = (p) => (R(p) ? Math.min(1.4, Math.max(0.7, R(p) / 250)) : lineScale);
+    const dotOf = (p) => (R(p) ? Math.min(1.3, Math.max(0.55, R(p) / 200)) : 1);
+    const lineFrom = lineOf(seg.from);
+    const lineTo = lineOf(seg.to);
+    const dotFrom = dotOf(seg.from);
+    const dotTo = dotOf(seg.to);
 
     for (let k = 0; k < COUNT; k++) {
       const s = ring[k];
@@ -445,8 +476,9 @@
       }
 
       const dots = arriving ? 1 - clamp(((own ? seg.k : mk) - 0.9) / 0.1) : 0;
+      const dotScale = lerp(dotFrom, dotTo, mk);
       if (dots < 1) {
-        const width = s.width * lineScale;
+        const width = s.width * lerp(lineFrom, lineTo, mk);
         ctx.lineWidth = width;
         for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
           const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
@@ -469,7 +501,7 @@
           // From the scatter they fade in as they come; from strands on screen they're there already
           const pa = Math.min(1, 0.25 + s.alpha) * (0.3 + 0.7 * fade) * dots * (scattered ? mk : 1);
           if (pa < 0.01) continue;
-          const size = 0.8 + 1.4 * fade;
+          const size = (0.8 + 1.4 * fade) * dotScale;
           let x = xs[i];
           let y = ys[i];
           if (own) {

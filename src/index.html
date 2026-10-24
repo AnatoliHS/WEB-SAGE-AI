@@ -4,7 +4,6 @@ title: Tinker Click — Make your own apps by describing them
 description: Tell Tinker Click what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS and Linux. Join the waitlist at tinker.click.
 heroSphere: true
 intro: true
-bentoLens: true
 ---
 
 <!-- ========================================================
@@ -113,70 +112,50 @@ bentoLens: true
       </div>
     </div>
 
-    <!-- Bento: each frame has its own colour (--c), which tints the icon and title. With a mouse, a magnifier
-         circle wanders over the grid on a random path showing the frames flooded with their colour; on touch screens, the frame at the middle of the screen floods instead
-         (assets/js/bento-lens.js). Without the script, a frame floods on hover -->
-    <div class="bento-stage" data-bento-lens>
-    <div class="bento">
-      <article class="bento-cell bento-big" style="--c: #4a6bff">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>
-        <div class="bento-say" data-bento-say aria-label="Make me a game, in five languages"><span class="is-in" lang="en">Make me a game</span><span lang="de">Mach mir ein Spiel</span><span lang="fr">Fais-moi un jeu</span><span lang="zh">给我做个游戏</span><span lang="es">Hazme un juego</span></div>
-        <div>
-          <h3>Your language</h3>
-          <p>The whole app is translated, and commands work in your own language too.</p>
-        </div>
-      </article>
-      <article class="bento-cell" style="--c: #e24a12">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
-        <div>
-          <h3>One-click covers</h3>
-          <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
-        </div>
-      </article>
-      <article class="bento-cell" style="--c: #8f5cff">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg>
-        <div>
-          <h3>Your choice of server</h3>
-          <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
-        </div>
-      </article>
-      <article class="bento-cell" style="--c: #0e936c">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>
-        <div>
-          <h3>Works with your files</h3>
-          <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
-        </div>
-      </article>
-      <article class="bento-cell" style="--c: #e0457b">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-        <div>
-          <h3>Under the hood</h3>
-          <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
-        </div>
-      </article>
-      <article class="bento-cell bento-wide" style="--c: #b27a00">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <div class="bento-cmds" aria-hidden="true"><code>/discover</code><code>/status</code><code>/login</code></div>
-        <div>
-          <h3>Slash commands</h3>
-          <p>Type commands like /discover, /status and /login to move around faster.</p>
-        </div>
-      </article>
-      <article class="bento-cell bento-wide" style="--c: #0a91b5">
-        <span class="bento-fill" aria-hidden="true"></span>
-        <svg class="bento-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
-        <div>
-          <h3>Open source</h3>
-          <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
-        </div>
-      </article>
+    <!-- Who it's for and what they ask for, in two big rows that the scroll slides in opposite directions
+         (scripts.njk), each word followed by the logo mark; the features are listed underneath -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="tinker-mark" viewBox="0 0 64 64">
+        <g fill="#126cfd"><rect x="14.4" y="9.1" width="9.8" height="32.6" rx="2.2"/><rect x="3" y="20.5" width="32.6" height="9.8" rx="2.2"/></g>
+        <g fill="#ff5f00"><rect x="39.5" y="22.1" width="9.8" height="32.6" rx="2.2"/><rect x="28.1" y="33.5" width="32.6" height="9.8" rx="2.2"/></g>
+      </symbol>
+    </svg>
+    <div class="ticker" data-ticker aria-hidden="true">
+      {%- for row in [["Tinkerers", "Families", "Classrooms"], ["Make me a game", "Fais-moi un jeu", "给我做个游戏"]] %}
+      <div class="ticker-row{{ ' ticker-hollow' if loop.last }}">{% for pass in [0, 1, 2, 3] %}{% for word in row %}<span>{{ word }}<svg class="ticker-mark"><use href="#tinker-mark"/></svg></span>{% endfor %}{% endfor %}</div>
+      {%- endfor %}
     </div>
-    </div>
+
+    <ul class="feature-list">
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>Your language</h3>
+        <p>The whole app is translated, and commands work in your own language too.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>One-click covers</h3>
+        <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg>Your choice of server</h3>
+        <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>Works with your files</h3>
+        <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Under the hood</h3>
+        <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20 17 4"/></svg>Slash commands</h3>
+        <p>Type commands like /discover, /status and /login to move around faster.</p>
+      </li>
+      <li class="reveal">
+        <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>Open source</h3>
+        <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
+      </li>
+    </ul>
 
     {% include "component/platform-logos.njk" %}
     <dl class="stats stats-words platforms reveal">
