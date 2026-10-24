@@ -684,7 +684,7 @@ html.has-intro .hero-grid {
   grid-column: 4;
   justify-self: end;
   align-self: end;
-  width: var(--slot-w, 136px);
+  width: var(--slot-w, 200px);
   aspect-ratio: var(--slot-ratio, 1);
 }
 
@@ -1232,6 +1232,17 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   font-size: clamp(0.75rem, 1.6vw, 1.0625rem);
   white-space: nowrap;
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 12%, transparent);
+}
+
+/* The halo's spot above the step-1 prompt (which sits at 43%); sized by height so it stays round
+   whatever the stage's shape. The orb canvas draws there */
+.live-stage > .ui-orb {
+  left: 50%;
+  top: 6%;
+  height: 32%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .ui-caret {

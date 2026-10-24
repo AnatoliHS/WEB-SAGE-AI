@@ -17,11 +17,12 @@ bentoLens: true
     <div class="container stage-inner">
       <!-- The words are drawn on the canvas with the orb (assets/js/sphere.js); this is their text -->
       <h2 class="sr-only">Make it. Use it. Share it.</h2>
-      <div class="sphere-target" data-stage-target>
-        <canvas class="sphere-canvas" aria-hidden="true"></canvas>
-      </div>
+      <div class="sphere-target" data-stage-target></div>
     </div>
   </div>
+  <!-- Fixed over the viewport. Kept outside the sticky pin, which would otherwise hold it in its own
+       layer under later sections, where the orb also draws (Meet Tinker's demo) -->
+  <canvas class="sphere-canvas" aria-hidden="true"></canvas>
 </section>
 
 <!-- ========================================================
@@ -35,7 +36,9 @@ bentoLens: true
     </div>
 
     <!-- Live interface: an abstract app that assembles and evolves through Describe → Build → Remix → Share.
-         The steps below drive it (auto-advancing while on screen); blocks are positioned in % by the script. -->
+         It plays through the steps on its own once the orb's halo has gathered above the prompt; the steps
+         below jump to theirs. Blocks are positioned in % by the script, and the orb (assets/js/sphere.js)
+         works on them. -->
     <div class="live reveal" data-live>
       <div class="live-stage" aria-hidden="true">
         <div class="ui-ghost" data-ui="ghostL"></div>
@@ -48,6 +51,8 @@ bentoLens: true
         <div class="ui-tile" data-ui="tile"></div>
         <div class="ui-prompt" data-ui="prompt"><span data-ui="promptText"></span><span class="ui-caret"></span></div>
         <div class="ui-badge" data-ui="badge"></div>
+        <!-- Where the orb's particles gather back into the halo, above the prompt (assets/js/sphere.js) -->
+        <div class="ui-orb" data-orb-dock></div>
         <span class="live-counter" data-live-counter>01 / 04</span>
       </div>
 

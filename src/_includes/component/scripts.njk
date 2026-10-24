@@ -182,7 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive an abstract
-  //    app whose blocks are placed in % of the stage; it auto-advances every 3s while on screen.
+  //    app whose blocks are placed in % of the stage. Coming down the page it waits on step 1 while
+  //    the orb's particles gather above the prompt (sphere.js), then plays through the steps on its
+  //    own; scrolled back up out of view, it resets, so arriving always starts with the gathering.
   const live = document.querySelector('[data-live]');
   if (live) {
     const stage = live.querySelector('.live-stage');
@@ -206,20 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    let typing = null;
-    function type(text, animate) {
-      const out = one('promptText');
-      clearInterval(typing);
-      if (!animate || reduced) { out.textContent = text; return; }
-      out.textContent = '';
-      let n = 0;
-      typing = setInterval(() => {
-        out.textContent = text.slice(0, ++n);
-        if (n >= text.length) clearInterval(typing);
-      }, 45);
-    }
-
-    function layout(step, animate) {
+    function layout(step) {
       const F = FRAMES[step];
       const app = FRAMES[Math.max(step, 1)];
       const shared = step === 3;
@@ -234,34 +223,68 @@ document.addEventListener('DOMContentLoaded', () => {
       put(one('badge'), shared ? rel(F, [0.15, 1.04, 0.7, 0.08]) : rel(F, [0.74, -0.06, 0.24, 0.07]), step >= 2 ? 1 : 0, step >= 2 ? 0.4 : 0);
       one('badge').textContent = shared ? '✓ Public' : 'DE';
       one('headText').textContent = HEAD_TEXT[step];
-      type(PROMPT_TEXT[step], animate);
       counter.textContent = `0${step + 1} / 0${steps.length}`;
       [steps, dots].forEach((list) => list.forEach((el, i) => (i === step ? el.setAttribute('aria-current', 'step') : el.removeAttribute('aria-current'))));
     }
 
-    let current = 0, timer = null, visible = false, started = false;
+    // Shared with the orb (sphere.js) on window.TinkerLive: the step (0–3), how far through it (0–1),
+    // gather (0 → 1 as the halo's spot above the prompt comes up the screen) and looped (back on
+    // step 1 from another step, so the halo flies back up rather than gathering)
+    const STEP_MS = 4500;
+    const dock = stage.querySelector('[data-orb-dock]');
+    const state = { step: 0, local: 0, gather: 0, looped: false };
+    window.TinkerLive = { state, stage };
+    const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+    let current = 0, stepStart = 0, frame = 0;
+
     function go(step) {
-      current = step;
-      layout(step, true);
-      clearTimeout(timer);
-      if (visible && !reduced) timer = setTimeout(() => go((current + 1) % steps.length), 3000);
+      const next = (step + steps.length) % steps.length;
+      state.looped = next === 0 && current !== 0;
+      current = next;
+      stepStart = performance.now();
+      layout(current);
     }
+
+    function tick(now) {
+      frame = requestAnimationFrame(tick);
+      const d = dock.getBoundingClientRect();
+      state.gather = clamp01((window.innerHeight * 1.05 - (d.top + d.height / 2)) / (window.innerHeight * 0.45));
+      // Hold on step 1 until the halo has gathered, then play on through the steps
+      if (state.gather < 1 && current === 0 && !state.looped) stepStart = now;
+      state.local = clamp01((now - stepStart) / STEP_MS);
+      if (state.local >= 1) go(current + 1);
+      state.step = current;
+      // The prompt types out over the start of each step
+      const text = PROMPT_TEXT[current];
+      one('promptText').textContent = text.slice(0, Math.round(text.length * (reduced ? 1 : clamp01((state.local - 0.1) / 0.3))));
+    }
+
     steps.forEach((el, i) => el.addEventListener('click', () => go(i)));
     // Tapping the animation moves on to the next step (handy on phones, where only one step shows)
-    stage.addEventListener('click', () => go((current + 1) % steps.length));
+    stage.addEventListener('click', () => go(current + 1));
     dots.forEach((el, i) => el.addEventListener('click', () => go(i)));
-    live.querySelector('[data-live-prev]').addEventListener('click', () => go((current + steps.length - 1) % steps.length));
-    live.querySelector('[data-live-next]').addEventListener('click', () => go((current + 1) % steps.length));
-    layout(0, false);
+    live.querySelector('[data-live-prev]').addEventListener('click', () => go(current - 1));
+    live.querySelector('[data-live-next]').addEventListener('click', () => go(current + 1));
+    go(0);
 
     if ('IntersectionObserver' in window) {
+      let pausedAt = performance.now();
       new IntersectionObserver(([e]) => {
-        visible = e.isIntersecting;
-        if (!visible) { clearTimeout(timer); return; }
-        // Replay the typing the first time it comes into view, then carry on from where it was
-        go(started ? current : 0);
-        started = true;
-      }, { threshold: 0.35 }).observe(live);
+        if (e.isIntersecting) {
+          // Carry on from where it paused
+          stepStart += performance.now() - pausedAt;
+          frame = requestAnimationFrame(tick);
+          return;
+        }
+        cancelAnimationFrame(frame);
+        pausedAt = performance.now();
+        // Gone off the bottom (scrolled back up): start over, so arriving again begins with the gathering
+        if (e.boundingClientRect.top > 0) {
+          state.gather = 0;
+          current = 0;
+          go(0);
+        }
+      }).observe(live);
     }
   }
 

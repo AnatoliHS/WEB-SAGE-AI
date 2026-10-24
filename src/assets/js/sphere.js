@@ -1,11 +1,22 @@
-// Thinking sphere: a rotating point cloud that grows from the hero slot into the stage, then
-// carries "Make it. Use it. Share it." as a lens:
+// Thinking orb: a ring of slow, wavy light strands that grows from the hero slot into the stage,
+// then carries "Make it. Use it. Share it." as a lens:
+//   - in the hero it's a flat ring of comets (concept A in /concepts/orb/); on the way to the
+//     stage the comets move out to just beyond the lens edge and keep circling there in a band
+//     (concept B, Orbit, in /concepts/orb-stage/), so nothing is ever drawn across the word
 //   - the three lines are set huge behind the orb and glide in one after another with the scroll
 //     (through a spring, so they ease rather than jump); the first slides in from the right as the
 //     orb lands. Inside the orb they're magnified and blue
-//   - the orb spins on its own clock; scrolling speeds the spin up, then it eases back
-//   - after the last line the words fade and the orb explodes into particles
-// Positions and progress come from assets/js/hero-stage.js.
+//   - the orb runs on its own clock: brisk in the hero, a slow drift once landed, and sped up by
+//     scrolling and by each line sliding in, easing back afterwards
+//   - after the last line the words fade and the strands break into particles that fly apart
+//   - further down, as the Meet Tinker demo comes up the screen, the particles fly back together
+//     into the hero halo above its prompt ([data-orb-dock]). Then, as the pinned demo steps through
+//     (concept in /concepts/orb-steps/), the halo builds the app: its strands run round the app
+//     window, header and tiles (Build), then round the blocks of text being translated (Remix),
+//     then fly in straight lines into the two other people's cards as small halos (Share). It
+//     takes each step's colour
+// Positions and progress come from assets/js/hero-stage.js, and for the demo from window.TinkerLive
+// (scripts.njk).
 (() => {
   const api = window.TinkerStage;
   const canvas = document.querySelector('.sphere-canvas');
@@ -13,17 +24,22 @@
 
   const ctx = canvas.getContext('2d');
   const pin = api.stage.querySelector('.stage-pin') || api.stage;
+  const dock = document.querySelector('[data-orb-dock]');
   const root = document.documentElement;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Share', ' it.']];
   const LINES_END = 0.74; // the lines take the first 74% of the pinned scroll, the explosion the rest
-  const BASE_SPIN = 0.35; // rad/s when nobody is scrolling
+  const HERO_SPEED = 1.4; // the orb's clock rate in the hero when nobody is scrolling
+  const LANDED_SPEED = 0.45; // ...and once it has landed in the stage
 
-  const N = 1536;
   const PI = Math.PI;
-  const TILT_COS = Math.cos(0.42);
-  const TILT_SIN = Math.sin(0.42);
+  const TAU = PI * 2;
+  const COUNT = 150; // strands
+  const SAMPLES = 72; // points along each strand
+  const CHUNK = 6; // points per stroke; each stroke gets its own alpha so the ends can fade
+  const DOT_STEP = 4; // every 4th point becomes a particle in the explosion
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const lerp = (a, b, k) => a + (b - a) * k;
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -31,18 +47,182 @@
     const v = Math.sin(i * 91.7 + s * 47.3) * 43758.5453;
     return v - Math.floor(v);
   };
+  // Seeded random so the strands match the concepts pages exactly
+  const seeded = (seed) => () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  // Every strand is a comet: it fades toward the tail and has a bright head
+  const cometFade = (u) => Math.pow(u, 1.7);
 
-  // Evenly spread points on the unit sphere
-  const points = Array.from({ length: N }, (_, i) => {
-    const y = 1 - ((i + 0.5) / N) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const a = i * PI * (3 - Math.sqrt(5));
-    return [Math.cos(a) * r, y, Math.sin(a) * r];
-  });
-  // Each point's flight when the orb explodes: direction, distance and a little stagger
-  const burstAngle = points.map((_, i) => rand(i, 2) * PI * 2);
-  const burstReach = points.map((_, i) => 0.25 + rand(i, 3) * 0.5);
-  const burstDelay = points.map((_, i) => rand(i, 7) * 0.3);
+  /* ----- The hero ring: radii and amounts in units of the orb's radius, speeds per second ----- */
+
+  const RING = { seed: 23, radius: [0.42, 0.98], length: [1.2, 3.2], drift: [0.22, 0.55], wobble: 0.065, wobbleSpeed: 0.3, jitter: 0.09, squash: [0.78, 1], alpha: [0.08, 0.9] };
+
+  const ring = (() => {
+    const rnd = seeded(RING.seed);
+    const between = ([a, b]) => a + (b - a) * rnd();
+    const sign = () => (rnd() < 0.5 ? -1 : 1);
+    return Array.from({ length: COUNT }, () => {
+      // Most strands faint, a few bright
+      const bright = Math.pow(rnd(), 2.4);
+      const s = {
+        r0: between(RING.radius),
+        a0: rnd() * TAU,
+        len: between(RING.length),
+        drift: between(RING.drift),
+        waves: [2, 3, 5].map((n) => ({
+          n,
+          amp: (RING.wobble * (0.3 + 0.7 * rnd())) / (n * 0.5),
+          phase: rnd() * TAU,
+          speed: RING.wobbleSpeed * (0.5 + 0.5 * rnd()) * sign()
+        })),
+        ox: (rnd() * 2 - 1) * RING.jitter,
+        oy: (rnd() * 2 - 1) * RING.jitter,
+        jp: rnd() * TAU,
+        js: 0.1 + 0.2 * rnd(),
+        squash: between(RING.squash),
+        turn: rnd() * TAU
+      };
+      // The random stream above must stay in this order to match the concepts pages
+      rnd(); rnd();
+      s.alpha = RING.alpha[0] + (RING.alpha[1] - RING.alpha[0]) * bright;
+      s.width = 0.6 + 0.9 * bright;
+      return s;
+    });
+  })();
+
+  // A strand's points in the hero ring at time t, in orb units
+  function traceRing(s, t, xs, ys) {
+    const ox = s.ox + Math.sin(t * s.js + s.jp) * RING.jitter * 0.5;
+    const oy = s.oy + Math.cos(t * s.js * 0.8 + s.jp) * RING.jitter * 0.5;
+    const turn = s.turn + t * 0.015;
+    const ct = Math.cos(turn);
+    const st = Math.sin(turn);
+    for (let i = 0; i < SAMPLES; i++) {
+      const th = s.a0 + s.drift * t + (i / (SAMPLES - 1)) * s.len;
+      let r = s.r0;
+      for (const w of s.waves) r += w.amp * Math.sin(w.n * th + w.phase + w.speed * t);
+      const ex = Math.cos(th) * r;
+      const ey = Math.sin(th) * r * s.squash;
+      xs[i] = ex * ct - ey * st + ox;
+      ys[i] = ex * st + ey * ct + oy;
+    }
+  }
+
+  // ...and in the landed orbit: a band of comets just outside the lens edge (1.03)
+  function traceOrbit(k, s, t, xs, ys) {
+    const r0 = 1.04 + Math.pow(rand(k, 21), 1.5) * 0.2;
+    const len = 0.8 + rand(k, 22) * 1.6;
+    const a0 = s.a0 + t * (0.3 + rand(k, 23) * 0.35);
+    const ph = rand(k, 24) * TAU;
+    for (let i = 0; i < SAMPLES; i++) {
+      const th = a0 + (i / (SAMPLES - 1)) * len;
+      const r = r0 + 0.025 * Math.sin(2 * th + t * 0.5 + ph);
+      xs[i] = Math.cos(th) * r;
+      ys[i] = Math.sin(th) * r;
+    }
+  }
+
+  /* ----- Meet Tinker: where every strand is in each step of the demo, in screen pixels -----
+     halo: the hero ring at x, y, radius R
+     halos: several smaller rings, strands shared out between them
+     rects: strands running round the edges of the given boxes
+     scatter: particles flung far out (the explosion's end) */
+
+  function fillPose(pose, k, s, t, xs, ys, vw, vh) {
+    if (pose.type === 'halo' || pose.type === 'halos') {
+      const h = pose.type === 'halo' ? pose : pose.list[k % pose.list.length];
+      traceRing(s, t, xs, ys);
+      for (let i = 0; i < SAMPLES; i++) {
+        xs[i] = h.x + xs[i] * h.R;
+        ys[i] = h.y + ys[i] * h.R;
+      }
+    } else if (pose.type === 'rects') {
+      // A stretch of each box's outline, sliding round it
+      const b = pose.list[k % pose.list.length];
+      const P = 2 * (b.w + b.h);
+      const len = P * (0.12 + 0.2 * rand(k, 52));
+      const start = rand(k, 51) * P + t * P * (0.04 + 0.04 * rand(k, 53));
+      for (let i = 0; i < SAMPLES; i++) {
+        let d = (start + (i / (SAMPLES - 1)) * len) % P;
+        let x;
+        let y;
+        if (d < b.w) { x = b.x + d; y = b.y; }
+        else if ((d -= b.w) < b.h) { x = b.x + b.w; y = b.y + d; }
+        else if ((d -= b.h) < b.w) { x = b.x + b.w - d; y = b.y + b.h; }
+        else { d -= b.w; x = b.x; y = b.y + b.h - d; }
+        xs[i] = x;
+        ys[i] = y;
+      }
+    } else {
+      // Every particle somewhere of its own, so they fly in separately rather than as strands
+      for (let i = 0; i < SAMPLES; i++) {
+        const d = k * SAMPLES + i;
+        const a = rand(d, 61) * TAU;
+        const dist = Math.max(vw, vh) * (0.3 + 0.7 * rand(d, 62));
+        xs[i] = vw / 2 + Math.cos(a) * dist;
+        ys[i] = vh / 2 + Math.sin(a) * dist;
+      }
+    }
+  }
+
+  // The demo's parts on screen (they move with CSS transitions, so they're measured every frame)
+  function liveRects(stage) {
+    const box = (el) => {
+      const b = el.getBoundingClientRect();
+      return { x: b.left, y: b.top, w: b.width, h: b.height };
+    };
+    const one = (n) => box(stage.querySelector(`[data-ui="${n}"]`));
+    const tiles = [...stage.querySelectorAll('[data-ui="tile"]')].map(box);
+    const S = box(stage);
+    // The two other people's cards where Share puts them (% of the stage, as in scripts.njk). Fixed
+    // rather than measured, so the halos in them stay put while the cards slide away afterwards
+    const card = (x) => ({ x: S.x + S.w * x, y: S.y + S.h * 0.18, w: S.w * 0.24, h: S.h * 0.62 });
+    return {
+      S, dock: box(dock), frame: one('frame'), head: one('head'),
+      cards: [card(0.05), card(0.71)], tiles,
+      // The text bar in each tile (.ui-tile::after: 12% in from the left, 24% from the right,
+      // 18% up from the bottom, 11% tall): the blocks of text the Remix translates
+      bars: tiles.map((b) => ({ x: b.x + b.w * 0.12, y: b.y + b.h * 0.71, w: b.w * 0.64, h: b.h * 0.11 }))
+    };
+  }
+
+  // Each step's last pose; a step's strands travel there from the previous step's over its first part.
+  // stagger: strands set off one after another; straight: they fly as straight streaks
+  const LIVE_STEPS = [
+    { at: 0, pose: (r) => ({ type: 'halo', x: r.dock.x + r.dock.w / 2, y: r.dock.y + r.dock.h / 2, R: (r.dock.h / 2) * 0.84 }) },
+    { at: 0.35, stagger: true, pose: (r) => ({ type: 'rects', list: [r.frame, r.frame, r.head, ...r.tiles] }) },
+    { at: 0.35, stagger: true, pose: (r) => ({ type: 'rects', list: r.bars }) },
+    {
+      at: 0.5, stagger: true, straight: true,
+      pose: (r) => ({ type: 'halos', list: r.cards.map((g) => ({ x: g.x + g.w / 2, y: g.y + g.h * 0.32, R: g.w * 0.3 })) })
+    }
+  ];
+  const LIVE_SPEED = [HERO_SPEED, 2.2, 1.6, HERO_SPEED];
+
+  // Where the demo's strands are going: from which pose to which, and how far. Step 0 is the
+  // particles gathering as the demo comes up the screen, or, when the demo has come back round to
+  // it, the previous step's strands breaking into particles that gather the same way (particles), so
+  // the halo forms where it always does rather than sliding there
+  function liveSegment(live, r) {
+    const s = live.step;
+    if (s === 0 && !live.looped) return { from: { type: 'scatter' }, to: LIVE_STEPS[0].pose(r), k: live.gather, stagger: true };
+    const key = LIVE_STEPS[s];
+    const back = s === 0;
+    return {
+      from: LIVE_STEPS[(s + 3) % 4].pose(r), to: key.pose(r), k: clamp(live.local / (back ? 0.35 : key.at)),
+      stagger: true, straight: key.straight, particles: back
+    };
+  }
+
+  // Each particle's flight when the orb explodes: direction, distance and a little stagger
+  const DOTS = Math.ceil(SAMPLES / DOT_STEP);
+  const burstAngle = Array.from({ length: COUNT * DOTS }, (_, i) => rand(i, 2) * TAU);
+  const burstReach = Array.from({ length: COUNT * DOTS }, (_, i) => 0.25 + rand(i, 3) * 0.5);
+  const burstDelay = Array.from({ length: COUNT * DOTS }, (_, i) => rand(i, 7) * 0.3);
 
   // Continuous line index 0 → 2: each line holds for the first 60% of its third, then moves on
   function holdStep(q) {
@@ -57,12 +237,22 @@
   let dpr = 1;
   let state = api.state;
 
+  const toRgb = (c) => {
+    const m = /^#?([0-9a-f]{6})$/i.exec(c.trim());
+    const n = m ? parseInt(m[1], 16) : 0x7590ff;
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+
   function readColors() {
     const cs = getComputedStyle(root);
     colors = {
       ink: cs.getPropertyValue('--ink').trim() || '#121212',
+      // Meet Tinker's step colours, as RGB so the halo can blend from one to the next
+      steps: [1, 2, 3, 4].map((i) => toRgb(cs.getPropertyValue(`--node-${i}`))),
       bg: cs.getPropertyValue('--bg').trim() || '#eee9e2',
-      accent: cs.getPropertyValue('--accent').trim() || '#2b4dff'
+      accent: cs.getPropertyValue('--accent').trim() || '#2b4dff',
+      // Light strands on a dark page add up where they cross; dark ones on a light page can't
+      dark: darkQuery.matches
     };
   }
 
@@ -76,13 +266,16 @@
 
   /* ----- Motion state ----- */
 
-  let spin = 0;
-  let spinVel = BASE_SPIN;
+  let clock = 20; // start mid-motion so the strands are already spread around the ring
+  let speed = HERO_SPEED;
   let rot = -1; // -1: the first line waiting off-screen to the right
+  let liveColor = null; // the demo halo's colour, easing to each step's
   let lastY = window.scrollY;
   let lastNow = null;
 
-  function drawWords(vw, vh, cy, R, cx, alpha, lensAlpha) {
+  // drawOrb paints the strands between the big words and the lens backdrop, so the backdrop keeps
+  // the window clean and the magnified words sit on top
+  function drawWords(vw, vh, cy, R, cx, alpha, lensAlpha, drawOrb) {
     ctx.font = '600 100px Geist, -apple-system, BlinkMacSystemFont, sans-serif';
     const widest = Math.max(...LINES.map((l) => ctx.measureText(l[0] + l[1]).width));
     const size = Math.min(vh * 0.42, (100 * vw * 0.86) / widest);
@@ -112,6 +305,8 @@
     ctx.globalAlpha = alpha;
     paint(colors.ink);
 
+    drawOrb();
+
     // The lens: inside the orb the words are magnified and blue
     ctx.save();
     ctx.beginPath();
@@ -128,17 +323,194 @@
     ctx.restore();
   }
 
+  // Scratch buffers for one strand in each look, and the blend of the two
+  const rx = new Float32Array(SAMPLES);
+  const ry = new Float32Array(SAMPLES);
+  const ox = new Float32Array(SAMPLES);
+  const oy = new Float32Array(SAMPLES);
+  const xs = new Float32Array(SAMPLES);
+  const ys = new Float32Array(SAMPLES);
+
+  // m: 0 the hero ring → 1 the landed orbit. burst: 0 → 1 as the strands fly apart as particles
+  function drawOrb(cx, cy, R, t, m, burst, reach) {
+    const lineAlpha = 1 - clamp(burst / 0.15);
+    const dotAlpha = clamp(burst / 0.15);
+    const lineScale = Math.min(1.4, Math.max(0.7, R / 250));
+    const dotScale = Math.min(1.3, Math.max(0.55, R / 200));
+
+    // A soft glow behind the ring, on dark pages only
+    if (colors.dark && lineAlpha > 0) {
+      const halo = ctx.createRadialGradient(cx, cy, R * 0.3, cx, cy, R * 1.4);
+      halo.addColorStop(0, 'rgba(255,255,255,0)');
+      halo.addColorStop(lerp(0.5, 0.6, m), `rgba(255,255,255,${0.045 * lineAlpha})`);
+      halo.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = halo;
+      ctx.fillRect(cx - R * 1.5, cy - R * 1.5, R * 3, R * 3);
+    }
+
+    ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+    ctx.strokeStyle = colors.ink;
+    ctx.fillStyle = colors.ink;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    for (let k = 0; k < COUNT; k++) {
+      const s = ring[k];
+      if (m < 1) traceRing(s, t, rx, ry);
+      if (m > 0) traceOrbit(k, s, t, ox, oy);
+      for (let i = 0; i < SAMPLES; i++) {
+        xs[i] = cx + lerp(rx[i], ox[i], m) * R;
+        ys[i] = cy + lerp(ry[i], oy[i], m) * R;
+      }
+
+      if (lineAlpha > 0) {
+        const width = s.width * lineScale;
+        ctx.lineWidth = width;
+        for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
+          const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
+          const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * lineAlpha;
+          if (al < 0.004) continue;
+          ctx.globalAlpha = al;
+          ctx.beginPath();
+          ctx.moveTo(xs[c], ys[c]);
+          for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
+          ctx.stroke();
+        }
+        const i = SAMPLES - 1;
+        ctx.globalAlpha = Math.min(1, s.alpha * 1.2) * lineAlpha;
+        ctx.beginPath();
+        ctx.arc(xs[i], ys[i], width * 1.1, 0, TAU);
+        ctx.fill();
+      }
+
+      if (dotAlpha > 0) {
+        for (let i = 0, d = k * DOTS; i < SAMPLES; i += DOT_STEP, d++) {
+          const fade = cometFade(i / (SAMPLES - 1));
+          const fly = easeInOut(clamp(burst * 1.3 - burstDelay[d]));
+          const pa = Math.min(1, 0.25 + s.alpha) * (0.3 + 0.7 * fade) * dotAlpha * (1 - fly);
+          if (pa < 0.01) continue;
+          const dist = fly * reach * burstReach[d];
+          const size = (0.8 + 1.4 * fade) * dotScale;
+          ctx.globalAlpha = pa;
+          ctx.fillRect(
+            xs[i] + Math.cos(burstAngle[d]) * dist - size / 2,
+            ys[i] + Math.sin(burstAngle[d]) * dist - size / 2,
+            size, size
+          );
+        }
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
+  // The demo's strands, between two poses (seg from liveSegment); arriving from the scatter, or when
+  // the segment says particles, they fly as particles that turn back into strands as they land
+  function drawLive(seg, t, vw, vh, color, lineScale) {
+    ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const scattered = seg.from.type === 'scatter';
+    // Breaking strands into particles: each particle sets off on its own, so they stream across
+    // separately instead of keeping their strand's shape, and the strands only re-form at the end
+    const own = seg.particles;
+    const arriving = scattered || own;
+
+    for (let k = 0; k < COUNT; k++) {
+      const s = ring[k];
+      const mk = seg.stagger ? easeInOut(clamp(seg.k * 1.35 - rand(k, 9) * 0.35)) : easeInOut(seg.k);
+      if (scattered && mk <= 0) continue;
+      if (mk < 1 || (own && seg.k < 1)) fillPose(seg.from, k, s, t, rx, ry, vw, vh);
+      if (mk > 0 || own) fillPose(seg.to, k, s, t, ox, oy, vw, vh);
+      // Arriving particles home in fast and then settle, so they sit on the halo before joining up
+      const mp = arriving ? 1 - Math.pow(1 - mk, 3) : mk;
+      for (let i = 0; i < SAMPLES; i++) {
+        xs[i] = lerp(rx[i], ox[i], mp);
+        ys[i] = lerp(ry[i], oy[i], mp);
+      }
+      // Straight flight: in mid-air the strand straightens into a streak running along the line
+      // from its head's start to its head's landing spot, curling back into a loop as it lands
+      if (seg.straight && mk > 0 && mk < 1) {
+        const flight = clamp(Math.sin(PI * mk) * 2.5);
+        const last = SAMPLES - 1;
+        const tail = 0.12 + 0.1 * rand(k, 71); // streak length, as a share of the trip
+        for (let i = 0; i < SAMPLES; i++) {
+          const at = clamp(mk - tail * (1 - i / last));
+          xs[i] = lerp(xs[i], lerp(rx[last], ox[last], at), flight);
+          ys[i] = lerp(ys[i], lerp(ry[last], oy[last], at), flight);
+        }
+      }
+
+      const dots = arriving ? 1 - clamp(((own ? seg.k : mk) - 0.9) / 0.1) : 0;
+      if (dots < 1) {
+        const width = s.width * lineScale;
+        ctx.lineWidth = width;
+        for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
+          const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
+          const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * (1 - dots);
+          if (al < 0.004) continue;
+          ctx.globalAlpha = al;
+          ctx.beginPath();
+          ctx.moveTo(xs[c], ys[c]);
+          for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = Math.min(1, s.alpha * 1.2) * (1 - dots);
+        ctx.beginPath();
+        ctx.arc(xs[SAMPLES - 1], ys[SAMPLES - 1], width * 1.1, 0, TAU);
+        ctx.fill();
+      }
+      if (dots > 0) {
+        for (let i = 0; i < SAMPLES; i += DOT_STEP) {
+          const fade = cometFade(i / (SAMPLES - 1));
+          // From the scatter they fade in as they come; from strands on screen they're there already
+          const pa = Math.min(1, 0.25 + s.alpha) * (0.3 + 0.7 * fade) * dots * (scattered ? mk : 1);
+          if (pa < 0.01) continue;
+          const size = 0.8 + 1.4 * fade;
+          let x = xs[i];
+          let y = ys[i];
+          if (own) {
+            const mi = 1 - Math.pow(1 - easeInOut(clamp(seg.k * 1.6 - rand(k * SAMPLES + i, 9) * 0.6)), 3);
+            x = lerp(rx[i], ox[i], mi);
+            y = lerp(ry[i], oy[i], mi);
+          }
+          ctx.globalAlpha = pa;
+          ctx.fillRect(x - size / 2, y - size / 2, size, size);
+        }
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function frame(now) {
     requestAnimationFrame(frame);
     const s = state.slotRect;
     const g = state.targetRect;
     if (!s || !g) return;
 
-    // Spin: a steady base speed, pushed faster by scrolling and easing back afterwards
     const dt = lastNow === null ? 0 : Math.min((now - lastNow) / 1000, 0.1);
     const screensPerSec = dt ? Math.abs(window.scrollY - lastY) / window.innerHeight / dt : 0;
     lastNow = now;
     lastY = window.scrollY;
+
+    const vw = canvas.clientWidth;
+    const vh = canvas.clientHeight;
+
+    // Meet Tinker: the demo's progress (scripts.njk) and where its strands are going, once the
+    // particles have started gathering and while the demo is anywhere near the screen
+    const live = window.TinkerLive;
+    const gather = live && dock ? live.state.gather : 0;
+    let liveRect = null;
+    let seg = null;
+    if (gather > 0) {
+      liveRect = liveRects(live.stage);
+      if (liveRect.S.y + liveRect.S.h > -vh && liveRect.S.y < vh * 2) seg = liveSegment(live.state, liveRect);
+    }
+    const liveStep = live ? live.state.step : 0;
 
     const q = state.flow;
     // The first line slides in as the orb lands, then the scroll steps through the lines
@@ -147,15 +519,24 @@
     if (reduced) {
       rot = target;
     } else {
-      const wantVel = BASE_SPIN + Math.min(5, screensPerSec * 8);
-      spinVel += (wantVel - spinVel) * (1 - Math.exp(-dt * 3));
-      spin += spinVel * dt;
+      const prevRot = rot;
       rot += (target - rot) * (1 - Math.exp(-dt * 5));
+      const slide = dt ? Math.abs(rot - prevRot) / dt : 0; // lines per second
+
+      // Clock: brisk in the hero, a slow drift once landed, then each demo step's pace once
+      // gathered; scrolling (less so in the demo, where scrolling is how it moves on), each line
+      // sliding in and strands flying between the demo's poses push it faster, and it eases back
+      // once things are still
+      const flying = seg && liveStep > 0 && seg.k > 0 && seg.k < 1 ? 3 * Math.sin(PI * seg.k) : 0;
+      const wantSpeed = lerp(lerp(HERO_SPEED, LANDED_SPEED, state.eased), LIVE_SPEED[liveStep], gather)
+        + Math.min(10, screensPerSec * 16) * (1 - 0.7 * gather)
+        + Math.min(6, slide * 8)
+        + flying;
+      speed += (wantSpeed - speed) * (1 - Math.exp(-dt * 3));
+      clock += speed * dt;
     }
 
     const isCompact = api.stage.classList.contains('is-compact');
-    const vw = canvas.clientWidth;
-    const vh = canvas.clientHeight;
     if (canvas.width !== Math.round(vw * dpr) || canvas.height !== Math.round(vh * dpr)) resize();
     // Clear the whole buffer, not just the visible part, so nothing from an earlier frame lingers
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -181,55 +562,33 @@
       cy = lerp(s.top + s.height / 2, g.top + g.height / 2, k);
       R = lerp(s.width / 2, g.width / 2, k) * 0.84;
     }
-    if (cy + R < -vh || cy - R > vh * 2) return;
-
-    const t = reduced ? 0 : now / 1000;
+    const reach = Math.max(vw, vh);
     const outro = clamp((q - LINES_END) / (1 - LINES_END));
     const burst = clamp((outro - 0.1) / 0.9);
     const textAlpha = 1 - clamp(outro / 0.3);
 
-    if (entry > 0 && textAlpha > 0.001) drawWords(vw, vh, cy, R, cx, textAlpha, entry * (1 - burst));
-
-    // The orb (and, at the end, its particles flying apart)
-    const cosY = Math.cos(spin);
-    const sinY = Math.sin(spin);
-    const dotScale = Math.min(1.3, Math.max(0.55, R / 200));
-    const reach = Math.max(vw, vh);
-    ctx.fillStyle = colors.ink;
-    for (let i = 0; i < N; i++) {
-      const [px, py, pz] = points[i];
-      const x1 = px * cosY - pz * sinY;
-      const z1 = px * sinY + pz * cosY;
-      const y2 = py * TILT_COS - z1 * TILT_SIN;
-      const z2 = py * TILT_SIN + z1 * TILT_COS;
-
-      // Slow surface ripple: the "thinking"
-      const wave = 1 + 0.04 * Math.sin(py * 5 + t * 1.8) * Math.cos(x1 * 4 - t * 1.2);
-      const scale = R * wave * (1 + z2 * 0.1);
-      const depth = (z2 + 1) / 2;
-      let x = cx + x1 * scale;
-      let y = cy + y2 * scale;
-      let alpha = Math.min(1, 0.1 + 0.75 * depth * depth) * 0.9;
-
-      if (burst > 0) {
-        const fly = easeInOut(clamp(burst * 1.3 - burstDelay[i]));
-        const d = fly * reach * burstReach[i];
-        x += Math.cos(burstAngle[i]) * d;
-        y += Math.sin(burstAngle[i]) * d;
-        alpha *= 1 - fly;
-        if (alpha < 0.01) continue;
-      }
-
-      const size = (0.8 + 1.6 * depth) * dotScale;
-      ctx.globalAlpha = alpha;
-      ctx.fillRect(x - size / 2, y - size / 2, size, size);
+    // The orb (and, at the end, its particles flying apart). It moves out into the orbit on the way
+    if (burst < 1 && cy + R > -vh && cy - R < vh * 2) {
+      const orb = () => drawOrb(cx, cy, R, clock, state.eased, burst, reach);
+      if (entry > 0 && textAlpha > 0.001) drawWords(vw, vh, cy, R, cx, textAlpha, entry * (1 - burst), orb);
+      else orb();
     }
-    ctx.globalAlpha = 1;
+
+    // Meet Tinker: the particles gathering into the halo above the prompt, then the halo building,
+    // remixing and sharing the app, in the step's colour
+    if (seg) {
+      const want = colors.steps[liveStep];
+      liveColor = liveColor
+        ? liveColor.map((c, i) => c + (want[i] - c) * (reduced ? 1 : 1 - Math.exp(-dt * 3)))
+        : want.slice();
+      const color = `rgb(${liveColor.map(Math.round).join(',')})`;
+      drawLive(seg, clock, vw, vh, color, Math.min(1.2, Math.max(0.7, liveRect.S.h / 500)));
+    }
   }
 
   readColors();
   resize();
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+  darkQuery.addEventListener('change', readColors);
   window.addEventListener('resize', resize);
   api.on((s) => { state = s; });
   canvas.classList.add('is-ready');

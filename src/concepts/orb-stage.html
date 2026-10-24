@@ -1,0 +1,574 @@
+---
+layout: policy.njk
+title: Orb stage concepts — Tinker
+description: Five ways for the hero halo to land behind "Make it. Use it. Share it.", side by side.
+noindex: true
+permalink: /concepts/orb-stage/
+---
+
+{% set variants = [
+  { id: "a", key: "rim", name: "Rim", text: "The halo keeps its identity: as it lands, the strands slide out to the edge and settle into a calm, thin ring hugging the lens. Nothing crosses the window, so the magnified word sits on a clean field with the ring as its frame.", tags: ["Clean window", "Calm", "Halo stays a ring"] },
+  { id: "b", key: "orbit", name: "Orbit", text: "Like Rim, but the comets never stop: they keep circling just outside the lens in a dense band, with bright heads. The window stays clean while the edge still looks like it's thinking.", tags: ["Clean window", "Most alive", "Comets keep going"] },
+  { id: "c", key: "nest", name: "Nest", text: "The 3D gyre you have now, but blown up around the lens and cut out of its middle. The loops wrap the window from outside, a thin ring marks its edge, and nothing is drawn over the word.", tags: ["Keeps the 3D gyre", "Clean window", "Thin edge ring"] },
+  { id: "d", key: "eclipse", name: "Eclipse", text: "The lens turns into a solid blue disc with the word knocked out of it in the page colour, and the strands become a slow corona around the rim. The strongest contrast of the five, and very legible.", tags: ["Solid disc", "Inverted word", "Corona"] },
+  { id: "e", key: "signal", name: "Signal", text: "The ring unspools into long, wavy lines that stream sideways behind the whole line of text, like a signal. The lens is a clean window with a thin ring, and the lines step back while the words are up.", tags: ["Full width", "Lines behind the words", "Most different"] }
+] %}
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; list-style: none; }
+  .cx-jump a { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.875rem; transition: border-color .3s, color .3s; }
+  .cx-jump a:hover { border-color: var(--accent); color: var(--accent); }
+  .cx-jump b { color: var(--accent); font-weight: 600; }
+  .cx-concept { margin-top: clamp(72px, 10vw, 140px); scroll-margin-top: 24px; }
+  .cx-concept-head { display: grid; grid-template-columns: auto 1fr; gap: 20px var(--gutter); align-items: start; margin-bottom: 40px; }
+  .cx-letter { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1.5rem; font-weight: 500; }
+  .cx-concept-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .cx-concept-head p { margin-top: 8px; max-width: 64ch; color: var(--ink-2); }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* ---------- Stage: a mini viewport playing the hero → stage → explosion sequence ---------- */
+  .os-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+  .os-stage canvas { display: block; width: 100%; height: 100%; }
+  .os-controls { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+  .os-controls input { flex: 1; max-width: 420px; accent-color: var(--accent); }
+  .os-phase { min-width: 9em; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .os-stage { aspect-ratio: 4 / 5; }
+  }
+
+  /* ---------- Comparison ---------- */
+  .cx-compare { margin-top: clamp(80px, 11vw, 160px); scroll-margin-top: 24px; }
+  .cx-compare h2 { font-size: clamp(1.75rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.045em; line-height: 1.05; margin-bottom: 28px; }
+  .cx-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  .cx-table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 0.9375rem; }
+  .cx-table th, .cx-table td { padding: 14px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .cx-table thead th { font-size: 0.8125rem; font-weight: 500; color: var(--muted); }
+  .cx-table tbody th { font-weight: 500; white-space: nowrap; }
+  .cx-table tbody th b { color: var(--accent); margin-right: 6px; }
+  .cx-table tr:last-child > * { border-bottom: 0; }
+  .cx-dots { letter-spacing: 2px; color: var(--accent); white-space: nowrap; }
+  .cx-dots i { font-style: normal; color: var(--line); }
+  .cx-pick { margin-top: 28px; padding: 24px 28px; border-radius: var(--radius); background: var(--bg-raised); max-width: 820px; }
+  .cx-pick strong { color: var(--accent); }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concepts) Orb stage</span>
+  <h1>Five ways to land <span class="text-accent">behind the words.</span></h1>
+  <p>Every version starts from the same hero halo in the corner and ends with the same explosion. Only the middle changes: what the strands become once the orb has landed and "Make it. Use it. Share it." runs through the lens.</p>
+  <p>Each one plays on a loop. Drag its slider to scrub it like scrolling; dragging fast speeds the strands up, as scrolling does on the real page.</p>
+  <ul class="cx-jump">
+    {% for v in variants %}<li><a href="#concept-{{ v.id }}"><b>{{ v.id | upper }}</b> {{ v.name }}</a></li>
+    {% endfor %}<li><a href="#compare">Compare</a></li>
+  </ul>
+</header>
+
+{% for v in variants %}
+<!-- ===================== {{ v.id | upper }}. {{ v.name | upper }} ===================== -->
+<section class="cx-concept" id="concept-{{ v.id }}">
+  <div class="cx-concept-head">
+    <span class="cx-letter">{{ v.id | upper }}</span>
+    <div>
+      <h2>{{ v.name }}</h2>
+      <p>{{ v.text }}</p>
+      <ul class="cx-tags">{% for t in v.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="os-stage"><canvas data-os="{{ v.key }}"></canvas></div>
+  <div class="os-controls">
+    <input type="range" min="0" max="1000" value="0" aria-label="Scrub {{ v.name }}" data-os-scrub>
+    <span class="mono os-phase" data-os-phase>Hero</span>
+  </div>
+</section>
+{% endfor %}
+
+<!-- ===================== COMPARE ===================== -->
+<section class="cx-compare" id="compare">
+  <span class="eyebrow">(Compare)</span>
+  <h2>Side by side</h2>
+  <div class="cx-table-wrap">
+    <table class="cx-table">
+      <thead><tr><th>Concept</th><th>Word legibility</th><th>Calm</th><th>Feels like the halo</th><th>What crosses the word</th><th>Watch out for</th></tr></thead>
+      <tbody>
+        <tr><th><b>A</b>Rim</th><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●●●</span></td><td>Nothing</td><td>Quiet; scrolling is the only thing that livens it up</td></tr>
+        <tr><th><b>B</b>Orbit</th><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td><span class="cx-dots">●●●●●</span></td><td>Nothing</td><td>The bright heads pull the eye away from the word a little</td></tr>
+        <tr><th><b>C</b>Nest</th><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Nothing; loops cross the big outer letters</td><td>The loops are large, so they reach into the words beside the lens</td></tr>
+        <tr><th><b>D</b>Eclipse</th><td><span class="cx-dots">●●●●●</span></td><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td>Nothing</td><td>A big block of blue; the loudest moment on the page</td></tr>
+        <tr><th><b>E</b>Signal</th><td><span class="cx-dots">●●●●<i>●</i></span></td><td><span class="cx-dots">●●●<i>●●</i></span></td><td><span class="cx-dots">●●<i>●●●</i></span></td><td>Faint lines behind the outer letters</td><td>Loses the round orb, so the explosion starts from lines</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cx-pick"><strong>Recommendation: A, Rim.</strong> The problem before was strands drawn across the word; Rim fixes that at the root, because the hero halo simply opens up and becomes the lens's frame. It's the same object the visitor saw in the hero, now doing a job. If you want more energy, <strong>B</strong> is the same idea with the comets still running; if you want a bold moment, <strong>D</strong>.</p>
+</section>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const LINES = ['Make it.', 'Use it.', 'Share it.'];
+  const LINES_END = 0.74; // as on the real page: lines first, explosion after
+  const BASE_SPEED = 1.4;
+  const LOOP = 16; // seconds for one autoplay pass
+  const PI = Math.PI;
+  const TAU = PI * 2;
+  const COUNT = 150;
+  const SAMPLES = 72;
+  const CHUNK = 6;
+  const DOT_STEP = 4;
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const rand = (i, s) => {
+    const v = Math.sin(i * 91.7 + s * 47.3) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  const seeded = (seed) => () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const cometFade = (u) => Math.pow(u, 1.7);
+  const loopFade = (u) => Math.pow(Math.sin(PI * u), 0.9);
+
+  /* ----- The hero halo and the gyre, as on the real page ----- */
+
+  const RING = { seed: 23, radius: [0.42, 0.98], length: [1.2, 3.2], drift: [0.22, 0.55], sameWay: true, wobble: 0.065, wobbleSpeed: 0.3, jitter: 0.09, squash: [0.78, 1], width: 1, alpha: [0.08, 0.9] };
+  const GYRE = { seed: 47, radius: [0.6, 0.98], length: [3, 6.1], drift: [0.04, 0.12], wobble: 0.05, wobbleSpeed: 0.35, jitter: 0, squash: [1, 1], width: 1.1, alpha: [0.1, 0.85], tilt: true, spin: 0.12 };
+
+  function makeStrands(cfg) {
+    const rnd = seeded(cfg.seed);
+    const between = ([a, b]) => a + (b - a) * rnd();
+    const sign = () => (rnd() < 0.5 ? -1 : 1);
+    return Array.from({ length: COUNT }, () => {
+      const bright = Math.pow(rnd(), 2.4);
+      return {
+        r0: between(cfg.radius),
+        a0: rnd() * TAU,
+        len: between(cfg.length),
+        drift: between(cfg.drift) * (cfg.sameWay ? 1 : sign()),
+        waves: [2, 3, 5].map((n) => ({
+          n,
+          amp: (cfg.wobble * (0.3 + 0.7 * rnd())) / (n * 0.5),
+          phase: rnd() * TAU,
+          speed: cfg.wobbleSpeed * (0.5 + 0.5 * rnd()) * sign()
+        })),
+        ox: (rnd() * 2 - 1) * cfg.jitter,
+        oy: (rnd() * 2 - 1) * cfg.jitter,
+        jp: rnd() * TAU,
+        js: 0.1 + 0.2 * rnd(),
+        squash: between(cfg.squash),
+        turn: rnd() * TAU,
+        tiltX: 0.25 + rnd() * 1.1,
+        tiltY: rnd() * TAU,
+        alpha: cfg.alpha[0] + (cfg.alpha[1] - cfg.alpha[0]) * bright,
+        width: cfg.width * (0.6 + 0.9 * bright)
+      };
+    });
+  }
+  const ring = makeStrands(RING);
+  const gyre = makeStrands(GYRE);
+
+  function trace(cfg, s, t, xs, ys, fade) {
+    const ox = s.ox + Math.sin(t * s.js + s.jp) * cfg.jitter * 0.5;
+    const oy = s.oy + Math.cos(t * s.js * 0.8 + s.jp) * cfg.jitter * 0.5;
+    const turn = s.turn + t * 0.015;
+    const ct = Math.cos(turn);
+    const st = Math.sin(turn);
+    for (let i = 0; i < SAMPLES; i++) {
+      const u = i / (SAMPLES - 1);
+      const th = s.a0 + s.drift * t + u * s.len;
+      let r = s.r0;
+      for (const w of s.waves) r += w.amp * Math.sin(w.n * th + w.phase + w.speed * t);
+      const ex = Math.cos(th) * r;
+      const ey = Math.sin(th) * r * s.squash;
+      if (cfg.tilt) {
+        const y1 = ey * Math.cos(s.tiltX);
+        const z1 = ey * Math.sin(s.tiltX);
+        const yaw = s.tiltY + t * cfg.spin;
+        const x2 = ex * Math.cos(yaw) - z1 * Math.sin(yaw);
+        const z2 = ex * Math.sin(yaw) + z1 * Math.cos(yaw);
+        const y3 = y1 * 0.96 - z2 * 0.28;
+        const z3 = y1 * 0.28 + z2 * 0.96;
+        const k = 3.2 / (3.2 - z3);
+        const d = (z3 + 1) / 2;
+        xs[i] = x2 * k;
+        ys[i] = y3 * k;
+        fade[i] = loopFade(u) * (0.2 + 0.8 * d * d);
+      } else {
+        xs[i] = ex * ct - ey * st + ox;
+        ys[i] = ex * st + ey * ct + oy;
+        fade[i] = cometFade(u);
+      }
+    }
+  }
+
+  /* ----- What the strands become once landed (orb radius units, centred on the lens) -----
+     keep: strands that stay (the rest fade out on the way)
+     under: drawn under the lens backdrop, so nothing shows inside the window
+     behind: drawn before the words, so the big letters sit on top
+     ring: a thin line marking the lens edge
+     solid: the lens is a filled accent disc with the word knocked out
+     dim: strand strength while the words are up
+     heads: bright comet heads */
+  const LANDED = {
+    rim: {
+      keep: 120, under: true, width: 1.1, alpha: 1,
+      trace(k, s, t, xs, ys, fade) {
+        const dir = k % 2 ? 1 : -1;
+        const r0 = 1.0 + rand(k, 11) * 0.09;
+        const len = 1.2 + rand(k, 12) * 2.8;
+        const a0 = s.a0 + dir * t * (0.04 + rand(k, 13) * 0.07);
+        const ph = rand(k, 14) * TAU;
+        for (let i = 0; i < SAMPLES; i++) {
+          const u = i / (SAMPLES - 1);
+          const th = a0 + u * len;
+          const r = r0 + 0.014 * Math.sin(3 * th + t * 0.4 + ph) + 0.008 * Math.sin(5 * th - t * 0.3);
+          xs[i] = Math.cos(th) * r;
+          ys[i] = Math.sin(th) * r;
+          fade[i] = loopFade(u);
+        }
+      }
+    },
+    orbit: {
+      keep: COUNT, under: true, width: 1, alpha: 1, heads: true,
+      trace(k, s, t, xs, ys, fade) {
+        const r0 = 1.04 + Math.pow(rand(k, 21), 1.5) * 0.2;
+        const len = 0.8 + rand(k, 22) * 1.6;
+        const a0 = s.a0 + t * (0.3 + rand(k, 23) * 0.35);
+        const ph = rand(k, 24) * TAU;
+        for (let i = 0; i < SAMPLES; i++) {
+          const u = i / (SAMPLES - 1);
+          const th = a0 + u * len;
+          const r = r0 + 0.025 * Math.sin(2 * th + t * 0.5 + ph);
+          xs[i] = Math.cos(th) * r;
+          ys[i] = Math.sin(th) * r;
+          fade[i] = cometFade(u);
+        }
+      }
+    },
+    nest: {
+      keep: 64, under: true, ring: true, width: 1.1, alpha: 0.9,
+      trace(k, s, t, xs, ys, fade) {
+        trace(GYRE, gyre[k], t, xs, ys, fade);
+        for (let i = 0; i < SAMPLES; i++) {
+          xs[i] *= 1.55;
+          ys[i] *= 1.55;
+        }
+      },
+      alphaOf: (k) => gyre[k].alpha
+    },
+    eclipse: {
+      keep: COUNT, under: true, solid: true, width: 1.1, alpha: 1,
+      trace(k, s, t, xs, ys, fade) {
+        const a0 = s.a0 + t * 0.035 * (k % 2 ? 1 : -1);
+        const reach = (0.1 + 0.3 * Math.pow(rand(k, 31), 1.6)) * (0.75 + 0.25 * Math.sin(t * 0.9 + rand(k, 32) * TAU));
+        const curl = (rand(k, 33) - 0.5) * 0.9;
+        for (let i = 0; i < SAMPLES; i++) {
+          const u = i / (SAMPLES - 1);
+          const th = a0 + u * curl;
+          const r = 1.04 + u * reach;
+          xs[i] = Math.cos(th) * r;
+          ys[i] = Math.sin(th) * r;
+          fade[i] = Math.pow(1 - u, 1.4);
+        }
+      }
+    },
+    signal: {
+      keep: 90, behind: true, ring: true, width: 1, alpha: 0.9, dim: 0.45,
+      trace(k, s, t, xs, ys, fade, span) {
+        const y0 = (rand(k, 41) + rand(k, 42) - 1) * 1.1;
+        const len = span * (0.5 + 0.9 * rand(k, 43));
+        const loop = 2 * span + len;
+        const pos = ((rand(k, 44) * loop + t * (0.12 + 0.2 * rand(k, 45))) % loop) - span - len;
+        const p1 = rand(k, 46) * TAU;
+        const p2 = rand(k, 47) * TAU;
+        for (let i = 0; i < SAMPLES; i++) {
+          const u = i / (SAMPLES - 1);
+          const x = pos + u * len;
+          xs[i] = x;
+          ys[i] = y0 + 0.09 * Math.sin(x * 1.4 + t * 0.7 + p1) + 0.04 * Math.sin(x * 3.1 - t * 0.45 + p2);
+          fade[i] = loopFade(u);
+        }
+      }
+    }
+  };
+
+  // Each particle's flight when the orb explodes
+  const DOTS = Math.ceil(SAMPLES / DOT_STEP);
+  const burstAngle = Array.from({ length: COUNT * DOTS }, (_, i) => rand(i, 2) * TAU);
+  const burstReach = Array.from({ length: COUNT * DOTS }, (_, i) => 0.25 + rand(i, 3) * 0.5);
+  const burstDelay = Array.from({ length: COUNT * DOTS }, (_, i) => rand(i, 7) * 0.3);
+
+  function holdStep(q) {
+    const c = q * 3;
+    const s = Math.min(2, Math.floor(c));
+    return s < 2 ? s + easeInOut(clamp((c - s - 0.6) / 0.4)) : 2;
+  }
+
+  let colors = {};
+  function readColors() {
+    const cs = getComputedStyle(root);
+    colors = {
+      ink: cs.getPropertyValue('--ink').trim() || '#121212',
+      bg: cs.getPropertyValue('--bg').trim() || '#eee9e2',
+      accent: cs.getPropertyValue('--accent').trim() || '#2b4dff',
+      dark: darkQuery.matches
+    };
+  }
+  readColors();
+  darkQuery.addEventListener('change', readColors);
+
+  // Scratch buffers
+  const hx = new Float32Array(SAMPLES);
+  const hy = new Float32Array(SAMPLES);
+  const hf = new Float32Array(SAMPLES);
+  const lx = new Float32Array(SAMPLES);
+  const ly = new Float32Array(SAMPLES);
+  const lf = new Float32Array(SAMPLES);
+  const xs = new Float32Array(SAMPLES);
+  const ys = new Float32Array(SAMPLES);
+  const fade = new Float32Array(SAMPLES);
+
+  function stage(canvas) {
+    const look = LANDED[canvas.dataset.os];
+    const wrap = canvas.closest('.cx-concept');
+    const scrub = wrap.querySelector('[data-os-scrub]');
+    const phase = wrap.querySelector('[data-os-phase]');
+    const ctx = canvas.getContext('2d');
+    let w = 0;
+    let h = 0;
+    let p = 0; // 0 → 1: hero, travel, the three lines, explosion, a short rest
+    let held = 0; // seconds left before autoplay resumes after a drag
+    let lastP = 0;
+    let clock = 20;
+    let speed = BASE_SPEED;
+    let rot = -1;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    scrub.addEventListener('input', () => {
+      p = scrub.value / 1000;
+      held = 1.5;
+    });
+
+    function drawOrb(cx, cy, R, m, burst, dim) {
+      const lineAlpha = (1 - clamp(burst / 0.15)) * dim;
+      const dotAlpha = clamp(burst / 0.15) * dim;
+      const lineScale = Math.min(1.4, Math.max(0.7, R / 250));
+      const dotScale = Math.min(1.3, Math.max(0.55, R / 200));
+      const span = w / 2 / R + 0.2;
+
+      if (colors.dark && lineAlpha > 0 && !look.behind) {
+        const halo = ctx.createRadialGradient(cx, cy, R * 0.3, cx, cy, R * 1.4);
+        halo.addColorStop(0, 'rgba(255,255,255,0)');
+        halo.addColorStop(0.6, `rgba(255,255,255,${0.045 * lineAlpha})`);
+        halo.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = halo;
+        ctx.fillRect(cx - R * 1.5, cy - R * 1.5, R * 3, R * 3);
+      }
+
+      ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+      ctx.strokeStyle = colors.ink;
+      ctx.fillStyle = colors.ink;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      for (let k = 0; k < COUNT; k++) {
+        const s = ring[k];
+        const landedAlpha = k < look.keep ? (look.alphaOf ? look.alphaOf(k) : s.alpha) * look.alpha : 0;
+        const alpha = lerp(s.alpha, landedAlpha, m);
+        if (alpha < 0.004) continue;
+        if (m < 1) trace(RING, s, clock, hx, hy, hf);
+        if (m > 0) look.trace(k, s, clock, lx, ly, lf, span);
+        for (let i = 0; i < SAMPLES; i++) {
+          xs[i] = cx + lerp(hx[i], lx[i], m) * R;
+          ys[i] = cy + lerp(hy[i], ly[i], m) * R;
+          fade[i] = lerp(hf[i], lf[i], m);
+        }
+
+        if (lineAlpha > 0) {
+          const width = lerp(s.width, s.width * look.width, m) * lineScale;
+          ctx.lineWidth = width;
+          for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
+            const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
+            const al = alpha * fade[(c + end) >> 1] * lineAlpha;
+            if (al < 0.004) continue;
+            ctx.globalAlpha = al;
+            ctx.beginPath();
+            ctx.moveTo(xs[c], ys[c]);
+            for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
+            ctx.stroke();
+          }
+          const heads = look.heads ? 1 : 1 - m;
+          if (heads > 0) {
+            const i = SAMPLES - 1;
+            ctx.globalAlpha = Math.min(1, alpha * 1.2) * heads * lineAlpha;
+            ctx.beginPath();
+            ctx.arc(xs[i], ys[i], width * 1.1, 0, TAU);
+            ctx.fill();
+          }
+        }
+
+        if (dotAlpha > 0) {
+          for (let i = 0, d = k * DOTS; i < SAMPLES; i += DOT_STEP, d++) {
+            const fly = easeInOut(clamp(burst * 1.3 - burstDelay[d]));
+            const pa = Math.min(1, 0.25 + alpha) * (0.3 + 0.7 * fade[i]) * dotAlpha * (1 - fly);
+            if (pa < 0.01) continue;
+            const dist = fly * Math.max(w, h) * burstReach[d];
+            const size = (0.8 + 1.4 * fade[i]) * dotScale;
+            ctx.globalAlpha = pa;
+            ctx.fillRect(xs[i] + Math.cos(burstAngle[d]) * dist - size / 2, ys[i] + Math.sin(burstAngle[d]) * dist - size / 2, size, size);
+          }
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+
+    function draw(dt) {
+      if (canvas.clientWidth !== w || canvas.clientHeight !== h) resize();
+
+      // Autoplay unless someone is dragging; drag speed pushes the strands like scrolling does
+      if (held > 0) held -= dt;
+      else if (!reduced) p = (p + dt / LOOP) % 1;
+      if (held <= 0) scrub.value = Math.round(p * 1000);
+      const dp = dt ? Math.abs(p - lastP) / dt : 0;
+      lastP = p;
+      const wantSpeed = BASE_SPEED + Math.min(12, (dp > 0.5 ? 0 : dp) * 60);
+      speed += (wantSpeed - speed) * (1 - Math.exp(-dt * 3));
+      if (!reduced) clock += speed * dt;
+
+      const morph = clamp(p / 0.18);
+      const eased = easeInOut(morph);
+      const q = clamp((p - 0.2) / 0.72);
+      const entry = easeInOut(clamp((morph - 0.75) / 0.25));
+      const target = holdStep(clamp(q / LINES_END)) - (1 - entry);
+      rot = reduced ? target : rot + (target - rot) * (1 - Math.exp(-dt * 5));
+      if (Math.abs(rot - target) > 1.5) rot = target; // jump after looping round
+      const outro = clamp((q - LINES_END) / (1 - LINES_END));
+      const burst = clamp((outro - 0.1) / 0.9);
+      const textAlpha = 1 - clamp(outro / 0.3);
+      const words = entry * textAlpha;
+      const lensAlpha = entry * (1 - burst);
+      phase.textContent = p < 0.2 ? (morph < 0.05 ? 'Hero' : 'Landing') : outro <= 0 ? LINES[Math.round(Math.max(0, rot))] : burst < 1 ? 'Explosion' : 'Next section';
+
+      // The orb travels from the hero slot (bottom right) to the middle and grows
+      const R0 = Math.min(w * 0.07, h * 0.11);
+      const R1 = Math.min(h * 0.26, w * 0.22);
+      const cx = lerp(w * 0.86, w / 2, eased);
+      const cy = lerp(h * 0.76, h / 2, eased);
+      const R = lerp(R0, R1, eased);
+      const fadeIn = clamp(p / 0.015); // after looping round, the halo fades back in
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // Lay out the three lines, half a stage apart, sliding to the current one
+      let size = 0;
+      let centres = [];
+      let shift = 0;
+      if (words > 0.001) {
+        ctx.font = '600 100px Geist, -apple-system, BlinkMacSystemFont, sans-serif';
+        const widest = Math.max(...LINES.map((l) => ctx.measureText(l).width));
+        size = Math.min(h * 0.42, (100 * w * 0.86) / widest);
+        ctx.font = `600 ${size}px Geist, -apple-system, BlinkMacSystemFont, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let x = 0;
+        LINES.forEach((l) => {
+          const lw = ctx.measureText(l).width;
+          centres.push(x + lw / 2);
+          x += lw + w * 0.5;
+        });
+        const k = Math.max(0, Math.min(Math.floor(rot), 2));
+        shift = rot < 0 ? centres[0] + rot * (centres[1] - centres[0]) : lerp(centres[k], centres[Math.min(k + 1, 2)], rot - k);
+      }
+      const paint = (color, alpha) => {
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+        LINES.forEach((l, i) => ctx.fillText(l, w / 2 + centres[i] - shift, cy + size * 0.04));
+      };
+      // A solid disc collapses as the particles fly, instead of hanging over them
+      const lensR = R * 1.03 * (look.solid ? 1 - easeInOut(clamp(burst / 0.3)) : 1);
+      const lens = () => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, lensR, 0, TAU);
+        ctx.clip();
+      };
+      const dim = lerp(1, look.dim || 1, words) * fadeIn;
+      const orb = () => drawOrb(cx, cy, R, eased, burst, dim);
+
+      if (look.behind) orb();
+      if (words > 0.001) paint(colors.ink, textAlpha);
+      if (!look.behind) orb();
+
+      if (lensAlpha > 0.001 && lensR > 0.5) {
+        // The window: page colour (or a solid accent disc) over anything behind it
+        ctx.save();
+        lens();
+        ctx.globalAlpha = lensAlpha;
+        ctx.fillStyle = look.solid ? colors.accent : colors.bg;
+        ctx.fillRect(cx - R * 1.1, cy - R * 1.1, R * 2.2, R * 2.2);
+        ctx.restore();
+        if (look.ring) {
+          ctx.globalAlpha = lensAlpha * 0.35;
+          ctx.strokeStyle = colors.ink;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(cx, cy, lensR, 0, TAU);
+          ctx.stroke();
+        }
+      }
+      if (words > 0.001) {
+        ctx.save();
+        lens();
+        ctx.translate(cx, cy);
+        ctx.scale(1.18, 1.18);
+        ctx.translate(-cx, -cy);
+        paint(look.solid ? colors.bg : colors.accent, textAlpha);
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    return { canvas, draw, visible: false };
+  }
+
+  const stages = [...document.querySelectorAll('canvas[data-os]')].map(stage);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      stages.find((s) => s.canvas === e.target).visible = e.isIntersecting;
+    });
+  }, { rootMargin: '100px' });
+  stages.forEach((s) => io.observe(s.canvas));
+
+  let last = null;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = last === null ? 0 : Math.min((now - last) / 1000, 0.1);
+    last = now;
+    stages.forEach((s) => s.visible && s.draw(dt));
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
