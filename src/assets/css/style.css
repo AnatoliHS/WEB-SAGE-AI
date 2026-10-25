@@ -84,7 +84,10 @@ body {
   letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* clip, not hidden: hidden can make the body its own scroll box on phones (WebKit), and the hero
+     stage's sticky pin (.stage-pin) would then slide straight through. hidden is the fallback */
   overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -730,7 +733,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   aspect-ratio: 1;
 }
 
-.sphere-canvas { display: none; }
+.sphere-canvas,
+.stage-canvas { display: none; }
 
 .js .sphere-canvas.is-ready {
   display: block;
@@ -756,8 +760,23 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     margin-top: -96px;
   }
 
+  /* Above the next section as it rises in, so the orb's canvas in it stays on top; it holds nothing to click */
   .stage-sphere .stage-pin {
+    z-index: 2;
     padding: calc(var(--header-h) + 8px) 0 16px;
+    pointer-events: none;
+  }
+
+  /* The orb while it moves with the page: drawn in the pin, so it scrolls with the content (sphere.js).
+     Reaches a screen above the pin for the orb's start under the hero text */
+  .js .stage-canvas.is-ready {
+    display: block;
+    position: absolute;
+    top: -100svh;
+    left: 0;
+    width: 100%;
+    height: 200svh;
+    pointer-events: none;
   }
 
   .sphere-target {
@@ -986,154 +1005,598 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   height: 0.5em;
 }
 
-.feature-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px var(--gutter);
+/* The features: a list on phones, a rail of cards from 761px (scripts.njk drags and steps it).
+   Each takes a step colour, --f */
+.features {
   margin-top: clamp(40px, 5vw, 72px);
-  list-style: none;
 }
 
-.feature-list li {
-  padding-top: 16px;
+.feature-list {
+  list-style: none;
   border-top: 1px solid var(--line);
 }
 
+/* Phones: the icon in a badge of the feature's colour, the copy beside it, the number on the right */
+.feature-list li {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  /* Scaled from the left, so the rows stay lined up with the page */
+  transform-origin: 0 50%;
+}
+
+/* The row nearest the middle of the screen snaps into focus under a glass panel, a little magnified;
+   the rest sit back, smaller and faded (scripts.njk). The rows reach 4px past the page on each side and
+   are padded 12px in, so the glass has room around the text and some space from the screen's edges;
+   their dividers are drawn inset to match */
+.feature-list.is-focusing {
+  border-top: 0;
+}
+
+.feature-list.is-focusing li {
+  position: relative;
+  margin-inline: -4px;
+  padding-inline: 12px;
+  border-bottom: 0;
+  border-radius: 18px;
+  opacity: 0.3;
+  transform: scale(0.86);
+  transform-origin: 50% 50%;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-list.is-focusing li::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 1px;
+  background: var(--line);
+  transition: opacity 0.25s ease;
+}
+
+.feature-list.is-focusing li.is-focus {
+  z-index: 1;
+  opacity: 1;
+  transform: scale(1.02);
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.28));
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  backdrop-filter: blur(10px) saturate(1.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 0 1px var(--line), 0 22px 44px -22px rgba(18, 18, 18, 0.4);
+}
+
+/* The light catching the glass */
+.feature-list.is-focusing li.is-focus::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 42%, transparent 54%);
+  pointer-events: none;
+}
+
+/* No dividers against the glass */
+.feature-list.is-focusing li.is-focus::after,
+.feature-list.is-focusing li:has(+ .is-focus)::after {
+  opacity: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .feature-list.is-focusing li.is-focus {
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 22px 44px -22px rgba(0, 0, 0, 0.8);
+  }
+
+  .feature-list.is-focusing li.is-focus::before {
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.07) 42%, transparent 54%);
+  }
+}
+
+.feature-viz { display: none; }
+
+.feature-copy {
+  position: relative;
+  min-height: 44px;
+  padding-left: 60px;
+}
+
+.feature-num {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
 .feature-list h3 {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  padding-right: 32px;
   font-size: 1.125rem;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
 
-.feature-list h3 svg {
-  flex: none;
-  color: var(--accent);
+.feature-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--f) 14%, var(--bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--f) 22%, transparent);
+  color: var(--f);
 }
 
-.feature-list p {
-  margin-top: 6px;
+.feature-copy > p {
+  margin-top: 4px;
   color: var(--ink-2);
   font-size: 0.9375rem;
 }
 
-@media (max-width: 860px) {
-  .feature-list { grid-template-columns: 1fr 1fr; }
+.features-nav { display: none; }
+
+/* From 761px: a rail of cards running out to the right edge of the screen, aligned with the page on the left */
+@media (min-width: 761px) {
+  .features {
+    --edge: max(var(--gutter), calc((100vw - 1440px) / 2 + var(--gutter)));
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .feature-list {
+    display: flex;
+    gap: 16px;
+    padding: 0 var(--edge) 4px;
+    overflow-x: auto;
+    border-top: 0;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    scrollbar-width: none;
+    cursor: grab;
+  }
+
+  .feature-list::-webkit-scrollbar { display: none; }
+  .feature-list.is-drag { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+
+  .feature-list li {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 0;
+    width: min(360px, 42vw);
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    scroll-snap-align: start;
+  }
+
+  .feature-viz {
+    display: grid;
+    place-items: center;
+    height: 220px;
+    padding: 18px;
+    background: color-mix(in srgb, var(--f) 10%, var(--bg-raised));
+    color: var(--f);
+  }
+
+  .feature-copy {
+    min-height: 0;
+    padding: 22px 24px 26px;
+  }
+
+  .feature-num { position: static; display: block; margin-bottom: 10px; }
+
+  .feature-list h3 {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 1.375rem;
+    letter-spacing: -0.03em;
+  }
+
+  .feature-list h3 { padding-right: 0; }
+
+  .feature-icon {
+    position: static;
+    width: auto;
+    height: auto;
+    background: none;
+    box-shadow: none;
+  }
+
+  .feature-copy > p { margin-top: 8px; }
+
+  .features-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 22px var(--edge) 0;
+  }
+
+  .features-progress {
+    flex: 1;
+    height: 1px;
+    margin-right: 12px;
+    background: var(--line);
+  }
+
+  .features-progress i {
+    display: block;
+    width: 0;
+    height: 2px;
+    margin-top: -0.5px;
+    background: var(--ink);
+    transition: width 0.2s linear;
+  }
+
+  .features-arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    transition: border-color 0.3s ease, opacity 0.3s ease;
+  }
+
+  .features-arrow:hover { border-color: var(--ink); }
+  .features-arrow:disabled { opacity: 0.35; cursor: default; }
 }
 
-@media (max-width: 560px) {
-  .feature-list { grid-template-columns: 1fr; }
+/* The examples on the cards, in the card's colour */
+.fv-say { display: grid; overflow: hidden; font-size: 2rem; font-weight: 500; letter-spacing: -0.04em; text-align: center; }
+.fv-covers { display: grid; grid-template-columns: repeat(3, 44px); gap: 8px; }
+.fv-covers i { aspect-ratio: 3 / 4; border-radius: 6px; background: color-mix(in srgb, var(--f) 18%, var(--bg)); }
+.fv-covers i:nth-child(5) { animation: fv-flash 2.4s ease infinite; }
+
+@keyframes fv-flash {
+  0%, 40% { background: color-mix(in srgb, var(--f) 18%, var(--bg)); box-shadow: none; }
+  45% { background: #fff; box-shadow: 0 0 30px #fff; }
+  60%, 100% { background: var(--f); box-shadow: none; }
 }
 
-/* Live interface (Meet Tinker): an abstract app that assembles and evolves; --c is the active step's colour */
+.fv-opts { display: grid; gap: 8px; width: min(260px, 100%); font-size: 0.875rem; color: var(--ink); }
+.fv-opts span { display: flex; gap: 10px; align-items: center; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); animation: fv-pick 4.5s infinite; }
+.fv-opts span::before { content: ""; width: 12px; height: 12px; border: 1.5px solid var(--muted); border-radius: 50%; animation: fv-dot 4.5s infinite; animation-delay: inherit; }
+.fv-opts span:nth-child(2) { animation-delay: 1.5s; }
+.fv-opts span:nth-child(3) { animation-delay: 3s; }
+
+@keyframes fv-pick {
+  0%, 30% { border-color: var(--f); }
+  34%, 100% { border-color: var(--line); }
+}
+
+@keyframes fv-dot {
+  0%, 30% { border-color: var(--f); background: radial-gradient(var(--f) 45%, transparent 50%); }
+  34%, 100% { border-color: var(--muted); background: none; }
+}
+
+.fv-files { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 280px; }
+.fv-files span { padding: 7px 12px; border-radius: 8px; background: var(--bg); color: var(--ink); font-size: 0.875rem; box-shadow: 0 0 0 1px var(--line); animation: fv-bob 3s ease-in-out infinite; }
+.fv-files span:nth-child(2) { animation-delay: 0.4s; }
+.fv-files span:nth-child(3) { animation-delay: 0.8s; }
+.fv-files span:last-child { color: var(--f); box-shadow: 0 0 0 1px var(--f); animation-delay: 1.2s; }
+
+@keyframes fv-bob {
+  50% { transform: translateY(-6px); }
+}
+
+.fv-code { margin: 0; padding: 14px 18px; border-radius: 10px; background: var(--bg); color: var(--ink-2); font: 0.8125rem/1.8 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; }
+.fv-code b { color: var(--f); font-weight: 500; }
+.fv-cmd { display: flex; gap: 6px; align-items: center; min-width: min(240px, 100%); padding: 12px 18px; border: 1.5px solid var(--f); border-radius: 999px; background: var(--bg); color: var(--ink); font: 1rem ui-monospace, "SF Mono", Menlo, monospace; }
+.fv-cmd > span { display: grid; overflow: hidden; }
+.fv-cmd i { width: 1.5px; height: 1.1em; background: var(--f); animation: ui-blink 1s steps(1) infinite; }
+.fv-graph { width: min(280px, 100%); }
+
+/* Words that change (data-cycle) roll up out of their line */
+.fv-w { grid-area: 1 / 1; white-space: nowrap; }
+.fv-w.is-in { animation: fv-in 0.6s var(--ease) both; }
+.fv-w.is-out { animation: fv-out 0.4s var(--ease-in-out) both; }
+
+@keyframes fv-in { from { transform: translateY(100%); } }
+@keyframes fv-out { to { transform: translateY(-100%); } }
+
+/* Live interface (Meet Tinker): a small app (Cat & Fish) that is described, built, translated and
+   shared. .live carries the step (data-step 0–3) and --c, that step's colour. The stage is a size
+   container: --u is 1% of the app's width, so the app scales as one piece, and --ch is its height in
+   --u; --k scales its type up on phones */
+.live { position: relative; --c: var(--node-1); }
+
+/* The orb's halo is drawn on this (sphere.js): over the whole width of the screen and well above and
+   below the demo, so the particles can fly in from far off as it gathers */
+.live-canvas {
+  position: absolute;
+  z-index: 5;
+  top: -35vh;
+  left: calc(50% - 50vw);
+  /* A canvas keeps its own shape unless given both sizes, so top and bottom alone won't stretch it */
+  width: 100vw;
+  height: calc(100% + 70vh);
+  pointer-events: none;
+}
+.live[data-step="1"] { --c: var(--node-2); }
+.live[data-step="2"] { --c: var(--node-3); }
+.live[data-step="3"] { --c: var(--node-4); }
+
 .live-stage {
-  --c: var(--node-1);
+  --cw: 40cqw;
+  --k: 1;
+  --ch: 125;
+  --u: calc(var(--cw) / 100);
+  --ph: calc(var(--u) * 11 * var(--k));
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   position: relative;
+  container-type: size;
   aspect-ratio: 16 / 9;
   /* Sized from the viewport height so the stage and the steps under it fit on one screen */
   width: min(100%, max(480px, calc((100svh - 340px) * 16 / 9)));
   margin-inline: auto;
-}
-
-.live-stage > * {
-  position: absolute;
-  box-sizing: border-box;
-  transition: left 0.9s var(--ease), top 0.9s var(--ease), width 0.9s var(--ease), height 0.9s var(--ease),
-    opacity 0.5s ease, background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
-}
-
-.ui-frame {
-  border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent);
-  border-radius: 14px;
-  background: var(--bg);
-  box-shadow: 0 30px 60px -30px rgba(18, 18, 18, 0.35);
-}
-
-.ui-ghost {
-  border: 1.5px dashed color-mix(in srgb, var(--c) 55%, transparent);
-  border-radius: 12px;
-  background: repeating-linear-gradient(180deg, transparent 0 18%, color-mix(in srgb, var(--c) 14%, transparent) 18% 30%);
-}
-
-.ui-head {
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
   overflow: hidden;
-  border-radius: 8px;
+  isolation: isolate;
+  border-radius: var(--radius);
+  background: radial-gradient(110% 80% at 50% 0%, color-mix(in srgb, var(--c) 14%, var(--bg-raised)), var(--bg-raised) 70%);
+  color: #141414;
+  perspective: 1800px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The app card: a prompt pill on step 1, the app on 2 and 3, a gallery card on 4 */
+.ui-card {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * var(--ch));
+  border-radius: calc(var(--u) * 6);
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.04), 0 34px 64px -30px rgba(20, 20, 50, 0.4);
+  transform-style: preserve-3d;
+  transition: width 0.9s var(--ease), height 0.9s var(--ease), border-radius 0.9s var(--ease), translate 0.9s var(--ease),
+    scale 0.9s var(--ease), background-color 0.6s ease;
+}
+
+.live[data-step="0"] .ui-card {
+  width: min(calc(var(--u) * 108), 92cqw);
+  height: calc(var(--ph) + var(--u) * 8);
+  border-radius: calc(var(--ph) / 2 + var(--u) * 4);
+  translate: -50% 0;
+}
+
+.live[data-step="3"] .ui-card { scale: 0.7; translate: -50% -56%; }
+
+.ui-body {
+  position: absolute;
+  left: calc(var(--u) * 6);
+  top: calc(var(--u) * 6);
+  width: calc(var(--u) * 88);
+  height: calc(var(--u) * (var(--ch) - 16) - var(--ph));
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 3.5);
+  transform-style: preserve-3d;
+}
+
+/* Blocks of the app come in one after another (--i) */
+.ui-b {
+  transition: opacity 0.5s ease, transform 0.8s var(--ease);
+  transition-delay: calc(0.25s + var(--i, 0) * 0.07s);
+}
+
+.live[data-step="0"] .ui-b {
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 4));
+  transition-duration: 0.3s;
+  transition-delay: 0s;
+}
+
+.ui-head { display: flex; justify-content: space-between; align-items: flex-start; gap: calc(var(--u) * 3); flex: none; }
+
+.ui-eyebrow {
+  display: grid;
+  font-family: var(--mono);
+  font-size: max(8.5px, calc(var(--u) * 2.3 * var(--k)));
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.ui-title {
+  display: grid;
+  margin-top: calc(var(--u) * 1.2);
+  font-family: var(--font-display);
+  font-size: calc(var(--u) * 7.6 * var(--k));
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.ui-badge {
+  display: inline-grid;
+  flex: none;
+  padding: calc(var(--u) * 1) calc(var(--u) * 2.4);
+  border-radius: 999px;
   background: var(--c);
   color: #fff;
-  font-size: clamp(0.6875rem, 1.3vw, 0.9375rem);
-  font-weight: 500;
+  font-size: calc(var(--u) * 2.3 * var(--k));
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition: opacity 0.4s ease, scale 0.6s var(--ease), background-color 0.6s ease;
+}
+
+.ui-badge.is-empty { opacity: 0; scale: 0.7; }
+
+.ui-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: none;
+  height: calc(var(--u) * 8.5 * var(--k));
+  padding: calc(var(--u) * 1);
+  border-radius: 999px;
+  background: #f1efeb;
+}
+
+.ui-seg > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 1.6);
+  border-radius: 999px;
+  color: #8a857d;
+  font-size: max(8.5px, calc(var(--u) * 2.4 * var(--k)));
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
+.ui-seg > .is-on { background: #fff; color: #141414; box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.2); }
+.ui-seg > span > span { display: inline-grid; }
+.ui-seg svg { flex: none; width: calc(var(--u) * 3 * var(--k)); height: calc(var(--u) * 3 * var(--k)); }
+
+.ui-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  gap: calc(var(--u) * 3.5);
+  transform-style: preserve-3d;
+}
+
+/* Each tile in one of the step colours (fixed, so they stay bright in dark mode too) */
 .ui-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 1);
+  min-height: 0;
+  padding: calc(var(--u) * 3.2) calc(var(--u) * 4);
+  border-radius: calc(var(--u) * 4.5);
+  color: #fff;
+  background: linear-gradient(155deg, color-mix(in srgb, var(--t) 82%, #fff), var(--t) 70%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 12px 24px -14px var(--t);
+}
+
+.ui-tile:nth-child(1) { --t: #2b4dff; }
+.ui-tile:nth-child(2) { --t: #7a3cff; }
+.ui-tile:nth-child(3) { --t: #f2541b; }
+.ui-tile:nth-child(4) { --t: #0f9f72; }
+
+.ui-tile > svg {
+  box-sizing: content-box;
+  flex: none;
+  width: calc(var(--u) * 4.4 * var(--k));
+  height: calc(var(--u) * 4.4 * var(--k));
+  margin-bottom: auto;
+  padding: calc(var(--u) * 0.9);
+  border-radius: calc(var(--u) * 1.8);
+  background: rgba(255, 255, 255, 0.2);
+  fill: rgba(255, 255, 255, 0.25);
+}
+
+.ui-label {
+  display: grid;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: max(8.5px, calc(var(--u) * 2.3 * var(--k)));
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* Not scaled up on phones (--k), where the tiles are shorter */
+.ui-value {
+  display: grid;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: calc(var(--u) * 7.4);
+  font-weight: 400;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-bar {
+  display: block;
+  flex: none;
+  height: calc(var(--u) * 1.1);
+  margin-top: calc(var(--u) * 1.2);
   overflow: hidden;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--c) 18%, var(--bg-raised));
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.ui-tile::before {
-  content: "";
+.ui-bar i {
+  display: block;
+  width: calc(var(--v) * 100%);
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+  transition: width 1.4s var(--ease) 0.6s;
+}
+
+.live[data-step="0"] .ui-bar i { width: 0; transition-delay: 0s; }
+
+/* The prompt: fills the pill on step 1, docks at the bottom of the app after */
+.ui-prompt,
+.ui-share {
   position: absolute;
-  left: 12%;
-  top: 16%;
-  width: 24%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--c);
-  opacity: 0.85;
-  transition: background-color 0.6s ease;
-}
-
-.ui-tile:nth-of-type(odd)::before {
-  border-radius: 6px;
-}
-
-.ui-tile::after {
-  content: "";
-  position: absolute;
-  left: 12%;
-  right: 24%;
-  bottom: 18%;
-  height: 11%;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--c) 40%, transparent);
+  left: calc(var(--u) * 6);
+  right: calc(var(--u) * 6);
+  bottom: calc(var(--u) * 6);
+  height: var(--ph);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 2);
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f3f1ed;
+  white-space: nowrap;
 }
 
 .ui-prompt {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  overflow: hidden;
-  border: 1.5px solid var(--c);
-  border-radius: 999px;
-  background: var(--bg);
-  font-size: clamp(0.75rem, 1.6vw, 1.0625rem);
-  white-space: nowrap;
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 12%, transparent);
+  padding: 0 calc(var(--u) * 1.6) 0 calc(var(--u) * 3.6);
+  font-size: calc(var(--u) * 3.2 * var(--k));
+  transition: left 0.9s var(--ease), right 0.9s var(--ease), bottom 0.9s var(--ease), font-size 0.9s var(--ease),
+    opacity 0.4s ease, translate 0.6s var(--ease), background-color 0.5s ease;
 }
 
-/* The halo's spot above the step-1 prompt (which sits at 43%); sized by height so it stays round
-   whatever the stage's shape. The orb canvas draws there */
-.live-stage > .ui-orb {
-  left: 50%;
-  top: -2.5%;
-  height: 44%;
-  aspect-ratio: 1;
-  transform: translateX(-50%);
-  pointer-events: none;
+.live[data-step="0"] .ui-prompt {
+  left: calc(var(--u) * 4);
+  right: calc(var(--u) * 4);
+  bottom: calc(var(--u) * 4);
+  font-size: calc(var(--u) * 3.7 * var(--k));
+  background-color: transparent;
+}
+
+.live[data-step="3"] .ui-prompt { opacity: 0; translate: 0 calc(var(--u) * 4); }
+
+.ui-prompt > svg,
+.ui-share > svg {
+  flex: none;
+  width: calc(var(--u) * 3.6 * var(--k));
+  height: calc(var(--u) * 3.6 * var(--k));
+  color: var(--c);
 }
 
 .ui-caret {
-  display: inline-block;
+  flex: none;
   width: 1.5px;
   height: 1.1em;
-  background: var(--c);
+  margin-left: -1px;
+  background: currentColor;
   animation: ui-blink 1s steps(1) infinite;
 }
 
@@ -1141,23 +1604,179 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   50% { opacity: 0; }
 }
 
-.ui-badge {
+.ui-send {
   display: grid;
   place-items: center;
-  border-radius: 999px;
-  background: var(--c);
+  flex: none;
+  width: calc(var(--ph) - var(--u) * 3.2);
+  aspect-ratio: 1;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #141414;
   color: #fff;
-  font-size: clamp(0.625rem, 1.2vw, 0.8125rem);
-  font-weight: 600;
+}
+
+.ui-send svg { width: 46%; height: 46%; }
+
+/* Building: a line runs along the prompt */
+.ui-prompt::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--c);
+  opacity: 0;
+}
+
+.live.go[data-step="1"] .ui-prompt::after { animation: ui-build 2.8s var(--ease-in-out) 0.3s both; }
+
+@keyframes ui-build {
+  0% { width: 0; opacity: 1; }
+  85% { width: 100%; opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+
+.ui-share {
+  padding: 0 calc(var(--u) * 3.6);
+  font-family: var(--mono);
+  font-size: calc(var(--u) * 2.7 * var(--k));
+  opacity: 0;
+  translate: 0 calc(var(--u) * 4);
+  transition: opacity 0.4s ease, translate 0.6s var(--ease);
+}
+
+.live[data-step="3"] .ui-share { opacity: 1; translate: 0 0; transition-delay: 0.35s; }
+.ui-likes { display: inline-flex; gap: 0.3em; margin-left: auto; color: #f2541b; font-weight: 600; }
+.ui-likes > span { display: inline-grid; font-variant-numeric: tabular-nums; }
+
+/* Two other people's apps, fanned out behind on step 4 */
+.ui-ghost {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * var(--ch));
+  translate: -50% -50%;
+  scale: 0.6;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 5);
+  padding: calc(var(--u) * 7);
+  border-radius: calc(var(--u) * 6);
+  background: #fff;
+  box-shadow: 0 30px 60px -30px rgba(20, 20, 50, 0.35);
+  transition: left 0.9s var(--ease), translate 0.9s var(--ease), scale 0.9s var(--ease), rotate 0.9s var(--ease), opacity 0.6s ease;
+}
+
+.ui-ghost b { width: 60%; height: calc(var(--u) * 9); border-radius: calc(var(--u) * 2); background: #ece9e3; }
+.ui-ghost span { flex: 1; display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: calc(var(--u) * 4); }
+/* Pastel, so they sit back behind the card */
+.ui-ghost i { --g: #fff; border-radius: calc(var(--u) * 4); background: color-mix(in srgb, var(--t) 30%, var(--g)); }
+.ui-ghost i:nth-child(1) { --t: #7a3cff; }
+.ui-ghost i:nth-child(2) { --t: #0f9f72; }
+.ui-ghost i:nth-child(3) { --t: #2b4dff; }
+.ui-ghost i:nth-child(4) { --t: #f2541b; }
+.live[data-step="3"] .ui-ghost { opacity: 1; scale: 0.64; }
+.live[data-step="3"] .ui-ghost-l { translate: calc(-50% - var(--u) * 24) -53%; rotate: -9deg; transition-delay: 0.15s; }
+.live[data-step="3"] .ui-ghost-r { translate: calc(-50% + var(--u) * 24) -53%; rotate: 9deg; transition-delay: 0.25s; }
+
+/* Step 1: suggestions under the pill */
+.ui-chips {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: calc(50% + var(--ph) + var(--u) * 13);
+  width: 92cqw;
+  translate: -50% 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(var(--u) * 2);
+  transition: opacity 0.4s ease, translate 0.6s var(--ease);
+}
+
+.ui-chips span {
+  padding: calc(var(--u) * 1.3) calc(var(--u) * 3);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 4px 12px -6px rgba(0, 0, 0, 0.2);
+  color: #5a564f;
+  font-family: var(--mono);
+  font-size: calc(var(--u) * 2.4 * var(--k));
   white-space: nowrap;
 }
 
+.live:not([data-step="0"]) .ui-chips { opacity: 0; translate: -50% calc(var(--u) * 4); }
+
+/* The halo's spot above the step-1 pill (which starts at 50%); sized by height so it stays round
+   whatever the stage's shape. The orb canvas draws there */
+.live-stage > .ui-orb {
+  position: absolute;
+  left: 50%;
+  top: 4.5%;
+  height: 44%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
 .live-stage .live-counter {
+  position: absolute;
+  z-index: 3;
   top: 16px;
   right: 18px;
   font-size: 0.8125rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* Text that changes: the new words stack on the old in one grid cell while they swap. Most swap at
+   once, as each block lands (--i); the Remix rolls each word up out of its slot and the German in
+   under it (--j), so the words that roll are clipped to their line */
+.ui-w { grid-area: 1 / 1; white-space: nowrap; }
+.ui-body [data-t],
+.ui-body [data-n] { overflow: hidden; padding-block: 0.1em; margin-block: -0.1em; }
+.ui-w.is-in { animation: ui-in 1ms both; animation-delay: calc(0.45s + var(--i, 0) * 0.08s); }
+.ui-w.is-out { animation: ui-out 1ms both; animation-delay: calc(0.45s + var(--i, 0) * 0.08s); }
+.live.go[data-step="1"] .ui-w.is-in { animation-delay: 0.3s; }
+.live[data-step="2"] .ui-w.is-in { animation: ui-roll-in 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--j, 0) * 55ms); }
+.live[data-step="2"] .ui-w.is-out { animation: ui-roll-out 0.55s var(--ease-in-out) both; animation-delay: calc(var(--j, 0) * 55ms); }
+
+@keyframes ui-in { from { opacity: 0; } }
+@keyframes ui-out { to { opacity: 0; } }
+@keyframes ui-roll-in { from { transform: translateY(110%); } }
+@keyframes ui-roll-out { to { transform: translateY(-110%); } }
+
+/* Build: the app lies exploded in 3D, then drops together and turns to face you */
+.ui-b { --z: calc(var(--u) * (10 + var(--i) * 5)); }
+.live.go[data-step="1"] .ui-card { animation: ui-tilt 2.8s var(--ease-in-out) both; }
+.live.go[data-step="1"] .ui-b { animation: ui-lift 2.8s var(--ease-in-out) both; animation-delay: calc(var(--i) * 0.05s); }
+
+@keyframes ui-tilt {
+  0%, 50% { transform: rotateX(54deg) rotateZ(-34deg) scale(0.8); }
+  100% { transform: none; }
+}
+
+@keyframes ui-lift {
+  0% { transform: translateZ(0); opacity: 0; }
+  12% { opacity: 1; }
+  28%, 52% { transform: translateZ(var(--z)); }
+  100% { transform: translateZ(0); }
+}
+
+@media (prefers-color-scheme: dark) {
+  .live-stage { color: #f2efe9; }
+  .ui-card { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 34px 64px -30px #000; }
+  .ui-card, .ui-ghost, .ui-chips span { background: #1e1e21; }
+  .ui-seg, .ui-prompt, .ui-share, .ui-ghost b { background: #2a2a2e; }
+  .ui-seg > .is-on { background: #3a3a3f; color: #f2efe9; }
+  .ui-send { background: #f2efe9; color: #141414; }
+  .ui-chips span { color: #b3aea6; }
+  .ui-ghost i { --g: #1e1e21; }
 }
 
 /* Steps under the stage: the active one is full strength, the rest wait in the background */
@@ -1202,6 +1821,23 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   color: var(--ink-2);
 }
 
+/* The timer line under each step's text: the current one fills until the next step (scripts.njk) */
+.live-timer {
+  display: block;
+  height: 1px;
+  margin-top: 16px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.live-timer i {
+  display: block;
+  height: 100%;
+  background: var(--node);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
 .live-nav {
   display: none;
 }
@@ -1216,6 +1852,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   }
 
   .live-stage {
+    --cw: 54cqw;
     aspect-ratio: 4 / 3;
     width: min(100%, calc((100svh - 180px) * 4 / 3));
   }
@@ -1231,7 +1868,17 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 @media (max-width: 860px) {
-  .live-stage { aspect-ratio: 1; width: min(100%, max(280px, calc(100svh - 440px))); }
+  /* A taller stage and app, with larger type; the halo's spot keeps the size it had on the square stage */
+  .live-stage {
+    --cw: 84cqw;
+    --k: 1.38;
+    --ch: 134;
+    aspect-ratio: 5 / 6;
+    width: min(100%, max(280px, calc((100svh - 440px) * 5 / 6)));
+  }
+
+  .live-stage > .ui-orb { top: 11.5%; height: 37%; }
+  .live-stage .live-counter { display: none; }
 
   /* One step at a time under the animation: all four share one spot and cross-fade */
   .live-steps { grid-template-columns: 1fr; }

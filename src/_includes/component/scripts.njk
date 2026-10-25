@@ -181,68 +181,98 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach(el => el.classList.add('is-in'));
   }
 
-  // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive an abstract
-  //    app whose blocks are placed in % of the stage. Coming down the page it waits on step 1 while
-  //    the orb's particles gather above the prompt (sphere.js), then plays through the steps on its
-  //    own; scrolled back up out of view, it resets, so arriving always starts with the gathering.
+  // 5. Live Interface (Meet Tinker): Describe → Build → Remix → Share. The steps drive a small app
+  //    (index.html); its look for each step is in the CSS, keyed on .live's data-step, and this swaps
+  //    its words, counts its numbers up and types the prompt. Coming down the page it waits on step 1
+  //    while the orb's particles gather above the prompt (sphere.js), then plays through the steps on
+  //    its own; scrolled back up out of view, it resets, so arriving always starts with the gathering.
   const live = document.querySelector('[data-live]');
   if (live) {
     const stage = live.querySelector('.live-stage');
-    const one = (n) => stage.querySelector(`[data-ui="${n}"]`);
-    const tiles = Array.from(stage.querySelectorAll('[data-ui="tile"]'));
     const steps = Array.from(live.querySelectorAll('[data-live-step]'));
     const counter = live.querySelector('[data-live-counter]');
     const dots = Array.from(live.querySelectorAll('[data-live-dot]'));
+    const typed = stage.querySelector('[data-ui="promptText"]');
+    // The timer line under each step's text, filled as the step plays
+    const timers = steps.map((el) => el.querySelector('.live-timer i'));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // The app window's rect for each step, and its parts' rects relative to it
-    const FRAMES = [{ x: 25, y: 18, w: 50, h: 64 }, { x: 22, y: 8, w: 56, h: 84 }, { x: 22, y: 8, w: 56, h: 84 }, { x: 37, y: 12, w: 26, h: 68 }];
-    const SLOTS = [[0.05, 0.2, 0.43, 0.3], [0.52, 0.2, 0.43, 0.3], [0.05, 0.53, 0.43, 0.3], [0.52, 0.53, 0.43, 0.3]];
-    const HEAD_TEXT = ['', 'Cat & Fish', 'Katze & Fisch', 'Katze & Fisch'];
     const PROMPT_TEXT = ['A cat-and-fish game', 'Building your app…', 'Translate it into German', ''];
-    const rel = (F, r) => ({ x: F.x + r[0] * F.w, y: F.y + r[1] * F.h, w: r[2] * F.w, h: r[3] * F.h });
-    const put = (el, r, opacity, delay = 0) => {
-      Object.assign(el.style, {
-        left: r.x + '%', top: r.y + '%', width: r.w + '%', height: r.h + '%', opacity,
-        transitionDelay: `${delay}s, ${delay}s, ${delay}s, ${delay}s, ${delay}s, 0s, 0s, 0s`
+    const words = Array.from(stage.querySelectorAll('[data-t]')).map((el) => ({ el, list: el.dataset.t.split('|'), text: null }));
+    const nums = Array.from(stage.querySelectorAll('[data-n]')).map((el) => ({ el, to: +el.dataset.n, at: +(el.dataset.at || 1), text: null }));
+    // Numbers follow the app's language: 1,240 in English, 1.240 once it's in German
+    const fmt = (n, step) => n.toLocaleString(step >= 2 ? 'de-DE' : 'en-US');
+
+    // Swaps an element's text: the new words go in on top of the old, which leave and are removed.
+    // j orders the words that change, for the Remix's roll
+    function swap(w, text, j, animate) {
+      if (w.text === text) return false;
+      w.text = text;
+      w.el.classList.toggle('is-empty', !text);
+      Array.from(w.el.children).forEach((old) => {
+        if (!animate) return old.remove();
+        if (old.classList.contains('is-out')) return;
+        old.classList.add('is-out');
+        old.style.setProperty('--j', j);
+        setTimeout(() => old.remove(), 1400);
       });
+      const span = document.createElement('span');
+      span.className = animate ? 'ui-w is-in' : 'ui-w';
+      span.style.setProperty('--j', j);
+      span.textContent = text;
+      // Once in, it's plain text again, so a later step's entrance rules can't replay on it
+      if (animate) span.addEventListener('animationend', () => span.classList.remove('is-in'), { once: true });
+      w.el.append(span);
+      return true;
+    }
+
+    const setNum = (n, text) => {
+      n.text = text;
+      if (n.el.lastChild) n.el.lastChild.textContent = text;
     };
 
-    function layout(step) {
-      const F = FRAMES[step];
-      const app = FRAMES[Math.max(step, 1)];
-      const shared = step === 3;
-      stage.style.setProperty('--c', `var(--node-${step + 1})`);
-      put(one('frame'), F, step ? 1 : 0);
-      put(one('ghostL'), shared ? { x: 5, y: 18, w: 24, h: 62 } : FRAMES[3], shared ? 0.6 : 0, shared ? 0.35 : 0);
-      put(one('ghostR'), shared ? { x: 71, y: 18, w: 24, h: 62 } : FRAMES[3], shared ? 0.6 : 0, shared ? 0.45 : 0);
-      put(one('head'), rel(app, [0.05, 0.05, 0.9, 0.1]), step ? 1 : 0, step === 1 ? 0.15 : 0);
-      const order = step >= 2 ? [3, 2, 1, 0] : [0, 1, 2, 3];
-      tiles.forEach((el, i) => put(el, rel(app, SLOTS[order[i]]), step ? 1 : 0, step === 1 ? 0.3 + i * 0.1 : i * 0.06));
-      put(one('prompt'), step === 0 ? { x: 16, y: 43, w: 68, h: 14 } : rel(F, [0.05, 0.86, 0.9, 0.09]), shared ? 0 : 1);
-      put(one('badge'), shared ? rel(F, [0.15, 1.04, 0.7, 0.08]) : rel(F, [0.74, -0.06, 0.24, 0.07]), step >= 2 ? 1 : 0, step >= 2 ? 0.4 : 0);
-      one('badge').textContent = shared ? '✓ Public' : 'DE';
-      one('headText').textContent = HEAD_TEXT[step];
+    function layout(step, prev, animate) {
+      live.dataset.step = step;
+      // Restart the step's keyframe animations
+      live.classList.remove('go');
+      void live.offsetWidth;
+      if (animate) live.classList.add('go');
+      let j = 0;
+      words.forEach((w) => { if (swap(w, w.list[step] || '', j, animate)) j++; });
+      nums.forEach((n) => {
+        if (n.counting) { n.counting = false; setNum(n, fmt(n.to, prev)); }
+        if (step < n.at) return swap(n, '', j, animate);
+        if (!n.text) {
+          // Arriving: count up from 0
+          swap(n, fmt(0, step), j++, animate);
+          n.t0 = performance.now() + 350;
+          n.counting = animate && !reduced;
+          if (!n.counting) setNum(n, fmt(n.to, step));
+        } else if (swap(n, fmt(n.to, step), j, animate)) j++;
+      });
+      typed.textContent = '';
       counter.textContent = `0${step + 1} / 0${steps.length}`;
       [steps, dots].forEach((list) => list.forEach((el, i) => (i === step ? el.setAttribute('aria-current', 'step') : el.removeAttribute('aria-current'))));
     }
 
     // Shared with the orb (sphere.js) on window.TinkerLive: the step (0–3), how far through it (0–1),
-    // gather (0 → 1 as the halo's spot above the prompt comes up the screen) and looped (back on
-    // step 1 from another step, so the halo flies back up rather than gathering)
+    // gather (0 → 1 as the halo's spot above the prompt comes up the screen), looped (back on step 1
+    // from another step, so the halo gathers again over the step's start) and leaving (just come
+    // from step 1, so the halo breaks up)
     const STEP_MS = 4500;
     const dock = stage.querySelector('[data-orb-dock]');
-    const state = { step: 0, local: 0, gather: 0, looped: false };
+    const state = { step: 0, local: 0, gather: 0, looped: false, leaving: false };
     window.TinkerLive = { state, stage };
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
     let current = 0, stepStart = 0, frame = 0;
 
-    function go(step) {
+    function go(step, animate = true) {
       const next = (step + steps.length) % steps.length;
+      const prev = current;
       state.looped = next === 0 && current !== 0;
+      state.leaving = current === 0 && next !== 0;
       current = next;
       stepStart = performance.now();
-      layout(current);
+      layout(current, prev, animate);
     }
 
     function tick(now) {
@@ -254,9 +284,16 @@ document.addEventListener('DOMContentLoaded', () => {
       state.local = clamp01((now - stepStart) / STEP_MS);
       if (state.local >= 1) go(current + 1);
       state.step = current;
+      timers.forEach((el, i) => { el.style.transform = `scaleX(${i === current ? state.local : 0})`; });
       // The prompt types out over the start of each step
       const text = PROMPT_TEXT[current];
-      one('promptText').textContent = text.slice(0, Math.round(text.length * (reduced ? 1 : clamp01((state.local - 0.1) / 0.3))));
+      typed.textContent = text.slice(0, Math.round(text.length * (reduced ? 1 : clamp01((state.local - 0.1) / 0.3))));
+      nums.forEach((n) => {
+        if (!n.counting) return;
+        const k = clamp01((now - n.t0) / 1300);
+        setNum(n, fmt(Math.round(n.to * (1 - Math.pow(1 - k, 3))), current));
+        if (k >= 1) n.counting = false;
+      });
     }
 
     steps.forEach((el, i) => el.addEventListener('click', () => go(i)));
@@ -265,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dots.forEach((el, i) => el.addEventListener('click', () => go(i)));
     live.querySelector('[data-live-prev]').addEventListener('click', () => go(current - 1));
     live.querySelector('[data-live-next]').addEventListener('click', () => go(current + 1));
-    go(0);
+    go(0, false);
 
     if ('IntersectionObserver' in window) {
       let pausedAt = performance.now();
@@ -282,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.boundingClientRect.top > 0) {
           state.gather = 0;
           current = 0;
-          go(0);
+          go(0, false);
         }
       }).observe(live);
     }
@@ -299,9 +336,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ticking = false;
       const b = ticker.getBoundingClientRect();
       if (b.bottom < -200 || b.top > window.innerHeight + 200) return;
-      const d = (window.innerHeight - b.top) * SPEED;
-      first.style.transform = `translateX(${-d}px)`;
-      // The second row starts half its width to the left, so it has room to travel right
+      // 0 with the rows in the middle of the screen, where each row's first phrase sits fully in view
+      const d = (window.innerHeight / 2 - (b.top + b.height / 2)) * SPEED;
+      // Each row is its phrases four times over: start a pass (the first) or two in, so there's always
+      // more row on either side whichever way it's sliding
+      first.style.transform = `translateX(${-d - first.scrollWidth / 4}px)`;
       second.style.transform = `translateX(${d - second.scrollWidth / 2}px)`;
     };
     const request = () => {
@@ -312,6 +351,99 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request);
     slide();
+  }
+
+  // 6b. Features: on wider screens a rail of cards, dragged with the mouse (touch scrolls natively) or
+  //     stepped with the arrows, with a line showing how far through it is. The words in the cards'
+  //     examples (data-cycle) roll over in turn while on screen
+  const features = document.querySelector('[data-features]');
+  if (features) {
+    const track = features.querySelector('[data-features-track]');
+    const bar = features.querySelector('[data-features-bar]');
+    const prev = features.querySelector('[data-features-prev]');
+    const next = features.querySelector('[data-features-next]');
+    const step = () => track.firstElementChild.getBoundingClientRect().width + 16;
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      bar.style.width = `${(max > 0 ? (track.scrollLeft + track.clientWidth) / track.scrollWidth : 1) * 100}%`;
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= max - 1;
+    };
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+
+    let startX = 0, startLeft = 0, dragging = false;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || track.scrollWidth <= track.clientWidth) return;
+      dragging = true;
+      startX = e.clientX;
+      startLeft = track.scrollLeft;
+      track.classList.add('is-drag');
+    });
+    window.addEventListener('pointermove', (e) => { if (dragging) track.scrollLeft = startLeft - (e.clientX - startX); });
+    window.addEventListener('pointerup', () => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove('is-drag');
+      // Settle on the nearest card
+      track.scrollTo({ left: Math.round(track.scrollLeft / step()) * step(), behavior: 'smooth' });
+    });
+    update();
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Phones: the row nearest the middle of the screen snaps into focus (is-focus); the rest sit back,
+    // smaller and faded (style.css). .is-focusing turns the effect on, so without the script all show
+    const phone = window.matchMedia('(max-width: 760px)');
+    const rows = Array.from(track.children);
+    let focusTicking = false;
+    const focus = () => {
+      focusTicking = false;
+      const on = phone.matches && !reduced;
+      track.classList.toggle('is-focusing', on);
+      if (!on) return;
+      const mid = window.innerHeight / 2;
+      let best = null, dist = Infinity;
+      rows.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < dist) { dist = d; best = el; }
+      });
+      rows.forEach((el) => el.classList.toggle('is-focus', el === best));
+    };
+    const requestFocus = () => {
+      if (focusTicking) return;
+      focusTicking = true;
+      requestAnimationFrame(focus);
+    };
+    window.addEventListener('scroll', requestFocus, { passive: true });
+    window.addEventListener('resize', requestFocus);
+    phone.addEventListener('change', requestFocus);
+    focus();
+
+    features.querySelectorAll('[data-cycle]').forEach((el) => {
+      const words = el.dataset.cycle.split('|');
+      let i = 0, timer = 0;
+      const show = (animate) => {
+        Array.from(el.children).forEach((old) => {
+          if (!animate) return old.remove();
+          old.className = 'fv-w is-out';
+          setTimeout(() => old.remove(), 450);
+        });
+        const span = document.createElement('span');
+        span.className = animate ? 'fv-w is-in' : 'fv-w';
+        span.textContent = words[i];
+        el.append(span);
+      };
+      show(false);
+      if (reduced || !('IntersectionObserver' in window)) return;
+      new IntersectionObserver(([e]) => {
+        clearInterval(timer);
+        if (e.isIntersecting) timer = setInterval(() => { i = (i + 1) % words.length; show(true); }, 1800);
+      }).observe(el);
+    });
   }
 
   // 7. Waitlist Form Processing & Progressive Enhancement

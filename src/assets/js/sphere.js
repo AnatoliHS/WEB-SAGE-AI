@@ -22,7 +22,42 @@
   const canvas = document.querySelector('.sphere-canvas');
   if (!api || !canvas) return;
 
-  const ctx = canvas.getContext('2d');
+  const mainCtx = canvas.getContext('2d');
+  // What's drawn on: the fixed canvas, or for the demo's halo, the demo's own canvas (liveCanvas)
+  let ctx = mainCtx;
+  // The demo's halo is drawn on a canvas inside the demo, so it scrolls with the page like the rest
+  // of the content; on the fixed canvas it trailed the page while a phone scrolled
+  const liveCanvas = document.querySelector('.live-canvas');
+  const liveCtx = liveCanvas ? liveCanvas.getContext('2d') : null;
+  let liveDrawn = false;
+  // Phones: while the orb moves with the page (riding up with the hero, or leaving with the stage) it's
+  // drawn on a canvas inside the sticky pin, which the browser scrolls with the content; while it holds
+  // still on screen, on the fixed canvas
+  const pinCanvas = api.stage.querySelector('.stage-canvas');
+  const pinCtx = pinCanvas ? pinCanvas.getContext('2d') : null;
+  let pinDrawn = false;
+
+  // Size a canvas inside the page to its box, and clear it if anything was drawn on it last frame
+  function prepare(c, context, drawn) {
+    const w = Math.round(c.clientWidth * dpr);
+    const h = Math.round(c.clientHeight * dpr);
+    if (c.width !== w || c.height !== h) {
+      c.width = w;
+      c.height = h;
+    } else if (drawn) {
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, c.width, c.height);
+    }
+  }
+
+  // Draw in screen pixels on a canvas inside the page, shifted by where it sits on screen right now
+  function drawOn(c, context, draw) {
+    const b = c.getBoundingClientRect();
+    ctx = context;
+    ctx.setTransform(dpr, 0, 0, dpr, -b.left * dpr, -b.top * dpr);
+    draw();
+    ctx = mainCtx;
+  }
   const pin = api.stage.querySelector('.stage-pin') || api.stage;
   const dock = document.querySelector('[data-orb-dock]');
   const root = document.documentElement;
@@ -56,6 +91,15 @@
   };
   // Every strand is a comet: it fades toward the tail and has a bright head
   const cometFade = (u) => Math.pow(u, 1.7);
+
+  // A strand's rounded tip: a half disc, the line's own width, past its last point (from x0, y0 to
+  // x1, y1), so it doesn't overlap the line and show as a dot
+  function strandTip(x0, y0, x1, y1, width) {
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.beginPath();
+    ctx.arc(x1, y1, width / 2, a - PI / 2, a + PI / 2);
+    ctx.fill();
+  }
 
   /* ----- The hero ring: radii and amounts in units of the orb's radius, speeds per second ----- */
 
@@ -126,52 +170,16 @@
     }
   }
 
-  /* ----- Meet Tinker: where every strand is in each step of the demo, in screen pixels -----
+  /* ----- Meet Tinker: where the strands are in the demo, in screen pixels -----
      halo: the hero ring at x, y, radius R
-     halos: several smaller rings, strands shared out between them
-     rects: strands running round the edges of the given boxes
      scatter: particles flung far out (the explosion's end) */
 
-  // The point d along a box's outline, following its rounded corners (b.r), clockwise from the top
-  function outlinePoint(b, d) {
-    const r = Math.min(b.r || 0, b.w / 2, b.h / 2);
-    const sw = b.w - 2 * r;
-    const sh = b.h - 2 * r;
-    const q = (PI / 2) * r;
-    const arc = (cx, cy, a0, t) => {
-      const a = a0 + (t / (q || 1)) * (PI / 2);
-      return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
-    };
-    if (d < sw) return [b.x + r + d, b.y];
-    if ((d -= sw) < q) return arc(b.x + b.w - r, b.y + r, -PI / 2, d);
-    if ((d -= q) < sh) return [b.x + b.w, b.y + r + d];
-    if ((d -= sh) < q) return arc(b.x + b.w - r, b.y + b.h - r, 0, d);
-    if ((d -= q) < sw) return [b.x + b.w - r - d, b.y + b.h];
-    if ((d -= sw) < q) return arc(b.x + r, b.y + b.h - r, PI / 2, d);
-    if ((d -= q) < sh) return [b.x, b.y + b.h - r - d];
-    return arc(b.x + r, b.y + r, PI, d - sh);
-  }
-  const outlineLength = (b) => {
-    const r = Math.min(b.r || 0, b.w / 2, b.h / 2);
-    return 2 * (b.w + b.h - 4 * r) + 2 * PI * r;
-  };
-
   function fillPose(pose, k, s, t, xs, ys, vw, vh) {
-    if (pose.type === 'halo' || pose.type === 'halos') {
-      const h = pose.type === 'halo' ? pose : pose.list[k % pose.list.length];
+    if (pose.type === 'halo') {
       traceRing(s, t, xs, ys);
       for (let i = 0; i < SAMPLES; i++) {
-        xs[i] = h.x + xs[i] * h.R;
-        ys[i] = h.y + ys[i] * h.R;
-      }
-    } else if (pose.type === 'rects') {
-      // A stretch of each box's outline, sliding round it
-      const b = pose.list[k % pose.list.length];
-      const P = outlineLength(b);
-      const len = P * (0.12 + 0.2 * rand(k, 52));
-      const start = rand(k, 51) * P + t * P * (0.04 + 0.04 * rand(k, 53));
-      for (let i = 0; i < SAMPLES; i++) {
-        [xs[i], ys[i]] = outlinePoint(b, (start + (i / (SAMPLES - 1)) * len) % P);
+        xs[i] = pose.x + xs[i] * pose.R;
+        ys[i] = pose.y + ys[i] * pose.R;
       }
     } else {
       // Every particle somewhere of its own, so they fly in separately rather than as strands
@@ -185,59 +193,27 @@
     }
   }
 
-  // The demo's parts on screen (they move with CSS transitions, so they're measured every frame;
-  // their corner radii don't change, so those are read once)
-  const radii = new Map();
-  const radiusOf = (el) => {
-    if (!radii.has(el)) radii.set(el, parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0);
-    return radii.get(el);
-  };
+  // The demo's stage and the halo's spot above its prompt, on screen
   function liveRects(stage) {
     const box = (el) => {
       const b = el.getBoundingClientRect();
-      return { x: b.left, y: b.top, w: b.width, h: b.height, r: radiusOf(el) };
+      return { x: b.left, y: b.top, w: b.width, h: b.height };
     };
-    const one = (n) => box(stage.querySelector(`[data-ui="${n}"]`));
-    const tiles = [...stage.querySelectorAll('[data-ui="tile"]')].map(box);
-    const S = box(stage);
-    // The two other people's cards where Share puts them (% of the stage, as in scripts.njk). Fixed
-    // rather than measured, so the halos in them stay put while the cards slide away afterwards
-    const card = (x) => ({ x: S.x + S.w * x, y: S.y + S.h * 0.18, w: S.w * 0.24, h: S.h * 0.62 });
-    return {
-      S, dock: box(dock), frame: one('frame'), head: one('head'),
-      cards: [card(0.05), card(0.71)], tiles,
-      // The text bar in each tile (.ui-tile::after: 12% in from the left, 24% from the right,
-      // 18% up from the bottom, 11% tall, 4px corners): the blocks of text the Remix translates
-      bars: tiles.map((b) => ({ x: b.x + b.w * 0.12, y: b.y + b.h * 0.71, w: b.w * 0.64, h: b.h * 0.11, r: 4 }))
-    };
+    return { S: box(stage), dock: box(dock) };
   }
 
-  // Each step's last pose; a step's strands travel there from the previous step's over its first part.
-  // stagger: strands set off one after another; straight: they fly as straight streaks
-  const LIVE_STEPS = [
-    { at: 0, pose: (r) => ({ type: 'halo', x: r.dock.x + r.dock.w / 2, y: r.dock.y + r.dock.h / 2, R: (r.dock.h / 2) * 0.84 }) },
-    { at: 0.35, stagger: true, pose: (r) => ({ type: 'rects', list: [r.frame, r.frame, r.head, ...r.tiles] }) },
-    { at: 0.35, stagger: true, pose: (r) => ({ type: 'rects', list: r.bars }) },
-    {
-      at: 0.5, stagger: true, straight: true,
-      pose: (r) => ({ type: 'halos', list: r.cards.map((g) => ({ x: g.x + g.w / 2, y: g.y + g.h * 0.32, R: g.w * 0.3 })) })
-    }
-  ];
   const LIVE_SPEED = [HERO_SPEED, 2.2, 1.6, HERO_SPEED];
 
-  // Where the demo's strands are going: from which pose to which, and how far. Step 0 is the
-  // particles gathering as the demo comes up the screen, or, when the demo has come back round to
-  // it, the previous step's strands breaking into particles that gather the same way (particles), so
-  // the halo forms where it always does rather than sliding there
+  // The halo only shows on the demo's first step. It gathers from the particles as the demo comes up
+  // the screen, or over the step's start when the demo has come back round to it, and breaks back
+  // into particles flying off as the next step opens the app (leaving: just come from step 1)
   function liveSegment(live, r) {
-    const s = live.step;
-    if (s === 0 && !live.looped) return { from: { type: 'scatter' }, to: LIVE_STEPS[0].pose(r), k: live.gather, stagger: true };
-    const key = LIVE_STEPS[s];
-    const back = s === 0;
-    return {
-      from: LIVE_STEPS[(s + 3) % 4].pose(r), to: key.pose(r), k: clamp(live.local / (back ? 0.35 : key.at)),
-      stagger: true, straight: key.straight, particles: back
-    };
+    const halo = { type: 'halo', x: r.dock.x + r.dock.w / 2, y: r.dock.y + r.dock.h / 2, R: (r.dock.h / 2) * 0.84 };
+    let k;
+    if (live.step === 0) k = live.looped ? clamp(live.local / 0.35) : live.gather;
+    else if (live.leaving) k = 1 - clamp(live.local / 0.3);
+    else return null;
+    return k > 0 ? { from: { type: 'scatter' }, to: halo, k, stagger: true } : null;
   }
 
   // Each particle's flight when the orb explodes: direction, distance and a little stagger
@@ -273,6 +249,12 @@
       steps: [1, 2, 3, 4].map((i) => toRgb(cs.getPropertyValue(`--node-${i}`))),
       bg: cs.getPropertyValue('--bg').trim() || '#eee9e2',
       accent: cs.getPropertyValue('--accent').trim() || '#2b4dff',
+      // The magnified lines: Make it blue, Use it the logo mark's orange (as .text-orange), Share it green
+      lens: [
+        cs.getPropertyValue('--accent').trim() || '#2b4dff',
+        '#ff5f00',
+        cs.getPropertyValue('--node-4').trim() || '#0f9f72'
+      ],
       // Light strands on a dark page add up where they cross; dark ones on a light page can't
       dark: darkQuery.matches
     };
@@ -291,7 +273,6 @@
   let clock = 20; // start mid-motion so the strands are already spread around the ring
   let speed = HERO_SPEED;
   let rot = -1; // -1: the first line waiting off-screen to the right
-  let liveColor = null; // the demo halo's colour, easing to each step's
   let lastY = window.scrollY;
   let lastNow = null;
 
@@ -319,9 +300,12 @@
     const shift = rot < 0
       ? centres[0] + rot * (centres[1] - centres[0])
       : lerp(centres[k], centres[Math.min(k + 1, 2)], rot - k);
+    // color: one for every line, or a list with one per line
     const paint = (color) => {
-      ctx.fillStyle = color;
-      LINES.forEach((l, i) => ctx.fillText(l[0] + l[1], vw / 2 + centres[i] - shift, cy + size * 0.04));
+      LINES.forEach((l, i) => {
+        ctx.fillStyle = Array.isArray(color) ? color[i] : color;
+        ctx.fillText(l[0] + l[1], vw / 2 + centres[i] - shift, cy + size * 0.04);
+      });
     };
 
     ctx.globalAlpha = alpha;
@@ -329,7 +313,7 @@
 
     drawOrb();
 
-    // The lens: inside the orb the words are magnified and blue
+    // The lens: inside the orb the words are magnified and coloured, a colour for each line
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, R * 1.03, 0, PI * 2);
@@ -341,7 +325,7 @@
     ctx.scale(1.18, 1.18);
     ctx.translate(-cx, -cy);
     ctx.globalAlpha = alpha;
-    paint(colors.accent);
+    paint(colors.lens);
     ctx.restore();
   }
 
@@ -374,7 +358,8 @@
     ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
     ctx.strokeStyle = colors.ink;
     ctx.fillStyle = colors.ink;
-    ctx.lineCap = 'round';
+    // Square ends: each strand is drawn in pieces, and round ends would overlap at every join
+    ctx.lineCap = 'butt';
     ctx.lineJoin = 'round';
 
     for (let k = 0; k < COUNT; k++) {
@@ -389,9 +374,11 @@
       if (lineAlpha > 0) {
         const width = s.width * lineScale;
         ctx.lineWidth = width;
+        let tipAlpha = 0;
         for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
           const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
           const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * lineAlpha;
+          tipAlpha = al;
           if (al < 0.004) continue;
           ctx.globalAlpha = al;
           ctx.beginPath();
@@ -400,10 +387,8 @@
           ctx.stroke();
         }
         const i = SAMPLES - 1;
-        ctx.globalAlpha = Math.min(1, s.alpha * 1.2) * lineAlpha;
-        ctx.beginPath();
-        ctx.arc(xs[i], ys[i], width * 1.1, 0, TAU);
-        ctx.fill();
+        ctx.globalAlpha = tipAlpha;
+        strandTip(xs[i - 1], ys[i - 1], xs[i], ys[i], width);
       }
 
       if (dotAlpha > 0) {
@@ -434,7 +419,7 @@
     ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineCap = 'round';
+    ctx.lineCap = 'butt';
     ctx.lineJoin = 'round';
     const scattered = seg.from.type === 'scatter';
     // Breaking strands into particles: each particle sets off on its own, so they stream across
@@ -480,9 +465,11 @@
       if (dots < 1) {
         const width = s.width * lerp(lineFrom, lineTo, mk);
         ctx.lineWidth = width;
+        let tipAlpha = 0;
         for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
           const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
           const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * (1 - dots);
+          tipAlpha = al;
           if (al < 0.004) continue;
           ctx.globalAlpha = al;
           ctx.beginPath();
@@ -490,10 +477,8 @@
           for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
           ctx.stroke();
         }
-        ctx.globalAlpha = Math.min(1, s.alpha * 1.2) * (1 - dots);
-        ctx.beginPath();
-        ctx.arc(xs[SAMPLES - 1], ys[SAMPLES - 1], width * 1.1, 0, TAU);
-        ctx.fill();
+        ctx.globalAlpha = tipAlpha;
+        strandTip(xs[SAMPLES - 2], ys[SAMPLES - 2], xs[SAMPLES - 1], ys[SAMPLES - 1], width);
       }
       if (dots > 0) {
         for (let i = 0; i < SAMPLES; i += DOT_STEP) {
@@ -556,14 +541,11 @@
       const slide = dt ? Math.abs(rot - prevRot) / dt : 0; // lines per second
 
       // Clock: brisk in the hero, a slow drift once landed, then each demo step's pace once
-      // gathered; scrolling (less so in the demo, where scrolling is how it moves on), each line
-      // sliding in and strands flying between the demo's poses push it faster, and it eases back
-      // once things are still
-      const flying = seg && liveStep > 0 && seg.k > 0 && seg.k < 1 ? 3 * Math.sin(PI * seg.k) : 0;
+      // gathered; scrolling (less so in the demo, where scrolling is how it moves on) and each line
+      // sliding in push it faster, and it eases back once things are still
       const wantSpeed = lerp(lerp(HERO_SPEED, LANDED_SPEED, state.eased), LIVE_SPEED[liveStep], gather)
         + Math.min(10, screensPerSec * 16) * (1 - 0.7 * gather)
-        + Math.min(6, slide * 8)
-        + flying;
+        + Math.min(6, slide * 8);
       speed += (wantSpeed - speed) * (1 - Math.exp(-dt * 3));
       clock += speed * dt;
     }
@@ -578,15 +560,19 @@
     let cx;
     let cy;
     let R;
+    let withPage = false;
     if (isCompact) {
       // Phones: same size throughout. Ride up with the page until reaching the spot it will
       // hold in the pinned stage, wait there while the hero scrolls out, then leave with the stage.
       const pinTop = pin.getBoundingClientRect().top;
       const targetCy = g.top + g.height / 2;
       const pinnedCy = targetCy - pinTop;
+      const slotCy = s.top + s.height / 2;
+      const holdCy = Math.min(pinnedCy, targetCy);
       cx = g.left + g.width / 2;
-      cy = Math.max(s.top + s.height / 2, Math.min(pinnedCy, targetCy));
+      cy = Math.max(slotCy, holdCy);
       R = (g.width / 2) * 0.84;
+      withPage = slotCy > holdCy || targetCy < pinnedCy;
     } else {
       // Desktop: grow from the hero slot into the stage as the title docks
       const k = state.eased;
@@ -600,21 +586,29 @@
     const textAlpha = 1 - clamp(outro / 0.3);
 
     // The orb (and, at the end, its particles flying apart). It moves out into the orbit on the way
+    if (pinCanvas) prepare(pinCanvas, pinCtx, pinDrawn);
+    pinDrawn = false;
     if (burst < 1 && cy + R > -vh && cy - R < vh * 2) {
       const orb = () => drawOrb(cx, cy, R, clock, state.eased, burst, reach);
-      if (entry > 0 && textAlpha > 0.001) drawWords(vw, vh, cy, R, cx, textAlpha, entry * (1 - burst), orb);
-      else orb();
+      const draw = () => {
+        if (entry > 0 && textAlpha > 0.001) drawWords(vw, vh, cy, R, cx, textAlpha, entry * (1 - burst), orb);
+        else orb();
+      };
+      if (withPage && pinCanvas) {
+        drawOn(pinCanvas, pinCtx, draw);
+        pinDrawn = true;
+      } else draw();
     }
 
-    // Meet Tinker: the particles gathering into the halo above the prompt, then the halo building,
-    // remixing and sharing the app, in the step's colour
-    if (seg) {
-      const want = colors.steps[liveStep];
-      liveColor = liveColor
-        ? liveColor.map((c, i) => c + (want[i] - c) * (reduced ? 1 : 1 - Math.exp(-dt * 3)))
-        : want.slice();
-      const color = `rgb(${liveColor.map(Math.round).join(',')})`;
-      drawLive(seg, clock, vw, vh, color, Math.min(1.2, Math.max(0.7, liveRect.S.h / 500)));
+    // Meet Tinker: the particles gathering into the halo above the prompt, in the first step's colour,
+    // and flying off again as the app opens. Drawn in screen pixels like everything else, shifted onto
+    // the demo's canvas by where it sits on screen right now
+    if (liveCanvas) {
+      prepare(liveCanvas, liveCtx, liveDrawn);
+      liveDrawn = Boolean(seg);
+      if (seg) {
+        drawOn(liveCanvas, liveCtx, () => drawLive(seg, clock, vw, vh, `rgb(${colors.steps[0].join(',')})`, Math.min(1.2, Math.max(0.7, liveRect.S.h / 500))));
+      }
     }
   }
 
@@ -624,5 +618,6 @@
   window.addEventListener('resize', resize);
   api.on((s) => { state = s; });
   canvas.classList.add('is-ready');
+  if (pinCanvas) pinCanvas.classList.add('is-ready');
   requestAnimationFrame(frame);
 })();
