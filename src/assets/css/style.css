@@ -167,7 +167,7 @@ button {
   white-space: nowrap;
 }
 
-/* Matches the orange plus in the logo mark (assets/tinker-mark.svg) */
+/* Matches the orange at the tail of the logo mark's strand (assets/tinker-mark.svg) */
 .text-orange {
   color: #ff5f00;
 }
@@ -315,12 +315,12 @@ button {
 
 .header-logo {
   position: fixed;
-  top: calc((var(--header-h) - 32px) / 2);
+  top: calc((var(--header-h) - 40px) / 2);
   left: var(--gutter);
   z-index: 1001;
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   transition: opacity 0.2s ease;
 }
 
@@ -335,9 +335,9 @@ button {
 
 @media (max-width: 767px) {
   .header-logo {
-    top: calc((var(--header-h) - 28px) / 2);
-    width: 28px;
-    height: 28px;
+    top: calc((var(--header-h) - 34px) / 2);
+    width: 34px;
+    height: 34px;
   }
 }
 
@@ -2090,9 +2090,9 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   letter-spacing: -0.06em;
 }
 
-/* The halo in its place on the page with the orb, the same size, its top lined up with the headline.
-   It's drawn on the canvas, which reaches well past it for the strands' wobble, once the particles
-   have gathered (sphere.js) */
+/* The logo mark on the page with the orb, in the halo's old place and size, its top lined up with the
+   headline. The mark leaves more room round its ring than the halo did, so it's drawn a little past
+   its box to come out the same size */
 .footer-orb {
   position: relative;
   flex: none;
@@ -2100,12 +2100,11 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   aspect-ratio: 1;
 }
 
-.footer-orb canvas {
+.footer-orb img {
   position: absolute;
-  inset: -40%;
-  width: 180%;
-  height: 180%;
-  pointer-events: none;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
 }
 
 .footer-cta {

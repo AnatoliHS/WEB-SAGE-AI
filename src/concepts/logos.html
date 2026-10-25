@@ -1,0 +1,470 @@
+---
+layout: policy.njk
+title: Logo concepts — Tinker
+description: Six logo directions for Tinker Click, each on light and dark, at icon and favicon sizes, and with the wordmark.
+noindex: true
+permalink: /concepts/logos/
+---
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  .lg-section { margin: 0 0 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .lg-section h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; }
+  .lg-section p { margin-top: 8px; max-width: 60ch; color: var(--ink-2); }
+  .lg-grid + .lg-section { margin-top: 96px; }
+
+  /* ---------- The six ---------- */
+  .lg-grid { display: grid; gap: 56px 40px; }
+  @media (min-width: 960px) { .lg-grid { grid-template-columns: 1fr 1fr; } }
+
+  .lg-card h2 { display: flex; gap: 10px; align-items: baseline; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.03em; }
+  .lg-card h2 .mono { color: var(--muted); }
+  .lg-card > p { margin-top: 6px; color: var(--ink-2); font-size: 0.9375rem; max-width: 60ch; }
+  .lg-card .cx-tags { margin-bottom: 18px; }
+
+  /* The mark large on light and on dark, then the small sizes and the lockup */
+  .lg-show { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .lg-tile { display: grid; place-items: center; aspect-ratio: 1.25; border-radius: var(--radius); }
+  .lg-tile svg { width: 46%; height: auto; }
+  .lg-light { background: #eee9e2; border: 1px solid rgba(18, 18, 18, 0.1); }
+  .lg-dark { background: #0e0e0f; }
+
+  .lg-small { display: flex; align-items: center; gap: 22px; margin-top: 10px; padding: 16px 20px; border: 1px solid var(--line); border-radius: var(--radius); }
+  /* As an app icon: the mark on a rounded square of the page colour */
+  .lg-app { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 15px; background: #eee9e2; box-shadow: 0 0 0 1px rgba(18, 18, 18, 0.12), 0 6px 14px -8px rgba(0, 0, 0, 0.4); }
+  .lg-app svg { width: 70%; height: auto; }
+  .lg-app.is-dark { background: #0e0e0f; box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.6); }
+  .lg-fav { display: flex; align-items: center; gap: 14px; color: var(--muted); }
+  .lg-fav svg { display: block; }
+  .lg-copy { margin-left: auto; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.8125rem; transition: border-color 0.2s ease; }
+  .lg-copy:hover { border-color: var(--ink); }
+
+  /* With the wordmark, as in the site's header */
+  .lg-lockup { display: flex; align-items: center; gap: 14px; margin-top: 10px; padding: 22px 24px; border-radius: var(--radius); background: #eee9e2; color: #121212; }
+  .lg-lockup svg { flex: none; width: 48px; height: 48px; }
+  .lg-word { font-family: var(--font-display); font-size: 2.75rem; line-height: 0.85; text-transform: uppercase; letter-spacing: 0; }
+  .lg-word small { margin-left: 2px; font-size: 0.42em; color: #2b4dff; }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concept) Logos</span>
+  <h1>Six marks for <span class="text-accent">Tinker Click.</span></h1>
+  <p>Each one is drawn from something the site already says: the halo of strands, the line that becomes a halo, the plus of making and adding, apps as tiles, and the click itself. They keep the brand's blue and orange.</p>
+  <p>Shown large on light and dark, as an app icon, at favicon sizes, and next to the wordmark. Copy SVG puts the mark on the clipboard.</p>
+</header>
+
+<div class="lg-section">
+  <h2>The thinking orb, <span class="text-accent">held still.</span></h2>
+  <p>Made from the halo itself: the same strands, from the same code that draws the orb on the page, frozen at one moment. From the whole orb down to a few strokes, each strand a comet, thin and faint at its tail, full at its head.</p>
+</div>
+
+<div class="lg-grid">
+  <article class="lg-card" data-logo="h-full">
+    <h2><span class="mono">H1</span>The whole orb</h2>
+    <p>All 150 strands, exactly as the hero draws them, in the ink colour. The real thing, for large uses: the site, a poster, a launch screen.</p>
+    <ul class="cx-tags"><li>The real orb</li><li>Large sizes only</li><li>Pair with a simpler one</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="h-twelve">
+    <h2><span class="mono">H2</span>Twelve strands</h2>
+    <p>Only the twelve brightest strands, a little heavier, in blue. Still unmistakably the orb, light enough to sit by the wordmark.</p>
+    <ul class="cx-tags"><li>Balanced</li><li>Works at icon size</li><li>Airy</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="h-brush">
+    <h2><span class="mono">H3</span>Five brush strokes</h2>
+    <p>The five brightest strands as bold strokes that swell from a fine tail to a full head, like a circle drawn quickly with a brush.</p>
+    <ul class="cx-tags"><li>Bold</li><li>Strong when tiny</li><li>Hand-made</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="h-two">
+    <h2><span class="mono">H4</span>In two colours</h2>
+    <p>Nine strands in the brand blue with two in orange running among them, like the idea woven into the thinking.</p>
+    <ul class="cx-tags"><li>Brand colours</li><li>Lively</li><li>Medium weight</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="h-comet">
+    <h2><span class="mono">H5</span>One strand, going round</h2>
+    <p>A single strand spiralling in a little over once round, from a fine orange tail outside to a full blue head inside, like the orb drawn in one stroke without lifting the pen.</p>
+    <ul class="cx-tags"><li>Simplest</li><li>Clearest at 16px</li><li>Movement</li></ul>
+  </article>
+</div>
+
+<div class="lg-section">
+  <h2>To tinker: <span class="text-accent">to make it better.</span></h2>
+  <p>The orbit again, round five ways of showing improvement: each one something getting a little better, step by step, the way tinkering does.</p>
+</div>
+
+<div class="lg-grid">
+  <article class="lg-card" data-logo="i-steps">
+    <h2><span class="mono">I</span>Steps up</h2>
+    <p>Three bars, each taller than the last, the newest in orange: every version a step better than the one before.</p>
+    <ul class="cx-tags"><li>Instantly reads as better</li><li>Strong when tiny</li><li>A little corporate</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="i-chevrons">
+    <h2><span class="mono">II</span>Levelling up</h2>
+    <p>Three chevrons stacked upward, fading in from below to the orange one at the top, like a rank badge going up a level.</p>
+    <ul class="cx-tags"><li>Playful</li><li>Game-like</li><li>Clear direction</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="i-refine">
+    <h2><span class="mono">III</span>Rough to smooth</h2>
+    <p>A line that starts as a jagged scribble and smooths out as it goes, rising to an orange point: the first rough try, refined.</p>
+    <ul class="cx-tags"><li>Tinkering, literally</li><li>Hand-made</li><li>Echoes the strands</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="i-iterate">
+    <h2><span class="mono">IV</span>Iterations</h2>
+    <p>A rough shape, a better one, then a perfect orange circle, each overlapping the last: three versions of the same idea, each one rounder.</p>
+    <ul class="cx-tags"><li>Versions</li><li>Remix</li><li>Calm</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="i-spiral">
+    <h2><span class="mono">V</span>Spiralling up</h2>
+    <p>A spiral that winds out from the centre and climbs away to an orange point: going round, a little further each time.</p>
+    <ul class="cx-tags"><li>Iteration as a loop</li><li>Ties to the halo</li><li>Busier when small</li></ul>
+  </article>
+</div>
+
+<div class="lg-section">
+  <h2>The orbit, <span class="text-accent">with a new heart.</span></h2>
+  <p>06 kept, but without the two pluses, which can read as medical. The same ring passing behind and in front, round six other things the product is about.</p>
+</div>
+
+<div class="lg-grid">
+  <article class="lg-card" data-logo="o-spark">
+    <h2><span class="mono">A</span>A spark</h2>
+    <p>The four-point spark from the prompt box, where you describe your idea, with a small orange one beside it. The idea, caught in orbit.</p>
+    <ul class="cx-tags"><li>The moment of the idea</li><li>Already in the UI</li><li>Reads as AI too</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="o-planet">
+    <h2><span class="mono">B</span>A planet and its moon</h2>
+    <p>A solid blue core with an orange moon riding the ring. Your app at the centre, things going round it. The simplest of the six.</p>
+    <ul class="cx-tags"><li>Simplest</li><li>Clearest when tiny</li><li>Calm</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="o-tiles">
+    <h2><span class="mono">C</span>Two app tiles</h2>
+    <p>Keeps the overlap of the current mark, but as two rounded app tiles, blue and orange: one app, and the remix of it.</p>
+    <ul class="cx-tags"><li>Closest to today</li><li>Apps, not crosses</li><li>Remix</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="o-cursor">
+    <h2><span class="mono">D</span>The click</h2>
+    <p>An orange pointer at the centre of the orbit: the Click in the name, with the halo going round it as if it had just set it off.</p>
+    <ul class="cx-tags"><li>Says the name</li><li>Playful</li><li>Strong silhouette</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="o-t">
+    <h2><span class="mono">E</span>The T</h2>
+    <p>A heavy T, cut like the wordmark's letters, with an orange stem: a monogram that sits right next to TINKER.</p>
+    <ul class="cx-tags"><li>Monogram</li><li>Pairs with Anton</li><li>Brand-first</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="o-stack">
+    <h2><span class="mono">F</span>A stack of blocks</h2>
+    <p>Three rounded blocks stacked a little off true, the top one orange: something being built, piece by piece.</p>
+    <ul class="cx-tags"><li>Building</li><li>Tinkering</li><li>Friendly</li></ul>
+  </article>
+</div>
+
+<div class="lg-section">
+  <h2>The first six</h2>
+</div>
+
+<div class="lg-grid">
+  <article class="lg-card" data-logo="halo">
+    <h2><span class="mono">01</span>The halo</h2>
+    <p>The orb that runs through the whole page, as a mark: a few open strokes going round, the way the strands do, with the orange plus at its centre where the idea is.</p>
+    <ul class="cx-tags"><li>Ties to the site</li><li>Hand-drawn feel</li><li>Needs care when tiny</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="cursor">
+    <h2><span class="mono">02</span>Plus and click</h2>
+    <p>The name in one picture: a bold plus for tinkering and adding, with a pointer clicking it. Reads instantly, even at 16px.</p>
+    <ul class="cx-tags"><li>Literal</li><li>Strongest when small</li><li>Playful</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="monogram">
+    <h2><span class="mono">03</span>TC monogram</h2>
+    <p>A heavy C drawn as one open stroke, like a strand of the halo, with an orange T set in its opening. A badge that works without the name.</p>
+    <ul class="cx-tags"><li>Classic monogram</li><li>Bold</li><li>Pairs with Anton</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="tiles">
+    <h2><span class="mono">04</span>The app library</h2>
+    <p>"A music library for apps, where you can add your own tracks": three app tiles and an empty fourth with a plus, waiting for the one you'll make.</p>
+    <ul class="cx-tags"><li>Tells the product</li><li>Icon-grid friendly</li><li>Calm</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="thread">
+    <h2><span class="mono">05</span>The thread</h2>
+    <p>One continuous line that runs in, loops round into a halo and runs on, going from orange to blue: you describe it, it gets built, it goes out. The page's story in a stroke.</p>
+    <ul class="cx-tags"><li>The page's story</li><li>Monoline</li><li>Distinctive</li></ul>
+  </article>
+
+  <article class="lg-card" data-logo="orbit">
+    <h2><span class="mono">06</span>The plus, in orbit</h2>
+    <p>The mark you have now, the two overlapping pluses, with a single strand of the halo orbiting them, passing behind and then in front. An evolution rather than a new start.</p>
+    <ul class="cx-tags"><li>Keeps what you have</li><li>Adds depth</li><li>Busier when small</li></ul>
+  </article>
+</div>
+
+<script>
+(() => {
+  const BLUE = '#126cfd';
+  const ORANGE = '#ff5f00';
+  const TAU = Math.PI * 2;
+  const PI_HALF = Math.PI / 2;
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
+  // An arc round (cx, cy) at radius r from angle a0 to a1 (degrees, clockwise from the right)
+  const arc = (cx, cy, r, a0, a1) => {
+    const p = (a) => [cx + r * Math.cos((a * TAU) / 360), cy + r * Math.sin((a * TAU) / 360)].map((v) => v.toFixed(2)).join(' ');
+    const large = Math.abs(a1 - a0) % 360 > 180 ? 1 : 0;
+    return `M${p(a0)} A${r} ${r} 0 ${large} 1 ${p(a1)}`;
+  };
+  const plus = (cx, cy, size, bar, color, rx = bar * 0.22) =>
+    `<rect x="${cx - bar / 2}" y="${cy - size / 2}" width="${bar}" height="${size}" rx="${rx}" fill="${color}"/>` +
+    `<rect x="${cx - size / 2}" y="${cy - bar / 2}" width="${size}" height="${bar}" rx="${rx}" fill="${color}"/>`;
+
+  /* ----- The marks, each in a 100 × 100 box. ink: the strands' colour on this background; bg: the
+     background, for the cut-outs that separate one shape from another ----- */
+
+  // The orbit round a core: the ring's back half, the core cut out of it, then its front half. core(a, b)
+  // draws the core with fills a and b (shapes only, no strokes), so it can be drawn in the background
+  // colour for the cut-out
+  const orbitWith = (core) => ({ ink, bg }) => {
+    const half = (top) => `<path d="M3 50 A47 17 0 0 ${top ? 1 : 0} 97 50" transform="rotate(-24 50 50)" fill="none" stroke="${ink}" stroke-width="3.2" stroke-linecap="round"/>`;
+    return half(true) + `<g stroke="${bg}" stroke-width="6" stroke-linejoin="round">${core(bg, bg, { ink, bg, cut: true })}</g>` + core(BLUE, ORANGE, { ink, bg }) + half(false);
+  };
+  // A stroked line for a core: in the background colour and wider when it's the cut-out
+  const line = (d, color, width, o, extra = '') => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${o.cut ? width + 6 : width}" stroke-linecap="round" stroke-linejoin="round" ${o.cut ? '' : extra}/>`;
+  // A spiral out from (cx, cy), climbing as it goes, as path data and its end point
+  const spiralPath = (() => {
+    const pts = [];
+    const turns = 2.1 * Math.PI;
+    const turn = (7 / 4) * Math.PI - turns; // so it ends heading out to the top right
+    for (let i = 0; i <= 70; i++) {
+      const th = (i / 70) * turns;
+      const r = 1.5 + 3.9 * th;
+      pts.push([48 + r * Math.cos(th + turn), 54 + r * Math.sin(th + turn) - th * 1.1]);
+    }
+    return { d: 'M' + pts.map((p) => p.map((v) => v.toFixed(1)).join(' ')).join(' L'), end: pts[pts.length - 1] };
+  })();
+  const spark = (cx, cy, r) => `M${cx} ${cy - r} C ${cx + r * 0.12} ${cy - r * 0.33}, ${cx + r * 0.33} ${cy - r * 0.12}, ${cx + r} ${cy} C ${cx + r * 0.33} ${cy + r * 0.12}, ${cx + r * 0.12} ${cy + r * 0.33}, ${cx} ${cy + r} C ${cx - r * 0.12} ${cy + r * 0.33}, ${cx - r * 0.33} ${cy + r * 0.12}, ${cx - r} ${cy} C ${cx - r * 0.33} ${cy - r * 0.12}, ${cx - r * 0.12} ${cy - r * 0.33}, ${cx} ${cy - r} Z`;
+
+  /* ----- The thinking orb's ring, exactly as sphere.js makes it, held at one moment ----- */
+
+  const RING = { seed: 23, radius: [0.42, 0.98], length: [1.2, 3.2], drift: [0.22, 0.55], wobble: 0.065, wobbleSpeed: 0.3, jitter: 0.09, squash: [0.78, 1], alpha: [0.08, 0.9] };
+  const ring = (() => {
+    const seed0 = RING.seed;
+    let seed = seed0;
+    const rnd = () => {
+      seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const between = ([a, b]) => a + (b - a) * rnd();
+    const sign = () => (rnd() < 0.5 ? -1 : 1);
+    return Array.from({ length: 150 }, () => {
+      const bright = Math.pow(rnd(), 2.4);
+      const s = {
+        r0: between(RING.radius), a0: rnd() * TAU, len: between(RING.length), drift: between(RING.drift),
+        waves: [2, 3, 5].map((n) => ({ n, amp: (RING.wobble * (0.3 + 0.7 * rnd())) / (n * 0.5), phase: rnd() * TAU, speed: RING.wobbleSpeed * (0.5 + 0.5 * rnd()) * sign() })),
+        ox: (rnd() * 2 - 1) * RING.jitter, oy: (rnd() * 2 - 1) * RING.jitter, jp: rnd() * TAU, js: 0.1 + 0.2 * rnd(),
+        squash: between(RING.squash), turn: rnd() * TAU
+      };
+      rnd(); rnd();
+      s.alpha = RING.alpha[0] + (RING.alpha[1] - RING.alpha[0]) * bright;
+      s.width = 0.6 + 0.9 * bright;
+      return s;
+    });
+  })();
+  // A strand's points at time t, in orb units
+  const trace = (s, t) => {
+    const ox = s.ox + Math.sin(t * s.js + s.jp) * RING.jitter * 0.5;
+    const oy = s.oy + Math.cos(t * s.js * 0.8 + s.jp) * RING.jitter * 0.5;
+    const turn = s.turn + t * 0.015;
+    const ct = Math.cos(turn);
+    const st = Math.sin(turn);
+    return Array.from({ length: 72 }, (_, i) => {
+      const th = s.a0 + s.drift * t + (i / 71) * s.len;
+      let r = s.r0;
+      for (const w of s.waves) r += w.amp * Math.sin(w.n * th + w.phase + w.speed * t);
+      const ex = Math.cos(th) * r;
+      const ey = Math.sin(th) * r * s.squash;
+      return [ex * ct - ey * st + ox, ex * st + ey * ct + oy];
+    });
+  };
+  const HELD = 20; // the moment it's held at: where the page's clock starts
+  const strands = ring.map((s) => trace(s, HELD));
+  const brightest = ring.map((_, k) => k).sort((a, b) => ring[b].alpha - ring[a].alpha);
+
+  // A strand drawn as a comet: in segs pieces from its tail to its head, each a little wider and
+  // stronger than the last. On a background (bg), the pieces are solid colours mixed toward it rather
+  // than see-through, so where they overlap they don't show up as beads
+  const hex = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
+  const mix = (a, b, k) => `rgb(${hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * k)).join(',')})`;
+  const comet = (pts, color, w0, w1, a0, a1, segs = 12, bg = null, R = 40) => {
+    let out = '';
+    const n = pts.length - 1;
+    for (let j = 0; j < segs; j++) {
+      const i0 = Math.floor((j * n) / segs);
+      const i1 = Math.floor(((j + 1) * n) / segs);
+      const u = (j + 1) / segs;
+      const a = a0 + (a1 - a0) * Math.pow(u, 1.7);
+      const paint = bg ? `stroke="${mix(bg, color, a)}"` : `stroke="${color}" opacity="${a.toFixed(3)}"`;
+      const d = 'M' + pts.slice(i0, i1 + 1).map(([x, y]) => `${(50 + x * R).toFixed(1)} ${(50 + y * R).toFixed(1)}`).join(' L');
+      out += `<path d="${d}" fill="none" ${paint} stroke-width="${(w0 + (w1 - w0) * u).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+    return out;
+  };
+
+  const MARKS = {
+    'h-full': ({ ink }) => ring.map((s, k) => comet(strands[k], ink, s.width * 0.3, s.width * 0.6, 0, s.alpha, 6)).join(''),
+
+    // Faintest first, so the brightest lie on top
+    'h-twelve': ({ bg }) => brightest.slice(0, 12).reverse().map((k) => comet(strands[k], BLUE, 0.6, 1.4 + 2.6 * ring[k].alpha, 0.1, 0.35 + 0.65 * ring[k].alpha, 24, bg)).join(''),
+
+    'h-brush': ({ bg }) => brightest.slice(0, 5).reverse().map((k) => comet(strands[k], BLUE, 1, 8, 0.2, 1, 30, bg)).join(''),
+
+    'h-two': ({ bg }) => brightest.slice(0, 11).reverse().map((k, i) => comet(strands[k], i === 4 || i === 9 ? ORANGE : BLUE, 0.7, 4.2, 0.15, 1, 24, bg)).join(''),
+
+    'h-comet': ({ bg }) => {
+      // One strand spiralling in a little over once round, from a fine orange tail outside to a full
+      // blue head inside
+      const n = 160;
+      const pts = Array.from({ length: n + 1 }, (_, i) => {
+        const u = i / n;
+        const th = -PI_HALF - 0.6 + u * 1.3 * TAU;
+        const r = 0.94 - 0.26 * u;
+        return [Math.cos(th) * r, Math.sin(th) * r];
+      });
+      let out = '';
+      const segs = 40;
+      for (let j = 0; j < segs; j++) {
+        const u = (j + 1) / segs;
+        const part = pts.slice(Math.floor((j * n) / segs), Math.floor(((j + 1) * n) / segs) + 1);
+        // Orange for the first stretch, turning blue
+        const col = mix(ORANGE, BLUE, clamp01((u - 0.2) / 0.4));
+        const d = 'M' + part.map(([x, y]) => `${(50 + x * 40).toFixed(1)} ${(50 + y * 40).toFixed(1)}`).join(' L');
+        out += `<path d="${d}" fill="none" stroke="${col}" stroke-width="${(0.8 + 8.7 * Math.pow(u, 0.9)).toFixed(2)}" stroke-linecap="round"/>`;
+      }
+      return out;
+    },
+
+    'i-steps': orbitWith((a, b, o) => `<rect x="27" y="56" width="13" height="18" rx="3.5" fill="${a}" ${o.cut ? '' : 'opacity="0.45"'}/><rect x="43.5" y="44" width="13" height="30" rx="3.5" fill="${a}"/><rect x="60" y="28" width="13" height="46" rx="3.5" fill="${b}"/>`),
+
+    'i-chevrons': orbitWith((a, b, o) => {
+      const ch = (y) => `M30 ${y + 9} L50 ${y - 7} L70 ${y + 9}`;
+      return line(ch(64), a, 8.5, o, 'opacity="0.4"') + line(ch(50), a, 8.5, o) + line(ch(36), b, 8.5, o);
+    }),
+
+    'i-refine': orbitWith((a, b, o) =>
+      line('M21 64 L26 54 L30 65 L35 51 L39 61 L44 50 L48 55', a, 6, o) +
+      line('M48 55 C 57 61, 64 42, 76 33', b, 6, o) +
+      `<circle cx="77" cy="32" r="${o.cut ? 9 : 5.5}" fill="${b}"/>`),
+
+    'i-iterate': orbitWith((a, b, o) =>
+      `<path d="M21 66 L31 42 L44 58 Z" fill="${a}" ${o.cut ? '' : 'opacity="0.45"'} stroke-linejoin="round"/>` +
+      `<rect x="37" y="38" width="24" height="24" rx="7" fill="${a}"/>` +
+      `<circle cx="69" cy="44" r="12.5" fill="${b}"/>`),
+
+    'i-spiral': orbitWith((a, b, o) =>
+      line(spiralPath.d, a, 5.5, o) +
+      `<circle cx="${spiralPath.end[0].toFixed(1)}" cy="${spiralPath.end[1].toFixed(1)}" r="${o.cut ? 9.5 : 6}" fill="${b}"/>`),
+
+    'o-spark': orbitWith((a, b) => `<path d="${spark(48, 50, 25)}" fill="${a}"/><path d="${spark(69, 31, 9)}" fill="${b}"/>`),
+
+    'o-planet': orbitWith((a, b) => `<circle cx="50" cy="50" r="18" fill="${a}"/><circle cx="77.4" cy="53.9" r="6" fill="${b}"/>`),
+
+    'o-tiles': orbitWith((a, b) => `<rect x="25" y="25" width="31" height="31" rx="9" fill="${a}"/><rect x="44" y="44" width="31" height="31" rx="9" fill="${b}"/>`),
+
+    'o-cursor': orbitWith((a, b) => `<path d="M38 26 L38 70 L48.5 60 L56.5 76 L65 72 L57 56.5 L72 56.5 Z" fill="${b}" stroke-linejoin="round"/>`),
+
+    'o-t': orbitWith((a, b) => `<rect x="43.5" y="30" width="13" height="44" rx="3" fill="${b}"/><rect x="28" y="26" width="44" height="13" rx="3" fill="${a}"/>`),
+
+    'o-stack': orbitWith((a, b) => `<rect x="27" y="58" width="46" height="15" rx="5" fill="${a}"/><rect x="30" y="41" width="40" height="15" rx="5" fill="${a}" opacity="0.55" transform="rotate(-4 50 48)"/><rect x="35" y="24" width="30" height="15" rx="5" fill="${b}" transform="rotate(5 50 31)"/>`),
+
+    halo: ({ ink }) => {
+      const s = (r, a0, a1, w, o, c = BLUE) => `<path d="${arc(50, 50, r, a0, a1)}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" opacity="${o}"/>`;
+      return s(41, 205, 505, 7.5, 1) + s(33, 30, 250, 4.5, 0.6) + s(45, 110, 200, 3, 0.4) + s(36, 280, 390, 2.5, 0.45, ink) + plus(50, 50, 26, 8.5, ORANGE);
+    },
+
+    cursor: ({ bg }) =>
+      plus(44, 44, 76, 24, BLUE, 6) +
+      `<path d="M55 55 L55 93 L64.5 84 L72 98.5 L80 94.5 L72.5 80.5 L86 80.5 Z" fill="${ORANGE}" stroke="${bg}" stroke-width="5" stroke-linejoin="round" paint-order="stroke"/>`,
+
+    monogram: ({ bg }) =>
+      `<path d="${arc(46, 54, 34, 40, 320)}" fill="none" stroke="${BLUE}" stroke-width="15" stroke-linecap="round"/>` +
+      `<path d="M50 30 H94 M72 30 V82" fill="none" stroke="${bg}" stroke-width="23" stroke-linecap="round"/>` +
+      `<path d="M50 30 H94 M72 30 V82" fill="none" stroke="${ORANGE}" stroke-width="13" stroke-linecap="round"/>`,
+
+    tiles: ({ ink }) =>
+      `<rect x="6" y="6" width="40" height="40" rx="11" fill="${BLUE}"/>` +
+      `<rect x="54" y="6" width="40" height="40" rx="11" fill="${BLUE}" opacity="0.45"/>` +
+      `<rect x="6" y="54" width="40" height="40" rx="11" fill="${ORANGE}"/>` +
+      `<rect x="56" y="56" width="36" height="36" rx="10" fill="none" stroke="${ink}" stroke-width="4" stroke-dasharray="7 5.2" opacity="0.55"/>` +
+      plus(74, 74, 18, 5, ink, 1.5),
+
+    thread: () =>
+      `<defs><linearGradient id="lg-thread" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${ORANGE}"/><stop offset="0.55" stop-color="${BLUE}"/></linearGradient></defs>` +
+      // In from the left, up and round in a loop that crosses its own way in, and out to the right
+      `<path d="M6 78 C 34 78, 58 75, 69 53 C 78 34, 64 17, 48 19 C 31 21, 24 41, 33 55 C 42 70, 66 80, 94 76" fill="none" stroke="url(#lg-thread)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>`,
+
+    orbit: ({ ink, bg }) => {
+      const half = (top) => `<path d="M3 50 A47 17 0 0 ${top ? 1 : 0} 97 50" transform="rotate(-24 50 50)" fill="none" stroke="${ink}" stroke-width="3.2" stroke-linecap="round"/>`;
+      // The two pluses as in the current mark, cut out from the ring behind them
+      const marks = (fill1, fill2, extra = '') =>
+        `<g transform="translate(18 18)" ${extra}><g fill="${fill1}"><rect x="14.4" y="9.1" width="9.8" height="32.6" rx="2.2"/><rect x="3" y="20.5" width="32.6" height="9.8" rx="2.2"/></g>` +
+        `<g fill="${fill2}"><rect x="39.5" y="22.1" width="9.8" height="32.6" rx="2.2"/><rect x="28.1" y="33.5" width="32.6" height="9.8" rx="2.2"/></g></g>`;
+      return half(true) + marks(bg, bg, `stroke="${bg}" stroke-width="6" stroke-linejoin="round"`) + marks(BLUE, ORANGE) + half(false);
+    }
+  };
+
+  const svg = (kind, size, theme) => {
+    const c = theme === 'dark' ? { ink: '#eee9e2', bg: '#0e0e0f' } : { ink: '#121212', bg: '#eee9e2' };
+    // The thread's gradient needs its own id each time it's on the page
+    const body = MARKS[kind](c).replace(/lg-thread/g, `lg-thread-${Math.random().toString(36).slice(2, 8)}`);
+    const dims = size ? `width="${size}" height="${size}"` : '';
+    return `<svg viewBox="0 0 100 100" ${dims} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
+  };
+
+  document.querySelectorAll('[data-logo]').forEach((card) => {
+    const kind = card.dataset.logo;
+    const show = document.createElement('div');
+    show.innerHTML = `
+      <div class="lg-show">
+        <div class="lg-tile lg-light">${svg(kind, 0, 'light')}</div>
+        <div class="lg-tile lg-dark">${svg(kind, 0, 'dark')}</div>
+      </div>
+      <div class="lg-small">
+        <span class="lg-app">${svg(kind, 0, 'light')}</span>
+        <span class="lg-app is-dark">${svg(kind, 0, 'dark')}</span>
+        <span class="lg-fav">${svg(kind, 32, 'light')}${svg(kind, 16, 'light')}<span class="mono">32 · 16</span></span>
+        <button type="button" class="lg-copy">Copy SVG</button>
+      </div>
+      <div class="lg-lockup">${svg(kind, 0, 'light')}<span class="lg-word">Tinker<small>Click</small></span></div>`;
+    card.append(...show.children);
+    const copy = card.querySelector('.lg-copy');
+    copy.addEventListener('click', () => {
+      navigator.clipboard?.writeText(svg(kind, 0, 'light')).then(() => {
+        copy.textContent = 'Copied';
+        setTimeout(() => { copy.textContent = 'Copy SVG'; }, 1400);
+      });
+    });
+  });
+})();
+</script>

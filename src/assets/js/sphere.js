@@ -36,14 +36,6 @@
   const pinCanvas = api.stage.querySelector('.stage-canvas');
   const pinCtx = pinCanvas ? pinCanvas.getContext('2d') : null;
   let pinDrawn = false;
-  // The footer's halo, in place of the year mark: drawn on its own canvas once gathered, so it moves
-  // with the page like the demo's
-  const footerOrb = document.querySelector('[data-footer-orb]');
-  const footerCanvas = footerOrb ? footerOrb.querySelector('canvas') : null;
-  const footerCtx = footerCanvas ? footerCanvas.getContext('2d') : null;
-  // ...and the rule along the top of the footer, which the strands run along on their way to it
-  const footerRule = footerOrb ? footerOrb.closest('.footer-statement') : null;
-  let footerDrawn = false;
 
   // Size a canvas inside the page to its box, and clear it if anything was drawn on it last frame
   function prepare(c, context, drawn) {
@@ -146,6 +138,10 @@
       return s;
     });
   })();
+
+  // The brightest of the strands along the features' progress line, left out of it: it stood out in
+  // front of the rest instead of weaving in with them
+  const WAVE_SKIP = ring.reduce((best, s, k) => (k % WAVE_EVERY === 0 && s.alpha > ring[best].alpha ? k : best), 0);
 
   // A strand's points in the hero ring at time t, in orb units
   function traceRing(s, t, xs, ys) {
@@ -268,123 +264,15 @@
     return { from: { type: 'scatter' }, to: wave, k: f.state.gather, steady: true, alpha: 1 - clamp(burst / 0.15), burst };
   }
 
-  // The footer: once its top rule is most of the way up the screen, the strands run in along it and
-  // curve round into the halo (drawFooterRun), playing out on their own over FOOTER_RUN seconds
-  // whatever the scroll does, and starting over if the footer goes back off the bottom of the screen
-  const FOOTER_RUN = 2.6;
-  let footerK = 0;
-  function footerSegment(vh, dt) {
-    const r = footerRule.getBoundingClientRect();
-    if (r.top > vh) footerK = 0;
-    else if (footerK > 0 || r.top < vh * 0.8) footerK = reduced ? 1 : Math.min(1, footerK + dt / FOOTER_RUN);
-    if (footerK <= 0) return null;
-    const b = footerOrb.getBoundingClientRect();
-    const halo = { type: 'halo', x: b.left + b.width / 2, y: b.top + b.height / 2, R: (b.width / 2) * 0.84 };
-    // The rule is the statement's 4px top border
-    return { from: { type: 'scatter' }, to: halo, k: footerK, stagger: true, rule: { x: r.left, y: r.top + 2 } };
-  }
-
-  // Each strand's way in: along the top rule from its left end, a little above it with a gentle wave,
-  // then curving down into its place in the halo, entering it the way it runs. The strand slides
-  // along that route, its own length, and ends up exactly where it sits in the finished halo
-  const RUN_LINE = 40; // points along the rule
-  const RUN_CURVE = 24; // ...in the curve down
-  const RUN = RUN_LINE + RUN_CURVE + SAMPLES;
-  const runX = new Float32Array(RUN);
-  const runY = new Float32Array(RUN);
-  const runD = new Float32Array(RUN);
-  function drawFooterRun(seg, t, color) {
-    const h = seg.to;
-    const rule = seg.rule;
-    ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineCap = 'butt';
-    ctx.lineJoin = 'round';
-    const scale = Math.min(1.4, Math.max(0.7, h.R / 250));
-    const y0 = rule.y - 12;
-    const sx = h.x - h.R * 1.3; // where the curve down begins
-    for (let k = 0; k < COUNT; k++) {
-      const s = ring[k];
-      const e = clamp(seg.k * 1.3 - rand(k, 9) * 0.3);
-      if (e <= 0) continue;
-      // An even pace, easing into place at the end
-      const m = 1 - Math.pow(1 - e, 1.6);
-
-      // The route: the rule...
-      const amp = 2 + 4 * rand(k, 81);
-      const freq = TAU / (160 + 200 * rand(k, 82));
-      const ph = rand(k, 85) * TAU;
-      for (let i = 0; i < RUN_LINE; i++) {
-        const u = i / (RUN_LINE - 1);
-        const x = lerp(rule.x, sx, u);
-        runX[i] = x;
-        runY[i] = y0 + amp * Math.min(1, u * 8, (1 - u) * 6) * Math.sin(x * freq + t * 1.5 + ph);
-      }
-      // ...its place in the halo...
-      traceRing(s, t, xs, ys);
-      const at = RUN_LINE + RUN_CURVE;
-      for (let i = 0; i < SAMPLES; i++) {
-        runX[at + i] = h.x + xs[i] * h.R;
-        runY[at + i] = h.y + ys[i] * h.R;
-      }
-      // ...and a curve between the two, leaving the rule level and joining the ring along it
-      const ex = runX[at];
-      const ey = runY[at];
-      let tx = runX[at + 1] - ex;
-      let ty = runY[at + 1] - ey;
-      const tl = Math.hypot(tx, ty) || 1;
-      tx /= tl;
-      ty /= tl;
-      const c1x = sx + h.R * 0.9;
-      const c2x = ex - tx * h.R * 0.9;
-      const c2y = ey - ty * h.R * 0.9;
-      for (let i = 1; i <= RUN_CURVE; i++) {
-        const u = i / (RUN_CURVE + 1);
-        const v = 1 - u;
-        runX[RUN_LINE - 1 + i] = v * v * v * sx + 3 * v * v * u * c1x + 3 * v * u * u * c2x + u * u * u * ex;
-        runY[RUN_LINE - 1 + i] = v * v * v * y0 + 3 * v * v * u * y0 + 3 * v * u * u * c2y + u * u * u * ey;
-      }
-      runD[0] = 0;
-      for (let i = 1; i < RUN; i++) runD[i] = runD[i - 1] + Math.hypot(runX[i] - runX[i - 1], runY[i] - runY[i - 1]);
-      const total = runD[RUN - 1];
-      const len = total - runD[at];
-
-      // The strand: its own length, its head m of the way along
-      const head = m * total;
-      let j = 1;
-      let first = -1;
-      for (let i = 0; i < SAMPLES; i++) {
-        const d = head - len * (1 - i / (SAMPLES - 1));
-        if (d < 0) continue;
-        if (first < 0) first = i;
-        while (j < RUN - 1 && runD[j] < d) j++;
-        const f = (d - runD[j - 1]) / (runD[j] - runD[j - 1] || 1);
-        rx[i] = lerp(runX[j - 1], runX[j], f);
-        ry[i] = lerp(runY[j - 1], runY[j], f);
-      }
-      if (first < 0 || first > SAMPLES - 2) continue;
-
-      const width = s.width * scale;
-      ctx.lineWidth = width;
-      const show = clamp(e * 6);
-      let tipAlpha = 0;
-      for (let c = first; c < SAMPLES - 1; c += CHUNK - 1) {
-        const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
-        const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * show;
-        tipAlpha = al;
-        if (al < 0.004) continue;
-        ctx.globalAlpha = al;
-        ctx.beginPath();
-        ctx.moveTo(rx[c], ry[c]);
-        for (let i = c + 1; i <= end; i++) ctx.lineTo(rx[i], ry[i]);
-        ctx.stroke();
-      }
-      ctx.globalAlpha = tipAlpha;
-      strandTip(rx[SAMPLES - 2], ry[SAMPLES - 2], rx[SAMPLES - 1], ry[SAMPLES - 1], width);
-    }
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.globalAlpha = 1;
+  // The hero halo is sketched in as the page loads, once the intro has played (intro.js), or straight
+  // away without it: its strands draw themselves one after another like pen strokes round the circle
+  // (heroSketch, 0 → 1 over SKETCH_TIME seconds)
+  const SKETCH_TIME = 3.6;
+  let heroSketch = reduced ? 1 : 0;
+  let heroSketching = false;
+  if (!reduced) {
+    if (root.classList.contains('has-intro')) document.addEventListener('tinker:intro-done', () => { heroSketching = true; }, { once: true });
+    else heroSketching = true;
   }
 
   // The colour of the card the rail has come to, blending into the next: the cards take the step
@@ -520,7 +408,7 @@
   const ys = new Float32Array(SAMPLES);
 
   // m: 0 the hero ring → 1 the landed orbit. burst: 0 → 1 as the strands fly apart as particles
-  function drawOrb(cx, cy, R, t, m, burst, reach) {
+  function drawOrb(cx, cy, R, t, m, burst, reach, sketch) {
     const lineAlpha = 1 - clamp(burst / 0.15);
     const dotAlpha = clamp(burst / 0.15);
     const lineScale = Math.min(1.4, Math.max(0.7, R / 250));
@@ -553,13 +441,23 @@
         ys[i] = cy + lerp(ry[i], oy[i], m) * R;
       }
 
+      // Being sketched in on load
+      let last = SAMPLES - 1;
+      let drawn = 1;
+      if (sketch < 1) {
+        const e = clamp(sketch * 2.2 - rand(k, 9) * 1.2);
+        if (e <= 0) continue;
+        last = Math.max(1, Math.round(easeInOut(e) * (SAMPLES - 1)));
+        drawn = clamp(e * 4);
+      }
+
       if (lineAlpha > 0) {
         const width = s.width * lineScale;
         ctx.lineWidth = width;
         let tipAlpha = 0;
-        for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
-          const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
-          const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * lineAlpha;
+        for (let c = 0; c < last; c += CHUNK - 1) {
+          const end = Math.min(c + CHUNK - 1, last);
+          const al = s.alpha * cometFade(((c + end) >> 1) / last) * lineAlpha * drawn;
           tipAlpha = al;
           if (al < 0.004) continue;
           ctx.globalAlpha = al;
@@ -568,9 +466,8 @@
           for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
           ctx.stroke();
         }
-        const i = SAMPLES - 1;
         ctx.globalAlpha = tipAlpha;
-        strandTip(xs[i - 1], ys[i - 1], xs[i], ys[i], width);
+        strandTip(xs[last - 1], ys[last - 1], xs[last], ys[last], width);
       }
 
       if (dotAlpha > 0) {
@@ -653,6 +550,7 @@
     const fadeAll = seg.alpha === undefined ? 1 : seg.alpha;
 
     for (let k = 0; k < COUNT; k += every) {
+      if (every > 1 && k === WAVE_SKIP) continue;
       const s = ring[k];
       // Steady: at an even pace, staggered only a little, so they all land right at the end
       const mk = seg.steady ? clamp(seg.k * 1.12 - rand(k, 9) * 0.12)
@@ -732,6 +630,7 @@
     if (!s || !g) return;
 
     const dt = lastNow === null ? 0 : Math.min((now - lastNow) / 1000, 0.1);
+    if (heroSketching) heroSketch = Math.min(1, heroSketch + dt / SKETCH_TIME);
     const screensPerSec = dt ? Math.abs(window.scrollY - lastY) / window.innerHeight / dt : 0;
     lastNow = now;
     lastY = window.scrollY;
@@ -811,7 +710,7 @@
     if (pinCanvas) prepare(pinCanvas, pinCtx, pinDrawn);
     pinDrawn = false;
     if (burst < 1 && cy + R > -vh && cy - R < vh * 2) {
-      const orb = () => drawOrb(cx, cy, R, clock, state.eased, burst, reach);
+      const orb = () => drawOrb(cx, cy, R, clock, state.eased, burst, reach, heroSketch);
       const draw = () => {
         if (entry > 0 && textAlpha > 0.001) drawWords(vw, vh, cy, R, cx, textAlpha, entry * (1 - burst), orb);
         else orb();
@@ -849,20 +748,6 @@
       if (featSeg.burst > 0 && featSeg.burst < 1) {
         const w = featSeg.to;
         drawBurst(w.x + w.w, w.y, w.R, clock, featSeg.burst, Math.max(vw, vh), color);
-      }
-    }
-
-    // Footer: the halo in the hero's colour, on the fixed canvas while the strands run in along the
-    // rule, then on its own canvas once formed
-    if (footerCanvas) {
-      prepare(footerCanvas, footerCtx, footerDrawn);
-      footerDrawn = false;
-      const footSeg = footerSegment(vh, dt);
-      if (footSeg) {
-        if (footSeg.k >= 1) {
-          drawOn(footerCanvas, footerCtx, () => drawLive(footSeg, clock, vw, vh, colors.ink, 1));
-          footerDrawn = true;
-        } else drawFooterRun(footSeg, clock, colors.ink);
       }
     }
   }

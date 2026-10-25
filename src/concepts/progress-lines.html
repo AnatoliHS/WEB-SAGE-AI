@@ -1,0 +1,457 @@
+---
+layout: policy.njk
+title: Progress lines concept — Tinker
+description: Five takes on the line under the features rail that shows how far through the cards you are, side by side with the one on the page now.
+noindex: true
+permalink: /concepts/progress-lines/
+---
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* ---------- One slider for every line, standing in for the scroll through the cards ---------- */
+  .pl-bar {
+    position: sticky;
+    top: 12px;
+    z-index: 5;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 8px 16px 8px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .pl-play { flex: none; padding: 8px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.875rem; }
+  .pl-bar input { flex: 1; min-width: 0; accent-color: var(--accent); }
+  .pl-pct { flex: none; min-width: 6.5em; color: var(--muted); text-align: right; }
+
+  /* ---------- The lines ---------- */
+  .pl-list { display: grid; gap: 40px; }
+  .pl-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 16px 40px; align-items: center; }
+  .pl-card h2 { display: flex; gap: 10px; align-items: baseline; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; }
+  .pl-card h2 .mono { color: var(--muted); }
+  .pl-card p { margin-top: 6px; color: var(--ink-2); font-size: 0.9375rem; }
+  .pl-card.is-now { padding-bottom: 40px; border-bottom: 1px solid var(--line); }
+  @media (max-width: 860px) { .pl-card { grid-template-columns: 1fr; } }
+
+  /* A miniature of the rail, sliding with the slider, and the line under it */
+  .pl-stage { position: relative; padding: 18px 0 8px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+  .pl-rail { display: flex; gap: 8px; padding-inline: 20px; will-change: transform; }
+  .pl-rail span {
+    flex: none;
+    width: clamp(150px, 22%, 200px);
+    height: 76px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--f) 14%, var(--bg-raised));
+    color: var(--muted);
+    font-size: 0.6875rem;
+  }
+  .pl-canvas { display: block; width: 100%; height: 56px; }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concept) Progress lines</span>
+  <h1>How far through <span class="text-accent">the cards.</span></h1>
+  <p>Five takes on the line under the features rail, each under a miniature of the rail, with the line on the page now at the top for comparison. The slider stands in for scrolling through the cards and drives every one at once.</p>
+  <p>Each takes the colour of the card the rail has come to, as now. It plays on a loop; drag the slider to scrub.</p>
+</header>
+
+<div class="pl-bar">
+  <button type="button" class="pl-play" data-pl-play>Pause</button>
+  <input type="range" min="0" max="1000" value="0" aria-label="Progress through the cards" data-pl-scrub>
+  <span class="mono pl-pct" data-pl-pct>Card 1 of 7</span>
+</div>
+
+<div class="pl-list">
+  <article class="pl-card is-now" data-pl="now">
+    <div>
+      <h2><span class="mono">00</span>As it is now</h2>
+      <p>About thirty strands, each with its own wave, weaving over and under one another and tapering at both ends.</p>
+      <ul class="cx-tags"><li>Live today</li></ul>
+    </div>
+  </article>
+
+  <article class="pl-card" data-pl="thread">
+    <div>
+      <h2><span class="mono">01</span>A single thread</h2>
+      <p>One clear strand with a soft wave and a glowing head, three faint ones keeping it company. The quietest; reads at a glance.</p>
+      <ul class="cx-tags"><li>Calm</li><li>Clearest progress</li></ul>
+    </div>
+  </article>
+
+  <article class="pl-card" data-pl="braid">
+    <div>
+      <h2><span class="mono">02</span>A braid</h2>
+      <p>Three strands twisting round one another in an even rope, each brighter as it comes to the front. Made, not scribbled.</p>
+      <ul class="cx-tags"><li>Crafted</li><li>Regular rhythm</li></ul>
+    </div>
+  </article>
+
+  <article class="pl-card" data-pl="stitches">
+    <div>
+      <h2><span class="mono">03</span>A small halo per card</h2>
+      <p>A faint track the whole length, one strand along it, and a tiny halo winding up at each card's end as the line passes it, in that card's colour.</p>
+      <ul class="cx-tags"><li>Shows which card</li><li>Echoes the halo</li></ul>
+    </div>
+  </article>
+
+  <article class="pl-card" data-pl="pulse">
+    <div>
+      <h2><span class="mono">04</span>A pulse at the front</h2>
+      <p>A faint track and a calm, straight line behind; all the movement is a burst of waves right at the head, as if it were pulling the line along.</p>
+      <ul class="cx-tags"><li>Energy where it matters</li><li>Calm behind</li></ul>
+    </div>
+  </article>
+
+  <article class="pl-card" data-pl="particles">
+    <div>
+      <h2><span class="mono">05</span>A trail of particles</h2>
+      <p>No lines at all: particles streaming along behind the head, thick and bright at the front and thinning out behind, as the orb's explosion left them.</p>
+      <ul class="cx-tags"><li>Ties to the explosions</li><li>Soft edges</li></ul>
+    </div>
+  </article>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const PI = Math.PI;
+  const TAU = PI * 2;
+  const CARDS = 7;
+  const SAMPLES = 72;
+  const PLAY = 8; // seconds through the cards
+  const HOLD = 1.6; // ...then a pause at the last card
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const rand = (i, s) => {
+    const v = Math.sin(i * 91.7 + s * 47.3) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  const cometFade = (u) => Math.pow(u, 1.7);
+
+  /* ----- Colours: each card a step colour in turn, as on the page ----- */
+
+  let colors = {};
+  const toRgb = (c) => {
+    const m = /^#?([0-9a-f]{6})$/i.exec(c.trim());
+    const n = m ? parseInt(m[1], 16) : 0x7590ff;
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  function readColors() {
+    const cs = getComputedStyle(root);
+    colors = {
+      steps: [1, 2, 3, 4].map((i) => toRgb(cs.getPropertyValue(`--node-${i}`))),
+      ink: toRgb(cs.getPropertyValue('--ink') || '#121212'),
+      dark: darkQuery.matches
+    };
+  }
+  const rgb = (c) => `rgb(${c.join(',')})`;
+  // The colour of the card at progress p, blending into the next
+  function cardColor(p) {
+    const at = clamp(p) * (CARDS - 1);
+    const i = Math.min(CARDS - 2, Math.floor(at));
+    const a = colors.steps[i % 4];
+    const b = colors.steps[(i + 1) % 4];
+    return a.map((v, j) => Math.round(lerp(v, b[j], easeInOut(at - i))));
+  }
+
+  /* ----- Drawing helpers ----- */
+
+  const xs = new Float32Array(SAMPLES);
+  const ys = new Float32Array(SAMPLES);
+
+  // A strand through xs/ys, its alpha at each piece from alphaAt(u), u 0 at the tail → 1 at the head
+  function stroke(ctx, n, width, alphaAt) {
+    ctx.lineWidth = width;
+    for (let c = 0; c < n - 1; c += 3) {
+      const end = Math.min(c + 3, n - 1);
+      const a = alphaAt(((c + end) / 2) / (n - 1));
+      if (a < 0.004) continue;
+      ctx.globalAlpha = a;
+      ctx.beginPath();
+      ctx.moveTo(xs[c], ys[c]);
+      for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
+      ctx.stroke();
+    }
+  }
+
+  // The whole length, faint, for the lines that show where they're going
+  function track(ctx, G) {
+    ctx.globalAlpha = colors.dark ? 0.16 : 0.12;
+    ctx.strokeStyle = rgb(colors.ink);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(G.x0, G.y);
+    ctx.lineTo(G.x0 + G.w, G.y);
+    ctx.stroke();
+  }
+
+  // A soft glowing dot
+  function glow(ctx, x, y, r, color, alpha) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 4);
+    g.addColorStop(0, `rgba(${color.join(',')},${0.5 * alpha})`);
+    g.addColorStop(1, `rgba(${color.join(',')},0)`);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r * 4, y - r * 4, r * 8, r * 8);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = rgb(color);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, TAU);
+    ctx.fill();
+  }
+
+  /* ----- The lines: each draws the line at progress p and time t ----- */
+
+  const LINES = {
+    // As on the page: ~30 strands, each its own wave, feathered front, tapering at both ends
+    now(ctx, G, p, t, color) {
+      ctx.strokeStyle = rgb(color);
+      for (let k = 0; k < 30; k++) {
+        const bright = Math.pow(rand(k, 1), 2.4);
+        const alpha = 0.08 + 0.82 * bright;
+        const L = G.w * p * (1 - 0.3 * rand(k, 86) * (1 - p * p));
+        if (L < 2) continue;
+        const amp = 12 * (0.2 + 0.8 * rand(k, 81));
+        const freq = TAU / (110 + 130 * rand(k, 82));
+        const flow = (0.8 + 1.2 * rand(k, 83)) * (rand(k, 84) < 0.5 ? -1 : 1);
+        const ph = rand(k, 85) * TAU;
+        for (let i = 0; i < SAMPLES; i++) {
+          const d = (i / (SAMPLES - 1)) * L;
+          xs[i] = G.x0 + d;
+          ys[i] = G.y + amp * Math.min(1, d / 50, (L - d) / 90) * Math.sin(d * freq + t * flow + ph);
+        }
+        stroke(ctx, SAMPLES, (0.6 + 0.9 * bright) * 0.8, (u) => alpha * (0.3 + 0.7 * cometFade(u)));
+      }
+    },
+
+    // One clear strand with a glowing head, three faint companions
+    thread(ctx, G, p, t, color) {
+      const L = G.w * p;
+      if (L < 2) return;
+      ctx.strokeStyle = rgb(color);
+      for (let k = 3; k >= 0; k--) {
+        const main = k === 0;
+        const amp = main ? 4 : 5 + 4 * rand(k, 1);
+        const freq = TAU / (main ? 220 : 140 + 120 * rand(k, 2));
+        const ph = rand(k, 3) * TAU;
+        const flow = main ? 1.2 : (0.8 + rand(k, 4)) * (k % 2 ? -1 : 1);
+        for (let i = 0; i < SAMPLES; i++) {
+          const d = (i / (SAMPLES - 1)) * L;
+          xs[i] = G.x0 + d;
+          ys[i] = G.y + amp * Math.min(1, d / 40, (L - d) / 70) * Math.sin(d * freq + t * flow + ph);
+        }
+        stroke(ctx, SAMPLES, main ? 2 : 1, (u) => (main ? 0.35 + 0.65 * u : 0.22 * (0.3 + 0.7 * cometFade(u))));
+      }
+      glow(ctx, G.x0 + L, G.y, 2.6, color, 1);
+    },
+
+    // Three strands twisting round one another, brighter at the front of the twist
+    braid(ctx, G, p, t, color) {
+      const L = G.w * p;
+      if (L < 2) return;
+      ctx.strokeStyle = rgb(color);
+      const A = 6;
+      const f = TAU / 130;
+      const n = Math.max(8, Math.round(L / 3));
+      for (let k = 0; k < 3; k++) {
+        const off = (k * TAU) / 3;
+        ctx.lineWidth = 1.6;
+        let px = G.x0;
+        let py = G.y;
+        for (let i = 1; i <= n; i++) {
+          const d = (i / n) * L;
+          const ph = d * f - t * 2 + off;
+          const x = G.x0 + d;
+          const y = G.y + A * Math.min(1, d / 30, (L - d) / 30) * Math.sin(ph);
+          // In front when the twist comes towards us
+          const front = 0.5 + 0.5 * Math.cos(ph);
+          ctx.globalAlpha = (0.2 + 0.8 * front) * (0.35 + 0.65 * (d / L));
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          px = x;
+          py = y;
+        }
+      }
+    },
+
+    // A faint track, one strand along it, and a tiny halo at each card's end once passed
+    stitches(ctx, G, p, t, color) {
+      track(ctx, G);
+      const L = G.w * p;
+      ctx.strokeStyle = rgb(color);
+      if (L > 2) {
+        for (let i = 0; i < SAMPLES; i++) {
+          const d = (i / (SAMPLES - 1)) * L;
+          xs[i] = G.x0 + d;
+          ys[i] = G.y + 2.5 * Math.min(1, d / 30, (L - d) / 30) * Math.sin(d * (TAU / 160) + t * 1.4);
+        }
+        stroke(ctx, SAMPLES, 1.6, (u) => 0.4 + 0.6 * u);
+      }
+      // A halo at the start, then one at each card after the first, winding up as the line reaches it
+      for (let c = 0; c < CARDS; c++) {
+        const x = G.x0 + (G.w * c) / (CARDS - 1);
+        const grow = c === 0 ? 1 : clamp((L - (x - G.x0) + 24) / 48);
+        if (grow <= 0 || (c === 0 && p <= 0)) continue;
+        const col = colors.steps[c % 4];
+        ctx.strokeStyle = rgb(col);
+        const r = 8 * easeInOut(grow);
+        for (let a = 0; a < 7; a++) {
+          const s = c * 7 + a;
+          const a0 = rand(s, 11) * TAU + t * (0.6 + 0.6 * rand(s, 12)) * (a % 2 ? -1 : 1);
+          const len = (1.4 + 2 * rand(s, 13)) * grow;
+          const rr = r * (0.75 + 0.35 * rand(s, 14));
+          for (let i = 0; i < 16; i++) {
+            const th = a0 + (i / 15) * len;
+            xs[i] = x + Math.cos(th) * rr;
+            ys[i] = G.y + Math.sin(th) * rr * 0.9;
+          }
+          const alpha = (0.25 + 0.75 * rand(s, 15)) * grow;
+          stroke(ctx, 16, 1, (u) => alpha * cometFade(u));
+        }
+      }
+    },
+
+    // A calm line behind, and a burst of waves right at the head
+    pulse(ctx, G, p, t, color) {
+      track(ctx, G);
+      const L = G.w * p;
+      if (L < 2) return;
+      ctx.strokeStyle = rgb(color);
+      for (let k = 0; k < 6; k++) {
+        const amp = k === 0 ? 0 : 4 + 7 * rand(k, 1);
+        const freq = TAU / (22 + 18 * rand(k, 2));
+        const ph = rand(k, 3) * TAU;
+        const N = Math.min(SAMPLES, Math.max(8, Math.round(L / 2.5)));
+        // Only the last stretch carries the waves; the rest lies flat
+        for (let i = 0; i < N; i++) {
+          const d = (i / (N - 1)) * L;
+          const near = Math.exp(-Math.pow((L - d) / 55, 2));
+          xs[i] = G.x0 + d;
+          ys[i] = G.y + amp * near * Math.min(1, (L - d) / 6) * Math.sin(d * freq - t * 5 + ph);
+        }
+        stroke(ctx, N, k === 0 ? 1.8 : 1, (u) => (k === 0 ? 0.5 + 0.5 * u : 0.5 * u));
+      }
+      glow(ctx, G.x0 + L, G.y, 2.2, color, 1);
+    },
+
+    // Particles streaming along behind the head, thick at the front, thinning out behind
+    particles(ctx, G, p, t, color) {
+      const L = G.w * p;
+      if (L < 2) return;
+      ctx.fillStyle = rgb(color);
+      for (let i = 0; i < 420; i++) {
+        // Each drifts forward along the line and comes round again
+        const v = (rand(i, 1) + t * 0.05 * (0.5 + rand(i, 2))) % 1;
+        const u = Math.sqrt(v); // more of them near the head
+        const d = L * u;
+        const spread = (2 + 9 * (1 - u)) * (rand(i, 3) * 2 - 1);
+        const x = G.x0 + d;
+        const y = G.y + spread + 2 * Math.sin(d * 0.04 + t * 1.5 + i);
+        const size = 0.9 + 1.8 * u * rand(i, 4) + 0.4;
+        ctx.globalAlpha = (0.15 + 0.85 * u * u) * Math.min(1, (L - d) / 4 + 0.3);
+        ctx.fillRect(x - size / 2, y - size / 2, size, size);
+      }
+      glow(ctx, G.x0 + L, G.y, 2, color, 0.9);
+    }
+  };
+
+  /* ----- Each panel: a miniature rail and the canvas under it ----- */
+
+  const panels = [...document.querySelectorAll('[data-pl]')].map((card) => {
+    const stage = document.createElement('div');
+    stage.className = 'pl-stage';
+    stage.setAttribute('aria-hidden', 'true');
+    stage.innerHTML = `<div class="pl-rail">${Array.from({ length: CARDS }, (_, i) => `<span class="mono" style="--f: var(--node-${(i % 4) + 1})">0${i + 1}</span>`).join('')}</div><canvas class="pl-canvas"></canvas>`;
+    card.append(stage);
+    const canvas = stage.querySelector('canvas');
+    return { kind: card.dataset.pl, stage, rail: stage.querySelector('.pl-rail'), canvas, ctx: canvas.getContext('2d'), visible: true };
+  });
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      const P = panels.find((x) => x.stage === e.target);
+      if (P) P.visible = e.isIntersecting;
+    }));
+    panels.forEach((P) => io.observe(P.stage));
+  }
+
+  const play = document.querySelector('[data-pl-play]');
+  const scrub = document.querySelector('[data-pl-scrub]');
+  const pct = document.querySelector('[data-pl-pct]');
+  let playing = !reduced;
+  let p = reduced ? 0.5 : 0;
+  let start = performance.now();
+  const setPlaying = (on) => {
+    playing = on;
+    play.textContent = on ? 'Pause' : 'Play';
+    if (on) start = performance.now() - p * PLAY * 1000;
+  };
+  play.addEventListener('click', () => setPlaying(!playing));
+  scrub.addEventListener('input', () => {
+    setPlaying(false);
+    p = scrub.value / 1000;
+  });
+  setPlaying(playing);
+
+  let dpr = 1;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (playing) {
+      const s = ((now - start) / 1000) % (PLAY + HOLD);
+      p = clamp(s / PLAY);
+      scrub.value = Math.round(p * 1000);
+    }
+    pct.textContent = `Card ${Math.min(CARDS, 1 + Math.round(p * (CARDS - 1)))} of ${CARDS}`;
+    const t = reduced ? 0 : now / 1000;
+    const color = cardColor(p);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    panels.forEach((P) => {
+      if (!P.visible) return;
+      // The rail slides across as the page's does
+      const slide = Math.max(0, P.rail.scrollWidth - P.stage.clientWidth);
+      P.rail.style.transform = `translateX(${-p * slide}px)`;
+      const c = P.canvas;
+      const w = Math.round(c.clientWidth * dpr);
+      const h = Math.round(c.clientHeight * dpr);
+      if (c.width !== w || c.height !== h) {
+        c.width = w;
+        c.height = h;
+      }
+      const ctx = P.ctx;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      const G = { x0: 24, y: c.clientHeight / 2, w: c.clientWidth - 48 };
+      LINES[P.kind](ctx, G, p, t, color);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  readColors();
+  darkQuery.addEventListener('change', readColors);
+  requestAnimationFrame(frame);
+})();
+</script>
