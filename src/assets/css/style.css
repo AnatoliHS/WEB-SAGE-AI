@@ -851,7 +851,10 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   align-items: end;
 }
 
+/* The title always sits just under the rule; where the lede runs longer (tablets), it's the lede that
+   reaches down, not the title */
 .section-head-split .section-title {
+  align-self: start;
   max-width: none;
 }
 
@@ -1005,7 +1008,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   height: 0.5em;
 }
 
-/* The features: a list on phones, a rail of cards from 761px (scripts.njk drags and steps it).
+/* The features: a list on phones, a rail of cards from 761px (scripts.njk slides it with the scroll).
    Each takes a step colour, --f */
 .features {
   margin-top: clamp(40px, 5vw, 72px);
@@ -1156,11 +1159,9 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--edge);
     scrollbar-width: none;
-    cursor: grab;
   }
 
   .feature-list::-webkit-scrollbar { display: none; }
-  .feature-list.is-drag { scroll-snap-type: none; cursor: grabbing; user-select: none; }
 
   .feature-list li {
     display: flex;
@@ -1235,18 +1236,18 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     transition: width 0.2s linear;
   }
 
-  .features-arrow {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    transition: border-color 0.3s ease, opacity 0.3s ease;
-  }
+  /* Pinned in the middle of the screen while the scroll slides the cards across (scripts.njk sets its
+     top and the section's height). The orb's strands are drawn along the line instead of the bar,
+     running out from its start as far as the rail has come (sphere.js) */
+  .features.is-scrub .features-pin { position: sticky; }
+  .features.is-scrub .feature-list { overflow-x: hidden; scroll-snap-type: none; cursor: auto; }
+  .features.is-scrub .features-progress { height: 28px; margin-right: 0; background: none; }
+  .features.is-scrub .features-progress i { display: none; }
 
-  .features-arrow:hover { border-color: var(--ink); }
-  .features-arrow:disabled { opacity: 0.35; cursor: default; }
+  /* On screens tall enough, the platforms row is pinned under the rail with it (scripts.njk), lined
+     up with the page, and the section keeps the space it left after it */
+  .features-pin > .platforms { margin: clamp(32px, 4vw, 56px) var(--edge) 0; }
+  .features.has-platforms { margin-bottom: clamp(64px, 9vw, 128px); }
 }
 
 /* The examples on the cards, in the card's colour */
@@ -2087,6 +2088,24 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   font-weight: 500;
   line-height: 0.8;
   letter-spacing: -0.06em;
+}
+
+/* The halo in its place on the page with the orb, the same size, its top lined up with the headline.
+   It's drawn on the canvas, which reaches well past it for the strands' wobble, once the particles
+   have gathered (sphere.js) */
+.footer-orb {
+  position: relative;
+  flex: none;
+  width: clamp(5.4rem, 18vw, 16.8rem);
+  aspect-ratio: 1;
+}
+
+.footer-orb canvas {
+  position: absolute;
+  inset: -40%;
+  width: 180%;
+  height: 180%;
+  pointer-events: none;
 }
 
 .footer-cta {

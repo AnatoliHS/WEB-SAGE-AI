@@ -260,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // from step 1, so the halo breaks up)
     const STEP_MS = 4500;
     const dock = stage.querySelector('[data-orb-dock]');
+    const pinned = document.querySelector('[data-stage]');
     const state = { step: 0, local: 0, gather: 0, looped: false, leaving: false };
     window.TinkerLive = { state, stage };
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
@@ -278,7 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function tick(now) {
       frame = requestAnimationFrame(tick);
       const d = dock.getBoundingClientRect();
-      state.gather = clamp01((window.innerHeight * 1.05 - (d.top + d.height / 2)) / (window.innerHeight * 0.45));
+      const vh = window.innerHeight;
+      const dockY = d.top + d.height / 2;
+      // The particles start gathering just as the stage above unpins (its orb's explosion has just
+      // finished there): where the halo's spot sits on screen at that moment, and take until it's
+      // 60% of the way up the screen, so they're in view the whole way in
+      const start = pinned ? Math.max(dockY - (pinned.getBoundingClientRect().bottom - vh) + vh * 0.05, vh * 1.05) : vh * 1.35;
+      state.gather = clamp01((start - dockY) / (start - vh * 0.6));
       // Hold on step 1 until the halo has gathered, then play on through the steps
       if (state.gather < 1 && current === 0 && !state.looped) stepStart = now;
       state.local = clamp01((now - stepStart) / STEP_MS);
@@ -321,7 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
           current = 0;
           go(0, false);
         }
-      }).observe(live);
+      // Running from well below the screen, as the halo starts gathering before the demo is on it
+      }, { rootMargin: '0px 0px 300% 0px' }).observe(live);
     }
   }
 
@@ -353,44 +361,89 @@ document.addEventListener('DOMContentLoaded', () => {
     slide();
   }
 
-  // 6b. Features: on wider screens a rail of cards, dragged with the mouse (touch scrolls natively) or
-  //     stepped with the arrows, with a line showing how far through it is. The words in the cards'
-  //     examples (data-cycle) roll over in turn while on screen
+  // 6b. Features: on wider screens a rail of cards that pins (.is-scrub) while the page's scroll slides
+  //     it sideways, a pixel across for each pixel down, with the orb's strands drawn out along the line
+  //     under it to show how far through it is (sphere.js). The words in the cards' examples
+  //     (data-cycle) roll over in turn while on screen
   const features = document.querySelector('[data-features]');
   if (features) {
     const track = features.querySelector('[data-features-track]');
+    const pinBox = features.querySelector('[data-features-pin]');
+    const line = features.querySelector('[data-features-line]');
     const bar = features.querySelector('[data-features-bar]');
-    const prev = features.querySelector('[data-features-prev]');
-    const next = features.querySelector('[data-features-next]');
-    const step = () => track.firstElementChild.getBoundingClientRect().width + 16;
-    const update = () => {
-      const max = track.scrollWidth - track.clientWidth;
-      bar.style.width = `${(max > 0 ? (track.scrollLeft + track.clientWidth) / track.scrollWidth : 1) * 100}%`;
-      prev.disabled = track.scrollLeft <= 1;
-      next.disabled = track.scrollLeft >= max - 1;
-    };
-    track.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    // The platforms row after the rail, and a marker for where it belongs when it isn't pinned with it
+    const platforms = document.querySelector('[data-platforms]');
+    const home = document.createComment('platforms');
+    if (platforms) platforms.before(home);
+    const wide = window.matchMedia('(min-width: 761px)');
+    const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+    // Shared with the orb (sphere.js) on window.TinkerFeatures: on (pinned and scrubbed), progress
+    // (0 → 1 across the cards), gather (0 → 1 over the 90% of a screen before the rail pins, the
+    // particles gathering at the line's start, done just as the cards start to move), past (how far, in px, the page has
+    // scrolled on since the last card came in and the rail unpinned: the line's tail runs up to its
+    // tip and the strands burst apart there), the line itself and how many cards
+    const state = { on: false, progress: 0, gather: 0, past: 0 };
+    window.TinkerFeatures = { state, line, cards: track.children.length };
+    let max = 0, pinTop = 0;
 
-    let startX = 0, startLeft = 0, dragging = false;
-    track.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || track.scrollWidth <= track.clientWidth) return;
-      dragging = true;
-      startX = e.clientX;
-      startLeft = track.scrollLeft;
-      track.classList.add('is-drag');
-    });
-    window.addEventListener('pointermove', (e) => { if (dragging) track.scrollLeft = startLeft - (e.clientX - startX); });
-    window.addEventListener('pointerup', () => {
-      if (!dragging) return;
-      dragging = false;
-      track.classList.remove('is-drag');
-      // Settle on the nearest card
-      track.scrollTo({ left: Math.round(track.scrollLeft / step()) * step(), behavior: 'smooth' });
-    });
-    update();
+    const update = () => {
+      if (state.on) {
+        // How far the page has scrolled since the rail pinned (less than 0 before it does)
+        const travelled = pinTop - features.getBoundingClientRect().top;
+        const run = window.innerHeight * 0.9;
+        state.gather = clamp01((travelled + run) / run);
+        state.progress = max > 0 ? clamp01(travelled / max) : 1;
+        state.past = Math.max(0, travelled - max);
+        track.scrollLeft = state.progress * max;
+      } else {
+        const m = track.scrollWidth - track.clientWidth;
+        state.progress = m > 0 ? track.scrollLeft / m : 1;
+        state.gather = 0;
+        state.past = 0;
+      }
+      bar.style.width = `${state.progress * 100}%`;
+    };
+    // The section is made as tall as the rail plus the distance it slides, so it unpins as the last
+    // card comes in, and the rail pins in the middle of the screen. On screens tall enough to hold
+    // both (iPads upright, tall desktops), the platforms row pins under it too, so the screen isn't
+    // left empty below the line while the cards go by
+    const measure = () => {
+      state.on = wide.matches;
+      features.classList.toggle('is-scrub', state.on);
+      // Room on screen below the fixed header, with a little space at either end
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      const room = window.innerHeight - header - 32;
+      if (platforms) {
+        if (state.on) pinBox.append(platforms);
+        if (!state.on || pinBox.offsetHeight > room) home.after(platforms);
+        features.classList.toggle('has-platforms', platforms.parentNode === pinBox);
+      }
+      max = state.on ? Math.max(0, track.scrollWidth - track.clientWidth) : 0;
+      // Centred, but kept clear of the header when the rail and platforms together only just fit
+      const centred = (window.innerHeight - pinBox.offsetHeight) / 2;
+      pinTop = state.on ? Math.max(features.classList.contains('has-platforms') ? header + 16 : 0, centred) : 0;
+      pinBox.style.top = state.on ? `${pinTop}px` : '';
+      features.style.height = state.on ? `${pinBox.offsetHeight + max}px` : '';
+      update();
+    };
+    let ticking = false;
+    const request = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    };
+    window.addEventListener('scroll', request, { passive: true });
+    track.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    wide.addEventListener('change', measure);
+    // A sideways swipe on a trackpad scrolls the page, so it moves the rail too
+    track.addEventListener('wheel', (e) => {
+      if (!state.on || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      window.scrollBy(0, e.deltaX);
+    }, { passive: false });
+    measure();
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

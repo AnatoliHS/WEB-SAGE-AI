@@ -1,7 +1,7 @@
 ---
 layout: default.njk
 title: Tinker Click — Make your own apps by describing them
-description: Tell Tinker Click what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS and Linux. Join the waitlist at tinker.click.
+description: Tell Tinker Click what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS, Linux and iPad. Join the waitlist at tinker.click.
 heroSphere: true
 intro: true
 ---
@@ -152,83 +152,85 @@ intro: true
       {%- endfor %}
     </div>
 
-    <!-- The features: a rail of cards with a small live example each on wider screens, dragged or stepped
-         through with the arrows (scripts.njk); a list on phones, where the examples are left out. Each takes
-         a step colour (--f) -->
+    <!-- The features: on wider screens a rail of cards with a small live example each, pinned while the
+         scroll slides it sideways, with the orb's strands drawn out along the line under it as it goes
+         (scripts.njk, sphere.js); a list on phones, where the examples are left out. Each takes a step
+         colour (--f) -->
     <div class="features reveal" data-features>
-      <ul class="feature-list" data-features-track>
-        <li style="--f: var(--node-1)">
-          <div class="feature-viz" aria-hidden="true"><div class="fv-say" data-cycle="Make me a game|Fais-moi un jeu|Mach mir ein Spiel|Hazme un juego|给我做个游戏"></div></div>
-          <div class="feature-copy">
-            <span class="feature-num">01</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg></span>Your language</h3>
-            <p>The whole app is translated, and commands work in your own language too.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-2)">
-          <div class="feature-viz" aria-hidden="true"><div class="fv-covers"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-          <div class="feature-copy">
-            <span class="feature-num">02</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>One-click covers</h3>
-            <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-3)">
-          <div class="feature-viz" aria-hidden="true"><div class="fv-opts"><span>Tinker Click server</span><span>Your own server</span><span>Your own AI model</span></div></div>
-          <div class="feature-copy">
-            <span class="feature-num">03</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg></span>Your choice of server</h3>
-            <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-4)">
-          <div class="feature-viz" aria-hidden="true"><div class="fv-files"><span>notes.md</span><span>budget.xlsx</span><span>timetable.pdf</span><span>the web</span></div></div>
-          <div class="feature-copy">
-            <span class="feature-num">04</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg></span>Works with your files</h3>
-            <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-1)">
-          <div class="feature-viz" aria-hidden="true"><pre class="fv-code"><b>system:</b> You are a patient maths tutor.
+      <div class="features-pin" data-features-pin>
+        <ul class="feature-list" data-features-track>
+          <li style="--f: var(--node-1)">
+            <div class="feature-viz" aria-hidden="true"><div class="fv-say" data-cycle="Make me a game|Fais-moi un jeu|Mach mir ein Spiel|Hazme un juego|给我做个游戏"></div></div>
+            <div class="feature-copy">
+              <span class="feature-num">01</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg></span>Your language</h3>
+              <p>The whole app is translated, and commands work in your own language too.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-2)">
+            <div class="feature-viz" aria-hidden="true"><div class="fv-covers"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <div class="feature-copy">
+              <span class="feature-num">02</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>One-click covers</h3>
+              <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-3)">
+            <div class="feature-viz" aria-hidden="true"><div class="fv-opts"><span>Tinker Click server</span><span>Your own server</span><span>Your own AI model</span></div></div>
+            <div class="feature-copy">
+              <span class="feature-num">03</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg></span>Your choice of server</h3>
+              <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-4)">
+            <div class="feature-viz" aria-hidden="true"><div class="fv-files"><span>notes.md</span><span>budget.xlsx</span><span>timetable.pdf</span><span>the web</span></div></div>
+            <div class="feature-copy">
+              <span class="feature-num">04</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg></span>Works with your files</h3>
+              <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-1)">
+            <div class="feature-viz" aria-hidden="true"><pre class="fv-code"><b>system:</b> You are a patient maths tutor.
 <b>tools:</b> calculator, quiz
 <b>tone:</b> friendly, short answers</pre></div>
-          <div class="feature-copy">
-            <span class="feature-num">05</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>Under the hood</h3>
-            <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-2)">
-          <div class="feature-viz" aria-hidden="true"><div class="fv-cmd"><span data-cycle="/discover|/status|/login"></span><i></i></div></div>
-          <div class="feature-copy">
-            <span class="feature-num">06</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20 17 4"/></svg></span>Slash commands</h3>
-            <p>Type commands like /discover, /status and /login to move around faster.</p>
-          </div>
-        </li>
-        <li style="--f: var(--node-3)">
-          <div class="feature-viz" aria-hidden="true"><svg class="fv-graph" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 60h300M60 60c20 0 20-34 40-34h80c20 0 20 34 40 34M140 60c20 0 20 34 40 34h40c20 0 20-34 40-34" opacity=".45"/><g fill="currentColor" stroke="none"><circle cx="10" cy="60" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="100" cy="26" r="6"/><circle cx="180" cy="26" r="6"/><circle cx="140" cy="60" r="6"/><circle cx="180" cy="94" r="6"/><circle cx="220" cy="60" r="6"/><circle cx="260" cy="60" r="6"/><circle cx="310" cy="60" r="6"/></g></svg></div>
-          <div class="feature-copy">
-            <span class="feature-num">07</span>
-            <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>Open source</h3>
-            <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
-          </div>
-        </li>
-      </ul>
-      <div class="features-nav">
-        <span class="features-progress"><i data-features-bar></i></span>
-        <button type="button" class="features-arrow" data-features-prev aria-label="Previous features"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
-        <button type="button" class="features-arrow" data-features-next aria-label="More features"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
+            <div class="feature-copy">
+              <span class="feature-num">05</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>Under the hood</h3>
+              <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-2)">
+            <div class="feature-viz" aria-hidden="true"><div class="fv-cmd"><span data-cycle="/discover|/status|/login"></span><i></i></div></div>
+            <div class="feature-copy">
+              <span class="feature-num">06</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20 17 4"/></svg></span>Slash commands</h3>
+              <p>Type commands like /discover, /status and /login to move around faster.</p>
+            </div>
+          </li>
+          <li style="--f: var(--node-3)">
+            <div class="feature-viz" aria-hidden="true"><svg class="fv-graph" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 60h300M60 60c20 0 20-34 40-34h80c20 0 20 34 40 34M140 60c20 0 20 34 40 34h40c20 0 20-34 40-34" opacity=".45"/><g fill="currentColor" stroke="none"><circle cx="10" cy="60" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="100" cy="26" r="6"/><circle cx="180" cy="26" r="6"/><circle cx="140" cy="60" r="6"/><circle cx="180" cy="94" r="6"/><circle cx="220" cy="60" r="6"/><circle cx="260" cy="60" r="6"/><circle cx="310" cy="60" r="6"/></g></svg></div>
+            <div class="feature-copy">
+              <span class="feature-num">07</span>
+              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>Open source</h3>
+              <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
+            </div>
+          </li>
+        </ul>
+        <div class="features-nav">
+          <!-- The orb's strands are drawn along this line (sphere.js); the bar is for without the script -->
+          <span class="features-progress" data-features-line><i data-features-bar></i></span>
+        </div>
       </div>
     </div>
 
     {% include "component/platform-logos.njk" %}
-    <dl class="stats stats-words platforms reveal">
+    <dl class="stats stats-words platforms reveal" data-platforms>
       <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-windows"/></svg>Desktop app</dt><dd>Windows</dd></div>
       <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-apple"/></svg>Desktop app</dt><dd>macOS</dd></div>
       <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-linux"/></svg>Desktop app</dt><dd>Linux</dd></div>
-      <div class="is-upcoming"><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-tablet"/></svg>In progress</dt><dd>iPad</dd></div>
+      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-tablet"/></svg>Tablet app</dt><dd>iPad</dd></div>
     </dl>
   </div>
 </section>
@@ -249,7 +251,7 @@ intro: true
           <span class="faq-icon" aria-hidden="true"></span>
         </button>
         <div id="faq-ans-1" class="faq-answer" hidden>
-          <p>Tinker Click is a desktop app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
+          <p>Tinker Click is a desktop and iPad app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
           <p>It's like a code-sharing platform for people who don't write code. Keep what you make, remix apps other people have made, and share your own in the public gallery.</p>
         </div>
       </div>

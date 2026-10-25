@@ -36,6 +36,14 @@
   const pinCanvas = api.stage.querySelector('.stage-canvas');
   const pinCtx = pinCanvas ? pinCanvas.getContext('2d') : null;
   let pinDrawn = false;
+  // The footer's halo, in place of the year mark: drawn on its own canvas once gathered, so it moves
+  // with the page like the demo's
+  const footerOrb = document.querySelector('[data-footer-orb]');
+  const footerCanvas = footerOrb ? footerOrb.querySelector('canvas') : null;
+  const footerCtx = footerCanvas ? footerCanvas.getContext('2d') : null;
+  // ...and the rule along the top of the footer, which the strands run along on their way to it
+  const footerRule = footerOrb ? footerOrb.closest('.footer-statement') : null;
+  let footerDrawn = false;
 
   // Size a canvas inside the page to its box, and clear it if anything was drawn on it last frame
   function prepare(c, context, drawn) {
@@ -75,6 +83,7 @@
   const SAMPLES = 72; // points along each strand
   const CHUNK = 6; // points per stroke; each stroke gets its own alpha so the ends can fade
   const DOT_STEP = 4; // every 4th point becomes a particle in the explosion
+  const WAVE_EVERY = 5; // every 5th strand runs along the features' progress line
   const clamp = (v) => Math.min(1, Math.max(0, v));
   const lerp = (a, b, k) => a + (b - a) * k;
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -172,6 +181,9 @@
 
   /* ----- Meet Tinker: where the strands are in the demo, in screen pixels -----
      halo: the hero ring at x, y, radius R
+     wave: the features' progress line, from x, y and w long: the strands wound into a small ring (R)
+       at its start, unrolling to the right into wavy lines as far as progress p; the tail then runs
+       along after them (tail, 0 → 1 of the way), winding them back into the ring at the tip
      scatter: particles flung far out (the explosion's end) */
 
   function fillPose(pose, k, s, t, xs, ys, vw, vh) {
@@ -180,6 +192,26 @@
       for (let i = 0; i < SAMPLES; i++) {
         xs[i] = pose.x + xs[i] * pose.R;
         ys[i] = pose.y + ys[i] * pose.R;
+      }
+    } else if (pose.type === 'wave') {
+      // Some strands a little behind the rest, so the front is feathered, catching up by the end
+      const x0 = pose.x + pose.w * pose.tail;
+      const L = Math.max(0, pose.w * pose.p * (1 - 0.3 * rand(k, 86) * (1 - pose.p * pose.p)) - pose.w * pose.tail);
+      const open = easeInOut(clamp(L / 80));
+      // Each strand its own wave, so they weave over and under one another as they run along
+      const amp = pose.A * (0.2 + 0.8 * rand(k, 81));
+      const freq = TAU / (220 + 260 * rand(k, 82));
+      const flow = (0.8 + 1.2 * rand(k, 83)) * (rand(k, 84) < 0.5 ? -1 : 1);
+      const ph = rand(k, 85) * TAU;
+      traceRing(s, t, xs, ys);
+      for (let i = 0; i < SAMPLES; i++) {
+        const d = (i / (SAMPLES - 1)) * L;
+        // Pinched together at the start, where they come out of the ring, and drawn back together
+        // to a point at the front, so the line tapers at both ends. The waves keep their place along
+        // the line as the tail runs up it
+        const y = pose.y + amp * Math.min(1, d / 50, (L - d) / 90) * Math.sin((x0 - pose.x + d) * freq + t * flow + ph);
+        xs[i] = lerp(x0 + xs[i] * pose.R, x0 + d, open);
+        ys[i] = lerp(pose.y + ys[i] * pose.R, y, open);
       }
     } else {
       // Every particle somewhere of its own, so they fly in separately rather than as strands
@@ -214,6 +246,156 @@
     else if (live.leaving) k = 1 - clamp(live.local / 0.3);
     else return null;
     return k > 0 ? { from: { type: 'scatter' }, to: halo, k, stagger: true } : null;
+  }
+
+  // The features' progress line (scripts.njk): the particles gather into a small ring at its start
+  // as it comes up the screen, then run out along it as the rail slides across. Past the last card
+  // the tail runs up the line after them over the next quarter screen of scrolling, until they're
+  // wound into a ring at its tip, which then bursts into particles flying apart over most of a
+  // screen more (burst), as the orb did, slowly, so the particles are around for a while
+  const TAIL_RUN = 0.27;
+  const BURST_START = 0.24;
+  const BURST_RUN = 0.9;
+  function featureSegment(f, vh) {
+    if (!f.state.on || f.state.gather <= 0) return null;
+    const past = f.state.past;
+    const burst = clamp((past - vh * BURST_START) / (vh * BURST_RUN));
+    const b = f.line.getBoundingClientRect();
+    if (b.top > vh * 2 || (b.bottom < -vh * 0.5 && burst === 0)) return null;
+    const R = b.height * 0.45;
+    const tail = easeInOut(clamp(past / (vh * TAIL_RUN)));
+    const wave = { type: 'wave', x: b.left + R, y: b.top + b.height / 2, w: b.width - R, p: f.state.progress, tail, R, A: b.height * 0.5 };
+    return { from: { type: 'scatter' }, to: wave, k: f.state.gather, steady: true, alpha: 1 - clamp(burst / 0.15), burst };
+  }
+
+  // The footer: once its top rule is most of the way up the screen, the strands run in along it and
+  // curve round into the halo (drawFooterRun), playing out on their own over FOOTER_RUN seconds
+  // whatever the scroll does, and starting over if the footer goes back off the bottom of the screen
+  const FOOTER_RUN = 2.6;
+  let footerK = 0;
+  function footerSegment(vh, dt) {
+    const r = footerRule.getBoundingClientRect();
+    if (r.top > vh) footerK = 0;
+    else if (footerK > 0 || r.top < vh * 0.8) footerK = reduced ? 1 : Math.min(1, footerK + dt / FOOTER_RUN);
+    if (footerK <= 0) return null;
+    const b = footerOrb.getBoundingClientRect();
+    const halo = { type: 'halo', x: b.left + b.width / 2, y: b.top + b.height / 2, R: (b.width / 2) * 0.84 };
+    // The rule is the statement's 4px top border
+    return { from: { type: 'scatter' }, to: halo, k: footerK, stagger: true, rule: { x: r.left, y: r.top + 2 } };
+  }
+
+  // Each strand's way in: along the top rule from its left end, a little above it with a gentle wave,
+  // then curving down into its place in the halo, entering it the way it runs. The strand slides
+  // along that route, its own length, and ends up exactly where it sits in the finished halo
+  const RUN_LINE = 40; // points along the rule
+  const RUN_CURVE = 24; // ...in the curve down
+  const RUN = RUN_LINE + RUN_CURVE + SAMPLES;
+  const runX = new Float32Array(RUN);
+  const runY = new Float32Array(RUN);
+  const runD = new Float32Array(RUN);
+  function drawFooterRun(seg, t, color) {
+    const h = seg.to;
+    const rule = seg.rule;
+    ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineCap = 'butt';
+    ctx.lineJoin = 'round';
+    const scale = Math.min(1.4, Math.max(0.7, h.R / 250));
+    const y0 = rule.y - 12;
+    const sx = h.x - h.R * 1.3; // where the curve down begins
+    for (let k = 0; k < COUNT; k++) {
+      const s = ring[k];
+      const e = clamp(seg.k * 1.3 - rand(k, 9) * 0.3);
+      if (e <= 0) continue;
+      // An even pace, easing into place at the end
+      const m = 1 - Math.pow(1 - e, 1.6);
+
+      // The route: the rule...
+      const amp = 2 + 4 * rand(k, 81);
+      const freq = TAU / (160 + 200 * rand(k, 82));
+      const ph = rand(k, 85) * TAU;
+      for (let i = 0; i < RUN_LINE; i++) {
+        const u = i / (RUN_LINE - 1);
+        const x = lerp(rule.x, sx, u);
+        runX[i] = x;
+        runY[i] = y0 + amp * Math.min(1, u * 8, (1 - u) * 6) * Math.sin(x * freq + t * 1.5 + ph);
+      }
+      // ...its place in the halo...
+      traceRing(s, t, xs, ys);
+      const at = RUN_LINE + RUN_CURVE;
+      for (let i = 0; i < SAMPLES; i++) {
+        runX[at + i] = h.x + xs[i] * h.R;
+        runY[at + i] = h.y + ys[i] * h.R;
+      }
+      // ...and a curve between the two, leaving the rule level and joining the ring along it
+      const ex = runX[at];
+      const ey = runY[at];
+      let tx = runX[at + 1] - ex;
+      let ty = runY[at + 1] - ey;
+      const tl = Math.hypot(tx, ty) || 1;
+      tx /= tl;
+      ty /= tl;
+      const c1x = sx + h.R * 0.9;
+      const c2x = ex - tx * h.R * 0.9;
+      const c2y = ey - ty * h.R * 0.9;
+      for (let i = 1; i <= RUN_CURVE; i++) {
+        const u = i / (RUN_CURVE + 1);
+        const v = 1 - u;
+        runX[RUN_LINE - 1 + i] = v * v * v * sx + 3 * v * v * u * c1x + 3 * v * u * u * c2x + u * u * u * ex;
+        runY[RUN_LINE - 1 + i] = v * v * v * y0 + 3 * v * v * u * y0 + 3 * v * u * u * c2y + u * u * u * ey;
+      }
+      runD[0] = 0;
+      for (let i = 1; i < RUN; i++) runD[i] = runD[i - 1] + Math.hypot(runX[i] - runX[i - 1], runY[i] - runY[i - 1]);
+      const total = runD[RUN - 1];
+      const len = total - runD[at];
+
+      // The strand: its own length, its head m of the way along
+      const head = m * total;
+      let j = 1;
+      let first = -1;
+      for (let i = 0; i < SAMPLES; i++) {
+        const d = head - len * (1 - i / (SAMPLES - 1));
+        if (d < 0) continue;
+        if (first < 0) first = i;
+        while (j < RUN - 1 && runD[j] < d) j++;
+        const f = (d - runD[j - 1]) / (runD[j] - runD[j - 1] || 1);
+        rx[i] = lerp(runX[j - 1], runX[j], f);
+        ry[i] = lerp(runY[j - 1], runY[j], f);
+      }
+      if (first < 0 || first > SAMPLES - 2) continue;
+
+      const width = s.width * scale;
+      ctx.lineWidth = width;
+      const show = clamp(e * 6);
+      let tipAlpha = 0;
+      for (let c = first; c < SAMPLES - 1; c += CHUNK - 1) {
+        const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
+        const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * show;
+        tipAlpha = al;
+        if (al < 0.004) continue;
+        ctx.globalAlpha = al;
+        ctx.beginPath();
+        ctx.moveTo(rx[c], ry[c]);
+        for (let i = c + 1; i <= end; i++) ctx.lineTo(rx[i], ry[i]);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = tipAlpha;
+      strandTip(rx[SAMPLES - 2], ry[SAMPLES - 2], rx[SAMPLES - 1], ry[SAMPLES - 1], width);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
+  // The colour of the card the rail has come to, blending into the next: the cards take the step
+  // colours in turn
+  function featureColor(p, cards) {
+    const at = p * (cards - 1);
+    const i = Math.floor(at);
+    const a = colors.steps[i % 4];
+    const b = colors.steps[(i + 1) % 4];
+    const c = a.map((v, j) => Math.round(lerp(v, b[j], easeInOut(at - i))));
+    return `rgb(${c.join(',')})`;
   }
 
   // Each particle's flight when the orb explodes: direction, distance and a little stagger
@@ -412,6 +594,35 @@
     ctx.globalAlpha = 1;
   }
 
+  // The ring at the tip of the features' line breaking into particles that fly apart, as the orb's
+  // strands do (burst 0 → 1); every other strand, for more particles than there were lines
+  function drawBurst(cx, cy, R, t, burst, reach, color) {
+    ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+    ctx.fillStyle = color;
+    const dotAlpha = clamp(burst / 0.15);
+    for (let k = 0; k < COUNT; k += 2) {
+      const s = ring[k];
+      traceRing(s, t, xs, ys);
+      for (let i = 0, d = k * DOTS; i < SAMPLES; i += DOT_STEP, d++) {
+        const fade = cometFade(i / (SAMPLES - 1));
+        const fly = easeInOut(clamp(burst * 1.3 - burstDelay[d]));
+        // Fading only toward the end of their flight, so they stay in view most of the way out
+        const pa = Math.min(1, 0.5 + s.alpha) * (0.55 + 0.45 * fade) * dotAlpha * (1 - fly * fly * fly);
+        if (pa < 0.01) continue;
+        const dist = fly * reach * burstReach[d];
+        const size = 1.3 + 1.7 * fade;
+        ctx.globalAlpha = pa;
+        ctx.fillRect(
+          cx + xs[i] * R + Math.cos(burstAngle[d]) * dist - size / 2,
+          cy + ys[i] * R + Math.sin(burstAngle[d]) * dist - size / 2,
+          size, size
+        );
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // The demo's strands, between two poses (seg from liveSegment); arriving from the scatter, or when
   // the segment says particles, they fly as particles that turn back into strands as they land.
   // lineScale sizes the lines running round the app's boxes
@@ -434,15 +645,24 @@
     const lineTo = lineOf(seg.to);
     const dotFrom = dotOf(seg.from);
     const dotTo = dotOf(seg.to);
+    // Along the progress line the tails don't fade right out, so the line reads from its start
+    const fade = seg.to.type === 'wave' ? (u) => 0.3 + 0.7 * cometFade(u) : cometFade;
+    // ...and only some of the strands run along it, so the lines stay apart
+    const every = seg.to.type === 'wave' ? WAVE_EVERY : 1;
+    // The whole thing fading, as it gives way to particles
+    const fadeAll = seg.alpha === undefined ? 1 : seg.alpha;
 
-    for (let k = 0; k < COUNT; k++) {
+    for (let k = 0; k < COUNT; k += every) {
       const s = ring[k];
-      const mk = seg.stagger ? easeInOut(clamp(seg.k * 1.35 - rand(k, 9) * 0.35)) : easeInOut(seg.k);
+      // Steady: at an even pace, staggered only a little, so they all land right at the end
+      const mk = seg.steady ? clamp(seg.k * 1.12 - rand(k, 9) * 0.12)
+        : seg.stagger ? easeInOut(clamp(seg.k * 1.35 - rand(k, 9) * 0.35)) : easeInOut(seg.k);
       if (scattered && mk <= 0) continue;
       if (mk < 1 || (own && seg.k < 1)) fillPose(seg.from, k, s, t, rx, ry, vw, vh);
       if (mk > 0 || own) fillPose(seg.to, k, s, t, ox, oy, vw, vh);
       // Arriving particles home in fast and then settle, so they sit on the halo before joining up
-      const mp = arriving ? 1 - Math.pow(1 - mk, 3) : mk;
+      // (steady ones only ease in gently, so they're still on their way in until the end)
+      const mp = arriving ? 1 - Math.pow(1 - mk, seg.steady ? 1.6 : 3) : mk;
       for (let i = 0; i < SAMPLES; i++) {
         xs[i] = lerp(rx[i], ox[i], mp);
         ys[i] = lerp(ry[i], oy[i], mp);
@@ -460,7 +680,8 @@
         }
       }
 
-      const dots = arriving ? 1 - clamp(((own ? seg.k : mk) - 0.9) / 0.1) : 0;
+      const join = seg.steady ? 0.96 : 0.9; // when the particles join up into strands
+      const dots = arriving ? 1 - clamp(((own ? seg.k : mk) - join) / (1 - join)) : 0;
       const dotScale = lerp(dotFrom, dotTo, mk);
       if (dots < 1) {
         const width = s.width * lerp(lineFrom, lineTo, mk);
@@ -468,7 +689,7 @@
         let tipAlpha = 0;
         for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
           const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
-          const al = s.alpha * cometFade(((c + end) >> 1) / (SAMPLES - 1)) * (1 - dots);
+          const al = s.alpha * fade(((c + end) >> 1) / (SAMPLES - 1)) * (1 - dots) * fadeAll;
           tipAlpha = al;
           if (al < 0.004) continue;
           ctx.globalAlpha = al;
@@ -482,11 +703,12 @@
       }
       if (dots > 0) {
         for (let i = 0; i < SAMPLES; i += DOT_STEP) {
-          const fade = cometFade(i / (SAMPLES - 1));
-          // From the scatter they fade in as they come; from strands on screen they're there already
-          const pa = Math.min(1, 0.25 + s.alpha) * (0.3 + 0.7 * fade) * dots * (scattered ? mk : 1);
+          const f = fade(i / (SAMPLES - 1));
+          // From the scatter they fade in early in their flight, so they show as they gather;
+          // from strands on screen they're there already
+          const pa = Math.min(1, 0.5 + s.alpha) * (0.55 + 0.45 * f) * dots * (scattered ? clamp(mk * 3) : 1) * fadeAll;
           if (pa < 0.01) continue;
-          const size = (0.8 + 1.4 * fade) * dotScale;
+          const size = (1.3 + 1.7 * f) * dotScale;
           let x = xs[i];
           let y = ys[i];
           if (own) {
@@ -525,7 +747,7 @@
     let seg = null;
     if (gather > 0) {
       liveRect = liveRects(live.stage);
-      if (liveRect.S.y + liveRect.S.h > -vh && liveRect.S.y < vh * 2) seg = liveSegment(live.state, liveRect);
+      if (liveRect.S.y + liveRect.S.h > -vh && liveRect.S.y < vh * 4) seg = liveSegment(live.state, liveRect);
     }
     const liveStep = live ? live.state.step : 0;
 
@@ -602,12 +824,45 @@
 
     // Meet Tinker: the particles gathering into the halo above the prompt, in the first step's colour,
     // and flying off again as the app opens. Drawn in screen pixels like everything else, shifted onto
-    // the demo's canvas by where it sits on screen right now
+    // the demo's canvas by where it sits on screen right now. While they gather they fly in from all
+    // over the screen, from before the demo (still to fade in, canvas and all) is on it, so they're
+    // drawn on the fixed canvas until the halo has formed
     if (liveCanvas) {
       prepare(liveCanvas, liveCtx, liveDrawn);
-      liveDrawn = Boolean(seg);
-      if (seg) {
-        drawOn(liveCanvas, liveCtx, () => drawLive(seg, clock, vw, vh, `rgb(${colors.steps[0].join(',')})`, Math.min(1.2, Math.max(0.7, liveRect.S.h / 500))));
+      liveDrawn = false;
+    }
+    if (seg) {
+      const draw = () => drawLive(seg, clock, vw, vh, `rgb(${colors.steps[0].join(',')})`, Math.min(1.2, Math.max(0.7, liveRect.S.h / 500)));
+      if (liveCanvas && gather >= 1) {
+        drawOn(liveCanvas, liveCtx, draw);
+        liveDrawn = true;
+      } else draw();
+    }
+
+    // Features: the strands along the progress line, on the fixed canvas (wider screens only, where
+    // the rail holds still on screen while they grow)
+    const feat = window.TinkerFeatures;
+    const featSeg = feat ? featureSegment(feat, vh) : null;
+    if (featSeg) {
+      const color = featureColor(feat.state.progress, feat.cards);
+      if (featSeg.alpha > 0) drawLive(featSeg, clock, vw, vh, color, 0.8);
+      if (featSeg.burst > 0 && featSeg.burst < 1) {
+        const w = featSeg.to;
+        drawBurst(w.x + w.w, w.y, w.R, clock, featSeg.burst, Math.max(vw, vh), color);
+      }
+    }
+
+    // Footer: the halo in the hero's colour, on the fixed canvas while the strands run in along the
+    // rule, then on its own canvas once formed
+    if (footerCanvas) {
+      prepare(footerCanvas, footerCtx, footerDrawn);
+      footerDrawn = false;
+      const footSeg = footerSegment(vh, dt);
+      if (footSeg) {
+        if (footSeg.k >= 1) {
+          drawOn(footerCanvas, footerCtx, () => drawLive(footSeg, clock, vw, vh, colors.ink, 1));
+          footerDrawn = true;
+        } else drawFooterRun(footSeg, clock, colors.ink);
       }
     }
   }

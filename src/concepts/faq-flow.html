@@ -1,0 +1,742 @@
+---
+layout: policy.njk
+title: FAQ flow concept — Tinker
+description: Ways for the orb's particles to travel down through the FAQ and gather into the footer halo, side by side.
+noindex: true
+permalink: /concepts/faq-flow/
+---
+
+<style>
+  /* Page chrome (shared with the other concepts pages) */
+  .cx-intro { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .cx-intro h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; margin: 12px 0 20px; }
+  .cx-intro p { color: var(--ink-2); font-size: 1.125rem; max-width: 56ch; }
+  .cx-intro p + p { margin-top: 12px; }
+  .cx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; list-style: none; }
+  .cx-tags li { padding: 3px 10px; border-radius: 999px; background: var(--bg-raised); font-size: 0.8125rem; color: var(--ink-2); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.8125rem; letter-spacing: 0; }
+
+  /* ---------- One slider for every option, standing in for the scroll ---------- */
+  .ff-bar {
+    position: sticky;
+    top: 12px;
+    z-index: 5;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 8px 16px 8px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .ff-play { flex: none; padding: 8px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.875rem; }
+  .ff-bar input { flex: 1; min-width: 0; accent-color: var(--accent); }
+  .ff-pct { flex: none; min-width: 7.5em; color: var(--muted); text-align: right; }
+
+  /* ---------- The options ---------- */
+  .ff-grid { display: grid; gap: 48px 32px; }
+  @media (min-width: 1100px) { .ff-grid { grid-template-columns: 1fr 1fr; } }
+
+  .ff-card h2 { display: flex; gap: 10px; align-items: baseline; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.03em; }
+  .ff-card h2 .mono { color: var(--muted); }
+  .ff-card > p { margin-top: 8px; color: var(--ink-2); max-width: 60ch; }
+  .ff-card .cx-tags { margin-bottom: 16px; }
+  .ff-card.is-pick .ff-stage { box-shadow: 0 0 0 2px var(--accent); }
+  .ff-pick { padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 0.75rem; font-weight: 500; letter-spacing: 0; }
+
+  /* A miniature of the bottom of the page: the finished progress line, the FAQ, the footer */
+  .ff-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 660px;
+    padding: 20px 24px 28px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+  .ff-canvas { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
+  .ff-label { color: var(--muted); font-size: 0.6875rem; }
+  .ff-line { display: block; height: 24px; margin-top: 6px; }
+
+  .ff-faq { display: grid; grid-template-columns: 0.75fr 1.6fr; gap: 32px; margin-top: 24px; }
+  .ff-title { font-size: 1.625rem; font-weight: 500; line-height: 1; letter-spacing: -0.045em; }
+  .ff-list { list-style: none; border-bottom: 1px solid var(--line); }
+  .ff-list li { border-top: 1px solid var(--line); }
+  .ff-q { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; font-size: 0.9375rem; }
+  .ff-icon { position: relative; flex: none; width: 12px; height: 12px; transition: transform 0.3s ease; }
+  .ff-icon::before, .ff-icon::after { content: ""; position: absolute; left: 0; top: 5.5px; width: 12px; height: 1px; background: currentColor; }
+  .ff-icon::after { transform: rotate(90deg); }
+  .ff-list li.is-open .ff-icon { transform: rotate(45deg); }
+  .ff-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease; }
+  .ff-a > p { overflow: hidden; color: var(--ink-2); font-size: 0.8125rem; }
+  .ff-list li.is-open .ff-a { grid-template-rows: 1fr; }
+  .ff-list li.is-open .ff-a > p { padding-bottom: 12px; }
+
+  .ff-foot { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 3px solid var(--ink); }
+  .ff-head { font-size: 2rem; font-weight: 500; line-height: 0.95; letter-spacing: -0.05em; }
+  .ff-orb { flex: none; width: 128px; aspect-ratio: 1; }
+
+  @media (max-width: 600px) {
+    .ff-stage { padding-inline: 16px; }
+    .ff-faq { grid-template-columns: 1fr; gap: 14px; }
+    .ff-head { font-size: 1.5rem; }
+    .ff-orb { width: 96px; }
+  }
+
+  /* ---------- Side by side ---------- */
+  .ff-table-wrap { margin-top: 72px; overflow-x: auto; }
+  .ff-table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.9375rem; }
+  .ff-table th, .ff-table td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .ff-table th { color: var(--muted); font-weight: 500; font-size: 0.8125rem; }
+  .ff-table td:first-child { font-weight: 500; white-space: nowrap; }
+  .ff-table td { color: var(--ink-2); }
+</style>
+
+<header class="cx-intro">
+  <span class="eyebrow">(Concept) FAQ flow</span>
+  <h1>From the progress line <span class="text-accent">to the footer halo.</span></h1>
+  <p>Each panel is a miniature of the bottom of the page: the features' progress line, finished, then the FAQ, then the footer. The slider stands in for scrolling from where the rail unpins down to the bottom of the page, and drives every panel at once so they can be compared at the same moment.</p>
+  <p>It plays on a loop; drag the slider to scrub.</p>
+</header>
+
+<div class="ff-bar">
+  <button type="button" class="ff-play" data-ff-play>Pause</button>
+  <input type="range" min="0" max="1000" value="0" aria-label="Scroll position" data-ff-scrub>
+  <span class="mono ff-pct" data-ff-pct>Scroll 0%</span>
+</div>
+
+<div class="ff-grid">
+  <article class="ff-card" data-ff="now">
+    <h2><span class="mono">00</span>As it is now</h2>
+    <p>The line scrolls away with the rail, and as the footer comes up the particles fly in from all over the screen and implode into the halo. Here for comparison.</p>
+    <ul class="cx-tags"><li>Live today</li><li>No link between the two</li></ul>
+  </article>
+
+  <article class="ff-card" data-ff="stream">
+    <h2><span class="mono">01</span>The line peels off and flows down</h2>
+    <p>The finished line unwinds from its tip: its strands come loose as particles and stream down the gap between the title and the questions, then curve into the halo's spot.</p>
+    <ul class="cx-tags"><li>One continuous thread</li><li>Stays out of the text</li><li>Effort: medium</li></ul>
+  </article>
+
+  <article class="ff-card" data-ff="dividers">
+    <h2><span class="mono">02</span>Threads along the dividers</h2>
+    <p>The strands leave the line one after another and run along each divider in turn, zigzagging down the list, then drop into the footer and wind up as the halo.</p>
+    <ul class="cx-tags"><li>Uses lines already there</li><li>Crosses behind the questions</li><li>Effort: medium</li></ul>
+  </article>
+
+  <article class="ff-card" data-ff="spiral">
+    <h2><span class="mono">03</span>A spiral arrival</h2>
+    <p>Where the particles come from stays as now, but they arrive on a tightening spiral, and the halo is still spinning as it forms, slowing to its usual drift.</p>
+    <ul class="cx-tags"><li>A deliberate ending</li><li>Combines with 01 or 02</li><li>Effort: low</li></ul>
+  </article>
+
+  <article class="ff-card" data-ff="question">
+    <h2><span class="mono">04</span>A reaction to an open question</h2>
+    <p>Opening a question pulls a few particles into a tiny ring round its icon; when it closes they drift on down and join the halo. Here the second question opens and closes on its own.</p>
+    <ul class="cx-tags"><li>Feedback, not guidance</li><li>Combines with any</li><li>Effort: low</li></ul>
+  </article>
+
+  <article class="ff-card is-pick" data-ff="combo">
+    <h2><span class="mono">05</span>01 + 03 <span class="ff-pick">Recommended</span></h2>
+    <p>The line peels off and streams down the gap, and the stream spirals into the footer, the halo spinning up as it lands. The particles that tracked the cards become the halo.</p>
+    <ul class="cx-tags"><li>One continuous thread</li><li>A deliberate ending</li><li>Effort: medium</li></ul>
+  </article>
+</div>
+
+<div class="ff-table-wrap">
+  <table class="ff-table">
+    <thead>
+      <tr><th>Option</th><th>Story</th><th>Against the text</th><th>On phones</th><th>Effort</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>00 Now</td><td>The particles appear from nowhere at the footer</td><td>Only while they fly in</td><td>As desktop</td><td>Done</td></tr>
+      <tr><td>01 Peel and stream</td><td>The same particles from the line to the halo</td><td>Stays in the gap between the columns</td><td>Single column: runs down the left edge</td><td>Medium: a path pose</td></tr>
+      <tr><td>02 Divider threads</td><td>The same strands, visiting every question</td><td>Runs behind each question; needs to be faint</td><td>Works, the dividers are there</td><td>Medium: a path pose</td></tr>
+      <tr><td>03 Spiral arrival</td><td>Only the ending changes</td><td>Only near the footer</td><td>As desktop</td><td>Low: a different flight</td></tr>
+      <tr><td>04 Question reaction</td><td>Feedback on clicks, not a journey</td><td>A small ring by the icon</td><td>As desktop</td><td>Low</td></tr>
+      <tr><td>05 01 + 03</td><td>The same particles, with a deliberate ending</td><td>Stays in the gap, then the footer</td><td>Left edge, then the spiral</td><td>Medium</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const PI = Math.PI;
+  const TAU = PI * 2;
+  const COUNT = 150; // halo strands
+  const WAVES = 50; // strands along the progress line (every third, as on the page)
+  const SAMPLES = 72;
+  const CHUNK = 6;
+  const DOTS = 450; // particles travelling between the two
+  const PLAY = 8.5; // seconds from the rail unpinning to the bottom of the page
+  const HOLD = 1.6; // ...then a pause at the bottom before it starts over
+  const clamp = (v) => Math.min(1, Math.max(0, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  const rand = (i, s) => {
+    const v = Math.sin(i * 91.7 + s * 47.3) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  const seeded = (seed) => () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const cometFade = (u) => Math.pow(u, 1.7);
+
+  /* ----- The hero halo, exactly as on the real page ----- */
+
+  const RING = { seed: 23, radius: [0.42, 0.98], length: [1.2, 3.2], drift: [0.22, 0.55], wobble: 0.065, wobbleSpeed: 0.3, jitter: 0.09, squash: [0.78, 1], alpha: [0.08, 0.9] };
+  const ring = (() => {
+    const rnd = seeded(RING.seed);
+    const between = ([a, b]) => a + (b - a) * rnd();
+    const sign = () => (rnd() < 0.5 ? -1 : 1);
+    return Array.from({ length: COUNT }, () => {
+      const bright = Math.pow(rnd(), 2.4);
+      const s = {
+        r0: between(RING.radius), a0: rnd() * TAU, len: between(RING.length), drift: between(RING.drift),
+        waves: [2, 3, 5].map((n) => ({ n, amp: (RING.wobble * (0.3 + 0.7 * rnd())) / (n * 0.5), phase: rnd() * TAU, speed: RING.wobbleSpeed * (0.5 + 0.5 * rnd()) * sign() })),
+        ox: (rnd() * 2 - 1) * RING.jitter, oy: (rnd() * 2 - 1) * RING.jitter, jp: rnd() * TAU, js: 0.1 + 0.2 * rnd(),
+        squash: between(RING.squash), turn: rnd() * TAU
+      };
+      rnd(); rnd();
+      s.alpha = RING.alpha[0] + (RING.alpha[1] - RING.alpha[0]) * bright;
+      s.width = 0.6 + 0.9 * bright;
+      return s;
+    });
+  })();
+
+  // Every strand of the ring at time t, in orb units, into RX/RY (strand k's points at k * SAMPLES)
+  const RX = new Float32Array(COUNT * SAMPLES);
+  const RY = new Float32Array(COUNT * SAMPLES);
+  function traceRings(t) {
+    for (let k = 0; k < COUNT; k++) {
+      const s = ring[k];
+      const ox = s.ox + Math.sin(t * s.js + s.jp) * RING.jitter * 0.5;
+      const oy = s.oy + Math.cos(t * s.js * 0.8 + s.jp) * RING.jitter * 0.5;
+      const turn = s.turn + t * 0.015;
+      const ct = Math.cos(turn);
+      const st = Math.sin(turn);
+      for (let i = 0; i < SAMPLES; i++) {
+        const th = s.a0 + s.drift * t + (i / (SAMPLES - 1)) * s.len;
+        let r = s.r0;
+        for (const w of s.waves) r += w.amp * Math.sin(w.n * th + w.phase + w.speed * t);
+        const ex = Math.cos(th) * r;
+        const ey = Math.sin(th) * r * s.squash;
+        RX[k * SAMPLES + i] = ex * ct - ey * st + ox;
+        RY[k * SAMPLES + i] = ex * st + ey * ct + oy;
+      }
+    }
+  }
+
+  // A strand along the progress line, as on the page (sphere.js): its own wave, pinched at both ends
+  function traceWave(k, L, t, x0, y0, A, xs, ys) {
+    const amp = A * (0.2 + 0.8 * rand(k, 81));
+    const freq = TAU / (110 + 130 * rand(k, 82));
+    const flow = (0.8 + 1.2 * rand(k, 83)) * (rand(k, 84) < 0.5 ? -1 : 1);
+    const ph = rand(k, 85) * TAU;
+    for (let i = 0; i < SAMPLES; i++) {
+      const d = (i / (SAMPLES - 1)) * L;
+      xs[i] = x0 + d;
+      ys[i] = y0 + amp * Math.min(1, d / 30, (L - d) / 50) * Math.sin(d * freq + t * flow + ph);
+    }
+  }
+
+  /* ----- Colours ----- */
+
+  let colors = {};
+  const toRgb = (c) => {
+    const m = /^#?([0-9a-f]{6})$/i.exec(c.trim());
+    const n = m ? parseInt(m[1], 16) : 0x7590ff;
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  function readColors() {
+    const cs = getComputedStyle(root);
+    colors = {
+      ink: toRgb(cs.getPropertyValue('--ink') || '#121212'),
+      // The line ends in the last card's colour
+      line: toRgb(cs.getPropertyValue('--node-3') || '#f2541b'),
+      dark: darkQuery.matches
+    };
+  }
+  const rgb = (a, b, k) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], k))).join(',')})`;
+
+  /* ----- Each panel ----- */
+
+  const QUESTIONS = [
+    ['What is Tinker Click?', 'A desktop and iPad app for making your own apps by describing them.'],
+    ['Do I need to know how to code?', 'Not at all. Describe what you want in plain words.'],
+    ['Is Tinker Click open source?', 'Yes. Read the code, run it yourself and help shape it.'],
+    ['Does it work without internet?', 'Apps you have made keep working offline.'],
+    ['When can I try it?', 'Join the waitlist and we will let you know.']
+  ];
+
+  function build(card) {
+    const stage = document.createElement('div');
+    stage.className = 'ff-stage';
+    stage.setAttribute('aria-hidden', 'true');
+    stage.innerHTML = `
+      <span class="mono ff-label">Features: the progress line, finished</span>
+      <span class="ff-line" data-line></span>
+      <div class="ff-faq">
+        <p class="ff-title" data-title>Questions, <span class="text-accent">answered.</span></p>
+        <ul class="ff-list" data-list>${QUESTIONS.map(([q, a]) => `<li><div class="ff-q"><span>${q}</span><i class="ff-icon" data-icon></i></div><div class="ff-a"><p>${a}</p></div></li>`).join('')}</ul>
+      </div>
+      <div class="ff-foot">
+        <p class="ff-head">Built to tinker.<br><span class="text-accent">Made to share.</span></p>
+        <span class="ff-orb" data-orb></span>
+      </div>
+      <canvas class="ff-canvas"></canvas>`;
+    card.append(stage);
+    const canvas = stage.querySelector('canvas');
+    return {
+      kind: card.dataset.ff,
+      stage,
+      canvas,
+      ctx: canvas.getContext('2d'),
+      line: stage.querySelector('[data-line]'),
+      title: stage.querySelector('[data-title]'),
+      list: stage.querySelector('[data-list]'),
+      items: [...stage.querySelectorAll('.ff-list li')],
+      icons: [...stage.querySelectorAll('[data-icon]')],
+      orb: stage.querySelector('[data-orb]'),
+      visible: true
+    };
+  }
+
+  const panels = [...document.querySelectorAll('[data-ff]')].map(build);
+
+  // Where everything is in the panel, in its own pixels
+  function measure(P) {
+    const S = P.stage.getBoundingClientRect();
+    const rel = (el) => {
+      const b = el.getBoundingClientRect();
+      return { x: b.left - S.left, y: b.top - S.top, w: b.width, h: b.height };
+    };
+    const line = rel(P.line);
+    const title = rel(P.title);
+    const list = rel(P.list);
+    const orb = rel(P.orb);
+    const side = list.x > title.x + title.w;
+    return {
+      W: S.width,
+      H: S.height,
+      line: { x: line.x, y: line.y + line.h / 2, w: line.w, A: line.h * 0.5 },
+      // The gap between the title and the questions, or the left edge when they're stacked
+      gx: side ? (title.x + title.w + list.x) / 2 : Math.max(8, list.x - 8),
+      top: list.y,
+      bottom: list.y + list.h,
+      list,
+      dividers: [...P.items.map((li) => rel(li).y), list.y + list.h],
+      icons: P.icons.map((el) => { const r = rel(el); return { x: r.x + r.w / 2, y: r.y + r.h / 2 }; }),
+      hx: orb.x + orb.w / 2,
+      hy: orb.y + orb.h / 2,
+      R: (orb.w / 2) * 0.84
+    };
+  }
+
+  /* ----- Drawing ----- */
+
+  const xs = new Float32Array(SAMPLES);
+  const ys = new Float32Array(SAMPLES);
+
+  // The progress line, L long, its strands fading in toward the head as on the page
+  function drawLine(ctx, G, L, t, alpha) {
+    if (L < 2 || alpha <= 0) return;
+    ctx.strokeStyle = rgb(colors.line, colors.line, 0);
+    for (let k = 0; k < WAVES; k++) {
+      const s = ring[k * 3];
+      traceWave(k, L, t, G.line.x, G.line.y, G.line.A, xs, ys);
+      ctx.lineWidth = s.width * 0.8;
+      for (let c = 0; c < SAMPLES - 1; c += CHUNK - 1) {
+        const end = Math.min(c + CHUNK - 1, SAMPLES - 1);
+        ctx.globalAlpha = s.alpha * (0.3 + 0.7 * cometFade(((c + end) >> 1) / (SAMPLES - 1))) * alpha;
+        ctx.beginPath();
+        ctx.moveTo(xs[c], ys[c]);
+        for (let i = c + 1; i <= end; i++) ctx.lineTo(xs[i], ys[i]);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // The footer halo, turned by spin (radians) while it's still spinning up
+  function drawHalo(ctx, G, alpha, spin) {
+    if (alpha <= 0) return;
+    const c = Math.cos(spin);
+    const s = Math.sin(spin);
+    ctx.strokeStyle = rgb(colors.ink, colors.ink, 0);
+    const scale = Math.min(1.4, Math.max(0.7, G.R / 250));
+    for (let k = 0; k < COUNT; k++) {
+      const st = ring[k];
+      ctx.lineWidth = st.width * scale;
+      for (let a = 0; a < SAMPLES - 1; a += CHUNK - 1) {
+        const end = Math.min(a + CHUNK - 1, SAMPLES - 1);
+        const al = st.alpha * cometFade(((a + end) >> 1) / (SAMPLES - 1)) * alpha;
+        if (al < 0.004) continue;
+        ctx.globalAlpha = al;
+        ctx.beginPath();
+        for (let i = a; i <= end; i++) {
+          const x = RX[k * SAMPLES + i];
+          const y = RY[k * SAMPLES + i];
+          const px = G.hx + (x * c - y * s) * G.R;
+          const py = G.hy + (x * s + y * c) * G.R;
+          if (i === a) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Where particle j starts on the finished line (and how far along it, 0 start → 1 tip), and lands
+  // on the halo
+  const WX = new Float32Array(WAVES * SAMPLES);
+  const WY = new Float32Array(WAVES * SAMPLES);
+  function traceLines(G, t) {
+    for (let k = 0; k < WAVES; k++) {
+      traceWave(k, G.line.w, t, G.line.x, G.line.y, G.line.A, xs, ys);
+      WX.set(xs, k * SAMPLES);
+      WY.set(ys, k * SAMPLES);
+    }
+  }
+  const src = { x: 0, y: 0, f: 0 };
+  function source(j) {
+    const i = Math.floor(rand(j, 1) * (SAMPLES - 1));
+    const at = (j % WAVES) * SAMPLES + i;
+    src.x = WX[at];
+    src.y = WY[at];
+    src.f = i / (SAMPLES - 1);
+    return src;
+  }
+  const dst = { x: 0, y: 0, r: 0, a: 0 };
+  function dest(G, j) {
+    const i = Math.floor(Math.pow(rand(j, 2), 0.6) * (SAMPLES - 1));
+    const at = (j % COUNT) * SAMPLES + i;
+    const dx = RX[at] * G.R;
+    const dy = RY[at] * G.R;
+    dst.x = G.hx + dx;
+    dst.y = G.hy + dy;
+    dst.r = Math.hypot(dx, dy);
+    dst.a = Math.atan2(dy, dx);
+    return dst;
+  }
+  // Flung far out, as the explosion leaves them
+  function scatter(G, j, out) {
+    const a = rand(j, 5) * TAU;
+    const d = Math.max(G.W, G.H) * (0.55 + 0.5 * rand(j, 6));
+    out.x = G.W / 2 + Math.cos(a) * d;
+    out.y = G.H / 2 + Math.sin(a) * d;
+    return out;
+  }
+
+  // A smooth curve through the points pts (each { x, y }), at s from 0 to 1
+  function curve(pts, s, out) {
+    const n = pts.length - 1;
+    const f = Math.min(n - 1e-6, Math.max(0, s) * n);
+    const i = Math.floor(f);
+    const t = f - i;
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(n, i + 2)];
+    const t2 = t * t;
+    const t3 = t2 * t;
+    const cr = (a, b, c, d) => 0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
+    out.x = cr(p0.x, p1.x, p2.x, p3.x);
+    out.y = cr(p0.y, p1.y, p2.y, p3.y);
+    return out;
+  }
+
+  // Down the gap between the columns, from the line to just short of the halo
+  const way = Array.from({ length: 6 }, () => ({ x: 0, y: 0 }));
+  function gapRoute(G, j, from, to) {
+    way[0].x = from.x; way[0].y = from.y;
+    way[1].x = G.gx + (rand(j, 11) - 0.5) * 22; way[1].y = G.top + 8;
+    way[2].x = G.gx + (rand(j, 12) - 0.5) * 26; way[2].y = (G.top + G.bottom) / 2;
+    way[3].x = G.gx + (rand(j, 13) - 0.5) * 22; way[3].y = G.bottom;
+    way[4].x = lerp(G.gx, to.x, 0.55); way[4].y = lerp(G.bottom, to.y, 0.6) + 20;
+    way[5].x = to.x; way[5].y = to.y;
+    return way;
+  }
+
+  const pos = { x: 0, y: 0 };
+  const tmp = { x: 0, y: 0 };
+  const entry = { x: 0, y: 0 };
+
+  // Particles, coloured from the line's colour to the halo's as they go (u)
+  function dot(ctx, x, y, size, alpha, u) {
+    if (alpha < 0.01) return;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = rgb(colors.line, colors.ink, u);
+    ctx.fillRect(x - size / 2, y - size / 2, size, size);
+  }
+  const dotSize = (j) => 1.3 + 1.4 * rand(j, 3);
+  const dotAlpha = (j) => 0.45 + 0.5 * rand(j, 4);
+
+  /* ----- The options: each draws the panel at scroll position p ----- */
+
+  const OPTIONS = {
+    // The line stays; the particles fly in from all over and implode into the halo
+    now(ctx, G, p, t) {
+      drawLine(ctx, G, G.line.w, t, 1);
+      const haloIn = clamp((p - 0.78) / 0.14);
+      for (let j = 0; j < DOTS; j++) {
+        const u = clamp((p - 0.3 - 0.3 * rand(j, 9)) / 0.3);
+        if (u <= 0) continue;
+        scatter(G, j, tmp);
+        const d = dest(G, j);
+        const e = easeOut(u);
+        dot(ctx, lerp(tmp.x, d.x, e), lerp(tmp.y, d.y, e), dotSize(j), dotAlpha(j) * clamp(u * 3) * (1 - haloIn), 1);
+      }
+      drawHalo(ctx, G, haloIn, 0);
+    },
+
+    // The line unwinds from its tip, its particles streaming down the gap into the halo
+    stream(ctx, G, p, t) {
+      drawLine(ctx, G, G.line.w * (1 - clamp(p / 0.3)), t, 1);
+      const haloIn = clamp((p - 0.8) / 0.12);
+      for (let j = 0; j < DOTS; j++) {
+        const s = source(j);
+        const u = clamp((p - (1 - s.f) * 0.3) / 0.55);
+        if (u <= 0) continue;
+        const d = dest(G, j);
+        curve(gapRoute(G, j, s, d), lerp(u, easeInOut(u), 0.4), pos);
+        // A little sway across the stream
+        pos.x += Math.sin(u * TAU * 2 + t * 2 + j) * 4 * Math.sin(PI * u);
+        dot(ctx, pos.x, pos.y, dotSize(j), dotAlpha(j) * clamp(u * 8) * (1 - haloIn), u);
+      }
+      drawHalo(ctx, G, haloIn, 0);
+    },
+
+    // Strands leave the line one after another and zigzag along the dividers into the halo
+    dividers(ctx, G, p, t) {
+      drawLine(ctx, G, G.line.w * (1 - clamp(p / 0.25)), t, 1);
+      const haloIn = clamp((p - 0.82) / 0.12);
+      // The route: from the line's tip, along each divider in turn, into the halo
+      const L = G.list;
+      const pts = [{ x: G.line.x + G.line.w, y: G.line.y }];
+      G.dividers.forEach((y, i) => {
+        const a = i % 2 ? L.x + L.w : L.x;
+        const b = i % 2 ? L.x : L.x + L.w;
+        pts.push({ x: a, y }, { x: b, y });
+      });
+      pts.push({ x: G.hx, y: G.hy - G.R * 0.4 }, { x: G.hx, y: G.hy });
+      // Lengths along it, so the strands move at an even pace
+      const cum = [0];
+      for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+      const total = cum[cum.length - 1];
+      const at = (u, out) => {
+        const d = clamp(u) * total;
+        let i = 1;
+        while (i < cum.length - 1 && cum[i] < d) i++;
+        const k = (d - cum[i - 1]) / (cum[i] - cum[i - 1] || 1);
+        out.x = lerp(pts[i - 1].x, pts[i].x, k);
+        out.y = lerp(pts[i - 1].y, pts[i].y, k);
+        return out;
+      };
+      const N = 26;
+      const body = 120 / total; // each strand about 120px long
+      ctx.lineCap = 'round';
+      for (let k = 0; k < N; k++) {
+        const head = clamp((p - 0.25 * (k / N)) / 0.6);
+        if (head <= 0) continue;
+        const st = ring[k * 5];
+        const off = (rand(k, 7) - 0.5) * 7;
+        ctx.strokeStyle = rgb(colors.line, colors.ink, head);
+        ctx.lineWidth = 0.9 + st.width * 0.6;
+        let px = null;
+        let py = null;
+        for (let i = 0; i < SAMPLES; i += 2) {
+          const f = i / (SAMPLES - 1);
+          const u = head - body * (1 - f);
+          at(u, pos);
+          at(u + 0.002, tmp);
+          // Offset to one side of the route, with a little wave, so the strands run as a loose bundle
+          const dx = tmp.x - pos.x;
+          const dy = tmp.y - pos.y;
+          const n = Math.hypot(dx, dy) || 1;
+          const w = off + Math.sin(u * 60 + t * 2 + k) * 2.5;
+          const x = pos.x - (dy / n) * w;
+          const y = pos.y + (dx / n) * w;
+          if (px !== null) {
+            ctx.globalAlpha = (0.4 + 0.6 * st.alpha) * (0.15 + 0.85 * cometFade(f)) * (1 - haloIn);
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+          }
+          px = x;
+          py = y;
+        }
+      }
+      ctx.lineCap = 'butt';
+      drawHalo(ctx, G, haloIn, 0);
+    },
+
+    // As now, but arriving on a tightening spiral, the halo still spinning as it forms
+    spiral(ctx, G, p, t) {
+      drawLine(ctx, G, G.line.w, t, 1);
+      const haloIn = clamp((p - 0.8) / 0.12);
+      for (let j = 0; j < DOTS; j++) {
+        const u = clamp((p - 0.3 - 0.3 * rand(j, 9)) / 0.32);
+        if (u <= 0) continue;
+        const d = dest(G, j);
+        const e = 1 - Math.pow(1 - u, 2.2);
+        const r0 = Math.max(G.W, G.H) * (0.55 + 0.45 * rand(j, 6));
+        const r = lerp(r0, d.r, e);
+        const a = d.a + (1.25 + 0.75 * rand(j, 8)) * TAU * (1 - e);
+        dot(ctx, G.hx + Math.cos(a) * r, G.hy + Math.sin(a) * r, dotSize(j), dotAlpha(j) * clamp(u * 4) * (1 - haloIn), 1);
+      }
+      drawHalo(ctx, G, haloIn, 2.4 * Math.pow(1 - clamp((p - 0.8) / 0.2), 2));
+    },
+
+    // As now, plus a small ring round the open question's icon that drifts on into the halo
+    question(ctx, G, p, t, P) {
+      const open = p > 0.12 && p < 0.58;
+      P.items.forEach((li, i) => li.classList.toggle('is-open', open && i === 1));
+      drawLine(ctx, G, G.line.w, t, 1);
+      const haloIn = clamp((p - 0.78) / 0.14);
+      const icon = G.icons[1];
+      const RINGED = 70;
+      for (let j = 0; j < DOTS; j++) {
+        const d = dest(G, j);
+        if (j < RINGED) {
+          const gather = easeOut(clamp((p - 0.12) / 0.12));
+          if (gather <= 0) continue;
+          const a = rand(j, 15) * TAU + t * (1.2 + rand(j, 16));
+          const r = 11 + 6 * rand(j, 17);
+          scatter(G, j, tmp);
+          const ox = icon.x + Math.cos(a) * r;
+          const oy = icon.y + Math.sin(a) * r;
+          const leave = easeInOut(clamp((p - 0.58 - 0.12 * rand(j, 18)) / 0.25));
+          const x = lerp(lerp(tmp.x, ox, gather), d.x, leave);
+          const y = lerp(lerp(tmp.y, oy, gather), d.y, leave);
+          dot(ctx, x, y, dotSize(j) * 0.9, dotAlpha(j) * gather * (1 - haloIn), leave);
+          continue;
+        }
+        const u = clamp((p - 0.3 - 0.3 * rand(j, 9)) / 0.3);
+        if (u <= 0) continue;
+        scatter(G, j, tmp);
+        const e = easeOut(u);
+        dot(ctx, lerp(tmp.x, d.x, e), lerp(tmp.y, d.y, e), dotSize(j), dotAlpha(j) * clamp(u * 3) * (1 - haloIn), 1);
+      }
+      drawHalo(ctx, G, haloIn, 0);
+    },
+
+    // 01 + 03: down the gap, then a spiral into the halo as it spins up
+    combo(ctx, G, p, t) {
+      drawLine(ctx, G, G.line.w * (1 - clamp(p / 0.3)), t, 1);
+      const haloIn = clamp((p - 0.82) / 0.12);
+      const SPLIT = 0.75; // the share of the trip spent in the stream, the rest in the spiral
+      for (let j = 0; j < DOTS; j++) {
+        const s = source(j);
+        const u = clamp((p - (1 - s.f) * 0.3) / 0.58);
+        if (u <= 0) continue;
+        const d = dest(G, j);
+        // Where it joins the spiral: out from the halo on the side facing the stream
+        const ea = Math.atan2(G.bottom - G.hy, G.gx - G.hx) + (rand(j, 19) - 0.5) * 0.8;
+        const er = G.R * (2 + 0.6 * rand(j, 20));
+        entry.x = G.hx + Math.cos(ea) * er;
+        entry.y = G.hy + Math.sin(ea) * er;
+        if (u < SPLIT) {
+          const v = u / SPLIT;
+          curve(gapRoute(G, j, s, entry), lerp(v, easeInOut(v), 0.4), pos);
+          pos.x += Math.sin(v * TAU * 2 + t * 2 + j) * 4 * Math.sin(PI * v);
+        } else {
+          const v = easeOut((u - SPLIT) / (1 - SPLIT));
+          // At least a full turn on the way in
+          const turn = ((((d.a - ea) % TAU) + TAU) % TAU) + TAU;
+          const a = ea + turn * v;
+          const r = lerp(er, d.r, v);
+          pos.x = G.hx + Math.cos(a) * r;
+          pos.y = G.hy + Math.sin(a) * r;
+        }
+        dot(ctx, pos.x, pos.y, dotSize(j), dotAlpha(j) * clamp(u * 8) * (1 - haloIn), u);
+      }
+      drawHalo(ctx, G, haloIn, -2.4 * Math.pow(1 - clamp((p - 0.82) / 0.2), 2));
+    }
+  };
+
+  /* ----- Running it ----- */
+
+  let dpr = 1;
+  function size(P) {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(P.canvas.clientWidth * dpr);
+    const h = Math.round(P.canvas.clientHeight * dpr);
+    if (P.canvas.width !== w || P.canvas.height !== h) {
+      P.canvas.width = w;
+      P.canvas.height = h;
+    }
+  }
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      const P = panels.find((x) => x.stage === e.target);
+      if (P) P.visible = e.isIntersecting;
+    }));
+    panels.forEach((P) => io.observe(P.stage));
+  }
+
+  const play = document.querySelector('[data-ff-play]');
+  const scrub = document.querySelector('[data-ff-scrub]');
+  const pct = document.querySelector('[data-ff-pct]');
+  let playing = !reduced;
+  let p = reduced ? 1 : 0;
+  let start = performance.now();
+  const setPlaying = (on) => {
+    playing = on;
+    play.textContent = on ? 'Pause' : 'Play';
+    if (on) start = performance.now() - p * PLAY * 1000;
+  };
+  play.addEventListener('click', () => setPlaying(!playing));
+  scrub.addEventListener('input', () => {
+    setPlaying(false);
+    p = scrub.value / 1000;
+  });
+  setPlaying(playing);
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (playing) {
+      const s = ((now - start) / 1000) % (PLAY + HOLD);
+      p = clamp(s / PLAY);
+      scrub.value = Math.round(p * 1000);
+    }
+    pct.textContent = `Scroll ${Math.round(p * 100)}%`;
+    const t = now / 1000;
+    traceRings(t);
+    panels.forEach((P) => {
+      if (!P.visible) return;
+      size(P);
+      const G = measure(P);
+      const ctx = P.ctx;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, P.canvas.width, P.canvas.height);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalCompositeOperation = colors.dark ? 'lighter' : 'source-over';
+      ctx.lineCap = 'butt';
+      ctx.lineJoin = 'round';
+      traceLines(G, t);
+      OPTIONS[P.kind](ctx, G, p, t, P);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  readColors();
+  darkQuery.addEventListener('change', readColors);
+  requestAnimationFrame(frame);
+})();
+</script>
