@@ -1081,11 +1081,16 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   paint-order: stroke fill;
 }
 
-/* The logo mark between the words */
-.ticker-mark {
+/* The solid grey dot between the words */
+.ticker-dot {
   flex: none;
-  width: 0.5em;
-  height: 0.5em;
+  display: inline-block;
+  width: 0.16em;
+  height: 0.16em;
+  border-radius: 50%;
+  background: var(--muted);
+  -webkit-text-stroke: 0;
+  vertical-align: middle;
 }
 
 /* The features: a list on phones, a rail of cards from 761px (scripts.njk slides it with the scroll).
@@ -1296,34 +1301,43 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
   .features-nav {
     display: flex;
-    gap: 10px;
     align-items: center;
-    margin: 22px var(--edge) 0;
+    margin: clamp(24px, 2.8vw, 40px) var(--edge) 0;
   }
 
   .features-progress {
+    display: block;
     flex: 1;
-    height: 1px;
-    margin-right: 12px;
+    height: clamp(2px, 0.15vw, 3px);
     background: var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
   }
 
   .features-progress i {
     display: block;
     width: 0;
-    height: 2px;
-    margin-top: -0.5px;
+    height: 100%;
     background: var(--ink);
-    transition: width 0.2s linear;
+    border-radius: 999px;
+    will-change: width;
+    transition: width 0.08s linear;
   }
 
   /* Pinned in the middle of the screen while the scroll slides the cards across (scripts.njk sets its
-     top and the section's height). The orb's strands are drawn along the line instead of the bar,
-     running out from its start as far as the rail has come (sphere.js) */
+     top and the section's height). A clean solid progress line indicates scroll position. */
   .features.is-scrub .features-pin { position: sticky; }
   .features.is-scrub .feature-list { overflow-x: hidden; scroll-snap-type: none; cursor: auto; }
-  .features.is-scrub .features-progress { height: 28px; margin-right: 0; background: none; }
-  .features.is-scrub .features-progress i { display: none; }
+  .features.is-scrub .features-progress {
+    height: clamp(2px, 0.15vw, 3px);
+    background: var(--line);
+    margin-right: 0;
+  }
+  .features.is-scrub .features-progress i {
+    display: block;
+    height: 100%;
+  }
 
   /* On screens tall enough, the platforms row is pinned under the rail with it (scripts.njk), lined
      up with the page, and the section keeps the space it left after it */

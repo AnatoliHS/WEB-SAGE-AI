@@ -244,26 +244,6 @@
     return k > 0 ? { from: { type: 'scatter' }, to: halo, k, stagger: true } : null;
   }
 
-  // The features' progress line (scripts.njk): the particles gather into a small ring at its start
-  // as it comes up the screen, then run out along it as the rail slides across. Past the last card
-  // the tail runs up the line after them over the next quarter screen of scrolling, until they're
-  // wound into a ring at its tip, which then bursts into particles flying apart over most of a
-  // screen more (burst), as the orb did, slowly, so the particles are around for a while
-  const TAIL_RUN = 0.27;
-  const BURST_START = 0.24;
-  const BURST_RUN = 0.9;
-  function featureSegment(f, vh) {
-    if (!f.state.on || f.state.gather <= 0) return null;
-    const past = f.state.past;
-    const burst = clamp((past - vh * BURST_START) / (vh * BURST_RUN));
-    const b = f.line.getBoundingClientRect();
-    if (b.top > vh * 2 || (b.bottom < -vh * 0.5 && burst === 0)) return null;
-    const R = b.height * 0.45;
-    const tail = easeInOut(clamp(past / (vh * TAIL_RUN)));
-    const wave = { type: 'wave', x: b.left + R, y: b.top + b.height / 2, w: b.width - R, p: f.state.progress, tail, R, A: b.height * 0.5 };
-    return { from: { type: 'scatter' }, to: wave, k: f.state.gather, steady: true, alpha: 1 - clamp(burst / 0.15), burst };
-  }
-
   // The hero halo is sketched in as the page loads, once the intro has played (intro.js), or straight
   // away without it: its strands draw themselves one after another like pen strokes round the circle
   // (heroSketch, 0 → 1 over SKETCH_TIME seconds)
@@ -273,17 +253,6 @@
   if (!reduced) {
     if (root.classList.contains('has-intro')) document.addEventListener('tinker:intro-done', () => { heroSketching = true; }, { once: true });
     else heroSketching = true;
-  }
-
-  // The colour of the card the rail has come to, blending into the next: the cards take the step
-  // colours in turn
-  function featureColor(p, cards) {
-    const at = p * (cards - 1);
-    const i = Math.floor(at);
-    const a = colors.steps[i % 4];
-    const b = colors.steps[(i + 1) % 4];
-    const c = a.map((v, j) => Math.round(lerp(v, b[j], easeInOut(at - i))));
-    return `rgb(${c.join(',')})`;
   }
 
   // Each particle's flight when the orb explodes: direction, distance and a little stagger
@@ -736,19 +705,6 @@
         drawOn(liveCanvas, liveCtx, draw);
         liveDrawn = true;
       } else draw();
-    }
-
-    // Features: the strands along the progress line, on the fixed canvas (wider screens only, where
-    // the rail holds still on screen while they grow)
-    const feat = window.TinkerFeatures;
-    const featSeg = feat ? featureSegment(feat, vh) : null;
-    if (featSeg) {
-      const color = featureColor(feat.state.progress, feat.cards);
-      if (featSeg.alpha > 0) drawLive(featSeg, clock, vw, vh, color, 0.8);
-      if (featSeg.burst > 0 && featSeg.burst < 1) {
-        const w = featSeg.to;
-        drawBurst(w.x + w.w, w.y, w.R, clock, featSeg.burst, Math.max(vw, vh), color);
-      }
     }
   }
 
