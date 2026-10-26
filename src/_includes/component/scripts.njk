@@ -27,11 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dock vertically centred on the CTA, just right of the logo
     const isMobile = window.innerWidth < 768;
-    geo.dockScale = (isMobile ? 26 : 32) / fullHeight;
+    let targetH = 32;
+    if (isMobile) targetH = 26;
+    else if (window.innerWidth >= 2560) targetH = 46;
+    else if (window.innerWidth >= 2000) targetH = 42;
+    else if (window.innerWidth >= 1600) targetH = 38;
+    geo.dockScale = targetH / fullHeight;
     const cta = triggerBtn ? triggerBtn.getBoundingClientRect() : null;
     const ctaCenter = cta ? cta.top + cta.height / 2 : 40;
     const logo = headerLogo ? headerLogo.getBoundingClientRect() : null;
-    geo.dockX = logo ? logo.right + (isMobile ? 10 : 14) : 24;
+    const gap = window.innerWidth >= 2000 ? 18 : window.innerWidth >= 1600 ? 16 : isMobile ? 10 : 14;
+    geo.dockX = logo ? logo.right + gap : 24;
     geo.dockY = ctaCenter - (fullHeight * geo.dockScale) / 2;
   }
 

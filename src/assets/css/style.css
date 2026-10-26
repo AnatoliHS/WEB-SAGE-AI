@@ -30,6 +30,8 @@
   --gutter: clamp(16px, 3vw, 40px);
   --container-max: 1440px;
   --header-h: 76px;
+  --logo-size: 40px;
+  --header-cta-h: 40px;
   --radius: 20px;
 
   /* Motion */
@@ -42,6 +44,8 @@
     --container-max: min(1720px, 92vw);
     --gutter: clamp(36px, 2.6vw, 56px);
     --header-h: 84px;
+    --logo-size: 48px;
+    --header-cta-h: 46px;
     --radius: 24px;
   }
 }
@@ -51,6 +55,8 @@
     --container-max: min(2160px, 88vw);
     --gutter: clamp(48px, 2.8vw, 72px);
     --header-h: 92px;
+    --logo-size: 54px;
+    --header-cta-h: 52px;
     --radius: 28px;
   }
 }
@@ -60,6 +66,8 @@
     --container-max: min(2400px, 86vw);
     --gutter: clamp(56px, 3vw, 84px);
     --header-h: 100px;
+    --logo-size: 60px;
+    --header-cta-h: 58px;
     --radius: 32px;
   }
 }
@@ -343,12 +351,12 @@ button {
 
 .header-logo {
   position: fixed;
-  top: calc((var(--header-h) - 40px) / 2);
+  top: calc((var(--header-h) - var(--logo-size, 40px)) / 2);
   left: var(--gutter);
   z-index: 1001;
   display: block;
-  width: 40px;
-  height: 40px;
+  width: var(--logo-size, 40px);
+  height: var(--logo-size, 40px);
   transition: opacity 0.2s ease;
 }
 
@@ -362,23 +370,22 @@ button {
 }
 
 @media (max-width: 767px) {
-  .header-logo {
-    top: calc((var(--header-h) - 34px) / 2);
-    width: 34px;
-    height: 34px;
+  :root {
+    --logo-size: 34px;
+    --header-cta-h: 36px;
   }
 }
 
 .header-cta {
   position: fixed;
-  top: calc((var(--header-h) - 40px) / 2);
+  top: calc((var(--header-h) - var(--header-cta-h, 40px)) / 2);
   right: var(--gutter);
   z-index: 1001;
-  height: 40px;
-  padding: 0 18px;
+  height: var(--header-cta-h, 40px);
+  padding: 0 clamp(18px, 1.25vw, 26px);
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.875rem;
+  font-size: clamp(0.875rem, 0.95vw, 1.0625rem);
 }
 
 .header-cta:hover {
@@ -391,6 +398,8 @@ button {
 }
 
 .header-cta .cta-icon {
+  width: clamp(14px, 0.95vw, 18px);
+  height: clamp(14px, 0.95vw, 18px);
   transition: transform 0.45s var(--ease);
 }
 
@@ -466,9 +475,13 @@ button {
   grid-column: 1 / span 2;
 }
 
+.drawer-intro .eyebrow {
+  font-size: clamp(0.8125rem, 0.9vw, 1.0625rem);
+}
+
 .drawer-title {
   margin-top: 16px;
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-size: clamp(2.25rem, 4.6vw, 6rem);
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.045em;
@@ -482,8 +495,10 @@ button {
 
 .drawer-copy {
   color: var(--ink-2);
-  max-width: 44ch;
-  margin-bottom: 28px;
+  max-width: 48ch;
+  font-size: clamp(1rem, 1.15vw, 1.35rem);
+  line-height: 1.55;
+  margin-bottom: clamp(28px, 3.2vh, 44px);
 }
 
 .drawer-copy strong {
@@ -494,9 +509,9 @@ button {
 .composer {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1.5px solid var(--ink);
+  gap: clamp(12px, 1.2vw, 20px);
+  padding-bottom: clamp(10px, 1.2vh, 18px);
+  border-bottom: clamp(1.5px, 0.15vw, 2.5px) solid var(--ink);
   transition: border-color 0.25s ease;
 }
 
@@ -510,13 +525,24 @@ button {
   background: transparent;
   border: 0;
   outline: 0;
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-size: clamp(1.25rem, 1.8vw, 2.25rem);
   letter-spacing: -0.02em;
-  padding: 6px 0;
+  padding: clamp(6px, 0.8vh, 12px) 0;
 }
 
 .composer input::placeholder {
   color: var(--muted);
+}
+
+.composer .btn-submit {
+  height: clamp(44px, 3.2vw, 56px);
+  padding: 0 clamp(20px, 1.5vw, 32px);
+  font-size: clamp(0.9375rem, 1vw, 1.15rem);
+}
+
+.composer .btn-submit svg {
+  width: clamp(16px, 1.1vw, 20px);
+  height: clamp(16px, 1.1vw, 20px);
 }
 
 .btn-submit:disabled {
@@ -526,8 +552,8 @@ button {
 
 .status {
   min-height: 1.5em;
-  margin-top: 12px;
-  font-size: 0.9375rem;
+  margin-top: 14px;
+  font-size: clamp(0.9375rem, 1vw, 1.15rem);
   color: var(--ink-2);
 }
 
@@ -557,9 +583,11 @@ button {
 }
 
 .drawer-fine {
-  margin-top: 20px;
-  font-size: 0.8125rem;
+  margin-top: clamp(20px, 2.2vh, 32px);
+  font-size: clamp(0.8125rem, 0.88vw, 1.0625rem);
+  line-height: 1.5;
   color: var(--muted);
+  max-width: 52ch;
 }
 
 @media (max-width: 860px) {
