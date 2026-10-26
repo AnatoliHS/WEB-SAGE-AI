@@ -1,8 +1,8 @@
-<!-- Intro: the four words rise from behind the hero rule, then TINKER CLICK does (assets/js/intro.js).
+<!-- Intro: words rise from behind the hero rule, then SAGE.IS does (assets/js/intro.js).
      Only shown when head.njk has flagged html.has-intro: every load unless reduced motion is on. -->
 <div class="intro" id="intro" aria-hidden="true">
   <div class="intro-stack" data-intro-stack>
-    {% for w in ["Describe", "Build", "Remix", "Share"] %}<span class="intro-word" style="--d: {{ 450 + loop.index0 * 600 }}ms">{{ w }}</span>{% endfor %}
+    {% for w in ["Build", "Deploy", "Collaborate", "Empower"] %}<span class="intro-word" style="--d: {{ 450 + loop.index0 * 600 }}ms">{{ w }}</span>{% endfor %}
   </div>
   <i class="intro-line" data-intro-line></i>
 </div>

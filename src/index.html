@@ -1,314 +1,489 @@
 ---
 layout: default.njk
-title: Tinker Click — Make your own apps by describing them
-description: Tell Tinker Click what you need and get a focused app built for the job, from games and tools to dashboards, documents and presentations. Open source, runs on Windows, macOS, Linux and iPad. Join the waitlist at tinker.click.
-heroSphere: true
+title: "Sage: Open-source, private & secure AI platform for teams"
+description: "The best open‑source alternative to proprietary AI platforms. Private by design, self‑hosted or managed. Build, deploy, and collaborate with AI agents in one calm, organized place."
 intro: true
 ---
 
 <!-- ========================================================
-     1. HERO + THINKING SPHERE STAGE
+     1. HERO
      ======================================================== -->
 {% include "component/hero.njk" %}
 
-<section class="stage stage-sphere" data-stage data-compact-below="760" aria-label="Make it. Use it. Share it.">
-  <div class="stage-pin">
-    <div class="container stage-inner">
-      <!-- The words are drawn on the canvas with the orb (assets/js/sphere.js); this is their text -->
-      <h2 class="sr-only">Make it. Use it. Share it.</h2>
-      <div class="sphere-target" data-stage-target></div>
-    </div>
-    <!-- Phones: the orb is drawn here while it moves with the page (assets/js/sphere.js) -->
-    <canvas class="stage-canvas" aria-hidden="true"></canvas>
-  </div>
-  <!-- Fixed over the viewport. Kept outside the sticky pin, which would otherwise hold it in its own
-       layer under later sections, where the orb also draws (Meet Tinker's demo) -->
-  <canvas class="sphere-canvas" aria-hidden="true"></canvas>
-</section>
-
 <!-- ========================================================
-     2. MEET TINKER
+     2. GROW YOUR IDEAS
      ======================================================== -->
-<section id="tinker" class="section">
+<section id="learn-more" class="section section-feature-intro">
+  <div class="container text-center reveal">
+    <header class="section-head-center">
+      <h2 class="section-title">Grow your ideas with <span class="text-accent">Sage.is</span></h2>
+      <p class="section-subtitle">
+        We build <u>Open-source AI solutions</u> and provide <u>Technical Capital</u> to align with your business goals.
+      </p>
+      <p class="section-lede max-w-prose">
+        Work with our <u>powerful AI</u> and <u>human experts</u> to develop <u>your bold vision</u>, no matter the challenge.
+        Our experts embed with your team to deploy and customize the <u>Sage.is AI engine.</u>
+      </p>
+      <p class="section-subtext max-w-prose">
+        Our open-source tech stack and hands-on approach get you from idea to impact, fast.
+        Hands-on technical support, OSS collaboration, and community-driven tools. No lock-in. Your success, our open ecosystem.
+      </p>
+      <div class="scroll-prompt" style="margin-top: 2rem;">
+        <a href="#wrestling-with-AIs" class="scroll-arrow-btn" aria-label="Scroll down">
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </header>
+  </div>
+</section>
+
+<!-- ========================================================
+     3. WRESTLING WITH AIS?
+     ======================================================== -->
+<section id="wrestling-with-AIs" class="section">
   <div class="container">
-    <div class="section-head section-head-split reveal">
-      <h2 class="section-title"><span class="nowrap">You describe it.</span> <span class="text-accent nowrap">Tinker builds it.</span></h2>
-      <p class="section-lede">Think of it as a music library for apps, where you can add your own tracks. From a game of Go to a working copy of Winamp, the apps people make in Tinker Click run right inside it.</p>
+    <div class="editorial-head reveal">
+      <h2 class="editorial-title">
+        Wrestling with AIs?<br>
+        <span class="text-accent">It doesn't need to be this hard.</span>
+      </h2>
     </div>
 
-    <!-- Live interface: a small app that is described, built, translated and shared, Describe → Build →
-         Remix → Share. It plays through the steps on its own once the orb's halo has gathered above the
-         prompt; the steps below jump to theirs. Text that changes per step is in data-t (step 1|2|3|4),
-         numbers in data-n count up from the step in data-at (scripts.njk). -->
-    <div class="live reveal" data-live data-step="0">
-      <div class="live-stage" aria-hidden="true">
-        <div class="ui-ghost ui-ghost-l"><b></b><span><i></i><i></i><i></i><i></i></span></div>
-        <div class="ui-ghost ui-ghost-r"><b></b><span><i></i><i></i><i></i><i></i></span></div>
-        <div class="ui-card">
-          <div class="ui-body">
-            <div class="ui-head ui-b" style="--i: 0">
-              <div>
-                <span class="ui-eyebrow" data-t="|Your app · Draft|Remix · Deutsch|Published"></span>
-                <span class="ui-title" data-t="|Cat &amp; Fish|Katze &amp; Fisch|Katze &amp; Fisch"></span>
-              </div>
-              <span class="ui-badge" data-t="||DE|✓ Public"></span>
-            </div>
-            <div class="ui-seg ui-b" style="--i: 1">
-              <span class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 5.5l11 6.5-11 6.5z"/></svg><span data-t="|Play|Spielen|Spielen"></span></span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM12 13v4M8.5 20h7M16 5.5h3a3 3 0 0 1-3 3.5M8 5.5H5a3 3 0 0 0 3 3.5"/></svg><span data-t="|Scores|Rangliste|Rangliste"></span></span>
-            </div>
-            <div class="ui-grid">
-              <div class="ui-tile ui-b" style="--i: 2; --v: 0.62"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12c3.2-5.2 9.3-6 13.6-1.6L20.5 7v10l-4.4-3.4C11.8 18 5.7 17.2 2.5 12z"/><circle cx="7.5" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span class="ui-label" data-t="|Score|Punkte|Punkte"></span><span class="ui-value" data-n="1240"></span><span class="ui-bar"><i></i></span></div>
-              <div class="ui-tile ui-b" style="--i: 3; --v: 0.38"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8-5.4 2.8 1-6-4.3-4.2 6-.9z"/></svg><span class="ui-label" data-t="|Level|Stufe|Stufe"></span><span class="ui-value" data-t="|3 of 8|3 von 8|3 von 8"></span><span class="ui-bar"><i></i></span></div>
-              <div class="ui-tile ui-b" style="--i: 4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg><span class="ui-label" data-t="|Lives|Leben|Leben"></span><span class="ui-value" data-t="|3 left|Noch 3|Noch 3"></span></div>
-              <div class="ui-tile ui-b" style="--i: 5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17.5V5.5l11-2.2v11.8"/><circle cx="6.2" cy="17.6" r="2.8"/><circle cx="17.2" cy="15.2" r="2.8"/></svg><span class="ui-label" data-t="|Sound|Ton|Ton"></span><span class="ui-value" data-t="|On|An|An"></span></div>
-            </div>
-          </div>
-          <div class="ui-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.6 4.7 3.3 7.4 8 8-4.7.6-7.4 3.3-8 8-.6-4.7-3.3-7.4-8-8 4.7-.6 7.4-3.3 8-8z"/></svg><span data-ui="promptText"></span><span class="ui-caret"></span><span class="ui-send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg></span></div>
-          <div class="ui-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>tinker.click/katze-fisch</span><span class="ui-likes">♥ <span data-n="128" data-at="3"></span></span></div>
-        </div>
-        <div class="ui-chips"><span>Snake, but with cats</span><span>A pocket-money tracker</span><span>Spanish flashcards</span></div>
-        <!-- Where the orb's particles gather back into the halo, above the prompt (assets/js/sphere.js) -->
-        <div class="ui-orb" data-orb-dock></div>
-        <span class="live-counter" data-live-counter>01 / 04</span>
+    <div class="editorial-grid reveal">
+      <div class="editorial-col">
+        <p>There are lots of ways to create and manage new AIs. And there's plenty of <strong>software promising to help.</strong></p>
+        <p><strong>Unfortunately, most AI tools work great for individuals,</strong> but <strong>terribly for teams, especially ones that want to do new things</strong> either overwhelming, inadequate, bewildering, or chaotic. Right?</p>
+        <p>Sage is different. We're here to help you and your team <strong>get things done</strong> with AI, not just <strong>play around</strong> with it.</p>
       </div>
-      <!-- The orb's halo above the prompt is drawn here (assets/js/sphere.js), so it scrolls with the page -->
-      <canvas class="live-canvas" aria-hidden="true"></canvas>
 
-      <ol class="live-steps">
-        <li>
-          <button type="button" class="live-step" data-live-step style="--node: var(--node-1)" aria-current="step">
-            <span class="index-num">01</span>
-            <h3>Describe <span class="text-orange">your idea</span></h3>
-            <p>Type what you want in plain words, in any language. No templates, no setup.</p>
-            <span class="live-timer"><i></i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="live-step" data-live-step style="--node: var(--node-2)">
-            <span class="index-num">02</span>
-            <h3>Watch it <span class="text-orange">build</span></h3>
-            <p>Tinker Click assembles a working app around your idea, ready to use right on your desktop.</p>
-            <span class="live-timer"><i></i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="live-step" data-live-step style="--node: var(--node-3)">
-            <span class="index-num">03</span>
-            <h3>Remix <span class="text-orange">anything</span></h3>
-            <p>Open someone's app to get your own copy, then change it however you like, even translate it into your language.</p>
-            <span class="live-timer"><i></i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="live-step" data-live-step style="--node: var(--node-4)">
-            <span class="index-num">04</span>
-            <h3>Share <span class="text-orange">when you’re ready</span></h3>
-            <p>Your apps stay private until you decide otherwise. When you're proud of something, share it with the world in one step.</p>
-            <span class="live-timer"><i></i></span>
-          </button>
-        </li>
-      </ol>
+      <div class="editorial-col">
+        <p><strong>Sage is your TCS, Technical Capital Solution</strong> The trifecta! We're <a href="https://sage.is/underdogs" target="_blank" rel="noopener"><u>here for startups, small teams and better businesses, institutions, and schools</u></a>, not big, sluggish ones. If your team knows it has ideas and needs to implement them fast, we're here to help.</p>
+        <p>So, I invite you watch our the videos below, and <a href="https://sage.is/pricing#packages" target="_blank" rel="noopener"><u>apply to be a member of Sage.is</u></a>. We'd be honored to work with you.<br>Thank you.</p>
 
-      <!-- Phones: step through by hand (only one step's text shows at a time) -->
-      <div class="live-nav">
-        <button type="button" class="live-arrow" data-live-prev aria-label="Previous step"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
-        <div class="live-dots">
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-1)" aria-label="Step 1, Describe"></button>
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-2)" aria-label="Step 2, Build"></button>
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-3)" aria-label="Step 3, Remix"></button>
-          <button type="button" class="live-dot" data-live-dot style="--node: var(--node-4)" aria-label="Step 4, Share"></button>
-        </div>
-        <button type="button" class="live-arrow" data-live-next aria-label="Next step"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
+        <dl class="founder-signature">
+          <dt>
+            <strong>Izzy Plante</strong>, <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>
+          </dt>
+          <dd>
+            <em>Co-founder &amp; CEO</em>
+          </dd>
+        </dl>
       </div>
+    </div>
+
+    <!-- Visual Walkthrough / Engine Showcase -->
+    <div class="visual-showcase reveal" style="margin-top: 4rem;">
+      <figure class="visual-figure">
+        <img loading="lazy" src="/assets/images/home/sage.webp" width="1200" height="663" alt="See how Sage works" class="visual-img">
+        <figcaption class="visual-caption">Sage.is what will make you projects succeed.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
 <!-- ========================================================
-     3. FEATURES
+     4. STATEMENT: LET'S WALK THROUGH IT
      ======================================================== -->
 <section id="features" class="section">
-  <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <h2 class="section-title">Made for tinkerers, families <span class="text-accent">and classrooms.</span></h2>
-      </div>
-    </div>
+  <div class="container text-center reveal">
+    <div class="statement-card">
+      <header class="statement-header">
+        <h2 class="statement-title">Let's walk through it.</h2>
+        <h3 id="home" class="statement-subtitle">Present us with your project and we'll help you get it done, <u>fast.</u></h3>
+      </header>
 
-    <!-- Two big rows of short promises that the scroll slides in opposite directions (scripts.njk), each
-         followed by the logo mark; the features are listed underneath. Visitors catch only a phrase or two
-         as they pass, so each stands on its own: the first of each row shows first, then the second row's
-         last slides in from the left -->
-    <div class="ticker" data-ticker aria-hidden="true">
-      {%- for row in [["No code needed", "Any language", "Remix anything"], ["Just describe it", "Works offline", "Yours to keep"]] %}
-      <div class="ticker-row{{ ' ticker-hollow' if loop.last }}">{% for pass in [0, 1, 2, 3] %}{% for word in row %}<span>{{ word }}<i class="ticker-dot"></i></span>{% endfor %}{% endfor %}</div>
-      {%- endfor %}
+      <article class="statement-body">
+        <p>Here at Sage, we help teams get things done with AI.</p>
+        <p>We'll <u>help</u> you organize your work, manage your team, and get things done with our <u>expertise</u>,<br>
+           our <u>capital</u>, and our <u>Sage.is AI Engine</u>. No more chaos, no more confusion.</p>
+        <p>We'll make sure that you are provided with the right tools, support, and <u>technical capital</u> to achieve your goals.</p>
+      </article>
     </div>
-
-    <!-- The features: on wider screens a rail of cards with a small live example each, pinned while the
-         scroll slides it sideways, with the orb's strands drawn out along the line under it as it goes
-         (scripts.njk, sphere.js); a list on phones, where the examples are left out. Each takes a step
-         colour (--f) -->
-    <div class="features reveal" data-features>
-      <div class="features-pin" data-features-pin>
-        <ul class="feature-list" data-features-track>
-          <li style="--f: var(--node-1)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-say" data-cycle="Make me a game|Fais-moi un jeu|Mach mir ein Spiel|Hazme un juego|给我做个游戏"></div></div>
-            <div class="feature-copy">
-              <span class="feature-num">01</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg></span>Your language</h3>
-              <p>The whole app is translated, and commands work in your own language too.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-2)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-covers"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-            <div class="feature-copy">
-              <span class="feature-num">02</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>One-click covers</h3>
-              <p>Snap a fresh cover image for any app with one click, even for 3D games like chess.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-3)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-opts"><span>Tinker Click server</span><span>Your own server</span><span>Your own AI model</span></div></div>
-            <div class="feature-copy">
-              <span class="feature-num">03</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.5"/><path d="M8 7h.01M8 17h.01"/></svg></span>Your choice of server</h3>
-              <p>Use the official Tinker Click server, host your own, or bring your own AI model.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-4)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-files"><span>notes.md</span><span>budget.xlsx</span><span>timetable.pdf</span><span>the web</span></div></div>
-            <div class="feature-copy">
-              <span class="feature-num">04</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg></span>Works with your files</h3>
-              <p>Tinker Click can read documents on your computer and reach out to the web, using tools the app makes available to the AI.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-1)">
-            <div class="feature-viz" aria-hidden="true"><pre class="fv-code"><b>system:</b> You are a patient maths tutor.
-<b>tools:</b> calculator, quiz
-<b>tone:</b> friendly, short answers</pre></div>
-            <div class="feature-copy">
-              <span class="feature-num">05</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>Under the hood</h3>
-              <p>Edit the system prompt and add your own tools to change how Tinker Click thinks and what it can do.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-2)">
-            <div class="feature-viz" aria-hidden="true"><div class="fv-cmd"><span data-cycle="/discover|/status|/login"></span><i></i></div></div>
-            <div class="feature-copy">
-              <span class="feature-num">06</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20 17 4"/></svg></span>Slash commands</h3>
-              <p>Type commands like /discover, /status and /login to move around faster.</p>
-            </div>
-          </li>
-          <li style="--f: var(--node-3)">
-            <div class="feature-viz" aria-hidden="true"><svg class="fv-graph" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 60h300M60 60c20 0 20-34 40-34h80c20 0 20 34 40 34M140 60c20 0 20 34 40 34h40c20 0 20-34 40-34" opacity=".45"/><g fill="currentColor" stroke="none"><circle cx="10" cy="60" r="6"/><circle cx="60" cy="60" r="6"/><circle cx="100" cy="26" r="6"/><circle cx="180" cy="26" r="6"/><circle cx="140" cy="60" r="6"/><circle cx="180" cy="94" r="6"/><circle cx="220" cy="60" r="6"/><circle cx="260" cy="60" r="6"/><circle cx="310" cy="60" r="6"/></g></svg></div>
-            <div class="feature-copy">
-              <span class="feature-num">07</span>
-              <h3><span class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>Open source</h3>
-              <p>Tinker Click is built in the open. Read the code, run it yourself and help shape it on GitHub.</p>
-            </div>
-          </li>
-        </ul>
-        <div class="features-nav">
-          <!-- Solid progress bar tracking horizontal card rail scroll -->
-          <span class="features-progress" data-features-line><i data-features-bar></i></span>
-        </div>
-      </div>
-    </div>
-
-    {% include "component/platform-logos.njk" %}
-    <dl class="stats stats-words platforms reveal" data-platforms>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-windows"/></svg>Desktop app</dt><dd>Windows</dd></div>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-apple"/></svg>Desktop app</dt><dd>macOS</dd></div>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-linux"/></svg>Desktop app</dt><dd>Linux</dd></div>
-      <div><dt><svg class="platform-logo" aria-hidden="true"><use href="#logo-tablet"/></svg>Tablet app</dt><dd>iPad</dd></div>
-    </dl>
   </div>
 </section>
 
 <!-- ========================================================
-     4. FAQ
+     5. WITH SAGE THE ANSWER IS YES!
      ======================================================== -->
-<section id="faq" class="section section-last">
-  <div class="container faq-layout">
-    <div class="section-head-stack reveal">
-      <h2 class="section-title">Questions, <span class="text-accent">answered.</span></h2>
+<section id="yes" class="section">
+  <div class="container text-center reveal">
+    <div class="yes-headline">
+      <h3 class="yes-title">With Sage the answer is <span class="yes-badge">YES!</span></h3>
+      <p class="yes-intro">As a Technical Capital Solution, we empower projects to grow quickly, with our decades of hands-on expertise, open-source innovation, and lock-in-free flexibility.</p>
+      <p class="yes-question">Are your projects fully ready for bold breakthroughs? </p>
+      <h4 class="yes-bold">When working with Sage.is, the answer is absolutely <u>YES!</u></h4>
     </div>
 
-    <div class="faq-list reveal">
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-1">
-          <span>What is Tinker Click?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-1" class="faq-answer" hidden>
-          <p>Tinker Click is a desktop and iPad app for making your own apps by describing them: games, tools, documents, charts, dashboards, presentations and more.</p>
-          <p>It's like a code-sharing platform for people who don't write code. Keep what you make, remix apps other people have made, and share your own in the public gallery.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-7">
-          <span>Do I need to know how to code?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-7" class="faq-answer" hidden>
-          <p>Not at all. Describe what you want in plain words and Tinker Click does the rest. If you do code, you can go further: edit the system prompt, add your own tools, or host your own server.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-8">
-          <span>Are my apps private?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-8" class="faq-answer" hidden>
-          <p>Yes. Everything you make stays private until you choose to share it in the public gallery.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-9">
-          <span>Is Tinker Click open source?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-9" class="faq-answer" hidden>
-          <p>Yes. Tinker Click is developed in the open on GitHub. You can use the official Tinker Click server or run your own.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-2">
-          <span>Do I need an account?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-2" class="faq-answer" hidden>
-          <p>No. You can open Tinker Click and play the built-in starter apps straight away. Create an account when you want to make and save your own, or choose to run Tinker Click offline instead.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-3">
-          <span>Does it work without internet?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-3" class="faq-answer" hidden>
-          <p>Yes. The starter apps work offline, and you can run Tinker Click fully offline with your own AI model. Browsing the public gallery needs a connection.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-ans-6">
-          <span>When can I try it?</span>
-          <span class="faq-icon" aria-hidden="true"></span>
-        </button>
-        <div id="faq-ans-6" class="faq-answer" hidden>
-          <p>Tinker Click is in private alpha with a small group of testers. Join the waitlist and we'll email you when it opens to more people.</p>
-        </div>
-      </div>
+    <div class="yes-checklist reveal">
+      <ul class="yes-list">
+        <li class="yes-item">
+          <span class="yes-icon">✓</span>
+          <span>Can our vision <strong>be incubated and grow with AI/ML experts?</strong></span>
+        </li>
+        <li class="yes-item">
+          <span class="yes-icon">✓</span>
+          <span>Can we access <strong>hands-on technical support?</strong></span>
+        </li>
+        <li class="yes-item">
+          <span class="yes-icon">✓</span>
+          <span>Can our team <strong>accelerate from idea to impact quickly?</strong></span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
+
+<!-- ========================================================
+     6. TICKER MARQUEE
+     ======================================================== -->
+<div class="ticker" data-ticker aria-hidden="true">
+  {%- for row in [
+    ["Private by design", "Self-hosted or managed", "No vendor lock-in", "Open-source AI platform"],
+    ["Technical Capital Solution", "Hands-on technical support", "99.99% uptime", "Zero debt", "18 years profitable"]
+  ] %}
+  <div class="ticker-row{{ ' ticker-hollow' if loop.last }}">
+    {% for pass in [0, 1, 2, 3] %}
+      {% for word in row %}
+        <span>{{ word }}<i class="ticker-dot"></i></span>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  {%- endfor %}
+</div>
+
+<!-- ========================================================
+     7. IT'S TIME FOR SAGE
+     ======================================================== -->
+<section id="its-time" class="section">
+  <div class="container text-center reveal">
+    <div class="time-card">
+      <header>
+        <h2 class="section-title">
+          You wouldn't be here if the<br>
+          way you've been working was working.<br>
+          <span class="text-accent">It's time for Sage.</span>
+        </h2>
+        <div style="margin: 2.2rem auto;">
+          <a href="#waitlist" class="btn btn-primary btn-lg" data-open-waitlist>
+            Apply to Access Sage.AI
+          </a>
+        </div>
+      </header>
+
+      <article class="time-body">
+        <p>
+          Team super busy, but running in circles? <strong>It's time for Sage.</strong> Finding stuff easy to start, but hard to finish? <strong>It's time for Sage.</strong> Things taking longer than they should? <strong>It's time for Sage.</strong> Info increasingly scattered across different apps? <strong>It's time for Sage.</strong> Subscription fees keep adding up? <strong>It's time for Sage.</strong> Growing into dysfunction? <strong>It's time for Sage.</strong> Tired of looking disorganized in front of clients? <strong class="text-accent">It's time for Sage.</strong>
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     8. FAQS: COMPANY, SECURITY & GENERAL
+     ======================================================== -->
+<section id="faq" class="section section-faq">
+  <div class="container faq-layout">
+
+    <!-- Group 1: Company FAQs -->
+    <div class="faq-group reveal">
+      <div class="section-head-stack">
+        <h2 id="company-faqs" class="section-title">
+          <a href="#company-faqs">I have questions about your company…</a>
+        </h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-1">
+            <span>Why partner with Sage.is for open-source incubation?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-1" class="faq-answer" hidden>
+            <p>At Sage.is OSVL, we're all about turning your bold vision into reality through hands-on technical incubation. We embed our open-source experts directly into your team to build, customize, and deploy OSS solutions that scale with you—no vendor lock-in, full ownership of your tech stack, and a collaborative path to launch. Whether you're bootstrapping an AI tool or scaling a dev platform, we make the journey smoother so you can focus on what you do best: innovating.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-2">
+            <span>How long have you been around? Can we trust you as our incubation partner?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-2" class="faq-answer" hidden>
+            <p>Sage.is is backed by <a href="https://Startr.Cloud/" target="_blank" rel="noopener"><u>Startr</u></a> (aka OpenCo), a tech incubator that's been empowering startups since 2007. We launched our OSVL program in 2023, and we've been refining our open-source technical support model ever since, helping teams ship faster and smarter. We're committed to sustainable growth: <strong>profitable for 18 straight years, zero debt, and privately held for the long haul.</strong> Check out our <a href="https://sage.is/books/handbook/" target="_blank" rel="noopener"><u>public employee handbook</u></a> to see how we foster a culture of trust and collaboration.<br>
+            You can email Izzy Plante, our Co-Founder and CEO, anytime at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>. They rely on their personal <strong>Sage AI (Mini Izzy)</strong> for organization, so expect a direct, thoughtful response from them.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-3">
+            <span>What about the reliability of your technical support and OSS solutions?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-3" class="faq-answer" hidden>
+            <p>We back our incubation with rock-solid reliability—our open-source deployments and expert support have maintained over 99.99% uptime across two decades of tech projects. Track real-time performance and support SLAs on our <a href="https://status.production.openco.ca" target="_blank" rel="noopener"><u>Status Page</u></a>, so you know your vision stays on track, even during rapid scaling.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-4">
+            <span>What if our partnership doesn't fit after we start?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-4" class="faq-answer" hidden>
+            <p>We're in this for mutual success, so we design flexible incubation paths. If things aren't clicking, we collaborate on a smooth transition—sharing all OSS code, knowledge, and resources we've built together. No hard exits; just open conversations to ensure you keep momentum toward your goals.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-5">
+            <span>Can I ask the founders a question directly about incubation?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-5" class="faq-answer" hidden>
+            <p><strong>Absolutely.</strong> Reach out to our Co-Founder and CEO Izzy Plante at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>, or our Co-Founder and CTO Alexander Somma at <a href="mailto:alexander@sage.is"><u>alexander@sage.is</u></a>. They're hands-on with OSVL and love chatting about your vision—they handle their own inboxes (with a little AI help), so you'll get a personal reply.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-6">
+            <span>Can we transition from proprietary tools to your open-source incubation model?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-co-6" class="faq-answer" hidden>
+            <p>Yes, absolutely—we specialize in seamless migrations to OSS stacks. Our team provides guided audits, custom migration plans, and hands-on support to port your workflows, models, and data. Start with a pilot project to test the waters, then scale as your vision takes shape.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 2: Security & Data FAQs -->
+    <div class="faq-group reveal" style="margin-top: 4rem;">
+      <div class="section-head-stack">
+        <h2 id="security-faqs" class="section-title">
+          <a href="#security-faqs">I have questions about security and our data…</a>
+        </h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-1">
+            <span>Is Sage open‑source? Can we self‑host?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-1" class="faq-answer" hidden>
+            <p>Yes. Sage is open‑source with a permissive license. You can self‑host in your VPC or run on‑prem. We also provide a fully managed option with the same security model and data ownership guarantees.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-2">
+            <span>How secure is Sage?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-2" class="faq-answer" hidden>
+            <p>We have a <a href="https://startr.cloud/policies/security/" target="_blank" rel="noopener"><u>full security write-up</u></a> available on the Startr site. Startr is the company behind Sage.</p>
+            <p>We take security very seriously, and we’ve built Sage to be secure by default. We use the latest security protocols, including <strong>256-bit AES encryption</strong> for all data at rest, and <strong>TLS 1.2</strong> for all data in transit. We also use <strong>OAuth 2.0</strong> for secure authentication. Moreover, for organizations that require it, we can provide <strong>on-premises deployment</strong> options to keep data entirely within your own infrastructure.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-3">
+            <span>Is our data backed up? How often?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-3" class="faq-answer" hidden>
+            <p>Data customers enter into Sage is stored in multiple, redundant data centers or securely on site when customers choose to use our own site solution. That data is backed up several times a day, and copies of those backups are stored both locally and off-site to further reduce points of possible failure. Files customers upload are stored off-site and backed up to servers in a different geographic region.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-4">
+            <span>Where are the servers that store our data?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-4" class="faq-answer" hidden>
+            <p>Our servers are located where our users need them. Either in neaby data centers or for <strong>security</strong> in their offices.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-5">
+            <span>Do you support compliance needs (SOC 2, GDPR, HIPAA)?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-5" class="faq-answer" hidden>
+            <p>We align with common frameworks and can provide guidance for deployments that need SOC 2, GDPR, or HIPAA readiness. Self‑hosting lets you meet internal and regional requirements while keeping full control of data residency.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-6">
+            <span>Can you fill our custom security questionnaires?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-6" class="faq-answer" hidden>
+            <p>We don’t fill out custom security questionnaires, but we’ve <a href="https://startr.cloud/policies/security/Security-Overview.pdf" target="_blank" rel="noopener"><u>prepared a summary security PDF</u></a> which you can provide to your IT staff. We’re always happy to answer any questions you have directly. To streamline your request, click the link below to compose an email to Izzy with a pre-set subject and draft:</p>
+            <p><a href="mailto:izzy@sage.is?subject=Custom%20Security%20Questionnaire" class="btn btn-primary btn-sm" style="margin-top: 0.5rem; display: inline-flex;">Compose Email to Izzy</a></p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-7">
+            <span>Can I export our data if we ever want to leave?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-sec-7" class="faq-answer" hidden>
+            <p><strong>Absolutely,</strong> you can do it as often as you’d like. Plus, it’s entirely self-service and easy so you don’t need to ask anyone for help or permission. Further, we provide it in a format that allows you to browse it in a web browser so it’s actually useful.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 3: Other FAQs -->
+    <div class="faq-group reveal" style="margin-top: 4rem;">
+      <div class="section-head-stack">
+        <h2 id="other-faqs" class="section-title">
+          <a href="#other-faqs">I have other questions…</a>
+        </h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-1">
+            <span>Is Sage for teams?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-1" class="faq-answer" hidden>
+            <p>Yes. Open‑source plus onboarding means you avoid lock‑in and surprise bills. Teams replace multiple tools with Sage’s agents, chat, tasks, docs, and files in one place — lowering total cost of ownership.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-2">
+            <span>Does Sage have an API? Can we integrate with Sage?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-2" class="faq-answer" hidden>
+            <p><strong>Yes,</strong> <a href="https://startr.cloud/sage-API/" target="_blank" rel="noopener"><u>Sage has a full-featured API (docs are hosted on GitHub)</u></a>. Companies have written custom integrations, and <a href="https://sage.is/integrations/" target="_blank" rel="noopener"><u>our Integrations page</u></a> links up third-party solutions for invoicing, accounting, time tracking, reporting, planning, asset management, contracts, proposals, and more.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-3">
+            <span>What if we need more help?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-3" class="faq-answer" hidden>
+            <p>Our partner support is considered to be among the best of the best (by us). Everyone who works on our team are expert specialists who know Sage inside and out, many having been with us for years and years, some over a decade. Further, we occasionally cycle every employee through support — including our CEO — so everyone has a chance to directly interact with customers.<br>
+            You can <a href="https://sage.is/support/" target="_blank" rel="noopener"><u>ask support a question</u></a>, or <a href="https://sage.is/learn/" target="_blank" rel="noopener"><u>watch tutorials</u></a>, or <a href="https://startr.cloud/docs/" target="_blank" rel="noopener"><u>review the help guides</u></a>, or <a href="https://sage.is/classes/" target="_blank" rel="noopener"><u>attend a live walkthrough class and Q&amp;A</u></a>.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-4">
+            <span>Is Sage available in languages other than English?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-4" class="faq-answer" hidden>
+            <p>Currently offer Sage’s interface in hundreds of languages, although we have people in over 160 countries writing and sharing in their own native languages using Sage.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-5">
+            <span>If we go with Sage, will we still need stuff like ChatGPT? Perplexity? Dropbox?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-5" class="faq-answer" hidden>
+            <p><strong>Nope,</strong> Sage.is AI engine replaces a whole set of separate products. Sage has chat built in (no more Slack, Teams). Sage has exceptional task management in the form of to-dos and RoundTable discussions (no more Jira, Asana, Trello, etc). And you can store and share all the files you need with your Sage.is AIs (no more Dropbox).</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-6">
+            <span>What kind of companies, in which industries, use Sage?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-6" class="faq-answer" hidden>
+            <p>Sage is used by top notch teams, schools, designers, client services firms, consultants, software developers, freelancers, PR agencies, contractors, religious institutions, schools, non-profits, first responders, and many others who value organized, efficient work.<br>
+            Our partners are primarily small or medium-sized organization with a few hundred members, but Sage is also used by teams inside many of the world’s largest companies.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-7">
+            <span>What’s the developer experience like?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div id="faq-oth-7" class="faq-answer" hidden>
+            <p>We onboard developers in minutes, not days. Straightforward. Clean REST APIs and SDKs, webhooks, and CLIs. Run locally, in your VPC, or on‑prem with the same APIs. No black boxes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================
+     9. BUILDERS STATEMENT
+     ======================================================== -->
+<section class="section section-builders text-center reveal">
+  <div class="container max-w-prose">
+    <p class="builders-lead">
+      We build because we are builders. We build because we want to.<br>
+      We build because we are creators who love creating.
+    </p>
+    <h3 class="builders-title">
+      Sage.is how.
+    </h3>
+  </div>
+</section>
+
+<!-- ========================================================
+     10. TESTIMONIALS MARQUEE
+     ======================================================== -->
+<div class="marquee marquee--left reveal" style="margin-bottom: 5rem; margin-top: 4rem;">
+  <div class="marquee-track" aria-hidden="true">
+    <ul class="marquee-list">
+      <li>"Extremely user friendly"</li>
+      <li>"Truly amazing!"</li>
+      <li>"A godsend for our org"</li>
+      <li>"Simple, quick, powerful"</li>
+      <li>"So glad I found Sage"</li>
+      <li>"The perfect AI solution"</li>
+      <li>"Really great"</li>
+      <li>"Outstanding"</li>
+      <li>"Best app for AI colaboration"</li>
+      <li>"Awesome service"</li>
+      <li>"Gets better and better"</li>
+      <li>"Great AI collaboration tool"</li>
+      <li>"Great software"</li>
+      <li>"Gold standard AI app"</li>
+      <li>"Brilliant solution"</li>
+      <li>"Clean and easy to use"</li>
+      <li>"Fantastic app"</li>
+      <li>"Organized and on point"</li>
+      <!-- Repeated for continuous seamless loop -->
+      <li>"Extremely user friendly"</li>
+      <li>"Truly amazing!"</li>
+      <li>"A godsend for our org"</li>
+      <li>"Simple, quick, powerful"</li>
+      <li>"So glad I found Sage"</li>
+      <li>"The perfect AI solution"</li>
+      <li>"Really great"</li>
+      <li>"Outstanding"</li>
+      <li>"Best app for AI colaboration"</li>
+      <li>"Awesome service"</li>
+      <li>"Gets better and better"</li>
+      <li>"Great AI collaboration tool"</li>
+      <li>"Great software"</li>
+      <li>"Gold standard AI app"</li>
+      <li>"Brilliant solution"</li>
+      <li>"Clean and easy to use"</li>
+      <li>"Fantastic app"</li>
+      <li>"Organized and on point"</li>
+    </ul>
+  </div>
+</div>

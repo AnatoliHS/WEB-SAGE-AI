@@ -61,10 +61,9 @@
   const pin = api.stage.querySelector('.stage-pin') || api.stage;
   const dock = document.querySelector('[data-orb-dock]');
   const root = document.documentElement;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const darkQuery = { matches: false };
 
-  const LINES = [['Make', ' it.'], ['Use', ' it.'], ['Share', ' it.']];
+  const LINES = [['Private', ' AI.'], ['Open', ' Source.'], ['Technical', ' Capital.']];
   const LINES_END = 0.74; // the lines take the first 74% of the pinned scroll, the explosion the rest
   const HERO_SPEED = 1.4; // the orb's clock rate in the hero when nobody is scrolling
   const LANDED_SPEED = 0.45; // ...and once it has landed in the stage
@@ -294,8 +293,8 @@
         '#ff5f00',
         cs.getPropertyValue('--node-4').trim() || '#0f9f72'
       ],
-      // Light strands on a dark page add up where they cross; dark ones on a light page can't
-      dark: darkQuery.matches
+      // Strictly light theme: dark ones on a light page
+      dark: false
     };
   }
 

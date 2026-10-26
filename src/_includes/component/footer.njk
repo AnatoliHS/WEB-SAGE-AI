@@ -1,32 +1,96 @@
 {% set fbase = "" if (page.url == "/" or page.url == "/index.html") else "/" %}
 <footer class="site-footer">
   <div class="container">
+
+    <!-- Everywhere / Web CTA -->
     <div class="footer-statement">
       <div class="footer-main">
-        <p class="footer-headline">Built to tinker.<br><span class="text-accent">Made to share.</span></p>
-        <a href="{{ fbase }}#waitlist" class="btn btn-primary btn-lg footer-cta" data-open-waitlist>
-          Join the waitlist
+        <p class="footer-headline">Sage’s everywhere<br><span class="text-accent">on the web — Sage is ready .</span></p>
+        <a href="https://sage.Startr.Cloud/" class="btn btn-primary btn-lg footer-cta" target="_blank" rel="noopener">
+          Sign in to Sage
           <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
       </div>
-      {%- if heroSphere %}
-      <!-- The logo mark, where the orb's halo used to close the page -->
-      <span class="footer-orb" aria-hidden="true"><img src="/assets/tinker-mark.svg" alt=""></span>
-      {%- else %}
-      <span class="footer-mark text-orange" aria-hidden="true">©26</span>
-      {%- endif %}
-    </div>
-
-    <p class="footer-blurb">Created by a small open-source team, Tinker Click is a place to make the tools you need, use them, and share them with everyone else. Carefully designed, built in the open.</p>
-
-    <div class="footer-bottom">
-      <span>&copy; 2026 Tinker Click. All rights reserved.</span>
-      <span class="footer-credit">Design and Development by <a href="https://chastech.ca" target="_blank" rel="noopener">ChasTech Inc</a></span>
-      <span class="footer-legal">
-        <a href="/privacy/">Privacy</a>
-        <a href="/terms/">Terms</a>
-        <a href="/cookies/">Cookies</a>
+      <span class="footer-orb" aria-hidden="true">
+        <img src="/assets/images/general/sage.webp" alt="Sage" width="48" height="48" style="border-radius: 10px; object-fit: contain;">
       </span>
     </div>
+
+    <!-- Live Classes, Newsletter, Support Grid -->
+    <div class="footer-grid-sections">
+      <!-- Live class -->
+      <div class="footer-card">
+        <h4 class="footer-card-title">Join us for a free live class</h4>
+        <p class="footer-card-desc">
+          We’ll answer questions about setting up Sage, rolling it out to your team, and anything else you’d like to ask.
+        </p>
+        <p><a href="https://sage.is/classes/" class="footer-link-highlight" target="_blank" rel="noopener">See all our upcoming classes →</a></p>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-card">
+        <h4 class="footer-card-title">Never miss an update</h4>
+        <p class="footer-card-desc">
+          Join the people who love our newsletter. We’ll share product updates, thoughts, new releases, and other tidbits we think you’ll find interesting.
+        </p>
+        <form action="https://nota.startr.cloud/form/submit?formId=3" method="post" class="footer-newsletter-form" target="_blank">
+          <input type="email" name="email" placeholder="Your email address" required class="footer-input">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+
+      <!-- Support -->
+      <div class="footer-card footer-card-wide">
+        <h4 class="footer-card-title">We’re here to help with 24/7/365 support</h4>
+        <p class="footer-card-desc">
+          There are no stupid questions — for pre-sales questions, existing customers who need a hand, or any other inquiries, <a href="https://sage.is/support/" target="_blank" rel="noopener"><u>contact us</u></a> and we’ll get back to you ASAP. <a href="https://sage.is/support/" target="_blank" rel="noopener"><u>Send us a message</u></a> to get help.
+        </p>
+        <p class="footer-alert">
+          <strong>We’re having a company meet-up this week so replies may be slower.</strong> Sorry about the delays!
+        </p>
+        <div class="footer-banner-space">
+          <a href="https://startr.space/" target="_blank" rel="noopener">
+            If you love <b>Sage</b>, you’ll love <strong>Startr.&thinsp;Space</strong> — our delightfully fresh take on meetings →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- More Links -->
+    <div class="footer-sublinks">
+      <span class="footer-sublinks-label">And there’s more&hellip;</span>
+      <div class="footer-sublinks-list">
+        <a href="https://sage.is/about/" target="_blank" rel="noopener">Where we came from</a>
+        <span class="sep">•</span>
+        <a href="https://sage.is/guide-to/how-we-communicate/" target="_blank" rel="noopener">How we communicate</a>
+        <span class="sep">•</span>
+        <a href="https://sage.is/guide-to/how-we-make-decisions/" target="_blank" rel="noopener">How we make decisions</a>
+        <span class="sep">•</span>
+        <a href="https://sage.is/community/" target="_blank" rel="noopener">Sage community</a>
+        <span class="sep">•</span>
+        <a href="https://sage.is/books/handbook/" target="_blank" rel="noopener">Employee handbook</a>
+      </div>
+    </div>
+
+    <!-- Bottom Legal -->
+    <div class="footer-bottom">
+      <div class="footer-legal-brand">
+        <a href="/" class="icon icon--sage" aria-label="Sage">
+          <img loading="lazy" src="/assets/images/general/sage.webp" alt="Sage" width="22" height="22" style="border-radius: 4px; vertical-align: middle; margin-right: 0.35rem;">
+          <strong>Sage</strong>
+        </a>
+        <span>is designed, built, and backed by</span>
+        <a href="https://Startr.Cloud/" target="_blank" rel="noopener" class="startr-brand"><strong>Startr</strong></a>
+      </div>
+      <div class="footer-legal">
+        <a href="https://status.production.openco.ca" target="_blank" rel="noopener">Status</a>
+        <a href="https://startr.cloud/job/posts/" target="_blank" rel="noopener">Jobs</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="https://startr.cloud/policies/terms" target="_blank" rel="noopener">Terms</a>
+        <a href="https://startr.cloud/cookies" target="_blank" rel="noopener">Cookies</a>
+        <span>&copy; 2026 Startr LLC</span>
+      </div>
+    </div>
+
   </div>
 </footer>

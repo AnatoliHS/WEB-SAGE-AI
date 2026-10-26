@@ -4,50 +4,62 @@
 <div class="site-header-bar" aria-hidden="true"></div>
 
 <!-- Logo mark, top far left -->
-<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Tinker Click home">
-  <img src="/assets/tinker-mark.svg" alt="" width="40" height="40">
+<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Sage home">
+  <img src="/assets/images/general/sage.webp" alt="Sage" width="40" height="40" style="border-radius: 8px; object-fit: contain;">
 </a>
 
 <!-- Dynamic brand: sits large in the hero at the top of the page, docks next to the logo once scrolling starts -->
-<a href="{{ base }}#hero" id="dynamic-brand" class="wordmark dynamic-brand" aria-label="Tinker Click home">
-  <!-- Each letter rises into place on load in a fixed scattered order: --i is its stagger slot (see .ltr in style.css) -->
-  {% set order = [4, 0, 7, 2, 9, 5, 1, 8, 3, 10, 6] %}
-  <span class="tinker-word">{% for ch in "TINKER" | list %}<span class="ltr" style="--i: {{ order[loop.index0] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
-  <span class="click-word">{% for ch in "CLICK" | list %}<span class="ltr" style="--i: {{ order[loop.index0 + 6] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
+<a href="{{ base }}#hero" id="dynamic-brand" class="wordmark dynamic-brand" aria-label="Sage home">
+  {% set order = [2, 0, 3, 1, 5, 4, 6] %}
+  <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr" style="--i: {{ order[loop.index0] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
+  <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr" style="--i: {{ order[loop.index0 + 4] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
 </a>
 
-<!-- Waitlist CTA in the top-right corner (also closes the drawer) -->
+<!-- Header Navigation Links (Sage.is) -->
+<nav class="header-nav" aria-label="Main navigation">
+  <div class="nav-phrase-rotator" aria-label="Sage is Private AI Capital">
+    <span class="phrase-prefix">is </span>
+    <span class="phrase-dynamic highlight" id="nav-phrase-rotator">Private AI Capital</span>
+  </div>
+  <div class="nav-links">
+    <a href="{{ base }}#features" class="nav-link">Empower</a>
+    <a href="https://sage.is/programs/" class="nav-link" target="_blank" rel="noopener">Programs</a>
+    <a href="https://sage.is/resources/" class="nav-link" target="_blank" rel="noopener">Resources</a>
+    <a href="https://sage.Startr.Cloud/" class="nav-link nav-signin" target="_blank" rel="noopener">Sign in</a>
+  </div>
+</nav>
+
+<!-- Application CTA in the top-right corner (also closes the drawer) -->
 <button type="button" id="btn-waitlist-trigger" class="btn header-cta" aria-expanded="false" aria-controls="waitlist-dropdown-drawer">
-  <span class="label-open">Join waitlist</span>
+  <span class="label-open">Apply to Access Sage.AI</span>
   <span class="label-close">Close</span>
   <svg class="cta-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
     <path d="M7 1.5v11M1.5 7h11"/>
   </svg>
 </button>
 
-<!-- Top-down waitlist drawer -->
+<!-- Top-down Application drawer -->
 <div id="waitlist-dropdown-drawer" class="waitlist-drawer" hidden>
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
     <div class="container drawer-grid">
       <div class="drawer-intro">
-        <span class="eyebrow">(Waitlist) Private Alpha</span>
-        <h2 class="drawer-title" id="drawer-title">Be first <span class="text-accent">to tinker.</span></h2>
+        <span class="eyebrow">(Application) Technical Capital</span>
+        <h2 class="drawer-title" id="drawer-title">Access <span class="text-accent">Sage.AI</span></h2>
       </div>
 
       <div class="drawer-form-col">
         <p class="drawer-copy">
-          Tinker Click is in private alpha. Join the waitlist at <strong>tinker.click</strong> and we'll email you when it opens to more people.
+          Sage is your TCS, Technical Capital Solution. We're here for startups, small teams and better businesses, institutions, and schools, not big, sluggish ones. If your team knows it has ideas and needs to implement them fast, we're here to help.
         </p>
 
-        <form id="signup" class="signup-form" action="https://tinker.click/subscribe.php" method="post" novalidate>
-
+        <form id="signup" class="signup-form" action="https://nota.startr.cloud/form/submit?formId=3" method="post" novalidate>
           <label class="sr-only" for="email">Email address</label>
           <div class="composer">
             <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
                    placeholder="you@example.com" required maxlength="254">
             <button type="submit" class="btn btn-primary btn-submit">
-              Notify me
+              Apply now
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </button>
           </div>
@@ -61,7 +73,7 @@
           <p id="status" class="status" role="status" aria-live="polite"></p>
         </form>
 
-        <p class="drawer-fine">Tinker Click will email you news about Tinker Click. Unsubscribe any time.</p>
+        <p class="drawer-fine">Private by design. Open-source, self-hosted or managed. Unsubscribe any time.</p>
       </div>
     </div>
   </div>

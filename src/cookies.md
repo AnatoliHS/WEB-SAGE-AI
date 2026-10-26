@@ -1,12 +1,12 @@
 ---
 layout: policy.njk
-title: Cookie Policy — Tinker Click
+title: Cookie Policy — Sage
 ---
 
 <section class="policy-section">
   <div class="policy-header">
     <h1>Cookie Policy</h1>
-    <p class="policy-meta">Last updated: October 2026 • Tinker Click (tinker.click)</p>
+    <p class="policy-meta">Last updated: October 2026 • Sage (sage.is) by Startr LLC</p>
   </div>
   
   <div class="policy-body">
@@ -16,11 +16,10 @@ title: Cookie Policy — Tinker Click
     </div>
 
     <div class="policy-card">
-      <h2>2. How Tinker Click Uses Cookies</h2>
-      <p>Tinker Click prioritizes minimal, privacy-centric design. We use strictly essential cookies and local storage tokens to:</p>
+      <h2>2. How Sage Uses Cookies</h2>
+      <p>Sage prioritizes minimal, privacy-centric design. We use strictly essential cookies and local storage tokens to:</p>
       <ul>
         <li>Preserve your theme preference (Dark Mode / Light Mode).</li>
-        <li>Remember your waitlist submission state so you don't receive duplicate prompts.</li>
         <li>Protect our submission endpoints against spam and automated abuse.</li>
       </ul>
       <p>We <strong>do not</strong> use third-party invasive ad-tracking pixels or cross-site tracking cookies.</p>
@@ -28,12 +27,12 @@ title: Cookie Policy — Tinker Click
 
     <div class="policy-card">
       <h2>3. Managing Cookie Preferences</h2>
-      <p>You can adjust your cookie settings through your browser controls. Note that disabling local storage or essential cookies may affect some convenience functions (such as remembering your waitlist confirmation status).</p>
+      <p>You can adjust your cookie settings through your browser controls. Note that disabling essential cookies may affect some site conveniences.</p>
     </div>
 
     <div class="policy-card highlight">
       <h2>Questions?</h2>
-      <p>Reach out to us at <a href="mailto:hello@tinker.click">hello@tinker.click</a> with any questions about our cookie policies.</p>
+      <p>Reach out to us at <a href="mailto:izzy@sage.is">izzy@sage.is</a> with any questions about our cookie policies.</p>
     </div>
   </div>
 </section>

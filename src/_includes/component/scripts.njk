@@ -554,14 +554,42 @@ document.addEventListener('DOMContentLoaded', () => {
           mode: 'cors'
         });
         const data = await response.json().catch(() => ({}));
-        markDone(emailVal, data.message || "You're on the list. We'll email you when Tinker Click opens to more people.");
+        markDone(emailVal, data.message || "Your application has been received. We'll email you with onboarding details.");
       } catch (err) {
         console.warn('Direct fetch handled gracefully:', err);
-        markDone(emailVal, "You're on the list. We'll email " + emailVal + ' when Tinker Click opens to more people.');
+        markDone(emailVal, "Your application has been received. We'll email " + emailVal + " with onboarding details.");
       } finally {
         if (waitlistBtn) waitlistBtn.disabled = false;
       }
     });
+  }
+
+  // 10. Rotating header phrase: "is [phrase] Private AI Capital"
+  const phraseEl = document.getElementById('nav-phrase-rotator');
+  if (phraseEl) {
+    const phrases = [
+      "famously straightforward",
+      "refreshingly clear",
+      "no-nonsense",
+      "amazingly intuitive",
+      "refreshingly simple",
+      "wonderfully efficient",
+      "simply powerful",
+      "especially practical",
+      "delightfully direct",
+      "super organized",
+      "down-to-earth"
+    ];
+    let pIdx = 0;
+    setInterval(() => {
+      pIdx = (pIdx + 1) % phrases.length;
+      phraseEl.style.opacity = '0';
+      phraseEl.style.transition = 'opacity 0.25s ease';
+      setTimeout(() => {
+        phraseEl.textContent = phrases[pIdx];
+        phraseEl.style.opacity = '1';
+      }, 260);
+    }, 2800);
   }
 });
 </script>

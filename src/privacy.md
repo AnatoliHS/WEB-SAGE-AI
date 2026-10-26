@@ -1,18 +1,18 @@
 ---
 layout: policy.njk
-title: Privacy Policy — Tinker Click
+title: Privacy Policy — Sage
 ---
 
 <section class="policy-section">
   <div class="policy-header">
     <h1>Privacy Policy</h1>
-    <p class="policy-meta">Last updated: October 2026 • Effective for Tinker Click (tinker.click)</p>
+    <p class="policy-meta">Last updated: October 2026 • Effective for Sage (sage.is) by Startr LLC</p>
   </div>
   
   <div class="policy-body">
     <div class="policy-card">
       <h2>1. Overview & Commitment</h2>
-      <p>Tinker Click ("we", "our", or "us") is dedicated to providing creative workflow tools while protecting your personal privacy. This Privacy Policy details how we handle information collected through our gateway website at <a href="https://tinker.click/">tinker.click</a>, our waitlist, and early-access services.</p>
+      <p>Sage ("we", "our", or "us"), backed by Startr LLC, is dedicated to providing private, secure open-source AI platform solutions for teams. This Privacy Policy details how we handle information collected through our gateway website at <a href="https://sage.is/">sage.is</a>, our waitlist, and services.</p>
     </div>
 
     <div class="policy-card">
@@ -42,12 +42,12 @@ title: Privacy Policy — Tinker Click
 
     <div class="policy-card">
       <h2>5. Unsubscribe & Data Deletion</h2>
-      <p>You can opt out of waitlist communications at any time by clicking the unsubscribe link in any email or by contacting us directly at <a href="mailto:hello@tinker.click">hello@tinker.click</a>. Upon request, we will promptly delete all records of your email from our system.</p>
+      <p>You can opt out of communications at any time by clicking the unsubscribe link in any email or by contacting us directly at <a href="mailto:izzy@sage.is">izzy@sage.is</a>. Upon request, we will promptly delete all records of your email from our system.</p>
     </div>
 
     <div class="policy-card highlight">
       <h2>Contact Us</h2>
-      <p>If you have any questions regarding this Privacy Policy or your data, reach out to the Tinker Click team at <a href="mailto:hello@tinker.click">hello@tinker.click</a>.</p>
+      <p>If you have any questions regarding this Privacy Policy or your data, reach out to the Sage team at <a href="mailto:izzy@sage.is">izzy@sage.is</a>.</p>
     </div>
   </div>
 </section>
