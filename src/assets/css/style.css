@@ -28,12 +28,40 @@
 
   /* Layout */
   --gutter: clamp(16px, 3vw, 40px);
+  --container-max: 1440px;
   --header-h: 76px;
   --radius: 20px;
 
   /* Motion */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --container-max: min(1720px, 92vw);
+    --gutter: clamp(36px, 2.6vw, 56px);
+    --header-h: 84px;
+    --radius: 24px;
+  }
+}
+
+@media (min-width: 2000px) {
+  :root {
+    --container-max: min(2160px, 88vw);
+    --gutter: clamp(48px, 2.8vw, 72px);
+    --header-h: 92px;
+    --radius: 28px;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --container-max: min(2400px, 86vw);
+    --gutter: clamp(56px, 3vw, 84px);
+    --header-h: 100px;
+    --radius: 32px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -145,7 +173,7 @@ button {
 /* Container */
 .container {
   width: 100%;
-  max-width: 1440px;
+  max-width: var(--container-max, 1440px);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
@@ -233,7 +261,7 @@ button {
   gap: 0.06em;
   font-family: var(--font-display);
   /* Sized so TINKER + CLICK spans the full container width */
-  font-size: calc((min(100vw, 1440px) - 2 * var(--gutter)) / 3.34);
+  font-size: calc((min(100vw, var(--container-max, 1440px)) - 2 * var(--gutter)) / 3.34);
   font-weight: 400;
   line-height: 0.84;
   letter-spacing: -0.012em;
@@ -568,6 +596,27 @@ button {
   transition: opacity 0.8s var(--ease) 0.35s, transform 0.8s var(--ease) 0.35s;
 }
 
+@media (min-width: 761px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: calc(var(--header-h) + clamp(24px, 4vh, 64px)) 0 clamp(48px, 6vh, 96px);
+    box-sizing: border-box;
+  }
+
+  .hero-rule {
+    margin-top: clamp(16px, 2vw, 32px);
+  }
+
+  .hero-grid {
+    padding-top: clamp(24px, 3.5vh, 48px);
+    gap: clamp(32px, 4vh, 56px) var(--gutter);
+  }
+}
+
 /* ==========================================================================
    INTRO: words rise from behind the hero rule before the wordmark does (assets/js/intro.js)
    ========================================================================== */
@@ -609,7 +658,7 @@ html.has-intro .hero-grid {
   left: 0;
   bottom: var(--gap);
   font-family: var(--font-display);
-  font-size: calc((min(100vw, 1440px) - 2 * var(--gutter)) / 3.34 * 0.6);
+  font-size: calc((min(100vw, var(--container-max, 1440px)) - 2 * var(--gutter)) / 3.34 * 0.6);
   line-height: 0.84;
   text-transform: uppercase;
   color: var(--ink);
@@ -634,8 +683,8 @@ html.has-intro .hero-grid {
 }
 
 .hero-meta p {
-  font-size: 0.9375rem;
-  line-height: 1.4;
+  font-size: clamp(0.9375rem, 0.95vw, 1.25rem);
+  line-height: 1.45;
 }
 
 .hero-statement {
@@ -643,7 +692,7 @@ html.has-intro .hero-grid {
 }
 
 .hero-title {
-  font-size: clamp(1.75rem, 2.8vw, 2.75rem);
+  font-size: clamp(1.75rem, 2.5vw, 3.75rem);
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.04em;
@@ -651,8 +700,10 @@ html.has-intro .hero-grid {
 }
 
 .hero-lede {
-  margin-top: 16px;
-  max-width: 46ch;
+  margin-top: clamp(16px, 1.8vh, 24px);
+  max-width: 52ch;
+  font-size: clamp(1rem, 1.1vw, 1.35rem);
+  line-height: 1.6;
   color: var(--ink-2);
 }
 
@@ -687,7 +738,7 @@ html.has-intro .hero-grid {
   grid-column: 4;
   justify-self: end;
   align-self: end;
-  width: var(--slot-w, 200px);
+  width: var(--slot-w, clamp(200px, 13vw, 280px));
   aspect-ratio: var(--slot-ratio, 1);
 }
 
@@ -729,7 +780,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 /* Where the sphere lands; the canvas itself covers the viewport so the words can run edge to edge */
 .sphere-target {
-  width: min(60vh, 540px, 46vw);
+  width: min(60vh, clamp(540px, 34vw, 760px), 46vw);
   aspect-ratio: 1;
 }
 
@@ -829,18 +880,19 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .section-title {
-  font-size: clamp(2rem, 4.6vw, 4.25rem);
+  font-size: clamp(2rem, 3.8vw, 5.25rem);
   font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.045em;
-  max-width: 17em;
+  max-width: 20em;
   text-wrap: balance;
 }
 
 .section-lede {
-  margin-top: 24px;
-  max-width: 48ch;
-  font-size: 1.125rem;
+  margin-top: clamp(20px, 2.2vh, 32px);
+  max-width: 54ch;
+  font-size: clamp(1.125rem, 1.25vw, 1.5rem);
+  line-height: 1.55;
   color: var(--ink-2);
 }
 
@@ -860,7 +912,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .section-head-split .section-lede {
   justify-self: end;
-  max-width: 56ch;
+  max-width: 62ch;
   margin-top: 0;
 }
 
@@ -904,7 +956,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .stats dt {
-  font-size: 0.8125rem;
+  font-size: clamp(0.8125rem, 0.9vw, 1.0625rem);
   color: var(--muted);
 }
 
@@ -926,7 +978,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 /* Words instead of numbers (platform names) need a smaller size to fit a column */
 .stats-words dd {
-  font-size: clamp(2rem, 4.2vw, 3.75rem);
+  font-size: clamp(2rem, 3.6vw, 4.5rem);
   line-height: 1;
   letter-spacing: -0.045em;
 }
@@ -941,15 +993,15 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .platforms > div {
-  padding-top: 20px;
+  padding-top: clamp(20px, 2.2vh, 32px);
   border-top: 1px solid var(--line);
 }
 
 .platform-logo {
   display: block;
-  width: clamp(32px, 3.4vw, 48px);
-  height: clamp(32px, 3.4vw, 48px);
-  margin-bottom: clamp(20px, 3vw, 40px);
+  width: clamp(32px, 3.2vw, 56px);
+  height: clamp(32px, 3.2vw, 56px);
+  margin-bottom: clamp(20px, 2.5vw, 44px);
   fill: currentColor;
   color: var(--ink);
   transition: color 0.4s ease, transform 0.6s var(--ease);
@@ -987,7 +1039,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   gap: 0.4em;
   padding-right: 0.4em;
   font-family: var(--font-display);
-  font-size: clamp(3rem, 9vw, 8rem);
+  font-size: clamp(3rem, 7.5vw, 11rem);
   line-height: 1.05;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1116,7 +1168,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .feature-list h3 {
   padding-right: 32px;
-  font-size: 1.125rem;
+  font-size: clamp(1.125rem, 1.25vw, 1.5rem);
   font-weight: 500;
   letter-spacing: -0.02em;
 }
@@ -1127,8 +1179,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   left: 0;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: clamp(44px, 3vw, 54px);
+  height: clamp(44px, 3vw, 54px);
   border-radius: 12px;
   background: color-mix(in srgb, var(--f) 14%, var(--bg));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--f) 22%, transparent);
@@ -1138,7 +1190,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .feature-copy > p {
   margin-top: 4px;
   color: var(--ink-2);
-  font-size: 0.9375rem;
+  font-size: clamp(0.9375rem, 1vw, 1.2rem);
+  line-height: 1.55;
 }
 
 .features-nav { display: none; }
@@ -1146,13 +1199,13 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 /* From 761px: a rail of cards running out to the right edge of the screen, aligned with the page on the left */
 @media (min-width: 761px) {
   .features {
-    --edge: max(var(--gutter), calc((100vw - 1440px) / 2 + var(--gutter)));
+    --edge: max(var(--gutter), calc((100vw - var(--container-max, 1440px)) / 2 + var(--gutter)));
     margin-inline: calc(50% - 50vw);
   }
 
   .feature-list {
     display: flex;
-    gap: 16px;
+    gap: clamp(16px, 1.5vw, 28px);
     padding: 0 var(--edge) 4px;
     overflow-x: auto;
     border-top: 0;
@@ -1168,7 +1221,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     flex: none;
     flex-direction: column;
     gap: 0;
-    width: min(360px, 42vw);
+    width: min(clamp(360px, 24vw, 500px), 42vw);
     padding: 0;
     overflow: hidden;
     border: 0;
@@ -1180,7 +1233,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .feature-viz {
     display: grid;
     place-items: center;
-    height: 220px;
+    height: clamp(220px, 14vw, 300px);
     padding: 18px;
     background: color-mix(in srgb, var(--f) 10%, var(--bg-raised));
     color: var(--f);
@@ -1188,7 +1241,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
   .feature-copy {
     min-height: 0;
-    padding: 22px 24px 26px;
+    padding: clamp(22px, 1.8vw, 36px);
   }
 
   .feature-num { position: static; display: block; margin-bottom: 10px; }
@@ -1197,7 +1250,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     display: flex;
     gap: 10px;
     align-items: center;
-    font-size: 1.375rem;
+    font-size: clamp(1.375rem, 1.4vw, 1.85rem);
     letter-spacing: -0.03em;
   }
 
@@ -1809,23 +1862,29 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   color: var(--node);
 }
 
+.live-step .index-num {
+  font-size: clamp(0.8125rem, 0.85vw, 1rem);
+}
+
 .live-step h3 {
   margin: 12px 0 10px;
-  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-size: clamp(1.25rem, 1.5vw, 2rem);
   font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.035em;
 }
 
 .live-step p {
-  max-width: 36ch;
+  max-width: 48ch;
+  font-size: clamp(0.9375rem, 1.05vw, 1.25rem);
+  line-height: 1.55;
   color: var(--ink-2);
 }
 
 /* The timer line under each step's text: the current one fills until the next step (scripts.njk) */
 .live-timer {
   display: block;
-  height: 1px;
+  height: clamp(1px, 0.12vw, 2px);
   margin-top: 16px;
   overflow: hidden;
   background: var(--line);
@@ -1848,24 +1907,24 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   .live {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: clamp(32px, 5vw, 80px);
+    gap: clamp(32px, 5vw, 100px);
     align-items: center;
   }
 
   .live-stage {
     --cw: 54cqw;
     aspect-ratio: 4 / 3;
-    width: min(100%, calc((100svh - 180px) * 4 / 3));
+    width: min(100%, calc((100svh - 160px) * 4 / 3));
   }
 
   .live-steps {
     grid-template-columns: 1fr;
-    gap: clamp(20px, 2.4vw, 32px);
+    gap: clamp(20px, 2.5vw, 40px);
     margin-top: 0;
   }
 
   .live-step h3 { margin-top: 6px; }
-  .live-step p { max-width: 44ch; }
+  .live-step p { max-width: 50ch; }
 }
 
 @media (max-width: 860px) {
@@ -1975,7 +2034,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .section-head-stack .section-title {
   margin-top: 24px;
-  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-size: clamp(2rem, 3.2vw, 4.25rem);
 }
 
 .faq-list {
@@ -1993,9 +2052,9 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  padding: 24px 0;
+  padding: clamp(24px, 2.2vh, 38px) 0;
   text-align: left;
-  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
+  font-size: clamp(1.0625rem, 1.35vw, 1.625rem);
   font-weight: 500;
   letter-spacing: -0.025em;
   transition: color 0.2s;
@@ -2007,8 +2066,8 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 .faq-icon {
   position: relative;
-  flex: 0 0 14px;
-  height: 14px;
+  flex: 0 0 clamp(14px, 1.1vw, 18px);
+  height: clamp(14px, 1.1vw, 18px);
   transition: transform 0.4s var(--ease);
 }
 
@@ -2032,14 +2091,16 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 }
 
 .faq-answer {
-  padding: 0 0 28px;
-  max-width: 64ch;
+  padding: 0 0 clamp(28px, 2.5vh, 40px);
+  max-width: 72ch;
+  font-size: clamp(1rem, 1.1vw, 1.25rem);
+  line-height: 1.65;
   color: var(--ink-2);
   animation: flash 0.4s ease;
 }
 
 .faq-answer p + p {
-  margin-top: 12px;
+  margin-top: clamp(12px, 1.4vh, 18px);
 }
 
 .faq-answer a {
@@ -2070,12 +2131,12 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding-top: 24px;
-  border-top: 4px solid var(--ink);
+  padding-top: clamp(24px, 2.5vh, 40px);
+  border-top: clamp(4px, 0.35vw, 6px) solid var(--ink);
 }
 
 .footer-headline {
-  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  font-size: clamp(2.25rem, 5.2vw, 6.5rem);
   font-weight: 500;
   line-height: 0.95;
   letter-spacing: -0.05em;
@@ -2096,7 +2157,7 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 .footer-orb {
   position: relative;
   flex: none;
-  width: clamp(5.4rem, 18vw, 16.8rem);
+  width: clamp(5.4rem, 15vw, 20rem);
   aspect-ratio: 1;
 }
 
@@ -2113,10 +2174,10 @@ html:not(.js) .stage-pin { position: static; height: auto; }
 
 /* Sits just above the bottom line */
 .footer-blurb {
-  max-width: 62ch;
-  margin-top: clamp(56px, 8vw, 112px);
-  font-size: clamp(1.125rem, 1.7vw, 1.5rem);
-  line-height: 1.4;
+  max-width: 68ch;
+  margin-top: clamp(56px, 7vw, 120px);
+  font-size: clamp(1.125rem, 1.4vw, 1.75rem);
+  line-height: 1.5;
   letter-spacing: -0.02em;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -2126,10 +2187,10 @@ html:not(.js) .stage-pin { position: static; height: auto; }
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 24px;
-  padding-top: 16px;
+  margin-top: clamp(24px, 2.5vh, 40px);
+  padding-top: clamp(16px, 1.8vh, 24px);
   border-top: 1px solid var(--line);
-  font-size: 0.8125rem;
+  font-size: clamp(0.8125rem, 0.85vw, 1rem);
   color: var(--muted);
 }
 
@@ -2279,5 +2340,11 @@ html:not(.js) .stage-pin { position: static; height: auto; }
     transition-delay: 0s !important;
   }
 
-  .js .reveal { opacity: 1; transform: none; }
+  .js .reveal,
+  .js .hero-title,
+  .js .hero-lede {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
 }
