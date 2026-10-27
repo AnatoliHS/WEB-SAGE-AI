@@ -751,6 +751,7 @@ html:not(.has-intro) .hero-rule {
   color: #971aff;
   background: linear-gradient(135deg, #302aff, #971aff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
