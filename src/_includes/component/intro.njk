@@ -1,8 +1,18 @@
-<!-- Intro: words rise from behind the hero rule, then SAGE.IS does (assets/js/intro.js).
-     Only shown when head.njk has flagged html.has-intro: every load unless reduced motion is on. -->
+<!-- Cosmic Star Swirl Intro (Instagram Reference Physics)
+     1. Diagonal slit top-left to bottom-right
+     2. Rotates to horizontal stars top & bottom
+     3. SAGE.IS reveals in central slit
+     4. Stars fade out
+     5. SAGE.IS glides seamlessly into the Hero section anchor
+-->
 <div class="intro" id="intro" aria-hidden="true">
-  <div class="intro-stack" data-intro-stack>
-    {% for w in ["Build", "Deploy", "Collaborate", "Empower"] %}<span class="intro-word" style="--d: {{ 450 + loop.index0 * 600 }}ms">{{ w }}</span>{% endfor %}
+  <canvas id="intro-star-canvas" class="intro-star-canvas"></canvas>
+  <div class="intro-wordmark-reveal" id="intro-wordmark-reveal">
+    <div class="wordmark intro-brand-clone" id="intro-brand-clone">
+      <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor
+        %}</span>
+      <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor
+        %}</span>
+    </div>
   </div>
-  <i class="intro-line" data-intro-line></i>
 </div>
