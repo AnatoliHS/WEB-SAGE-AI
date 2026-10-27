@@ -1,0 +1,220 @@
+---
+layout: policy.njk
+title: "Colour options: Sage"
+description: Five Ironhill-inspired palettes, each running on the real homepage.
+noindex: true
+permalink: /concepts/palettes/
+palettes:
+  - slug: current
+    name: Violet
+    tag: Today, for reference
+    summary: "The site as it stands, near-black with the electric violet gradient. Here to compare against."
+    swatches:
+      - { name: Ground, hex: "#0e0e0f" }
+      - { name: Ink, hex: "#eee9e2" }
+      - { name: Accent, hex: "#302aff" }
+      - { name: Spark, hex: "#971aff" }
+    mood: [electric, tech, night]
+  - slug: paper
+    name: Paper
+    tag: Light, closest to Ironhill
+    summary: "Ironhill's cream paper as the ground and its moss as the ink, so the whole site reads like a field guide. The .IS and buttons go moss to olive; sun yellow is kept for the small sparks (the featured step, the end of the lines)."
+    swatches:
+      - { name: Paper, hex: "#f4eddd" }
+      - { name: Forest ink, hex: "#27311e" }
+      - { name: Moss, hex: "#344128" }
+      - { name: Olive, hex: "#6b7f3a" }
+      - { name: Sun, hex: "#fec820" }
+    mood: [warm, crafted, outdoors, calm]
+  - slug: forest
+    name: Forest
+    tag: Dark, the current mood re-grown
+    summary: "Keeps today's dark, cinematic feel but swaps black for deep forest green and the violet for a sage-leaf-to-sun gradient. The easiest step from where the site is now."
+    swatches:
+      - { name: Forest, hex: "#1d2516" }
+      - { name: Cream ink, hex: "#f4eddd" }
+      - { name: Sage leaf, hex: "#a9ba86" }
+      - { name: Sun, hex: "#fec820" }
+    mood: [night, premium, quiet, cinematic]
+  - slug: sage
+    name: Sage leaf
+    tag: Light, the plant itself
+    summary: "The ground is the grey-green of a sage leaf, with forest ink on top. The most literal take on the name, and the most unusual: few sites sit on a mid-tone colour like this."
+    swatches:
+      - { name: Sage leaf, hex: "#b9c0a3" }
+      - { name: Forest ink, hex: "#1f2818" }
+      - { name: Deep forest, hex: "#27311e" }
+      - { name: Sun, hex: "#fec820" }
+    mood: [botanical, soft, distinctive]
+  - slug: moss
+    name: Moss
+    tag: Mid-dark, Ironhill's own green
+    summary: "Ironhill's moss as the ground, cream ink, and the .IS fading from sun yellow into cream. Richer and warmer than Forest, with more colour in every screen."
+    swatches:
+      - { name: Moss, hex: "#344128" }
+      - { name: Cream ink, hex: "#f4eddd" }
+      - { name: Mist, hex: "#cfd0c0" }
+      - { name: Sun, hex: "#fec820" }
+    mood: [rich, earthy, bold]
+  - slug: day-night
+    name: Day & night
+    tag: Both, in alternating blocks
+    summary: "Paper and Forest together. The hero sits on cream, then every other section turns to forest green, the way Ironhill moves between light and dark panels. Gives the long page a rhythm as you scroll."
+    swatches:
+      - { name: Paper, hex: "#f4eddd" }
+      - { name: Moss, hex: "#344128" }
+      - { name: Forest, hex: "#1d2516" }
+      - { name: Sage leaf, hex: "#a9ba86" }
+      - { name: Sun, hex: "#fec820" }
+    mood: [rhythm, editorial, contrast]
+---
+<style>
+  .px-head { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding-top: 20px; border-top: 1px solid var(--line); }
+  .px-head > div { grid-column: 2 / -1; }
+  .px-head h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .px-head p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .px-head p + p { margin-top: 12px; font-size: 0.9375rem; color: var(--muted); }
+
+  /* Ironhill's own palette, as the source */
+  .px-source { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: clamp(40px, 5vw, 72px); }
+  .px-source div { display: flex; flex-direction: column; justify-content: flex-end; min-height: clamp(120px, 12vw, 180px); padding: 14px 16px; font-size: 0.8125rem; line-height: 1.4; }
+  .px-source b { font-weight: 500; }
+  .px-source-note { margin-top: 12px; font-size: 0.8125rem; color: var(--muted); }
+
+  .px-bar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: clamp(40px, 5vw, 72px); padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .px-jump { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; font-size: 0.875rem; }
+  .px-jump a { color: var(--ink-2); transition: color 0.2s; }
+  .px-jump a:hover { color: var(--ink); }
+  .px-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .px-device { display: inline-flex; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); }
+  .px-device button { height: 32px; padding: 0 14px; border-radius: 999px; font-size: 0.8125rem; color: var(--ink-2); transition: background 0.25s, color 0.25s; }
+  .px-device button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+  .px-option { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr); gap: 32px clamp(32px, 4vw, 72px); padding: clamp(48px, 6vw, 96px) 0; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; }
+  .px-label { display: flex; gap: 14px; align-items: baseline; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+  .px-label b { font-weight: 500; color: var(--accent-soft); letter-spacing: 0; }
+  .px-option h2 { margin-top: 16px; font-size: clamp(2rem, 3.2vw, 3.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; }
+  .px-summary { margin-top: 18px; font-size: clamp(1rem, 1.05vw, 1.1875rem); line-height: 1.6; color: var(--ink-2); }
+  .px-swatches { display: flex; margin-top: 24px; list-style: none; }
+  .px-swatches li { flex: 1; min-width: 0; }
+  .px-swatches i { display: block; height: 56px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .px-swatches li:first-child i { border-radius: 10px 0 0 10px; }
+  .px-swatches li:last-child i { border-radius: 0 10px 10px 0; }
+  .px-swatches span { display: block; margin-top: 8px; padding-right: 6px; font-size: 0.75rem; line-height: 1.35; color: var(--ink-2); }
+  .px-swatches code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.6875rem; color: var(--muted); }
+  .px-mood { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 22px; list-style: none; font-size: 0.8125rem; color: var(--muted); }
+  .px-mood li::before { content: "#"; color: var(--accent-soft); }
+
+  .px-stage-wrap { min-width: 0; }
+  .px-stage { position: relative; overflow: hidden; aspect-ratio: 1440 / 900; border-radius: 14px; background: #000; box-shadow: 0 0 0 1px var(--line), 0 40px 100px -50px rgba(0, 0, 0, 0.9); }
+  .px-stage iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; }
+  .px-stage-empty { position: absolute; inset: 0; display: grid; place-items: center; font-size: 0.875rem; color: var(--muted); }
+  [data-device="phone"] .px-stage { aspect-ratio: 390 / 844; width: min(100%, 340px); border-radius: 28px; }
+  [data-device="phone"] .px-stage iframe { width: 390px; height: 844px; }
+  .px-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; margin-top: 16px; font-size: 0.875rem; color: var(--muted); }
+  .px-controls a { color: var(--ink-2); transition: color 0.2s; }
+  .px-controls a:hover { color: var(--accent-soft); }
+
+  @media (max-width: 960px) {
+    .px-head { grid-template-columns: 1fr; }
+    .px-head > div { grid-column: 1; }
+    .px-source { grid-template-columns: repeat(3, 1fr); }
+    .px-option { grid-template-columns: 1fr; }
+    .px-stage-wrap { order: -1; }
+  }
+</style>
+
+<header class="px-head">
+  <p class="section-label"><span class="index-num">00</span>Colour options</p>
+  <div>
+    <h1>Five greens.</h1>
+    <p>Five palettes taken from Ironhill's cream, moss, forest and sun yellow, leaning into Sage the plant. Each runs on the real homepage, with the same layout and copy; only the colours change.</p>
+    <p>Scroll inside a preview to see every section in that palette, or open it full page. The intro is skipped here; it gets re-coloured in the animation round.</p>
+  </div>
+</header>
+
+<div class="px-source" aria-label="Ironhill's palette">
+  <div style="background:#f4eddd;color:#27311e"><b>Paper</b>#f4eddd</div>
+  <div style="background:#cfd0c0;color:#27311e"><b>Mist</b>#cfd0c0</div>
+  <div style="background:#fec820;color:#27311e"><b>Sun</b>#fec820</div>
+  <div style="background:#344128;color:#f4eddd"><b>Moss</b>#344128</div>
+  <div style="background:#27311e;color:#f4eddd"><b>Forest</b>#27311e</div>
+  <div style="background:#a9ba86;color:#27311e"><b>Sage leaf</b>#a9ba86 (added)</div>
+</div>
+<p class="px-source-note">Ironhill's palette, read from its stylesheet, with a sage-leaf green added for the plant.</p>
+
+<div class="px-bar">
+  <ul class="px-jump">
+    {% for o in palettes %}<li><a href="#{{ o.slug }}"><b>0{{ loop.index0 }}</b>{{ o.name }}</a></li>{% endfor %}
+  </ul>
+  <div class="px-device" role="group" aria-label="Preview size">
+    <button type="button" data-device-btn="desktop" aria-pressed="true">Desktop</button>
+    <button type="button" data-device-btn="phone" aria-pressed="false">Phone</button>
+  </div>
+</div>
+
+<div class="px-list" data-device="desktop">
+  {% for o in palettes %}
+  {% set url = "/?intro=0&theme=" + ("violet" if o.slug == "current" else o.slug) %}
+  <section class="px-option" id="{{ o.slug }}">
+    <div>
+      <p class="px-label"><b>0{{ loop.index0 }}</b>{{ o.tag }}</p>
+      <h2>{{ o.name }}</h2>
+      <p class="px-summary">{{ o.summary }}</p>
+      <ul class="px-swatches">
+        {% for s in o.swatches %}<li><i style="background:{{ s.hex }}"></i><span>{{ s.name }}<code>{{ s.hex }}</code></span></li>{% endfor %}
+      </ul>
+      <ul class="px-mood">
+        {% for m in o.mood %}<li>{{ m }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="px-stage-wrap">
+      <div class="px-stage" data-stage>
+        <span class="px-stage-empty">Loading…</span>
+        <iframe data-src="{{ url }}" title="{{ o.name }} palette preview" loading="lazy"></iframe>
+      </div>
+      <div class="px-controls">
+        <span>Scroll inside to see every section</span>
+        <a href="{{ url }}" target="_blank" rel="noopener">Open full page ↗</a>
+      </div>
+    </div>
+  </section>
+  {% endfor %}
+</div>
+
+<script>
+(() => {
+  const list = document.querySelector('.px-list');
+  const stages = Array.from(document.querySelectorAll('[data-stage]'));
+  const size = () => list.dataset.device === 'phone' ? [390, 844] : [1440, 900];
+
+  // Scale each 1440×900 (or phone-sized) page down to fit its frame
+  const fit = (stage) => {
+    stage.querySelector('iframe').style.transform = `scale(${stage.clientWidth / size()[0]})`;
+  };
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  stages.forEach((s) => ro.observe(s));
+
+  const load = (stage) => {
+    const frame = stage.querySelector('iframe');
+    frame.src = frame.dataset.src;
+    fit(stage);
+  };
+
+  // Load each one as it nears the screen
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    load(e.target);
+  }), { rootMargin: '200px 0px' });
+  stages.forEach((s) => io.observe(s));
+
+  document.querySelectorAll('[data-device-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      list.dataset.device = btn.dataset.deviceBtn;
+      document.querySelectorAll('[data-device-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      stages.forEach((s) => { if (s.querySelector('iframe').src) load(s); });
+    });
+  });
+})();
+</script>

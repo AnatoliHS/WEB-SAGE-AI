@@ -1,0 +1,16 @@
+---
+layout: default.njk
+pagination:
+  data: promptFields
+  size: 1
+  alias: option
+permalink: "/concepts/loading/{{ option.slug }}/"
+intro: true
+introVariant: prompt
+noindex: true
+eleventyComputed:
+  promptField: "{{ option.slug }}"
+  title: "Loading: {{ option.name }}"
+---
+{# One Prompt intro background on the real hero, for the comparison page (concepts/loading.njk) to frame #}
+{% include "component/hero.njk" %}

@@ -112,6 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 1b. The header is in the hero's colours while the hero is behind it, the page's once it has
+  //     scrolled out from under it (style.css, html[data-theme="home"])
+  const hero = document.getElementById('hero');
+  const headerBar = document.querySelector('.site-header-bar');
+  const headerTone = () => {
+    // Where the paper starts on screen: the hero's bottom, or the edge burning up through it (hero-burn.js)
+    const paperTop = !hero ? 0 : window.SageHeroPaperTop ? window.SageHeroPaperTop() : hero.getBoundingClientRect().bottom;
+    const onPaper = paperTop <= (headerBar ? headerBar.offsetHeight : 0);
+    root.classList.toggle('header-on-paper', onPaper);
+  };
+  headerTone();
+  window.addEventListener('scroll', headerTone, { passive: true });
+  window.addEventListener('resize', headerTone);
+
   // 2. Waitlist Top-Down Drawer
   const drawer = document.getElementById('waitlist-dropdown-drawer');
   const backdrop = document.getElementById('drawer-backdrop');
@@ -604,6 +618,20 @@ document.addEventListener('DOMContentLoaded', () => {
       p1: Math.random() * 6.28, p2: Math.random() * 6.28, s: 0.4 + Math.random() * 0.8, i,
     }));
     let W = 0, H = 0, onScreen = false;
+    // The band's colours come from its section's tokens (style.css), so they follow the theme:
+    // each resolved to "r, g, b" so it can take an alpha
+    const rgbOf = (name) => {
+      const probe = document.createElement('i');
+      probe.style.color = `var(${name})`;
+      untangle.append(probe);
+      const rgb = getComputedStyle(probe).color.match(/[\d.]+/g).slice(0, 3).join(', ');
+      probe.remove();
+      return rgb;
+    };
+    let tones;
+    const readTones = () => { tones = { ink: rgbOf('--ink'), soft: rgbOf('--accent-soft'), accent: rgbOf('--accent-2') }; };
+    readTones();
+    new MutationObserver(readTones).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = untangle.clientWidth;
@@ -625,10 +653,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const t = reducedUntangle ? 0 : now / 1000;
       ctx.clearRect(0, 0, W, H);
       const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, 'rgba(238, 233, 226, 0.28)');
-      grad.addColorStop(0.5, 'rgba(238, 233, 226, 0.35)');
-      grad.addColorStop(0.78, 'rgba(143, 134, 255, 0.9)');
-      grad.addColorStop(1, 'rgba(151, 26, 255, 0.9)');
+      grad.addColorStop(0, `rgba(${tones.ink}, 0.28)`);
+      grad.addColorStop(0.5, `rgba(${tones.ink}, 0.35)`);
+      grad.addColorStop(0.78, `rgba(${tones.soft}, 0.9)`);
+      grad.addColorStop(1, `rgba(${tones.accent}, 0.9)`);
       ctx.strokeStyle = grad;
       ctx.lineWidth = 1.2;
       const gap = H / (N + 3);

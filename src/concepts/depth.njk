@@ -1,0 +1,187 @@
+---
+layout: policy.njk
+title: "Hero depth options: Sage"
+description: Five ways to give the hero a forest in depth, and a transition into the next section.
+noindex: true
+permalink: /concepts/depth/
+options:
+  - slug: canopy
+    name: Canopy
+    tag: Closest to Ironhill
+    summary: "Leafy sage clusters at three depths frame the hero: faint trunks and foliage far back, mid-green masses at the sides, near-black leaves in the bottom corners and a branch dropping in from the top right. Scrolling, the near leaves move faster than the far ones. The paper section rises into the hero as Ironhill's ink-blot mist, and the canopy's edge hangs down over it."
+    points: ["Three depths moving at three speeds", "Paper rises as crisp, merging mist blots", "Dark branches hang over the top of section 01"]
+  - slug: sprigs
+    name: Hanging sprigs
+    tag: Lighter, airy
+    summary: "Sage sprigs hang down from the top of the screen at three depths: a fine curtain of small ones far back, medium ones at the sides and a few long dark ones up close, which leave first as you scroll. The paper rises into the hero as a soft fog rather than blots."
+    points: ["Keeps the middle of the hero clear", "The softest transition of the five", "Ties to the leaves in the loading screen"]
+  - slug: fieldguide
+    name: Field guide
+    tag: Line drawing and paper
+    summary: "The forest is drawn rather than painted: sage sprigs in fine sage-green line, like a botanical plate, faint in the distance and two large ones rising from the corners. The next section comes up as a torn page laid over the forest, casting a shadow, with leaves tucked in under its edge."
+    points: ["Ironhill's paper-scrap feel", "The torn page rises faster than the scroll and covers the hero", "Most editorial and lightest in weight"]
+  - slug: clearing
+    name: Clearing
+    tag: Walking in
+    summary: "Two dense masses of dark foliage frame the hero from the left and right, with trunks and haze behind. As you scroll they part, sliding out to the sides and growing as if you were walking through them, into a clearing where the paper section rises as mist."
+    points: ["Scroll moves the leaves sideways, not just up", "The most cinematic of the five", "The hero copy sits in the gap between them"]
+  - slug: treeline
+    name: Treeline
+    tag: Landscape
+    summary: "Three ridges of tree crowns and pines across the bottom of the hero, paler and hazier with distance, like hills at dusk. They slide at different speeds as you scroll, then the paper rises as mist through them, with a few near pines standing in it at the edges."
+    points: ["A horizon under the hero, with the copy in the sky above", "Clearest sense of distance", "Pines at the edges carry into section 01"]
+---
+<style>
+  .px-head { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding-top: 20px; border-top: 1px solid var(--line); }
+  .px-head > div { grid-column: 2 / -1; }
+  .px-head h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .px-head p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .px-head p + p { margin-top: 12px; font-size: 0.9375rem; color: var(--muted); }
+
+  /* Ironhill's own palette, as the source */
+
+  .px-bar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: clamp(40px, 5vw, 72px); padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .px-jump { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; font-size: 0.875rem; }
+  .px-jump a { color: var(--ink-2); transition: color 0.2s; }
+  .px-jump a:hover { color: var(--ink); }
+  .px-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .px-device { display: inline-flex; padding: 3px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); }
+  .px-device button { height: 32px; padding: 0 14px; border-radius: 999px; font-size: 0.8125rem; color: var(--ink-2); transition: background 0.25s, color 0.25s; }
+  .px-device button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+  .px-option { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr); gap: 32px clamp(32px, 4vw, 72px); padding: clamp(48px, 6vw, 96px) 0; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; }
+  .px-label { display: flex; gap: 14px; align-items: baseline; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+  .px-label b { font-weight: 500; color: var(--accent-soft); letter-spacing: 0; }
+  .px-option h2 { margin-top: 16px; font-size: clamp(2rem, 3.2vw, 3.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.045em; }
+  .px-summary { margin-top: 18px; font-size: clamp(1rem, 1.05vw, 1.1875rem); line-height: 1.6; color: var(--ink-2); }
+  .px-points { margin-top: 22px; list-style: none; font-size: 0.9375rem; color: var(--ink-2); }
+  .px-points li { position: relative; padding: 9px 0 9px 22px; border-top: 1px solid var(--line); }
+  .px-points li::before { content: ""; position: absolute; left: 2px; top: 1.05em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-soft); }
+
+  .px-stage-wrap { min-width: 0; }
+  .px-stage { position: relative; overflow: hidden; aspect-ratio: 1440 / 900; border-radius: 14px; background: #000; box-shadow: 0 0 0 1px var(--line), 0 40px 100px -50px rgba(0, 0, 0, 0.9); }
+  .px-stage iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; }
+  .px-stage-empty { position: absolute; inset: 0; display: grid; place-items: center; font-size: 0.875rem; color: var(--muted); }
+  [data-device="phone"] .px-stage { aspect-ratio: 390 / 844; width: min(100%, 340px); border-radius: 28px; }
+  [data-device="phone"] .px-stage iframe { width: 390px; height: 844px; }
+  .px-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; margin-top: 16px; font-size: 0.875rem; color: var(--muted); }
+  .px-controls a { color: var(--ink-2); transition: color 0.2s; }
+  .px-controls a:hover { color: var(--accent-soft); }
+
+  @media (max-width: 960px) {
+    .px-head { grid-template-columns: 1fr; }
+    .px-head > div { grid-column: 1; }
+    .px-option { grid-template-columns: 1fr; }
+    .px-stage-wrap { order: -1; }
+  }
+</style>
+
+<header class="px-head">
+  <p class="section-label"><span class="index-num">00</span>Hero depth</p>
+  <div>
+    <h1>Into the forest.</h1>
+    <p>Five ways to give the hero depth, after Ironhill: a forest drawn in layers that move at different speeds as you scroll, and a transition into the paper section below. Each runs on the real homepage; the copy and layout are unchanged.</p>
+    <p>Each preview scrolls itself through the hero and into section 01 when it comes into view. Use Play scroll to watch again, scroll inside it yourself, or open it full page.</p>
+  </div>
+</header>
+
+<div class="px-bar">
+  <ul class="px-jump">
+    {% for o in options %}<li><a href="#{{ o.slug }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+  </ul>
+  <div class="px-device" role="group" aria-label="Preview size">
+    <button type="button" data-device-btn="desktop" aria-pressed="true">Desktop</button>
+    <button type="button" data-device-btn="phone" aria-pressed="false">Phone</button>
+  </div>
+</div>
+
+<div class="px-list" data-device="desktop">
+  {% for o in options %}
+  {% set url = "/?intro=0&depth=" + o.slug %}
+  <section class="px-option" id="{{ o.slug }}">
+    <div>
+      <p class="px-label"><b>0{{ loop.index }}</b>{{ o.tag }}</p>
+      <h2>{{ o.name }}</h2>
+      <p class="px-summary">{{ o.summary }}</p>
+      <ul class="px-points">
+        {% for p in o.points %}<li>{{ p }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="px-stage-wrap">
+      <div class="px-stage" data-stage>
+        <span class="px-stage-empty">Loading…</span>
+        <iframe data-src="{{ url }}" title="{{ o.name }} preview" loading="lazy"></iframe>
+      </div>
+      <div class="px-controls">
+        <button type="button" class="btn btn-ghost btn-sm" data-play>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          Play scroll
+        </button>
+        <a href="{{ url }}" target="_blank" rel="noopener">Open full page ↗</a>
+      </div>
+    </div>
+  </section>
+  {% endfor %}
+</div>
+
+<script>
+(() => {
+  const list = document.querySelector('.px-list');
+  const stages = Array.from(document.querySelectorAll('[data-stage]'));
+  const size = () => list.dataset.device === 'phone' ? [390, 844] : [1440, 900];
+
+  // Scale each 1440×900 (or phone-sized) page down to fit its frame
+  const fit = (stage) => {
+    stage.querySelector('iframe').style.transform = `scale(${stage.clientWidth / size()[0]})`;
+  };
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  stages.forEach((s) => ro.observe(s));
+
+  // Scroll the page inside a frame down through the hero into section 01, pause, and back up
+  const play = (stage) => {
+    const win = stage.querySelector('iframe').contentWindow;
+    if (!win || !win.document.body) return;
+    const to = Math.min(win.innerHeight * 1.35, win.document.documentElement.scrollHeight);
+    const leg = (from, end, ms) => new Promise((done) => {
+      const t0 = performance.now();
+      const step = (now) => {
+        const k = Math.min((now - t0) / ms, 1);
+        const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        win.scrollTo({ top: from + (end - from) * e, behavior: 'instant' });
+        if (k < 1) requestAnimationFrame(step); else done();
+      };
+      requestAnimationFrame(step);
+    });
+    clearTimeout(stage.playTimer);
+    win.scrollTo({ top: 0, behavior: 'instant' });
+    leg(0, to, 4200).then(() => new Promise((r) => { stage.playTimer = setTimeout(r, 900); })).then(() => leg(to, 0, 2600));
+  };
+
+  const load = (stage, autoplay) => {
+    const frame = stage.querySelector('iframe');
+    frame.onload = () => { if (autoplay) setTimeout(() => play(stage), 900); };
+    frame.src = frame.dataset.src;
+    fit(stage);
+  };
+
+  // Load each one as it nears the screen
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    load(e.target, true);
+  }), { threshold: 0.5 });
+  stages.forEach((s) => io.observe(s));
+
+  document.querySelectorAll('[data-play]').forEach((btn) => {
+    btn.addEventListener('click', () => play(btn.closest('.px-stage-wrap').querySelector('[data-stage]')));
+  });
+
+  document.querySelectorAll('[data-device-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      list.dataset.device = btn.dataset.deviceBtn;
+      document.querySelectorAll('[data-device-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      stages.forEach((s) => { if (s.querySelector('iframe').src) load(s, true); });
+    });
+  });
+})();
+</script>

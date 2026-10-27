@@ -14,7 +14,11 @@
   --muted: #77736c;
   --line: rgba(238, 233, 226, 0.12);
   --accent: #302aff;
-  --accent-gradient: linear-gradient(135deg, #302aff 0%, #971aff 100%);
+  /* Second accent: the spark on a featured dot, and the far end of the gradient */
+  --accent-2: #971aff;
+  --accent-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  /* Text set on the accent or its gradient */
+  --on-accent: #fff;
   --on-ink: #0e0e0f;
   --danger: #ff7a66;
 
@@ -137,7 +141,7 @@ button {
 
 ::selection {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 /* Accessibility Utilities */
@@ -175,11 +179,11 @@ button {
 }
 
 .text-accent {
-  background: linear-gradient(135deg, #302aff 0%, #971aff 100%);
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #302aff;
+  color: var(--accent);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -227,7 +231,7 @@ button {
 
 .btn-primary:hover {
   background: var(--accent-gradient);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn-outline {
@@ -276,11 +280,11 @@ button {
   display: inline-block;
   padding: 0.1em 0.14em;
   margin: -0.1em -0.14em;
-  background: linear-gradient(135deg, #302aff 0%, #971aff 100%);
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #302aff;
+  color: var(--accent);
 }
 
 /* Letters: each sits in a box clipped at the hero rule (its margin-top below), so it rises from behind it */
@@ -415,7 +419,7 @@ button {
 
 .header-cta:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .header-cta .label-close {
@@ -599,7 +603,7 @@ button {
   margin-right: 10px;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-size: 0.8em;
 }
 
@@ -646,6 +650,33 @@ button {
   flex: none;
 }
 
+/* Who we are, standing on the rule at the left; the wordmark follows after it, staggered left of
+   the headline under the rule (.hero-title, .hero-body) */
+.hero-meta {
+  flex: none;
+  padding-bottom: 2px;
+}
+
+/* The room left over goes after the wordmark */
+.hero-wordmark-wrap {
+  margin-right: auto;
+}
+
+/* Wider screens: the wordmark a quarter column in from the note, and the copy under the rule a
+   quarter column into the second, right of it */
+@media (min-width: 961px) {
+  .hero-wordmark-wrap {
+    /* A quarter of one of the hero's four columns */
+    margin-left: calc((100% - 3 * var(--gutter)) / 16);
+  }
+
+  .hero-title,
+  .hero-body {
+    /* A quarter of one of the three columns (and two gutters) these span */
+    margin-left: calc((100% - 2 * var(--gutter)) / 12);
+  }
+}
+
 .hero-rule {
   height: 3px;
   margin-top: 8px;
@@ -659,10 +690,6 @@ button {
   padding-top: clamp(16px, 2.4vh, 28px);
 }
 
-.hero-meta {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
 
 .hero-meta p {
   font-size: clamp(0.9375rem, 0.95vw, 1.25rem);
@@ -766,18 +793,38 @@ button {
   to { transform: translateY(250%); }
 }
 
-/* Wider screens: only as tall as its content, so the first section follows straight on rather than
-   after a screen's worth of space, and let down from the header by about the room left on the first
-   screen, so the block sits near the middle of it */
+/* The whole first screen (svh: the height with the browser's bars showing), the copy in the middle
+   of it and the scroll lines at the bottom */
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.hero > .container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.hero-top,
+.hero-foot {
+  margin-top: auto;
+}
+
 @media (min-width: 761px) {
   .hero {
-    padding: calc(var(--header-h) + clamp(40px, 12vh, 150px)) 0 clamp(16px, 2vh, 28px);
+    padding: calc(var(--header-h) + clamp(16px, 3vh, 40px)) 0 clamp(16px, 2vh, 28px);
   }
 }
 
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .hero-meta { grid-row: auto; order: 3; }
+  /* No room beside the wordmark: on a line of its own above it */
+  .hero-top { flex-wrap: wrap; }
+  .hero-meta { flex-basis: 100%; }
+  /* ...while the social proof stays beside the wordmark, in what room is left */
+  .hero-subtext { flex: 1 1 0; min-width: 0; }
   .hero-title, .hero-body { grid-column: 1; }
 }
 
@@ -829,6 +876,7 @@ html.has-intro .intro {
 /* Held back until the intro hands over */
 html.has-intro .hero-grid,
 html.has-intro .hero-subtext,
+html.has-intro .hero-meta,
 html.has-intro .hero-foot {
   opacity: 0;
   transform: translateY(18px);
@@ -842,6 +890,7 @@ html.has-intro .header-cta {
 
 html.intro-completed .hero-grid,
 html.intro-completed .hero-subtext,
+html.intro-completed .hero-meta,
 html.intro-completed .hero-foot {
   opacity: 1;
   transform: none;
@@ -2350,7 +2399,7 @@ a:hover u {
   transform: translateX(-50%);
   width: min(900px, 90vw);
   height: 420px;
-  background: radial-gradient(circle, #302aff 0%, #971aff 60%, transparent 80%);
+  background: radial-gradient(circle, var(--accent) 0%, var(--accent-2) 60%, transparent 80%);
 }
 
 .ambient-glow--left {
@@ -2358,7 +2407,7 @@ a:hover u {
   left: -12%;
   width: min(700px, 80vw);
   height: 460px;
-  background: radial-gradient(circle, #302aff 0%, transparent 75%);
+  background: radial-gradient(circle, var(--accent) 0%, transparent 75%);
 }
 
 .ambient-glow--right {
@@ -2366,7 +2415,7 @@ a:hover u {
   right: -12%;
   width: min(700px, 80vw);
   height: 460px;
-  background: radial-gradient(circle, #971aff 0%, transparent 75%);
+  background: radial-gradient(circle, var(--accent-2) 0%, transparent 75%);
 }
 
 /* Section label: index number and name in the first column of .section-head */
@@ -2505,8 +2554,8 @@ a:hover u {
 }
 
 .grow-step:nth-child(3)::before {
-  background: #971aff;
-  box-shadow: 0 0 0 6px var(--bg), 0 0 18px #971aff;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 6px var(--bg), 0 0 18px var(--accent-2);
 }
 
 .grow-icon {
@@ -2707,7 +2756,7 @@ a:hover u {
   height: 52px;
   border-radius: 50%;
   background: var(--accent-gradient);
-  color: #fff;
+  color: var(--on-accent);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -2760,7 +2809,7 @@ a:hover u {
   inset: 12% 6% -8%;
   z-index: -1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(70, 52, 255, 0.45), transparent);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 45%, transparent), transparent);
   filter: blur(70px);
   pointer-events: none;
 }
@@ -2869,8 +2918,8 @@ a:hover u {
 }
 
 .step.is-featured::before {
-  background: #971aff;
-  box-shadow: 0 0 14px #971aff;
+  background: var(--accent-2);
+  box-shadow: 0 0 14px var(--accent-2);
 }
 
 .step-num {
@@ -3480,3 +3529,266 @@ a:hover u {
     animation: none !important;
   }
 }
+
+/* ==========================================================================
+   COLOUR THEMES (trial)
+   Palettes drawn from Ironhill (ironhill.au): cream paper #f4eddd, moss #344128,
+   deep forest #27311e, sun yellow #fec820 and mist #cfd0c0, nodding to sage the
+   plant. Set with html[data-theme]; head.njk takes ?theme=<name> for the
+   comparison page (concepts/palettes.njk). Without one, the site stays as above.
+   ========================================================================== */
+
+/* 01 Paper: cream ground, moss ink, sun yellow kept for small sparks */
+html[data-theme="paper"],
+html[data-theme="day-night"] {
+  color-scheme: light;
+  --bg: #f4eddd;
+  --bg-raised: #ebe2cc;
+  --ink: #27311e;
+  --ink-2: #4f5843;
+  --muted: #7e7f69;
+  --line: rgba(39, 49, 30, 0.16);
+  --accent: #344128;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #344128 0%, #6b7f3a 100%);
+  --accent-soft: #5c6d36;
+  --on-accent: #f4eddd;
+  --on-ink: #f4eddd;
+  --node-1: #6b7f3a;
+  --node-2: #a8862a;
+  --node-3: #c8641e;
+  --node-4: #3f7a52;
+}
+
+/* 02 Forest: the dark site, re-grown; cream ink, sage-to-sun accent */
+html[data-theme="forest"],
+html[data-theme="day-night"] main > section.section:nth-of-type(odd) {
+  color-scheme: dark;
+  --bg: #1d2516;
+  --bg-raised: #27311e;
+  --ink: #f4eddd;
+  --ink-2: #c8c2ae;
+  --muted: #8a8c74;
+  --line: rgba(244, 237, 221, 0.12);
+  --accent: #fec820;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #fec820 100%);
+  --accent-soft: #f2d364;
+  --on-accent: #1d2516;
+  --on-ink: #1d2516;
+  --node-1: #a9ba86;
+  --node-2: #fec820;
+  --node-3: #f08a4b;
+  --node-4: #6fc79a;
+}
+
+/* 03 Sage leaf: the plant itself as the ground, forest ink */
+html[data-theme="sage"] {
+  color-scheme: light;
+  --bg: #b9c0a3;
+  --bg-raised: #aab394;
+  --ink: #1f2818;
+  --ink-2: #39432d;
+  --muted: #5a6449;
+  --line: rgba(31, 40, 24, 0.18);
+  --accent: #27311e;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #27311e 0%, #4b5e2c 100%);
+  --accent-soft: #2f3d1f;
+  --on-accent: #f4eddd;
+  --on-ink: #f4eddd;
+  --node-1: #344128;
+  --node-2: #8a6a12;
+  --node-3: #a24a14;
+  --node-4: #2f6142;
+}
+
+/* 04 Moss: Ironhill's moss as the ground, sun yellow fading to cream */
+html[data-theme="moss"] {
+  color-scheme: dark;
+  --bg: #344128;
+  --bg-raised: #3d4b30;
+  --ink: #f4eddd;
+  --ink-2: #d4cfba;
+  --muted: #a3a689;
+  --line: rgba(244, 237, 221, 0.15);
+  --accent: #fec820;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #fec820 0%, #f4eddd 100%);
+  --accent-soft: #fcd659;
+  --on-accent: #27311e;
+  --on-ink: #344128;
+  --node-1: #cfd0c0;
+  --node-2: #fec820;
+  --node-3: #f59a5c;
+  --node-4: #8fd1a6;
+}
+
+/* 05 Day & night: paper, with every other section in forest, Ironhill-style blocks */
+html[data-theme="day-night"] main > section.section:nth-of-type(odd) {
+  background: var(--bg);
+  color: var(--ink);
+  padding-bottom: clamp(96px, 12vw, 184px);
+}
+
+/* Home (the site's theme, set in head.njk): Paper, with the hero in Forest. The fixed header
+   (brand, phrase, links, CTA, bar) is in Forest too while the hero is behind it, and turns
+   Paper once the hero has scrolled out from under it (header-on-paper, scripts.njk) or the
+   application drawer opens over it */
+html[data-theme="home"] {
+  color-scheme: light;
+  --bg: #f4eddd;
+  --bg-raised: #ebe2cc;
+  --ink: #27311e;
+  --ink-2: #4f5843;
+  --muted: #7e7f69;
+  --line: rgba(39, 49, 30, 0.16);
+  --accent: #344128;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #344128 0%, #6b7f3a 100%);
+  --accent-soft: #5c6d36;
+  --on-accent: #f4eddd;
+  --on-ink: #f4eddd;
+  --node-1: #6b7f3a;
+  --node-2: #a8862a;
+  --node-3: #c8641e;
+  --node-4: #3f7a52;
+}
+
+html[data-theme="home"] :is(.hero, .intro),
+html[data-theme="home"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  color-scheme: dark;
+  --bg: #1d2516;
+  --bg-raised: #27311e;
+  --ink: #f4eddd;
+  --ink-2: #c8c2ae;
+  --muted: #8a8c74;
+  --line: rgba(244, 237, 221, 0.12);
+  --accent: #fec820;
+  --accent-2: #fec820;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #fec820 100%);
+  --accent-soft: #f2d364;
+  --on-accent: #1d2516;
+  --on-ink: #1d2516;
+}
+
+html[data-theme="home"] .hero {
+  /* The loading screen's ground (intros/prompt.js): night at the edges, the forest in the middle,
+     and the soft sage light that sits behind its input, here behind the copy */
+  background:
+    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(169, 186, 134, 0.15), rgba(169, 186, 134, 0)),
+    radial-gradient(circle farthest-corner at 50% 50%, #1d2516 0%, #141a0f 55%, #0c1009 100%);
+  color: var(--ink);
+  /* Room under the scroll lines, now the hero ends on a colour change */
+  padding-bottom: clamp(40px, 6vh, 80px);
+}
+
+/* Over the hero's dark top edge, the bar is night rather than forest */
+html[data-theme="home"]:not(.header-on-paper):not(.drawer-open) .site-header-bar {
+  background: rgba(12, 16, 9, 0.86);
+}
+
+/* Inherited text colour has to be re-set where the Forest tokens start */
+html[data-theme="home"]:not(.header-on-paper):not(.drawer-open) :is(.dynamic-brand, .brand-phrase, .header-nav) {
+  color: var(--ink);
+}
+
+/* The header eases between the two, rather than snapping */
+html[data-theme="home"] .dynamic-brand {
+  transition: transform 0.48s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease, color 0.35s ease;
+}
+html[data-theme="home"] .brand-phrase {
+  transition: opacity 0.25s ease, translate 0.4s var(--ease), color 0.35s ease;
+}
+html[data-theme="home"] .site-header-bar {
+  transition: opacity 0.35s ease, background-color 0.35s ease;
+}
+html[data-theme="home"] :is(.nav-link, .header-cta) {
+  transition: color 0.35s ease, background-color 0.35s ease, border-color 0.35s ease;
+}
+
+/* ==========================================================================
+   HERO DEPTH (trial, assets/js/hero-depth.js)
+   A forest in layers behind the hero, and the paper section's top reaching up
+   into it. html[data-hero-depth] is set from the page's heroDepth, or ?depth=
+   (head.njk). The homepage's, edges, keeps to the hero's own height; the others
+   (concepts/depth.njk) take a full screen.
+   ========================================================================== */
+html[data-hero-depth] .hero {
+  position: relative;
+}
+
+html[data-hero-depth]:not([data-hero-depth="edges"]) .hero {
+  /* A full first screen, so the forest has room below the copy */
+  min-height: 100svh;
+}
+
+html[data-hero-depth] .hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Behind the hero's copy */
+.hd-back {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* At the top of the next section, reaching up into the hero: over the forest, under its own copy */
+.hd-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hd-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* Room for what hangs over the top of the next section */
+html[data-hero-depth]:not([data-hero-depth="edges"]) .section-grow {
+  padding-top: clamp(140px, 13vw, 220px);
+}
+
+.hd-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+/* ==========================================================================
+   HERO BURN (trial, assets/js/hero-burn.js)
+   The hero runs 40% of a screen longer, the extra in the night of its edges, and
+   the paper burns up through it as it scrolls. html[data-hero-burn] is set from
+   the page's heroBurn, or ?burn= (head.njk); concepts/burn.njk compares them.
+   ========================================================================== */
+html[data-hero-burn] .hero {
+  position: relative;
+  min-height: 140svh;
+  /* The copy keeps to the first screen; the rest under it is forest */
+  padding-bottom: calc(40svh + clamp(40px, 6vh, 80px));
+  /* The lit ground stays on the first screen, fading to the night that fills the rest */
+  background:
+    linear-gradient(to bottom, rgba(12, 16, 9, 0) 55%, #0c1009) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(169, 186, 134, 0.15), rgba(169, 186, 134, 0)) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(circle farthest-corner at 50% 50%, #1d2516 0%, #141a0f 55%, #0c1009 100%) 0 0 / 100% 100svh no-repeat,
+    #0c1009;
+}
+
+.hb-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
