@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "horizon",
+    "name": "Horizon",
+    "tag": "Improved current",
+    "length": "3.2s",
+    "summary": "The star intro, rebuilt. A real 3D star field streams at you from a dark slit, first as a tight diagonal S, then unfolding level onto the exact line of the hero rule. It warps, the stars pour into the horizon, and that line becomes the rule as SAGE.IS rises out of it.",
+    "changes": ["True perspective: fine and dense at the horizon, big and close at the edges, like the reference", "Lands on the rule instead of gliding a copy of the logo across the screen", "Ground fades to the page colour, so there's no cut at the end", "No neon glow; the real wordmark rises, in its real colours", "5.6s down to 3.2s"],
+    "mood": ["Cinematic", "Canvas", "Brand story"]
+  },
+  {
+    "slug": "constellation",
+    "name": "Constellation",
+    "tag": "AI network",
+    "length": "2.75s",
+    "summary": "A loose network of nodes drifts across the page, linked where they come near, like a neural net thinking. Then every point flies, left to right, to its place in SAGE.IS and the rule: the name is assembled out of the network, and the real wordmark fades in over it.",
+    "changes": ["Made from the hero's own letters, so the points land exactly where the wordmark appears", "On the page's own ground from the first frame"],
+    "mood": ["Technical", "Canvas", "AI"]
+  },
+  {
+    "slug": "progress",
+    "name": "Progress",
+    "tag": "Loader is the hero",
+    "length": "2.75s",
+    "summary": "An honest loader that's already the hero: a counter rolls from 000 to 100 in the wordmark's size and place, while the rule fills as its progress bar. At 100 the digits drop behind the rule and SAGE.IS rises out of it in their place.",
+    "changes": ["Odometer digits, so the numbers never jitter", "No new layer to remove: the bar is the rule"],
+    "mood": ["Editorial", "Minimal", "DOM only"]
+  },
+  {
+    "slug": "decode",
+    "name": "Decode",
+    "tag": "Machine reads",
+    "length": "2.65s",
+    "summary": "SAGE.IS appears in place as scrambling glyphs over a faint field of characters, a scan line running down to the rule. The letters lock one by one, each flashing as it resolves, and the rule fills as they do.",
+    "changes": ["Each letter holds its final width while it scrambles, so nothing shifts", "The field and scan line clear before the copy arrives"],
+    "mood": ["Technical", "Playful", "AI"]
+  },
+  {
+    "slug": "zoom",
+    "name": "Zoom",
+    "tag": "Inside the letter",
+    "length": "2.6s",
+    "summary": "The screen opens solid violet: you're inside the E. The view pulls back out of the letter, revealing SAGE.IS in the brand gradient, and settles exactly on the hero wordmark; SAGE cools to the ink and the rule draws under it.",
+    "changes": ["Drawn as text on a canvas, so it stays sharp at every scale", "Bold first frame, quiet last frame"],
+    "mood": ["Bold", "Brand colour", "Canvas"]
+  },
+  {
+    "slug": "prompt",
+    "name": "Prompt",
+    "tag": "Ask Sage",
+    "length": "2.8s",
+    "summary": "Sage is an AI you talk to, so it opens on a prompt, sitting in the dark slit of a star field that streams at you above and below it. The input types the hero's headline, \"Sage.is your next AI breakthrough\", and sends it. The stars warp, the input flattens and stretches into the hero rule as they pour into it, and SAGE.IS rises out of it with that headline beneath.",
+    "changes": ["Shows the product's core interaction before a word of marketing", "The input itself becomes the rule", "Lit violet as it stretches, as in Horizon: the line burns white-hot, then cools to the ink as SAGE.IS rises"],
+    "mood": ["Product", "Cinematic", "Canvas"]
+  }
+]

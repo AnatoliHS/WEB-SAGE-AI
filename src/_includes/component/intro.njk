@@ -1,18 +1,5 @@
-<!-- Cosmic Star Swirl Intro (Instagram Reference Physics)
-     1. Diagonal slit top-left to bottom-right
-     2. Rotates to horizontal stars top & bottom
-     3. SAGE.IS reveals in central slit
-     4. Stars fade out
-     5. SAGE.IS glides seamlessly into the Hero section anchor
--->
-<div class="intro" id="intro" aria-hidden="true">
-  <canvas id="intro-star-canvas" class="intro-star-canvas"></canvas>
-  <div class="intro-wordmark-reveal" id="intro-wordmark-reveal">
-    <div class="wordmark intro-brand-clone" id="intro-brand-clone">
-      <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor
-        %}</span>
-      <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor
-        %}</span>
-    </div>
-  </div>
+<!-- Intro: plays over the hero on load and lands on its rule (assets/js/intros/). The variant is
+     picked by the page's introVariant (default: horizon); each one adds what it needs to this -->
+<div class="intro intro--{{ introVariant or 'horizon' }}" id="intro" aria-hidden="true">
+  <canvas class="intro-canvas"></canvas>
 </div>
