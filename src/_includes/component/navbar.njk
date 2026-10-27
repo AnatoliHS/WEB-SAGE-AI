@@ -3,24 +3,20 @@
 <!-- Header bar that fades in once the brand docks -->
 <div class="site-header-bar" aria-hidden="true"></div>
 
-<!-- Logo mark, top far left -->
-<a href="{{ base }}#hero" id="header-logo" class="header-logo" aria-label="Sage home">
-  <img src="/assets/images/general/sage.webp" alt="Sage" width="40" height="40" style="border-radius: 8px; object-fit: contain;">
-</a>
-
-<!-- Dynamic brand: sits large in the hero at the top of the page, docks next to the logo once scrolling starts -->
+<!-- Dynamic brand: sits large in the hero at the top of the page, docks into the top-left corner once scrolling starts -->
 <a href="{{ base }}#hero" id="dynamic-brand" class="wordmark dynamic-brand" aria-label="Sage home">
   {% set order = [2, 0, 3, 1, 5, 4, 6] %}
   <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr" style="--i: {{ order[loop.index0] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
   <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr" style="--i: {{ order[loop.index0 + 4] }}"><span>{{ ch }}</span></span>{% endfor %}</span>
 </a>
 
+<!-- Beside the docked brand, finishing its sentence: "SAGE.IS refreshingly simple", cycling (scripts.njk) -->
+<p class="brand-phrase" id="brand-phrase" aria-hidden="true">
+  <span class="phrase-word">Private AI Capital</span>
+</p>
+
 <!-- Header Navigation Links (Sage.is) -->
 <nav class="header-nav" aria-label="Main navigation">
-  <div class="nav-phrase-rotator" aria-label="Sage is Private AI Capital">
-    <span class="phrase-prefix">is </span>
-    <span class="phrase-dynamic highlight" id="nav-phrase-rotator">Private AI Capital</span>
-  </div>
   <div class="nav-links">
     <a href="{{ base }}#features" class="nav-link">Empower</a>
     <a href="https://sage.is/programs/" class="nav-link" target="_blank" rel="noopener">Programs</a>

@@ -32,7 +32,6 @@
   --gutter: clamp(16px, 3vw, 40px);
   --container-max: 1440px;
   --header-h: 76px;
-  --logo-size: 40px;
   --header-cta-h: 40px;
   --radius: 20px;
 
@@ -46,7 +45,6 @@
     --container-max: min(1720px, 92vw);
     --gutter: clamp(36px, 2.6vw, 56px);
     --header-h: 84px;
-    --logo-size: 48px;
     --header-cta-h: 46px;
     --radius: 24px;
   }
@@ -57,7 +55,6 @@
     --container-max: min(2160px, 88vw);
     --gutter: clamp(48px, 2.8vw, 72px);
     --header-h: 92px;
-    --logo-size: 54px;
     --header-cta-h: 52px;
     --radius: 28px;
   }
@@ -68,7 +65,6 @@
     --container-max: min(2400px, 86vw);
     --gutter: clamp(56px, 3vw, 84px);
     --header-h: 100px;
-    --logo-size: 60px;
     --header-cta-h: 58px;
     --radius: 32px;
   }
@@ -352,31 +348,57 @@ button {
   opacity: 1;
 }
 
-.header-logo {
-  position: fixed;
-  top: calc((var(--header-h) - var(--logo-size, 40px)) / 2);
-  left: var(--gutter);
-  z-index: 1001;
-  display: block;
-  width: var(--logo-size, 40px);
-  height: var(--logo-size, 40px);
-  transition: opacity 0.2s ease;
-}
-
-.header-logo img {
-  width: 100%;
-  height: 100%;
-}
-
-.header-logo:hover {
-  opacity: 0.7;
-}
-
 @media (max-width: 767px) {
   :root {
-    --logo-size: 34px;
     --header-cta-h: 36px;
   }
+}
+
+/* The phrase beside the docked brand, finishing its sentence: "SAGE.IS refreshingly simple".
+   Set like the wordmark's .IS: scripts.njk gives it .IS's docked size (--phrase-size) and puts it
+   just past the wordmark (--phrase-x) on .IS's baseline (--phrase-y). It comes in once the brand
+   has landed, and each phrase rolls up out of its line as the next rolls in */
+.brand-phrase {
+  position: fixed;
+  top: var(--phrase-y, 0px);
+  left: var(--phrase-x, 0px);
+  z-index: 1001;
+  display: grid;
+  overflow: hidden;
+  height: 1.1em;
+  font-family: var(--font-display);
+  font-size: var(--phrase-size, 13px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  translate: -10px 0;
+  transition: opacity 0.25s ease, translate 0.4s var(--ease);
+}
+
+.brand-docked .brand-phrase {
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity 0.5s ease 0.38s, translate 0.8s var(--ease) 0.38s;
+}
+
+.phrase-word {
+  grid-area: 1 / 1;
+}
+
+.phrase-word.is-in { animation: phrase-in 0.6s var(--ease) both; }
+.phrase-word.is-out { animation: phrase-out 0.45s var(--ease-in-out) both; }
+
+@keyframes phrase-in { from { transform: translateY(100%); opacity: 0; } }
+@keyframes phrase-out { to { transform: translateY(-100%); opacity: 0; } }
+
+/* No room beside the brand and the CTA on narrow phones */
+@media (max-width: 640px) {
+  .brand-phrase { display: none; }
 }
 
 .header-cta {
@@ -611,8 +633,17 @@ button {
   padding: calc(var(--header-h) + clamp(16px, 3vw, 40px)) 0 clamp(40px, 6vw, 72px);
 }
 
+.hero-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gutter);
+}
+
 .hero-wordmark-wrap {
   display: flex;
+  /* The wordmark keeps its size; the social proof beside it takes what room is left */
+  flex: none;
 }
 
 .hero-rule {
@@ -672,36 +703,47 @@ button {
 
 .hero-foot {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-top: clamp(32px, 5vh, 64px);
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
+  justify-content: center;
+  margin-top: clamp(28px, 4vh, 56px);
 }
 
+/* Social proof, standing on the rule at the right, two short lines set like the meta on the left */
 .hero-subtext {
-  font-size: clamp(0.875rem, 0.9vw, 1.0625rem);
-  color: var(--muted);
+  max-width: 17em;
+  padding-bottom: 2px;
+  text-align: right;
+  font-size: clamp(0.9375rem, 0.95vw, 1.25rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-wrap: balance;
 }
 
-/* The way down: a short line with a light running along it */
+/* The way down: three short lines, the middle one longest, with a light running down each in turn */
 .hero-scroll-prompt {
   display: block;
   padding: 6px 12px;
-  margin-right: -12px;
 }
 
-.scroll-line {
+.scroll-lines {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.scroll-lines i {
   position: relative;
   display: block;
   width: 1px;
-  height: 40px;
+  height: 30px;
   overflow: hidden;
   background: var(--line);
 }
 
-.scroll-line::after {
+.scroll-lines i:nth-child(2) {
+  height: 44px;
+}
+
+.scroll-lines i::after {
   content: "";
   position: absolute;
   left: 0;
@@ -712,7 +754,10 @@ button {
   animation: scroll-run 2.2s var(--ease-in-out) infinite;
 }
 
-.hero-scroll-prompt:hover .scroll-line::after {
+.scroll-lines i:nth-child(2)::after { animation-delay: 0.14s; }
+.scroll-lines i:nth-child(3)::after { animation-delay: 0.28s; }
+
+.hero-scroll-prompt:hover .scroll-lines i::after {
   background: var(--accent-soft);
 }
 
@@ -721,25 +766,12 @@ button {
   to { transform: translateY(250%); }
 }
 
-/* The first screen: wordmark block centred in the space above the foot */
+/* Wider screens: only as tall as its content, so the first section follows straight on rather than
+   after a screen's worth of space, and let down from the header by about the room left on the first
+   screen, so the block sits near the middle of it */
 @media (min-width: 761px) {
   .hero {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-height: 100svh;
-    padding: calc(var(--header-h) + clamp(10px, 1.5vh, 20px)) 0 clamp(20px, 3vh, 36px);
-  }
-
-  .hero > .container {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
-  .hero-wordmark-wrap,
-  .hero-foot {
-    margin-top: auto;
+    padding: calc(var(--header-h) + clamp(40px, 12vh, 150px)) 0 clamp(16px, 2vh, 28px);
   }
 }
 
@@ -751,6 +783,7 @@ button {
 
 @media (max-width: 560px) {
   .hero-meta { display: none; }
+  .hero-subtext { min-width: 0; max-width: 10em; font-size: 0.75rem; }
 }
 
 /* ==========================================================================
@@ -795,12 +828,12 @@ html.has-intro .intro {
 
 /* Held back until the intro hands over */
 html.has-intro .hero-grid,
+html.has-intro .hero-subtext,
 html.has-intro .hero-foot {
   opacity: 0;
   transform: translateY(18px);
 }
 
-html.has-intro .header-logo,
 html.has-intro .header-nav,
 html.has-intro .header-cta {
   opacity: 0;
@@ -808,6 +841,7 @@ html.has-intro .header-cta {
 }
 
 html.intro-completed .hero-grid,
+html.intro-completed .hero-subtext,
 html.intro-completed .hero-foot {
   opacity: 1;
   transform: none;
@@ -818,7 +852,6 @@ html.intro-completed .hero-foot {
   transition-delay: 0.2s;
 }
 
-html.intro-completed .header-logo,
 html.intro-completed .header-nav,
 html.intro-completed .header-cta {
   opacity: 1;
@@ -2216,21 +2249,6 @@ html.intro-completed .header-cta {
   height: var(--header-cta-h, 40px);
 }
 
-.nav-phrase-rotator {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.875rem;
-  color: var(--muted);
-  font-weight: 500;
-  user-select: none;
-}
-
-.nav-phrase-rotator .phrase-dynamic {
-  color: var(--ink);
-  font-weight: 600;
-}
-
 .nav-links {
   display: inline-flex;
   align-items: center;
@@ -2281,6 +2299,9 @@ html.intro-completed .header-cta {
 .section {
   position: relative;
   isolation: isolate;
+  /* The ambient glows run past the sides; phones would widen the whole page to fit them (body's
+     clip doesn't stop that). clip, not hidden, so the FAQ's sticky titles still stick */
+  overflow-x: clip;
   padding: clamp(96px, 12vw, 184px) 0 0;
 }
 
@@ -2386,78 +2407,140 @@ a:hover u {
   margin-top: clamp(28px, 3vw, 48px);
 }
 
-/* 01. Grow: three pillars on a shared rule, then a large statement */
-.pillars {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 56px var(--gutter);
-}
-
-.pillar {
-  position: relative;
+/* 01. Grow: a manifesto over a staircase. The title sits small at the top with the subtitle across
+   from it; the statement takes over, large, its underlined phrases lit in the gradient; then the
+   three pillars step down a line from idea to impact */
+.grow-top {
   display: flex;
-  flex-direction: column;
-  padding-top: clamp(24px, 2.4vw, 36px);
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px var(--gutter);
+  padding-top: 20px;
   border-top: 1px solid var(--line);
 }
 
-/* The rule lights up in the accent: always on the featured pillar, on hover for the rest */
-.pillar::before {
+.grow-title {
+  margin-top: 14px;
+  font-size: clamp(1.5rem, 2.2vw, 2.75rem);
+}
+
+.grow-subtitle {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.15vw, 1.35rem);
+  text-align: right;
+}
+
+.grow-lede {
+  margin-top: clamp(56px, 7vw, 120px);
+  font-size: clamp(2rem, 5vw, 6.5rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.grow-lede u {
+  text-decoration: none;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.grow-sub {
+  max-width: 60ch;
+  margin: clamp(28px, 3vw, 48px) 0 0 auto;
+  font-size: clamp(1rem, 1.15vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* The stairs: each pillar a step lower than the last; the line's three levels (0, 50%, 100% of its
+   height) are the steps' drops, so it runs through each step's dot */
+.grow-stairs {
+  --drop: clamp(70px, 8vw, 140px);
+  position: relative;
+  margin-top: clamp(80px, 10vw, 160px);
+  padding-bottom: calc(var(--drop) * 2);
+}
+
+.grow-path {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: calc(var(--drop) * 2);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.grow-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 var(--gutter);
+  list-style: none;
+}
+
+.grow-step {
+  position: relative;
+  padding-top: 28px;
+}
+
+.grow-step:nth-child(2) { transform: translateY(var(--drop)); }
+.grow-step:nth-child(3) { transform: translateY(calc(var(--drop) * 2)); }
+
+/* The step's dot on the line, ringed in the page colour; the last one glows */
+.grow-step::before {
   content: "";
   position: absolute;
-  top: -1px;
   left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--accent-gradient);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.9s var(--ease);
+  top: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 6px var(--bg);
 }
 
-.pillar:hover::before,
-.pillar.is-featured::before {
-  transform: scaleX(1);
+.grow-step:nth-child(3)::before {
+  background: #971aff;
+  box-shadow: 0 0 0 6px var(--bg), 0 0 18px #971aff;
 }
 
-.pillar-icon {
+.grow-icon {
   display: block;
-  margin-bottom: clamp(32px, 3.6vw, 56px);
+  margin-bottom: 20px;
   color: var(--accent-soft);
 }
 
-.pillar-icon svg {
-  width: clamp(26px, 2vw, 34px);
-  height: clamp(26px, 2vw, 34px);
-}
-
-.pillar-title {
-  font-size: clamp(1.375rem, 1.7vw, 2.125rem);
+.grow-step h3 {
+  font-size: clamp(1.375rem, 1.8vw, 2.125rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.03em;
 }
 
-.pillar-text {
-  margin-top: 14px;
-  max-width: 40ch;
-  font-size: clamp(1rem, 1.05vw, 1.25rem);
+.grow-step p:not(.grow-tag) {
+  margin-top: 12px;
+  max-width: 34ch;
+  font-size: clamp(1rem, 1.05vw, 1.2rem);
   line-height: 1.6;
   color: var(--ink-2);
 }
 
-.pillar-tag {
+.grow-tag {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: auto;
-  padding-top: 32px;
+  margin-top: 20px;
   font-size: clamp(0.8125rem, 0.85vw, 0.9375rem);
   font-weight: 500;
   color: var(--muted);
 }
 
-.pillar-tag::before {
+.grow-tag::before {
   content: "";
   flex: none;
   width: 6px;
@@ -2466,10 +2549,19 @@ a:hover u {
   background: currentColor;
 }
 
-.pillar.is-featured .pillar-tag {
+.grow-step:nth-child(3) .grow-tag {
   color: var(--accent-soft);
 }
 
+@media (max-width: 860px) {
+  .grow-subtitle { text-align: left; }
+  .grow-stairs { padding-bottom: 0; }
+  .grow-path { display: none; }
+  .grow-steps { grid-template-columns: 1fr; gap: 48px; }
+  .grow-step:nth-child(n) { transform: none; }
+}
+
+/* The editorial statement (used by the layout options in concepts/grow.njk) */
 .statement {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2494,8 +2586,9 @@ a:hover u {
   color: var(--ink-2);
 }
 
-@media (max-width: 860px) {
-  .pillars { grid-template-columns: 1fr; gap: 48px; }
+/* The hero already closes its screen, so the first section needs less room above it */
+.section-grow {
+  padding-top: clamp(40px, 5vw, 80px);
 }
 
 @media (max-width: 760px) {
@@ -2503,23 +2596,34 @@ a:hover u {
   .statement-lede, .statement-sub { grid-column: 1; }
 }
 
-/* 02. Problem / solution: two columns split by a hairline, then the product */
-.contrast {
+/* 02. Problem / solution, untangled: a band of lines runs the width of the screen, knotted over
+   the challenge and combed straight, lit violet, over the solution (scripts.njk draws it, and
+   unties more of the knot as it comes up the screen); each column sits under its half */
+.section-wrestle .section-head {
+  margin-bottom: clamp(40px, 5vw, 80px);
+}
+
+.untangle-band {
+  position: relative;
+  height: clamp(160px, 18vw, 280px);
+  margin-inline: calc(50% - 50vw);
+}
+
+.untangle-band canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.untangle-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--line);
+  gap: 48px clamp(40px, 6vw, 120px);
+  margin-top: clamp(32px, 4vw, 64px);
 }
 
-.contrast-col {
-  display: flex;
-  flex-direction: column;
-  padding: clamp(32px, 3.5vw, 56px) clamp(24px, 4vw, 80px) 0 0;
-}
-
-.contrast-col + .contrast-col {
-  padding-left: clamp(24px, 4vw, 80px);
-  padding-right: 0;
-  border-left: 1px solid var(--line);
+.untangle-col .contrast-title {
+  margin-top: 18px;
 }
 
 .contrast-label {
@@ -2553,15 +2657,15 @@ a:hover u {
   text-wrap: balance;
 }
 
-.contrast-col > p:not([class]) {
-  margin-top: 18px;
+.untangle-col > p:not([class]) {
+  margin-top: 16px;
   max-width: 54ch;
-  font-size: clamp(1rem, 1.1vw, 1.25rem);
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
   line-height: 1.7;
   color: var(--ink-2);
 }
 
-.contrast-col strong {
+.untangle-col strong {
   color: var(--ink);
   font-weight: 500;
 }
@@ -2641,20 +2745,13 @@ a:hover u {
 }
 
 @media (max-width: 860px) {
-  .contrast { grid-template-columns: 1fr; }
-  .contrast-col { padding-right: 0; }
-  .contrast-col + .contrast-col {
-    margin-top: 56px;
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
+  .untangle-cols { grid-template-columns: 1fr; }
 }
 
 /* The product shot: a quiet window frame lit from below */
 .showcase {
   position: relative;
-  margin: clamp(96px, 11vw, 176px) 0 0;
+  margin: clamp(64px, 8vw, 120px) 0 0;
 }
 
 .showcase::before {

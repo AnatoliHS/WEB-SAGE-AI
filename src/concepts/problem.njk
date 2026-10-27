@@ -1,0 +1,504 @@
+---
+layout: policy.njk
+title: "Section 02 layouts: Sage"
+description: Five layouts for the homepage's "The Problem & The Solution" section, side by side.
+noindex: true
+permalink: /concepts/problem/
+layouts:
+  - slug: slider
+    name: Before / After
+    note: "The challenge and the solution sit on top of each other, split by a handle you can drag. When it comes into view the solution sweeps across and wipes the problem away; drag back to compare. The problem side is drained and grainy, the solution side lit in the violet."
+  - slug: untangle
+    name: Untangle
+    note: "A band of lines runs across the section: knotted and jittering over the challenge, combed straight and lit violet over the solution. Scrolling through it unties the knot. The two columns sit under their halves; the product follows."
+  - slug: thread
+    name: Thread
+    note: "The section as a conversation, like the product itself. The challenge is put; Izzy answers, a typing indicator before each reply, the messages arriving in turn as it scrolls in. The product shot stays pinned beside the thread."
+  - slug: stage
+    name: Annotated stage
+    note: "The product is the stage: the screenshot leans back in 3D and stands up as you scroll, glowing from beneath. The challenge annotates it from above, the solution from below, each on a leader line with a dot where it meets the screen; the pull quote is set over the shot's foot."
+  - slug: strike
+    name: Strike-through
+    note: "Kinetic type. The challenge's key sentence is set large, and as it comes into view a violet line strikes through overwhelming, inadequate, bewildering and chaotic one by one, leaving them dim; then Sage is different rises in the gradient as the answer. The solution and the product close it."
+---
+{# ---------- The section's copy, exactly as on the homepage (index.html) ---------- #}
+{% set label %}The Problem &amp; The Solution{% endset %}
+{% set title %}Wrestling with AIs?<br><span class="text-accent">It doesn't need to be this hard.</span>{% endset %}
+{% set cLabel %}THE CHALLENGE{% endset %}
+{% set cTitle %}Why Most AI Tools Fail Teams{% endset %}
+{% set cP1 %}There are lots of ways to create and manage new AIs. And there's plenty of <strong>software promising to help.</strong>{% endset %}
+{% set cP2 %}<strong>Unfortunately, most AI tools work great for individuals,</strong> but <strong>terribly for teams, especially ones that want to do new things</strong> either overwhelming, inadequate, bewildering, or chaotic. Right?{% endset %}
+{% set quote %}Sage is different. We're here to help you and your team <strong>get things done</strong> with AI, not just <strong>play around</strong> with it.{% endset %}
+{% set sLabel %}THE TCS SOLUTION{% endset %}
+{% set sTitle %}Technical Capital for Ambitious Teams{% endset %}
+{% set sP1 %}<strong>Sage is your TCS, Technical Capital Solution</strong> The trifecta! We're <a href="https://sage.is/underdogs" target="_blank" rel="noopener"><u>here for startups, small teams and better businesses, institutions, and schools</u></a>, not big, sluggish ones. If your team knows it has ideas and needs to implement them fast, we're here to help.{% endset %}
+{% set sP2 %}So, I invite you to watch our videos below, and <a href="https://sage.is/pricing#packages" target="_blank" rel="noopener"><u>apply to be a member of Sage.is</u></a>. We'd be honored to work with you.<br>Thank you.{% endset %}
+
+{% macro head(n) %}
+<header class="section-head">
+  <p class="section-label"><span class="index-num">02</span>{{ label | safe }}</p>
+  <div><h2 class="section-title">{{ title | safe }}</h2></div>
+</header>
+{% endmacro %}
+
+{% macro mail() %}<a href="mailto:izzy@sage.is" class="signature-mail"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>izzy@sage.is</a>{% endmacro %}
+
+{% macro signature() %}
+<div class="signature">
+  <span class="signature-avatar" aria-hidden="true">IP</span>
+  <div>
+    <p class="signature-name"><strong>Izzy Plante</strong><span>Co-founder &amp; CEO</span></p>
+    {{ mail() }}
+  </div>
+</div>
+{% endmacro %}
+
+{% macro shot(cls = "") %}
+<figure class="showcase {{ cls }}">
+  <div class="browser-chassis">
+    <div class="browser-header" aria-hidden="true">
+      <div class="browser-dots"><span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span></div>
+      <div class="browser-url-bar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>sage.is/platform</span>
+      </div>
+    </div>
+    <img loading="lazy" src="/assets/images/home/sage.webp" width="1200" height="663" alt="See how Sage works" class="visual-img">
+  </div>
+  <figcaption class="showcase-caption">Sage.is what will make your projects succeed.</figcaption>
+</figure>
+{% endmacro %}
+
+<style>
+  /* ---------- Page chrome (as on concepts/grow) ---------- */
+  .gx-head { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding-top: 20px; border-top: 1px solid var(--line); }
+  .gx-head > div { grid-column: 2 / -1; }
+  .gx-head h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .gx-head p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .gx-jump { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 4px 22px; margin-top: clamp(40px, 5vw, 72px); padding: 16px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .gx-jump a { color: var(--ink-2); transition: color 0.2s; }
+  .gx-jump a:hover { color: var(--ink); }
+  .gx-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .gx-option { padding: clamp(56px, 7vw, 112px) 0 clamp(72px, 9vw, 144px); border-bottom: 1px solid var(--line); scroll-margin-top: 56px; }
+  .gx-about { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(48px, 6vw, 96px); padding: 18px 0; border-block: 1px dashed color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+  .gx-about h2 { display: flex; gap: 14px; align-items: baseline; font-size: clamp(1.25rem, 1.6vw, 1.75rem); font-weight: 500; letter-spacing: -0.03em; }
+  .gx-about h2 b { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; color: var(--accent-soft); }
+  .gx-about p { grid-column: 2 / -1; max-width: 72ch; font-size: 0.9375rem; line-height: 1.6; color: var(--muted); }
+  .gx-demo { position: relative; isolation: isolate; }
+  .gx-demo .ambient-glow { opacity: 0.12; }
+  .gx-demo .section-head { margin-bottom: clamp(40px, 5vw, 80px); }
+  /* Body copy in every option */
+  .px-copy p { margin-top: 16px; max-width: 54ch; font-size: clamp(1rem, 1.1vw, 1.2rem); line-height: 1.7; color: var(--ink-2); }
+  .px-copy strong { color: var(--ink); font-weight: 500; }
+
+  /* ---------- 1. Before / After ---------- */
+  .p1-compare { --split: 100%; position: relative; display: grid; overflow: hidden; border-block: 1px solid var(--line); cursor: ew-resize; touch-action: pan-y; user-select: none; }
+  .p1-layer { grid-area: 1 / 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: clamp(48px, 6vw, 96px) 0; }
+  /* Each side's copy on its own half, so the layers never overlap: the split only shows or hides */
+  .p1-before > .px-copy { grid-column: 1 / span 2; padding-right: clamp(24px, 4vw, 80px); }
+  .p1-after > .px-copy { grid-column: 3 / -1; padding-left: clamp(24px, 3vw, 48px); }
+  .p1-layer .contrast-title { font-size: clamp(2rem, 3.4vw, 4rem); }
+  /* The problem: drained, grainy */
+  .p1-before { background: #101011; }
+  .p1-before::before { content: ""; position: absolute; inset: 0; opacity: 0.22; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .p1-before .contrast-title, .p1-before strong { color: #b9b4ac; }
+  .p1-before .pull-quote { margin-top: 40px; }
+  /* The solution: lit, revealed from the handle rightwards */
+  .p1-after { position: relative; background: radial-gradient(70% 90% at 70% 40%, rgba(80, 50, 255, 0.22), transparent 70%), var(--bg); clip-path: inset(0 0 0 var(--split)); }
+  .p1-handle { position: absolute; top: 0; bottom: 0; left: var(--split); width: 1px; background: linear-gradient(to bottom, transparent, var(--accent-soft) 20%, var(--accent-soft) 80%, transparent); pointer-events: none; }
+  .p1-knob { position: absolute; top: 50%; left: 0; display: grid; place-items: center; width: 52px; height: 52px; translate: -50% -50%; border-radius: 50%; background: var(--ink); color: var(--bg); box-shadow: 0 0 0 6px rgba(143, 134, 255, 0.18), 0 0 40px rgba(143, 134, 255, 0.5); }
+  .p1-tags { position: absolute; inset: 18px 0 auto; display: flex; justify-content: space-between; pointer-events: none; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; }
+  .p1-tags span:first-child { color: var(--muted); }
+  .p1-tags span:last-child { color: var(--accent-soft); }
+  .p1 .showcase { margin-top: clamp(64px, 8vw, 120px); }
+  @media (max-width: 860px) { .p1-layer { grid-template-columns: 1fr; } .p1-layer > .px-copy { grid-column: 1; padding: 0; } }
+
+  /* ---------- 2. Untangle ---------- */
+  .p2-band { position: relative; height: clamp(160px, 18vw, 280px); margin: 0 calc(50% - 50vw); }
+  .p2-band canvas { display: block; width: 100%; height: 100%; }
+  .p2-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px clamp(40px, 6vw, 120px); margin-top: clamp(32px, 4vw, 64px); }
+  .p2-cols .contrast-title { margin-top: 18px; }
+  .p2-cols .is-solution .contrast-label { color: var(--accent-soft); }
+  .p2 .showcase { margin-top: clamp(64px, 8vw, 120px); }
+  @media (max-width: 860px) { .p2-cols { grid-template-columns: 1fr; } }
+
+  /* ---------- 3. Thread ---------- */
+  .p3-wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px clamp(40px, 5vw, 96px); align-items: start; }
+  .p3-thread { list-style: none; }
+  .p3-subject { display: flex; align-items: baseline; gap: 14px; padding: 18px 0; border-block: 1px solid var(--line); font-size: clamp(1.25rem, 1.8vw, 2rem); font-weight: 500; letter-spacing: -0.03em; }
+  .p3-subject b { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; color: var(--muted); }
+  .p3-subject.is-solution b { color: var(--accent-soft); }
+  .p3-msg { display: grid; grid-template-columns: 40px 1fr; gap: 4px 16px; padding: 22px 0; opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.7s var(--ease); }
+  .p3-msg.is-in { opacity: 1; transform: none; }
+  .p3-avatar { display: grid; place-items: center; width: 40px; height: 40px; grid-row: span 2; border-radius: 50%; font-size: 0.8125rem; font-weight: 600; }
+  .p3-avatar.is-team { box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); }
+  .p3-avatar.is-izzy { background: var(--accent-gradient); color: #fff; }
+  .p3-who { font-size: 0.875rem; color: var(--muted); }
+  .p3-who strong { margin-right: 8px; color: var(--ink); font-weight: 500; }
+  .p3-text { font-size: clamp(1rem, 1.15vw, 1.25rem); line-height: 1.65; color: var(--ink-2); }
+  .p3-text strong { color: var(--ink); font-weight: 500; }
+  .p3-msg.is-quote .p3-text { font-size: clamp(1.25rem, 1.7vw, 1.875rem); line-height: 1.35; letter-spacing: -0.025em; color: var(--ink); }
+  .p3-typing { display: none; gap: 5px; padding: 10px 0 4px; }
+  .p3-msg.is-typing .p3-typing { display: flex; }
+  .p3-msg.is-typing .p3-text { display: none; }
+  .p3-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-soft); animation: p3-dot 1s ease-in-out infinite; }
+  .p3-typing i:nth-child(2) { animation-delay: 0.15s; }
+  .p3-typing i:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes p3-dot { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+  .p3-mail { padding: 8px 0 0 56px; }
+  .p3-side { position: sticky; top: 96px; }
+  .p3-side .showcase { margin: 0; }
+  @media (max-width: 960px) { .p3-wrap { grid-template-columns: 1fr; } .p3-side { position: static; } }
+
+  /* ---------- 4. Annotated stage ---------- */
+  .p4-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 var(--gutter); }
+  .p4-note { position: relative; padding-bottom: clamp(40px, 5vw, 80px); }
+  .p4-note.is-top { grid-column: 1 / span 2; }
+  .p4-note.is-bottom { grid-column: 3 / -1; padding: clamp(40px, 5vw, 80px) 0 0; }
+  /* The leader line from each note to the screen, with a dot where it lands */
+  .p4-note::after { content: ""; position: absolute; left: 0; width: 1px; height: clamp(40px, 5vw, 80px); background: linear-gradient(to bottom, var(--line), var(--accent-soft)); }
+  .p4-note.is-top::after { bottom: 0; }
+  .p4-note.is-bottom::after { top: 0; background: linear-gradient(to top, var(--line), var(--accent-soft)); }
+  .p4-note::before { content: ""; position: absolute; left: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent-soft); box-shadow: 0 0 14px var(--accent-soft); }
+  .p4-note.is-top::before { bottom: -4px; }
+  .p4-note.is-bottom::before { top: -4px; }
+  .p4-note > * { padding-left: clamp(20px, 2vw, 32px); }
+  .p4-note.is-bottom .contrast-label { color: var(--accent-soft); }
+  .p4-scene { grid-column: 1 / -1; perspective: 1600px; }
+  .p4-tilt { position: relative; transform: rotateX(var(--tilt, 22deg)) scale(var(--zoom, 0.92)); transform-origin: 50% 100%; transition: transform 0.1s linear; }
+  .p4-tilt .showcase { margin: 0; }
+  .p4-tilt .showcase-caption { display: none; }
+  /* The pull quote, set over the foot of the shot on a fade */
+  .p4-quote { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(80px, 10vw, 160px) clamp(24px, 4vw, 64px) clamp(24px, 3vw, 48px); border-radius: 0 0 clamp(12px, 1.1vw, 20px) clamp(12px, 1.1vw, 20px); background: linear-gradient(to bottom, transparent, rgba(14, 14, 15, 0.92) 55%); }
+  .p4-quote .pull-quote { margin: 0; max-width: 40ch; color: var(--ink); }
+  .p4-caption { grid-column: 1 / -1; }
+  @media (max-width: 860px) {
+    .p4-note.is-top, .p4-note.is-bottom { grid-column: 1 / -1; }
+    .p4-quote { position: static; padding: 24px 0 0; background: none; }
+  }
+
+  /* ---------- 5. Strike-through ---------- */
+  .p5-small { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); }
+  .p5-small > div { grid-column: 2 / -1; }
+  .p5-small .contrast-title { margin-top: 18px; }
+  .p5-big { margin-top: clamp(40px, 5vw, 80px); font-size: clamp(1.875rem, 4.4vw, 5.5rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; color: var(--ink-2); text-wrap: pretty; }
+  .p5-big strong { color: var(--ink); font-weight: 500; }
+  /* The struck words: a violet line draws across each in turn, and the word dims */
+  .p5-x { position: relative; display: inline-block; transition: color 0.5s ease var(--d); }
+  .p5-x::after { content: ""; position: absolute; left: -0.04em; right: -0.04em; top: 54%; height: 0.08em; border-radius: 1em; background: var(--accent-gradient); box-shadow: 0 0 18px rgba(143, 134, 255, 0.6); transform: scaleX(0); transform-origin: left; transition: transform 0.55s var(--ease) var(--d); }
+  .p5.is-on .p5-x { color: var(--muted); }
+  .p5.is-on .p5-x::after { transform: scaleX(1); }
+  .p5-answer { margin-top: clamp(40px, 5vw, 80px); font-size: clamp(1.625rem, 3vw, 3.5rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.04em; opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease 2.3s, transform 1s var(--ease) 2.3s; }
+  .p5-answer strong { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 500; }
+  .p5.is-on .p5-answer { opacity: 1; transform: none; }
+  .p5-close { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 48px clamp(40px, 5vw, 96px); align-items: center; margin-top: clamp(80px, 10vw, 160px); padding-top: clamp(32px, 4vw, 56px); border-top: 1px solid var(--line); }
+  .p5-close .contrast-label { color: var(--accent-soft); }
+  .p5-close .contrast-title { margin-top: 18px; }
+  .p5-close .showcase { margin: 0; }
+  @media (max-width: 860px) { .p5-small, .p5-close { grid-template-columns: 1fr; } .p5-small > div { grid-column: 1; } }
+</style>
+
+<header class="gx-head">
+  <p class="section-label"><span class="index-num">00</span>Section 02 layouts</p>
+  <div>
+    <h1>Five ways to say it.</h1>
+    <p>Five layouts for the homepage's "The Problem &amp; The Solution" section, each with exactly the same copy, built from the site's own type, rules and colours, none in boxes, and each with a moving part of its own. Each is shown full width, as it would sit on the page; scroll each into view to see it play.</p>
+  </div>
+</header>
+
+<ul class="gx-jump">
+  {% for l in layouts %}<li><a href="#{{ l.slug }}"><b>0{{ loop.index }}</b>{{ l.name }}</a></li>{% endfor %}
+</ul>
+
+{# ===================== 1. BEFORE / AFTER ===================== #}
+<section class="gx-option" id="slider">
+  <div class="gx-about"><h2><b>01</b>{{ layouts[0].name }}</h2><p>{{ layouts[0].note }}</p></div>
+  <div class="gx-demo p1">
+    <div class="ambient-glow ambient-glow--left" aria-hidden="true"></div>
+    {{ head() }}
+    <div class="p1-compare" data-p1>
+      <div class="p1-layer p1-before">
+        <div class="px-copy">
+          <p class="contrast-label">{{ cLabel }}</p>
+          <h3 class="contrast-title">{{ cTitle }}</h3>
+          <p>{{ cP1 | safe }}</p>
+          <p>{{ cP2 | safe }}</p>
+          <p class="pull-quote">{{ quote | safe }}</p>
+        </div>
+      </div>
+      <div class="p1-layer p1-after">
+        <div class="px-copy">
+          <p class="contrast-label" style="color: var(--accent-soft);">{{ sLabel }}</p>
+          <h3 class="contrast-title">{{ sTitle }}</h3>
+          <p>{{ sP1 | safe }}</p>
+          <p>{{ sP2 | safe }}</p>
+          {{ signature() }}
+        </div>
+      </div>
+      <div class="p1-tags" aria-hidden="true"><span>{{ cLabel }}</span><span>{{ sLabel }}</span></div>
+      <div class="p1-handle" aria-hidden="true">
+        <span class="p1-knob"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span>
+      </div>
+    </div>
+    {{ shot() }}
+  </div>
+</section>
+
+{# ===================== 2. UNTANGLE ===================== #}
+<section class="gx-option" id="untangle">
+  <div class="gx-about"><h2><b>02</b>{{ layouts[1].name }}</h2><p>{{ layouts[1].note }}</p></div>
+  <div class="gx-demo p2">
+    <div class="ambient-glow ambient-glow--right" aria-hidden="true"></div>
+    {{ head() }}
+    <div class="p2-band" data-p2 aria-hidden="true"><canvas></canvas></div>
+    <div class="p2-cols">
+      <article class="px-copy">
+        <p class="contrast-label">{{ cLabel }}</p>
+        <h3 class="contrast-title">{{ cTitle }}</h3>
+        <p>{{ cP1 | safe }}</p>
+        <p>{{ cP2 | safe }}</p>
+        <p class="pull-quote">{{ quote | safe }}</p>
+      </article>
+      <article class="px-copy is-solution">
+        <p class="contrast-label">{{ sLabel }}</p>
+        <h3 class="contrast-title">{{ sTitle }}</h3>
+        <p>{{ sP1 | safe }}</p>
+        <p>{{ sP2 | safe }}</p>
+        {{ signature() }}
+      </article>
+    </div>
+    {{ shot() }}
+  </div>
+</section>
+
+{# ===================== 3. THREAD ===================== #}
+<section class="gx-option" id="thread">
+  <div class="gx-about"><h2><b>03</b>{{ layouts[2].name }}</h2><p>{{ layouts[2].note }}</p></div>
+  <div class="gx-demo p3">
+    <div class="ambient-glow ambient-glow--left" aria-hidden="true"></div>
+    {{ head() }}
+    <div class="p3-wrap">
+      <ol class="p3-thread" data-p3>
+        <li class="p3-subject"><b>{{ cLabel }}</b>{{ cTitle }}</li>
+        <li class="p3-msg">
+          <span class="p3-avatar is-team" aria-hidden="true">?</span>
+          <p class="p3-text">{{ cP1 | safe }}</p>
+        </li>
+        <li class="p3-msg">
+          <span class="p3-avatar is-team" aria-hidden="true">?</span>
+          <p class="p3-text">{{ cP2 | safe }}</p>
+        </li>
+        <li class="p3-msg is-quote" data-typed>
+          <span class="p3-avatar is-izzy" aria-hidden="true">IP</span>
+          <p class="p3-who"><strong>Izzy Plante</strong>Co-founder &amp; CEO</p>
+          <span class="p3-typing" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="p3-text">{{ quote | safe }}</p>
+        </li>
+        <li class="p3-subject is-solution"><b>{{ sLabel }}</b>{{ sTitle }}</li>
+        <li class="p3-msg" data-typed>
+          <span class="p3-avatar is-izzy" aria-hidden="true">IP</span>
+          <p class="p3-who"><strong>Izzy Plante</strong>Co-founder &amp; CEO</p>
+          <span class="p3-typing" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="p3-text">{{ sP1 | safe }}</p>
+        </li>
+        <li class="p3-msg" data-typed>
+          <span class="p3-avatar is-izzy" aria-hidden="true">IP</span>
+          <p class="p3-who"><strong>Izzy Plante</strong>Co-founder &amp; CEO</p>
+          <span class="p3-typing" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="p3-text">{{ sP2 | safe }}</p>
+        </li>
+        <li class="p3-mail">{{ mail() }}</li>
+      </ol>
+      <div class="p3-side">{{ shot() }}</div>
+    </div>
+  </div>
+</section>
+
+{# ===================== 4. ANNOTATED STAGE ===================== #}
+<section class="gx-option" id="stage">
+  <div class="gx-about"><h2><b>04</b>{{ layouts[3].name }}</h2><p>{{ layouts[3].note }}</p></div>
+  <div class="gx-demo p4">
+    <div class="ambient-glow ambient-glow--center" aria-hidden="true"></div>
+    {{ head() }}
+    <div class="p4-grid">
+      <article class="p4-note is-top px-copy">
+        <p class="contrast-label">{{ cLabel }}</p>
+        <h3 class="contrast-title">{{ cTitle }}</h3>
+        <p>{{ cP1 | safe }}</p>
+        <p>{{ cP2 | safe }}</p>
+      </article>
+      <div class="p4-scene" data-p4>
+        <div class="p4-tilt">
+          {{ shot() }}
+          <div class="p4-quote"><p class="pull-quote">{{ quote | safe }}</p></div>
+        </div>
+      </div>
+      <article class="p4-note is-bottom px-copy">
+        <p class="contrast-label">{{ sLabel }}</p>
+        <h3 class="contrast-title">{{ sTitle }}</h3>
+        <p>{{ sP1 | safe }}</p>
+        <p>{{ sP2 | safe }}</p>
+        {{ signature() }}
+      </article>
+      <p class="showcase-caption p4-caption" style="grid-row: 3; grid-column: 1 / span 2; align-self: start; margin-top: 24px;">Sage.is what will make your projects succeed.</p>
+    </div>
+  </div>
+</section>
+
+{# ===================== 5. STRIKE-THROUGH ===================== #}
+<section class="gx-option" id="strike">
+  <div class="gx-about"><h2><b>05</b>{{ layouts[4].name }}</h2><p>{{ layouts[4].note }}</p></div>
+  <div class="gx-demo p5" data-p5>
+    <div class="ambient-glow ambient-glow--right" aria-hidden="true"></div>
+    {{ head() }}
+    <div class="p5-small">
+      <div class="px-copy">
+        <p class="contrast-label">{{ cLabel }}</p>
+        <h3 class="contrast-title">{{ cTitle }}</h3>
+        <p>{{ cP1 | safe }}</p>
+      </div>
+    </div>
+    {# The second paragraph of the challenge, the same words, with the four to strike wrapped #}
+    <p class="p5-big"><strong>Unfortunately, most AI tools work great for individuals,</strong> but <strong>terribly for teams, especially ones that want to do new things</strong> either <span class="p5-x" style="--d: 0.3s">overwhelming</span>, <span class="p5-x" style="--d: 0.75s">inadequate</span>, <span class="p5-x" style="--d: 1.2s">bewildering</span>, or <span class="p5-x" style="--d: 1.65s">chaotic</span>. Right?</p>
+    <p class="p5-answer">{{ quote | safe }}</p>
+    <div class="p5-close">
+      <div class="px-copy">
+        <p class="contrast-label">{{ sLabel }}</p>
+        <h3 class="contrast-title">{{ sTitle }}</h3>
+        <p>{{ sP1 | safe }}</p>
+        <p>{{ sP2 | safe }}</p>
+        {{ signature() }}
+      </div>
+      {{ shot() }}
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+  const ease = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  const onView = (el, fn, threshold = 0.35) => {
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) return fn();
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); fn(); } }, { threshold });
+    io.observe(el);
+  };
+
+  // 1. Before / After: the solution sweeps in from the right once, then the handle follows a drag
+  const cmp = document.querySelector('[data-p1]');
+  if (cmp) {
+    const set = (pct) => cmp.style.setProperty('--split', `${pct}%`);
+    let dragging = false, swept = false;
+    onView(cmp, () => {
+      if (reduced) { set(50); return; }
+      const t0 = performance.now();
+      const run = (now) => {
+        if (dragging) return;
+        const k = ease(clamp01((now - t0) / 1800));
+        set(100 - k * 50);
+        if (k < 1) requestAnimationFrame(run); else swept = true;
+      };
+      requestAnimationFrame(run);
+    });
+    const move = (e) => {
+      const r = cmp.getBoundingClientRect();
+      set(clamp01((e.clientX - r.left) / r.width) * 100);
+    };
+    cmp.addEventListener('pointerdown', (e) => { dragging = true; cmp.setPointerCapture(e.pointerId); move(e); });
+    cmp.addEventListener('pointermove', (e) => { if (dragging) move(e); });
+    cmp.addEventListener('pointerup', () => { dragging = false; });
+  }
+
+  // 2. Untangle: lines knotted over the challenge, combed straight over the solution; scrolling
+  //    through the band unties more of the knot
+  const band = document.querySelector('[data-p2]');
+  if (band) {
+    const canvas = band.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const N = 16;
+    const lines = Array.from({ length: N }, (_, i) => ({
+      f1: 0.006 + Math.random() * 0.012, f2: 0.015 + Math.random() * 0.02,
+      p1: Math.random() * 6.28, p2: Math.random() * 6.28, s: 0.4 + Math.random() * 0.8, i,
+    }));
+    let W = 0, H = 0, visible = false;
+    const size = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      W = band.clientWidth; H = band.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    size();
+    addEventListener('resize', size);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(band);
+    const draw = (now) => {
+      requestAnimationFrame(draw);
+      if (!visible) return;
+      const r = band.getBoundingClientRect();
+      // 0 as the band comes up the screen, 1 by the time it's two thirds of the way up
+      const untie = reduced ? 0.6 : clamp01((innerHeight - r.top) / (innerHeight * 0.9));
+      const t = reduced ? 0 : now / 1000;
+      ctx.clearRect(0, 0, W, H);
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, 'rgba(238, 233, 226, 0.28)');
+      grad.addColorStop(0.5, 'rgba(238, 233, 226, 0.35)');
+      grad.addColorStop(0.78, 'rgba(143, 134, 255, 0.9)');
+      grad.addColorStop(1, 'rgba(151, 26, 255, 0.9)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.2;
+      const gap = H / (N + 3);
+      lines.forEach((l) => {
+        const base = H / 2 + (l.i - (N - 1) / 2) * gap;
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 6) {
+          // How knotted at this point: all of it on the left, none past the middle; less as it unties
+          const k = Math.pow(1 - clamp01(x / (W * (0.42 + 0.3 * untie))), 1.6) * (1 - 0.55 * untie);
+          const amp = H * 0.42 * k;
+          const y = base + amp * (Math.sin(x * l.f1 + l.p1 + t * l.s) * 0.7 + Math.sin(x * l.f2 + l.p2 - t * l.s * 1.4) * 0.5) - (base - H / 2) * k * 0.9;
+          x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.stroke();
+      });
+    };
+    requestAnimationFrame(draw);
+  }
+
+  // 3. Thread: messages arrive in turn; Izzy's show a typing indicator first
+  const thread = document.querySelector('[data-p3]');
+  if (thread) {
+    const msgs = Array.from(thread.querySelectorAll('.p3-msg'));
+    onView(thread, () => {
+      let at = 0;
+      msgs.forEach((m) => {
+        const typed = m.hasAttribute('data-typed') && !reduced;
+        setTimeout(() => {
+          m.classList.add('is-in');
+          if (typed) {
+            m.classList.add('is-typing');
+            setTimeout(() => m.classList.remove('is-typing'), 900);
+          }
+        }, at);
+        at += reduced ? 0 : typed ? 1500 : 650;
+      });
+    }, 0.2);
+  }
+
+  // 4. Annotated stage: the shot leans back and stands up as it comes up the screen
+  const scene = document.querySelector('[data-p4]');
+  if (scene) {
+    const tilt = scene.querySelector('.p4-tilt');
+    const update = () => {
+      const r = scene.getBoundingClientRect();
+      const k = reduced ? 1 : ease(clamp01((innerHeight - r.top) / (innerHeight * 0.85)));
+      tilt.style.setProperty('--tilt', `${22 * (1 - k)}deg`);
+      tilt.style.setProperty('--zoom', `${0.92 + 0.08 * k}`);
+    };
+    addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  // 5. Strike-through: strike the four words in turn once the sentence is on screen
+  onView(document.querySelector('[data-p5] .p5-big'), () => document.querySelector('[data-p5]').classList.add('is-on'), 0.6);
+})();
+</script>

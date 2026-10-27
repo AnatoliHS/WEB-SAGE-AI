@@ -1,13 +1,20 @@
 <section id="hero" class="hero">
   <div class="container">
 
-    <!-- Reserves the exact space the dynamic brand (navbar.njk) occupies at the top of the page -->
-    <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
-      <div class="wordmark hero-wordmark-ghost" aria-hidden="true">
-        <!-- Split into letters like the dynamic brand, so both measure exactly the same -->
-        <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
-        <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+    <!-- The wordmark row: the brand's place on the left, social proof standing on the rule on the right -->
+    <div class="hero-top">
+      <!-- Reserves the exact space the dynamic brand (navbar.njk) occupies at the top of the page -->
+      <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
+        <div class="wordmark hero-wordmark-ghost" aria-hidden="true">
+          <!-- Split into letters like the dynamic brand, so both measure exactly the same -->
+          <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+          <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+        </div>
       </div>
+
+      <p class="hero-subtext">
+        Hundreds of students already build with Sage.
+      </p>
     </div>
 
     <!-- The intros (component/intro.njk) all land on this line -->
@@ -43,13 +50,10 @@
       </div>
     </div>
 
-    <!-- Bottom of the first screen: social proof on the left, the way down on the right -->
+    <!-- Bottom of the first screen: the way down, centred -->
     <div class="hero-foot">
-      <p class="hero-subtext">
-        Hundreds of students already build with Sage.
-      </p>
       <a href="#learn-more" class="hero-scroll-prompt" aria-label="Scroll down">
-        <span class="scroll-line" aria-hidden="true"></span>
+        <span class="scroll-lines" aria-hidden="true"><i></i><i></i><i></i></span>
       </a>
     </div>
   </div>

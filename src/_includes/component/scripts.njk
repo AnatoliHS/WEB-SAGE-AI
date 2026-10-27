@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     set(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
   };
 
-  // 1. Dynamic Brand: big in the hero at the top, docks into the corner as soon as scrolling starts
+  // 1. Dynamic Brand: big in the hero at the top, docks into the corner as soon as scrolling starts,
+  //    with its phrase (#brand-phrase) beside it
   const heroAnchor = document.getElementById('hero-wordmark-anchor');
   const dynamicBrand = document.getElementById('dynamic-brand');
   const triggerBtn = document.getElementById('btn-waitlist-trigger');
-  const headerLogo = document.getElementById('header-logo');
+  const brandPhrase = document.getElementById('brand-phrase');
 
   const geo = { x: 0, y: 0, dockX: 24, dockY: 24, dockScale: 0.2 };
   let isDocked = null;
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     geo.x = rect.left;
     geo.y = rect.top + scrollY;
 
-    // Dock vertically centred on the CTA, just right of the logo
+    // Dock vertically centred on the CTA, in from the left edge by the same margin the CTA keeps on the right
     const isMobile = window.innerWidth < 768;
     let targetH = 32;
     if (isMobile) targetH = 26;
@@ -35,10 +36,35 @@ document.addEventListener('DOMContentLoaded', () => {
     geo.dockScale = targetH / fullHeight;
     const cta = triggerBtn ? triggerBtn.getBoundingClientRect() : null;
     const ctaCenter = cta ? cta.top + cta.height / 2 : 40;
-    const logo = headerLogo ? headerLogo.getBoundingClientRect() : null;
-    const gap = window.innerWidth >= 2000 ? 18 : window.innerWidth >= 1600 ? 16 : isMobile ? 10 : 14;
-    geo.dockX = logo ? logo.right + gap : 24;
+    geo.dockX = cta ? document.documentElement.clientWidth - cta.right : 24;
     geo.dockY = ctaCenter - (fullHeight * geo.dockScale) / 2;
+    if (brandPhrase) placePhrase();
+  }
+
+  // The phrase is set at the docked .IS's size, starts a word space past the docked wordmark (its
+  // layout width, before the scale) and sits on .IS's baseline. The baselines are read off the
+  // hero's copy of the wordmark, which has the brand's layout without its transform
+  const baselineOf = (el) => {
+    const probe = document.createElement('i');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    el.append(probe);
+    const y = probe.getBoundingClientRect().top;
+    probe.remove();
+    return y;
+  };
+
+  function placePhrase() {
+    const ghost = heroAnchor.querySelector('.hero-wordmark-ghost');
+    const isWord = ghost && ghost.querySelector('.click-word');
+    const word = brandPhrase.querySelector('.phrase-word');
+    if (!isWord || !word) return;
+    const size = parseFloat(getComputedStyle(isWord).fontSize) * geo.dockScale;
+    brandPhrase.style.setProperty('--phrase-size', `${size}px`);
+    brandPhrase.style.setProperty('--phrase-x', `${geo.dockX + dynamicBrand.offsetWidth * geo.dockScale + size * 0.45}px`);
+    const baseline = geo.dockY + (baselineOf(isWord) - ghost.getBoundingClientRect().top) * geo.dockScale;
+    // Where the phrase's own baseline falls inside it, at that size
+    const own = baselineOf(word) - brandPhrase.getBoundingClientRect().top;
+    brandPhrase.style.setProperty('--phrase-y', `${baseline - own}px`);
   }
 
   function applyBrand(animate) {
@@ -76,8 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', remeasure);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
 
-    [dynamicBrand, headerLogo].forEach((link) => {
-      if (!link) return;
+    [dynamicBrand].forEach((link) => {
       link.addEventListener('click', (e) => {
         if (window.scrollY > 4) {
           e.preventDefault();
@@ -564,9 +589,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. Rotating header phrase: "is [phrase] Private AI Capital"
-  const phraseEl = document.getElementById('nav-phrase-rotator');
-  if (phraseEl) {
+  // 9. The Problem & The Solution: a band of lines, knotted over the challenge and combed straight
+  //    (and violet) over the solution. The knot's reach and size shrink as the band comes up the
+  //    screen, so scrolling through unties it; it only draws while on screen
+  const untangle = document.querySelector('[data-untangle]');
+  if (untangle) {
+    const canvas = untangle.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const reducedUntangle = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clampU = (v) => Math.min(Math.max(v, 0), 1);
+    const N = 16;
+    const lines = Array.from({ length: N }, (_, i) => ({
+      f1: 0.006 + Math.random() * 0.012, f2: 0.015 + Math.random() * 0.02,
+      p1: Math.random() * 6.28, p2: Math.random() * 6.28, s: 0.4 + Math.random() * 0.8, i,
+    }));
+    let W = 0, H = 0, onScreen = false;
+    const size = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = untangle.clientWidth;
+      H = untangle.clientHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    size();
+    window.addEventListener('resize', size);
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(untangle);
+    else onScreen = true;
+    const draw = (now) => {
+      requestAnimationFrame(draw);
+      if (!onScreen || document.hidden) return;
+      const r = untangle.getBoundingClientRect();
+      // 0 as the band comes up the screen, 1 by the time it's most of the way up
+      const untie = reducedUntangle ? 0.6 : clampU((window.innerHeight - r.top) / (window.innerHeight * 0.9));
+      const t = reducedUntangle ? 0 : now / 1000;
+      ctx.clearRect(0, 0, W, H);
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, 'rgba(238, 233, 226, 0.28)');
+      grad.addColorStop(0.5, 'rgba(238, 233, 226, 0.35)');
+      grad.addColorStop(0.78, 'rgba(143, 134, 255, 0.9)');
+      grad.addColorStop(1, 'rgba(151, 26, 255, 0.9)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.2;
+      const gap = H / (N + 3);
+      lines.forEach((l) => {
+        const base = H / 2 + (l.i - (N - 1) / 2) * gap;
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 6) {
+          // How knotted at this point: all of it on the left, none past the middle; less as it unties
+          const k = Math.pow(1 - clampU(x / (W * (0.42 + 0.3 * untie))), 1.6) * (1 - 0.55 * untie);
+          const amp = H * 0.42 * k;
+          const y = base + amp * (Math.sin(x * l.f1 + l.p1 + t * l.s) * 0.7 + Math.sin(x * l.f2 + l.p2 - t * l.s * 1.4) * 0.5) - (base - H / 2) * k * 0.9;
+          if (x) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+        }
+        ctx.stroke();
+      });
+    };
+    requestAnimationFrame(draw);
+  }
+
+  // 10. The phrase beside the docked brand ("SAGE.IS refreshingly simple"): every few seconds the
+  //     next one rolls up into its line as the last rolls out (style.css, .phrase-word). It only
+  //     moves on while it's showing, so it never changes out of sight
+  if (brandPhrase) {
     const phrases = [
       "famously straightforward",
       "refreshingly clear",
@@ -580,15 +665,18 @@ document.addEventListener('DOMContentLoaded', () => {
       "super organized",
       "down-to-earth"
     ];
-    let pIdx = 0;
+    let pIdx = -1;
     setInterval(() => {
+      if (!root.classList.contains('brand-docked') || document.hidden) return;
       pIdx = (pIdx + 1) % phrases.length;
-      phraseEl.style.opacity = '0';
-      phraseEl.style.transition = 'opacity 0.25s ease';
-      setTimeout(() => {
-        phraseEl.textContent = phrases[pIdx];
-        phraseEl.style.opacity = '1';
-      }, 260);
+      brandPhrase.querySelectorAll('.phrase-word').forEach((old) => {
+        old.className = 'phrase-word is-out';
+        setTimeout(() => old.remove(), 450);
+      });
+      const word = document.createElement('span');
+      word.className = 'phrase-word is-in';
+      word.textContent = phrases[pIdx];
+      brandPhrase.append(word);
     }, 2800);
   }
 });
