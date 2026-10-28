@@ -1049,6 +1049,96 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.fonts) document.fonts.load('100px Anton').then(startYes, startYes); else startYes();
   }
 
+  // 14. Workflow Diagnosis: the section holds the screen while the scroll types a diagnosis in a
+  //     terminal (its lines are in the page, typed out; this clears and retypes them as it goes),
+  //     each symptom coming back DETECTED; then the verdict builds in big dot-matrix letters, dot
+  //     by dot with the hero's spring and flash, and the button comes in. It runs backwards too
+  const diag = document.querySelector('[data-diag]');
+  if (diag) {
+    const term = diag.querySelector('.diag-term');
+    const lines = Array.from(diag.querySelectorAll('.diag-body div'));
+    const texts = lines.map((d) => d.textContent);
+    const total = texts.reduce((a, t) => a + t.length, 0);
+    const vCanvas = diag.querySelector('.diag-body canvas');
+    const vCtx = vCanvas.getContext('2d');
+    const stillDiag = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clampD = (v) => Math.min(Math.max(v, 0), 1);
+    const segD = (p, a, b) => clampD((p - a) / (b - a));
+    const outBackD = (x) => 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2);
+    const mixD = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+    // The verdict's letters, 5 x 7 dots each
+    const GLYPH = {
+      I: '.###...#....#....#....#....#...###.', T: '#####..#....#....#....#....#....#..', "'": '..#....#...#.......................',
+      S: '.#####....#.....###.....#....#####.', M: '#...###.###.#.##.#.##...##...##...#', E: '######....#....####.#....#....#####',
+      F: '######....#....####.#....#....#....', O: '.###.#...##...##...##...##...#.###.', R: '####.#...##...#####.#.#..#..#.#...#',
+      A: '.###.#...##...#######...##...##...#', G: '.###.#...##....#.####...##...#.####', '.': '..........................##...##..', ' ': '...................................',
+    };
+    const VERDICT = "IT'S TIME FOR SAGE.";
+    let vW = 0, vH = 0, vDpr = 1, typedLast = -1, verdictLast = -1;
+
+    const sizeDiag = () => {
+      vDpr = Math.min(window.devicePixelRatio || 1, 2);
+      vW = vCanvas.clientWidth; vH = vCanvas.clientHeight;
+      vCanvas.width = Math.round(vW * vDpr);
+      vCanvas.height = Math.round(vH * vDpr);
+      verdictLast = -1;
+    };
+
+    // The verdict, k of the way built: each letter switches on in turn, its unlit dots faint
+    const drawVerdict = (k) => {
+      vCtx.setTransform(vDpr, 0, 0, vDpr, 0, 0);
+      vCtx.clearRect(0, 0, vW, vH);
+      const P = Math.min(vW / (VERDICT.length * 6), vH / 8), y0 = (vH - 7 * P) / 2;
+      const letters = VERDICT.replace(/ /g, '').length;
+      let n = 0;
+      [...VERDICT].forEach((ch, i) => {
+        const g = GLYPH[ch] || GLYPH[' '];
+        if (ch !== ' ') n++;
+        const kk = clampD(k * letters * 1.2 - (n - 1));
+        for (let q = 0; q < 35; q++) {
+          const x = (i * 6 + (q % 5) + 0.5) * P, y = y0 + (Math.floor(q / 5) + 0.5) * P;
+          const on = g[q] === '#' && kk > 0;
+          vCtx.fillStyle = on ? `rgb(${mixD(mixD([48, 42, 255], [151, 26, 255], i / VERDICT.length), [205, 192, 255], Math.sin(Math.PI * kk) * 0.5).join(',')})` : 'rgba(255,255,255,0.07)';
+          vCtx.beginPath();
+          vCtx.arc(x, y, on ? P * 0.4 * outBackD(kk) : P * 0.16, 0, 6.2832);
+          vCtx.fill();
+        }
+      });
+    };
+
+    const typeDiag = () => {
+      const r = diag.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      const p = stillDiag ? 1 : clampD(-r.top / (r.height - vh));
+      const typed = Math.round(segD(p, 0.02, 0.72) * total);
+      if (typed !== typedLast) {
+        typedLast = typed;
+        let left = typed, at = -1;
+        lines.forEach((d, i) => {
+          const n = Math.max(0, Math.min(texts[i].length, left));
+          left -= texts[i].length;
+          d.textContent = texts[i].slice(0, n);
+          if (n > 0) at = i;
+        });
+        // The caret sits after the last character typed
+        lines.forEach((d, i) => d.classList.toggle('caret', i === at));
+      }
+      const k = Math.round(segD(p, 0.75, 0.95) * 200) / 200;
+      if (k !== verdictLast) { verdictLast = k; drawVerdict(k); }
+      term.classList.toggle('is-done', k >= 1);
+    };
+
+    let diagTick = false;
+    window.addEventListener('scroll', () => {
+      if (diagTick) return;
+      diagTick = true;
+      requestAnimationFrame(() => { diagTick = false; typeDiag(); });
+    }, { passive: true });
+    window.addEventListener('resize', () => { sizeDiag(); typeDiag(); });
+    sizeDiag();
+    typeDiag();
+  }
+
   // 11. Scroll-lit text ([data-scroll-words]): every word starts faint and lights up, in order, as the
   //     text scrolls up through the screen, from its top coming past 85% of the way down to its
   //     bottom reaching 70%, so it's all lit while it's still being read

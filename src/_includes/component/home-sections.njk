@@ -236,33 +236,50 @@
       </div>
     </header>
 
-    <!-- Symptoms as a running list -->
-    <ul class="symptoms reveal">
-      <li class="symptom">
-        <span class="symptom-q">Team super busy, but running in circles?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
-      <li class="symptom">
-        <span class="symptom-q">Finding stuff easy to start, but hard to finish?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
-      <li class="symptom">
-        <span class="symptom-q">Things taking longer than they should?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
-      <li class="symptom">
-        <span class="symptom-q">Info increasingly scattered across different apps?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
-      <li class="symptom">
-        <span class="symptom-q">Subscription fees keep adding up?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
-      <li class="symptom is-featured">
-        <span class="symptom-q">Growing into dysfunction &amp; looking disorganized?</span>
-        <span class="symptom-a">It's time for Sage.</span>
-      </li>
+    <!-- The symptoms, for screen readers; the terminal below types them -->
+    <ul class="sr-only">
+      <li>Team super busy, but running in circles? It's time for Sage.</li>
+      <li>Finding stuff easy to start, but hard to finish? It's time for Sage.</li>
+      <li>Things taking longer than they should? It's time for Sage.</li>
+      <li>Info increasingly scattered across different apps? It's time for Sage.</li>
+      <li>Subscription fees keep adding up? It's time for Sage.</li>
+      <li>Growing into dysfunction &amp; looking disorganized? It's time for Sage.</li>
     </ul>
+  </div>
+
+  <!-- The diagnosis: the section holds the screen while the scroll types it in a terminal, each
+       symptom coming back DETECTED, then prints the verdict in big dot-matrix letters, with the
+       button (scripts.njk, 14). Compared in concepts/diagnosis.njk -->
+  <div class="diag-pin" data-diag>
+    <div class="diag-stage">
+      <div class="diag-term">
+        <div class="diag-bar" aria-hidden="true"><i></i><i></i><i></i><span>sage — diagnose</span></div>
+        <div class="diag-body" aria-hidden="true">
+          <div class="cmd">$ sage diagnose --team</div>
+          <div class="dim">scanning your workflow ...</div>
+          <div>[1/6] team super busy, but running in circles?</div>
+          <div class="ok">      DETECTED</div>
+          <div>[2/6] finding stuff easy to start, but hard to finish?</div>
+          <div class="ok">      DETECTED</div>
+          <div>[3/6] things taking longer than they should?</div>
+          <div class="ok">      DETECTED</div>
+          <div>[4/6] info increasingly scattered across different apps?</div>
+          <div class="ok">      DETECTED</div>
+          <div>[5/6] subscription fees keep adding up?</div>
+          <div class="ok">      DETECTED</div>
+          <div>[6/6] growing into dysfunction &amp; looking disorganized?</div>
+          <div class="ok">      DETECTED</div>
+          <div class="cmd">result: 6 of 6 symptoms found</div>
+          <canvas></canvas>
+        </div>
+        <div class="diag-cta">
+          <a href="#waitlist" class="btn btn-primary" data-open-waitlist>
+            Apply to Access Sage.AI
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

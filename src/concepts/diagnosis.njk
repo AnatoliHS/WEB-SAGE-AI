@@ -1,0 +1,558 @@
+---
+layout: policy.njk
+title: "Workflow Diagnosis options: Sage"
+description: "Five redesigns of Workflow Diagnosis, each with its own dot-matrix animation."
+noindex: true
+permalink: /concepts/diagnosis/
+symptoms:
+  - q: "Team super busy, but running in circles?"
+    k: circles
+  - q: "Finding stuff easy to start, but hard to finish?"
+    k: stall
+  - q: "Things taking longer than they should?"
+    k: slow
+  - q: "Info increasingly scattered across different apps?"
+    k: scatter
+  - q: "Subscription fees keep adding up?"
+    k: fees
+  - q: "Growing into dysfunction &amp; looking disorganized?"
+    k: mess
+options:
+  - id: cards
+    tag: "01 · Recommended"
+    name: "Symptoms, illustrated"
+    desc: "Six cards, each with a small dot-matrix picture of its problem, moving: dots running in circles, a progress bar stalling at 85%, traffic crawling, dots scattered across four apps, bills stacking up, a grid falling apart. As each card scrolls up the screen, Sage fixes it: the circle straightens into a line going forward, the bar completes, the traffic flows, the dots gather into one app, the bills flatten, the grid snaps into order, all in purple, and It's time for Sage. appears."
+  - id: scan
+    tag: "02 · Diagnostic"
+    name: "Running a diagnosis"
+    desc: "A checkup. A dotted scan line holds on the screen as the symptoms scroll through it, and each one it passes is marked as found. Beside the list a readout counts them in big dot-matrix figures with a six-part meter, 0 of 6 up to 6 of 6, and then gives the diagnosis, It's time for Sage., with the button. On phones the readout is a slim bar along the foot of the screen."
+  - id: strike
+    tag: "03 · Editorial"
+    name: "Struck off"
+    desc: "The symptoms set big, one per line. As each comes up the screen, a line of dots strikes it out from left to right, it greys away, and It's time for Sage. comes in under it in purple. The last one isn't struck; its answer is underlined in dots instead."
+  - id: terminal
+    tag: "04 · Technical"
+    name: "Terminal diagnosis"
+    desc: "The section holds the screen while Sage runs a diagnosis in a terminal: sage diagnose --team types itself, each symptom is checked and comes back DETECTED, and the result prints in big dot-matrix letters, IT'S TIME FOR SAGE., with the button under it. Typed by the scroll, so it runs backwards too."
+  - id: pulse
+    tag: "05 · Vital signs"
+    name: "Erratic to steady"
+    desc: "A heartbeat trace in dots runs down beside the symptoms and lights as you scroll. Beside each symptom it's erratic, jumping about; at the end, beside the answer, it settles into a clean, steady beat in purple. A team's pulse, made healthy."
+---
+{# Ways to redesign Workflow Diagnosis (section 05, home-sections.njk), each with a dot-matrix
+   animation in the hero's language. Each option is the real heading, button and six symptoms, and
+   has its own phone layout. Everything is scoped under .dg- #}
+{% macro head() %}
+<header class="section-head">
+  <p class="section-label"><span class="index-num">05</span>Workflow Diagnosis</p>
+  <div>
+    <h2 class="section-title">You wouldn't be here if the<br class="dg-br"> way you've been working was working.<br> <span class="text-accent">It's time for Sage.</span></h2>
+    <div class="section-cta"><a href="#waitlist" class="btn btn-primary btn-lg">Apply to Access Sage.AI <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+  </div>
+</header>
+{% endmacro %}
+
+<style>
+  .dg-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .dg-intro > div { grid-column: 2 / -1; }
+  .dg-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .dg-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .dg-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .dg-jump a { color: var(--ink-2); }
+  .dg-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .dg-option { padding: clamp(80px, 10vw, 140px) 0 clamp(100px, 16vh, 200px); border-bottom: 1px solid var(--line); scroll-margin-top: 50px; }
+  .dg-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(48px, 6vw, 96px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .dg-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .dg-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .dg-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+  .dg-option .section-head { margin-bottom: clamp(48px, 6vw, 88px); }
+  .dg-answer { font-weight: 500; color: var(--accent-soft); }
+
+  /* 01 Symptoms, illustrated */
+  .dg-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.6vw, 24px); list-style: none; }
+  .dg-card { display: flex; flex-direction: column; padding: clamp(16px, 1.6vw, 24px); border: 1px solid var(--line); border-radius: 22px; background: color-mix(in srgb, var(--bg) 60%, #fff); }
+  .dg-card canvas { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  .dg-card p:not(.dg-answer) { margin-top: 18px; font-size: clamp(1.125rem, 1.4vw, 1.5rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.03em; }
+  .dg-card .dg-answer { margin-top: auto; padding-top: 14px; font-size: 0.9375rem; opacity: 0; translate: 0 6px; transition: opacity 0.4s ease, translate 0.5s var(--ease); }
+  .dg-card.is-fixed .dg-answer { opacity: 1; translate: 0 0; }
+  .dg-card:last-child { border-color: color-mix(in srgb, var(--accent-2) 35%, transparent); }
+
+  /* 02 Running a diagnosis */
+  .dg-scan { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+  .dg-scan-list { position: relative; list-style: none; }
+  .dg-scanline { position: sticky; top: 58vh; z-index: 2; height: 0; pointer-events: none; }
+  .dg-scanline::before { content: ""; position: absolute; left: -12px; right: -12px; top: 0; height: 3px; background: radial-gradient(circle, #971aff 1.4px, transparent 1.8px) 0 0 / 8px 3px repeat-x; filter: drop-shadow(0 0 6px rgba(151, 26, 255, 0.7)); }
+  .dg-row { display: grid; grid-template-columns: 28px 1fr; gap: 6px 18px; padding: clamp(22px, 3vh, 34px) 0; border-top: 1px solid var(--line); }
+  .dg-row:last-child { border-bottom: 1px solid var(--line); }
+  .dg-ind { width: 22px; height: 22px; margin-top: 6px; border-radius: 50%; border: 2px dotted color-mix(in srgb, var(--ink) 30%, transparent); transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease; }
+  .dg-row.is-on .dg-ind { border: 2px solid #971aff; background: radial-gradient(circle, #971aff 0 4px, transparent 5px); box-shadow: 0 0 14px rgba(151, 26, 255, 0.4); }
+  .dg-row .dg-q { font-size: clamp(1.375rem, 2.2vw, 2.25rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.04em; color: var(--ink-2); transition: color 0.3s ease; }
+  .dg-row.is-on .dg-q { color: var(--ink); }
+  .dg-row .dg-answer { grid-column: 2; font-size: 0.9375rem; opacity: 0; transition: opacity 0.4s ease; }
+  .dg-row.is-on .dg-answer { opacity: 1; }
+  .dg-readout { position: sticky; top: 18vh; padding: clamp(22px, 2.4vw, 36px); border-radius: 24px; background: #0d0b16; color: #f1eefa; }
+  .dg-readout small { display: block; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #8d86a3; }
+  .dg-readout canvas { display: block; width: 100%; height: clamp(150px, 20vh, 220px); margin-top: 14px; }
+  .dg-verdict { margin-top: 18px; opacity: 0.25; transition: opacity 0.4s ease; }
+  .dg-verdict p { font-size: clamp(1.5rem, 2.2vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; }
+  .dg-verdict .btn { margin-top: 18px; }
+  .dg-readout.is-done .dg-verdict { opacity: 1; }
+  .dg-readout:not(.is-done) .dg-verdict .btn { pointer-events: none; }
+
+  /* 03 Struck off */
+  .dg-strike { list-style: none; border-top: 1px solid var(--line); }
+  .dg-line { position: relative; padding: clamp(24px, 3vw, 44px) 0; border-bottom: 1px solid var(--line); }
+  .dg-line .dg-q { display: block; max-width: 18em; font-size: clamp(1.875rem, 4.4vw, 4.75rem); font-weight: 500; line-height: 1.04; letter-spacing: -0.05em; transition: color 0.5s ease; }
+  .dg-line.is-done:not(.is-final) .dg-q { color: color-mix(in srgb, var(--ink) 30%, transparent); }
+  .dg-line .dg-answer { display: block; margin-top: 12px; font-size: clamp(1.125rem, 1.6vw, 1.75rem); opacity: 0; translate: -10px 0; transition: opacity 0.4s ease, translate 0.5s var(--ease); }
+  .dg-line.is-done .dg-answer { opacity: 1; translate: 0 0; }
+  .dg-line.is-final .dg-answer { font-size: clamp(1.875rem, 4.4vw, 4.75rem); letter-spacing: -0.05em; line-height: 1.04; }
+  .dg-line canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* 04 Terminal diagnosis */
+  .dg-pin { position: relative; height: 340vh; }
+  .dg-stage { position: sticky; top: 0; height: 100svh; display: flex; align-items: center; justify-content: center; padding: 0 var(--gutter); }
+  .dg-term { position: relative; width: min(100%, 980px); border-radius: 20px; background: #0d0b16; color: #c6c0d8; box-shadow: 0 40px 100px -40px rgba(48, 42, 255, 0.45); overflow: hidden; }
+  .dg-term-bar { display: flex; align-items: center; gap: 7px; padding: 14px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .dg-term-bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
+  .dg-term-bar span { margin-left: auto; font-size: 0.75rem; color: #8d86a3; }
+  .dg-term-body { padding: clamp(18px, 2.4vw, 32px); min-height: 52vh; font: 500 clamp(0.75rem, 1.05vw, 1rem)/1.75 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .dg-term-body div { white-space: pre-wrap; word-break: break-word; }
+  .dg-term-body .cmd { color: #f1eefa; }
+  .dg-term-body .ok { color: #b462ff; }
+  .dg-term-body .dim { color: #6f688a; }
+  .dg-term-body .caret::after { content: ""; display: inline-block; width: 0.55em; height: 1.1em; margin-left: 2px; vertical-align: -0.2em; background: #b462ff; animation: dg-caret 1s steps(1) infinite; }
+  @keyframes dg-caret { 50% { opacity: 0; } }
+  .dg-term canvas { display: block; width: 100%; height: clamp(70px, 11vh, 120px); margin-top: 8px; }
+  .dg-term-cta { display: flex; justify-content: flex-start; padding: 0 clamp(18px, 2.4vw, 32px) clamp(18px, 2.4vw, 28px); opacity: 0; transition: opacity 0.4s ease; }
+  .dg-term.is-done .dg-term-cta { opacity: 1; }
+
+  /* 05 Erratic to steady */
+  .dg-pulse { position: relative; list-style: none; padding-left: 120px; }
+  .dg-pulse canvas { position: absolute; left: 0; top: 0; width: 100px; height: 100%; pointer-events: none; }
+  .dg-beat { padding: clamp(28px, 4vh, 44px) 0; opacity: 0.35; transition: opacity 0.4s ease; }
+  .dg-beat.is-on { opacity: 1; }
+  .dg-beat .dg-q { font-size: clamp(1.5rem, 2.8vw, 3rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; }
+  .dg-beat .dg-answer { display: block; margin-top: 8px; font-size: clamp(1rem, 1.3vw, 1.25rem); }
+  .dg-beat.is-final { padding-bottom: 200px; }
+  .dg-beat.is-final .dg-answer { font-size: clamp(1.875rem, 4vw, 4rem); letter-spacing: -0.05em; line-height: 1.05; margin-top: 14px; }
+
+  @media (max-width: 860px) {
+    .dg-cards { grid-template-columns: 1fr 1fr; }
+    .dg-scan { grid-template-columns: 1fr; }
+    /* The readout becomes a slim bar along the foot of the screen */
+    .dg-readout { position: sticky; top: auto; bottom: 12px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 14px; padding: 12px 16px; border-radius: 16px; order: 2; }
+    .dg-readout small { grid-column: 1 / -1; }
+    .dg-readout canvas { grid-column: 1 / -1; height: 44px; margin-top: 2px; }
+    .dg-verdict { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+    .dg-verdict p { font-size: 1.125rem; }
+    .dg-verdict .btn { margin-top: 0; height: 38px; padding: 0 14px; font-size: 0.8125rem; }
+    .dg-verdict .btn svg { display: none; }
+  }
+  @media (max-width: 640px) {
+    .dg-intro, .dg-cap { grid-template-columns: 1fr; }
+    .dg-intro > div, .dg-cap > p:last-child { grid-column: 1; }
+    .dg-br { display: none; }
+    .dg-cards { grid-template-columns: 1fr; }
+    .dg-pulse { padding-left: 60px; }
+    .dg-pulse canvas { width: 48px; }
+    .dg-term-body { min-height: 58vh; }
+  }
+</style>
+
+<header class="dg-intro">
+  <p class="section-label"><span class="index-num">00</span>Workflow Diagnosis</p>
+  <div>
+    <h1>Diagnosed, in dots.</h1>
+    <p>Five redesigns of Workflow Diagnosis, each with its own animation in the hero's dot-matrix language, using the real heading, button and six symptoms. Each has its own phone layout. Scroll slowly through each one as a visitor would.</p>
+  </div>
+</header>
+
+<ul class="dg-jump">
+  {% for o in options %}<li><a href="#dg-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<section class="dg-option" id="dg-{{ loop.index }}" data-dg="{{ o.id }}">
+  <div class="container">
+    <div class="dg-cap"><p>{{ o.tag }}</p><p><b>{{ o.name }}</b>{{ o.desc }}</p></div>
+    {% if o.id != 'terminal' %}{{ head() }}{% endif %}
+
+    {% if o.id == 'cards' %}
+    <ul class="dg-cards">
+      {% for s in symptoms %}<li class="dg-card" data-k="{{ s.k }}"><canvas aria-hidden="true"></canvas><p>{{ s.q | safe }}</p><p class="dg-answer">It's time for Sage.</p></li>{% endfor %}
+    </ul>
+
+    {% elif o.id == 'scan' %}
+    <div class="dg-scan">
+      <ul class="dg-scan-list">
+        <li class="dg-scanline" aria-hidden="true"></li>
+        {% for s in symptoms %}<li class="dg-row"><span class="dg-ind" aria-hidden="true"></span><span class="dg-q">{{ s.q | safe }}</span><span class="dg-answer">It's time for Sage.</span></li>{% endfor %}
+      </ul>
+      <aside class="dg-readout">
+        <small>Symptoms found</small>
+        <canvas aria-hidden="true"></canvas>
+        <div class="dg-verdict"><p>It's time for <span class="text-accent">Sage.</span></p><a href="#waitlist" class="btn btn-primary">Apply to Access Sage.AI <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+      </aside>
+    </div>
+
+    {% elif o.id == 'strike' %}
+    <ul class="dg-strike">
+      {% for s in symptoms %}<li class="dg-line{% if loop.last %} is-final{% endif %}"><canvas aria-hidden="true"></canvas><span class="dg-q">{{ s.q | safe }}</span><span class="dg-answer">It's time for Sage.</span></li>{% endfor %}
+    </ul>
+
+    {% elif o.id == 'pulse' %}
+    <ul class="dg-pulse">
+      <canvas aria-hidden="true"></canvas>
+      {% for s in symptoms %}<li class="dg-beat{% if loop.last %} is-final{% endif %}"><span class="dg-q">{{ s.q | safe }}</span><span class="dg-answer">It's time for Sage.</span></li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+
+  {% if o.id == 'terminal' %}
+  <div class="container">{{ head() }}</div>
+  <div class="dg-pin" data-dg-term>
+    <div class="dg-stage">
+      <div class="dg-term">
+        <div class="dg-term-bar"><i></i><i></i><i></i><span>sage — diagnose</span></div>
+        <div class="dg-term-body"></div>
+        <div class="dg-term-cta"><a href="#waitlist" class="btn btn-primary">Apply to Access Sage.AI <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255];
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function seg(p, a, b) { return clamp01((p - a) / (b - a)); }
+  function smooth(k) { return k * k * (3 - 2 * k); }
+  function outBack(x) { return 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2); }
+  function mix(a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); }
+  function rgba(c, a) { return 'rgba(' + c.join(',') + ',' + a.toFixed(3) + ')'; }
+  function dot(c, x, y, r, col) { if (r <= 0.05) return; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
+  // A problem's grey turning to Sage's purple as it's fixed (f), across the picture (u)
+  function tone(f, u, a) { return rgba(mix(INK, mix(FROM, TO, u || 0), f), (a === undefined ? 0.75 : a) * (0.55 + 0.45 * f) + 0.0); }
+  function sizeCanvas(cv) {
+    var dpr = Math.min(devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    var c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { c: c, w: w, h: h };
+  }
+
+  // Text sampled from Anton onto a grid rowsTall dots high
+  function sample(text, rowsTall) {
+    var m = document.createElement('canvas').getContext('2d'); m.font = '100px Anton';
+    var mt = m.measureText(text), s = rowsTall / (mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent);
+    var cols = Math.ceil((mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight) * s) + 2, rows = rowsTall + 2, k = 4;
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d'); mc.font = (100 * s * k) + 'px Anton';
+    mc.fillText(text, (1 + mt.actualBoundingBoxLeft * s) * k, (1 + mt.actualBoundingBoxAscent * s) * k);
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data, dots = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var cov = 0;
+      for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+      cov /= k * k * 255;
+      if (cov > 0.05) dots.push({ c: c, r: r, cov: cov, d: 0.6 * c / cols + 0.4 * rand(c, r) });
+    }
+    return { dots: dots, w: cols, h: rows };
+  }
+  // A 5 x 7 dot font, for the terminal's result
+  var F = {
+    A: '.###.#...##...#######...##...##...#',
+    E: '######....#....####.#....#....#####',
+    F: '######....#....####.#....#....#....',
+    G: '.###.#...##....#.####...##...#.####',
+    I: '.###...#....#....#....#....#...###.',
+    M: '#...###.###.#.##.#.##...##...##...#',
+    O: '.###.#...##...##...##...##...#.###.',
+    R: '####.#...##...#####.#.#..#..#.#...#',
+    S: '.#####....#.....###.....#....#####.',
+    T: '#####..#....#....#....#....#....#..',
+    '.': '..........................##...##..',
+    ' ': '...................................',
+    "'": '..#....#...#.......................'
+  };
+  function led(c, str, x, y, P, k) {
+    var n = 0, total = str.replace(/ /g, '').length;
+    for (var i = 0; i < str.length; i++) {
+      var g = F[str[i]] || F[' '];
+      if (str[i] !== ' ') n++;
+      var kk = clamp01(k * total * 1.2 - (n - 1));
+      for (var q = 0; q < 35; q++) {
+        var cx = x + (i * 6 + (q % 5) + 0.5) * P, cy = y + (Math.floor(q / 5) + 0.5) * P;
+        if (g[q] === '#' && kk > 0) dot(c, cx, cy, P * 0.4 * outBack(kk), rgba(mix(mix(FROM, TO, i / str.length), LIGHT, Math.sin(Math.PI * kk) * 0.5), 0.95));
+        else dot(c, cx, cy, P * 0.16, 'rgba(255,255,255,0.07)');
+      }
+    }
+  }
+
+  var opts = [];
+  var vh = function () { return innerHeight; };
+
+  // ---------------------------------------------------------------- 01 Symptoms, illustrated
+  // Each picture is drawn at time t (s) and fixed by f (0: the problem, 1: Sage's fix)
+  var PICS = {
+    // Dots running round a ring straighten into a line moving forward
+    circles: function (c, w, h, t, f) {
+      var N = 18, cx = w / 2, cy = h / 2, R = h * 0.3;
+      for (var i = 0; i < N; i++) {
+        var a = i / N * 6.2832 + t * 1.6, px = cx + Math.cos(a) * R, py = cy + Math.sin(a) * R;
+        var u = ((i / N + t * 0.18) % 1), lx = w * 0.12 + u * w * 0.72, ly = cy;
+        var e = smooth(f), x = px + (lx - px) * e, y = py + (ly - py) * e;
+        dot(c, x, y, 3.2, tone(f, u));
+      }
+      if (f > 0.6) { var k = seg(f, 0.6, 1); for (var j = 0; j < 4; j++) { dot(c, w * 0.88 - j * 7, cy - j * 7 * k, 3, tone(1, 1, k)); dot(c, w * 0.88 - j * 7, cy + j * 7 * k, 3, tone(1, 1, k)); } }
+    },
+    // A progress bar stalls short of the end, slipping back; fixed, it completes with a tick
+    stall: function (c, w, h, t, f) {
+      var N = 20, P = (w * 0.76) / N, x0 = (w - N * P) / 2, y = h / 2;
+      var stuck = 0.62 + 0.22 * Math.abs(Math.sin(t * 0.9)) - 0.06 * (Math.sin(t * 5) > 0.9 ? 1 : 0), fill = stuck + (1 - stuck) * smooth(f);
+      for (var i = 0; i < N; i++) for (var r = -1; r <= 1; r++) {
+        var on = (i + 0.5) / N <= fill;
+        dot(c, x0 + (i + 0.5) * P, y + r * P, on ? P * 0.36 : P * 0.18, on ? tone(f, i / N) : rgba(INK, 0.14));
+      }
+      var pct = Math.round(fill * 100); c.fillStyle = f > 0.5 ? '#7a3cff' : 'rgba(22,19,31,0.5)'; c.font = '600 12px Geist, sans-serif'; c.fillText(pct + '%', x0, y - P * 2.6);
+    },
+    // Traffic crawling stop and start, bunched up; fixed, it flows quickly and evenly
+    slow: function (c, w, h, t, f) {
+      for (var lane = 0; lane < 3; lane++) {
+        var y = h * (0.3 + lane * 0.2), N = 7;
+        for (var i = 0; i < N; i++) {
+          var bunch = (i / N) * 0.55 + rand(i, lane) * 0.08, crawl = t * 0.035 + 0.02 * Math.sin(t * 2 + lane);
+          var even = i / N, flow = t * (0.22 + lane * 0.03);
+          var u = ((bunch + crawl) * (1 - f) + (even + flow) * f + lane * 0.13) % 1;
+          dot(c, w * 0.08 + u * w * 0.84, y, 3.2, tone(f, u));
+          if (f > 0.5) for (var s = 1; s < 4; s++) dot(c, w * 0.08 + u * w * 0.84 - s * 7, y, 3.2 - s * 0.7, tone(1, u, (f - 0.5) * 1.2 * (1 - s / 4)));
+        }
+      }
+    },
+    // Dots wandering between four apps; fixed, they all gather into one
+    scatter: function (c, w, h, t, f) {
+      var S = h * 0.26, apps = [[w * 0.2, h * 0.28], [w * 0.8, h * 0.28], [w * 0.2, h * 0.72], [w * 0.8, h * 0.72]];
+      function box(x, y, s, col) { for (var q = -s; q <= s; q += 6) { dot(c, x + q, y - s, 1.6, col); dot(c, x + q, y + s, 1.6, col); dot(c, x - s, y + q, 1.6, col); dot(c, x + s, y + q, 1.6, col); } }
+      apps.forEach(function (a) { box(a[0], a[1], S * 0.5, rgba(INK, 0.22 * (1 - f))); });
+      box(w / 2, h / 2, S * 0.75, tone(f, 0.5, f));
+      for (var i = 0; i < 16; i++) {
+        var a = apps[Math.floor((i + Math.floor(t * 0.6 + rand(i, 1) * 4)) % 4)];
+        var px = a[0] + (rand(i, 2) - 0.5) * S * 0.6 + Math.sin(t * 2 + i) * 4, py = a[1] + (rand(i, 3) - 0.5) * S * 0.6 + Math.cos(t * 2.3 + i) * 4;
+        var gx = w / 2 + ((i % 4) - 1.5) * S * 0.32, gy = h / 2 + (Math.floor(i / 4) - 1.5) * S * 0.32, e = smooth(f);
+        dot(c, px + (gx - px) * e, py + (gy - py) * e, 3, tone(f, i / 16));
+      }
+    },
+    // Bills stacking higher and higher; fixed, one low, flat line
+    fees: function (c, w, h, t, f) {
+      var N = 7, P = 8, base = h * 0.84, cols = (w * 0.7) / N;
+      for (var i = 0; i < N; i++) {
+        var grow = (i + 1) / N * (0.85 + 0.15 * Math.sin(t * 1.4 + i * 0.6)), hh = Math.round((grow * (1 - f) + 0.18 * f) * (h * 0.66) / P);
+        for (var r = 0; r < hh; r++) for (var q = 0; q < 2; q++) dot(c, w * 0.15 + i * cols + q * P, base - r * P, 2.6, tone(f, i / N));
+      }
+    },
+    // A grid of dots jittering, gaps and strays; fixed, it snaps into perfect order
+    mess: function (c, w, h, t, f) {
+      var C = 11, R = 6, P = Math.min(w * 0.8 / C, h * 0.8 / R), x0 = (w - (C - 1) * P) / 2, y0 = (h - (R - 1) * P) / 2;
+      for (var r = 0; r < R; r++) for (var q = 0; q < C; q++) {
+        var j = r * C + q, gone = rand(j, 4) < 0.18 * (1 - f);
+        var jx = ((rand(j, 1) - 0.5) * P * 1.6 + Math.sin(t * (1 + rand(j, 2)) + j) * P * 0.25) * (1 - smooth(f));
+        var jy = ((rand(j, 3) - 0.5) * P * 1.6 + Math.cos(t * (1 + rand(j, 5)) + j) * P * 0.25) * (1 - smooth(f));
+        if (!gone) dot(c, x0 + q * P + jx, y0 + r * P + jy, P * 0.2, tone(f, q / C));
+      }
+    }
+  };
+  (function () {
+    var cards = [].slice.call(document.querySelectorAll('.dg-card'));
+    if (!cards.length) return;
+    var o = { items: [] };
+    o.size = function () { o.items = cards.map(function (el) { var s = sizeCanvas(el.querySelector('canvas')); s.el = el; s.pic = PICS[el.dataset.k]; return s; }); };
+    o.draw = function (now) {
+      var t = still ? 0 : now / 1000, any = false;
+      o.items.forEach(function (it) {
+        var r = it.el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh()) return;
+        any = true;
+        // Fixed as the card comes up the screen: from 80% of the way down to 50%
+        var f = still ? 1 : smooth(seg((vh() * 0.8 - r.top) / (vh() * 0.3), 0, 1));
+        it.el.classList.toggle('is-fixed', f > 0.6);
+        it.c.clearRect(0, 0, it.w, it.h);
+        it.pic(it.c, it.w, it.h, t, f);
+      });
+      return any && !still;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- 02 Running a diagnosis
+  (function () {
+    var list = document.querySelector('.dg-scan-list');
+    if (!list) return;
+    var rows = [].slice.call(list.querySelectorAll('.dg-row')), panel = document.querySelector('.dg-readout'), cv = panel.querySelector('canvas');
+    var o = { count: -1, changedAt: 0 }, NUM = null;
+    o.size = function () { o.s = sizeCanvas(cv); o.narrow = innerWidth <= 860; NUM = '0123456'.split('').map(function (d) { return sample(d, 22); }); };
+    o.draw = function (now) {
+      var line = vh() * 0.58, n = 0;
+      rows.forEach(function (row) { var on = row.getBoundingClientRect().top + 30 < line; row.classList.toggle('is-on', on); if (on) n++; });
+      if (n !== o.count) { o.count = n; o.changedAt = now; }
+      panel.classList.toggle('is-done', n === 6);
+      var c = o.s.c, w = o.s.w, h = o.s.h, a = still ? 1e9 : now - o.changedAt;
+      c.clearRect(0, 0, w, h);
+      if (o.narrow) {
+        // The bar: n of 6 in small type, the meter across
+        c.fillStyle = '#f1eefa'; c.font = '600 15px Geist, sans-serif'; c.fillText(n + ' of 6', 0, h / 2 + 5);
+        for (var s = 0; s < 6; s++) for (var q = 0; q < 6; q++) for (var r = 0; r < 3; r++) dot(c, 64 + s * ((w - 64) / 6) + q * 6, h / 2 - 6 + r * 6, 1.8, s < n ? rgba(mix(FROM, TO, s / 5), 1) : 'rgba(255,255,255,0.12)');
+        return a < 700;
+      }
+      // The figure, built in dots whenever it changes, and "/ 6"
+      var pat = NUM[n], P = Math.min(h * 0.62 / pat.h, 7), x0 = 0, y0 = 0;
+      pat.dots.forEach(function (d) {
+        var k = clamp01((a - d.d * 400) / 300);
+        dot(c, x0 + (d.c + 0.5) * P, y0 + (d.r + 0.5) * P, P * (0.2 + 0.22 * d.cov) * (k > 0 ? outBack(k) : 0.5), k > 0 ? rgba(mix(mix(FROM, TO, d.c / pat.w), LIGHT, Math.sin(Math.PI * k) * 0.5), 1) : 'rgba(255,255,255,0.1)');
+      });
+      c.fillStyle = '#8d86a3'; c.font = '600 ' + Math.round(P * 5) + 'px Anton, sans-serif'; c.fillText('/ 6', pat.w * P + 10, pat.h * P - P);
+      // The meter: six blocks of dots
+      var mw = (w - 5 * 10) / 6;
+      for (var s2 = 0; s2 < 6; s2++) for (var q2 = 0; q2 * 7 < mw; q2++) for (var r2 = 0; r2 < 3; r2++) dot(c, s2 * (mw + 10) + q2 * 7 + 3, h - 18 + r2 * 7, 2, s2 < n ? rgba(mix(FROM, TO, s2 / 5), 1) : 'rgba(255,255,255,0.12)');
+      return a < 800;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- 03 Struck off
+  (function () {
+    var lines = [].slice.call(document.querySelectorAll('.dg-line'));
+    if (!lines.length) return;
+    var o = {};
+    o.size = function () {
+      o.items = lines.map(function (li) {
+        var s = sizeCanvas(li.querySelector('canvas')), base = li.getBoundingClientRect();
+        var range = document.createRange(), q = li.querySelector(li.classList.contains('is-final') ? '.dg-answer' : '.dg-q');
+        range.selectNodeContents(q);
+        var rects = [].slice.call(range.getClientRects()).filter(function (r) { return r.width > 4; });
+        // One stroke per line of text: through its middle, or under it for the answer
+        var final = li.classList.contains('is-final');
+        s.strokes = rects.map(function (r) { return { x: r.left - base.left, y: r.top - base.top + r.height * (final ? 0.98 : 0.56), w: r.width }; });
+        s.total = s.strokes.reduce(function (a, k) { return a + k.w; }, 0);
+        s.el = li; s.final = final;
+        return s;
+      });
+    };
+    o.draw = function () {
+      o.items.forEach(function (it) {
+        var r = it.el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh()) return;
+        var k = still ? 1 : seg((vh() * 0.72 - r.top) / (vh() * 0.22), 0, 1);
+        if (it.final) it.el.classList.toggle('is-done', k > 0);
+        else it.el.classList.toggle('is-done', k >= 1);
+        var c = it.c; c.clearRect(0, 0, it.w, it.h);
+        var budget = (it.final ? seg(k, 0.4, 1) : k) * it.total, P = it.final ? 9 : 8;
+        it.strokes.forEach(function (st) {
+          for (var x = 0; x <= st.w && budget > 0; x += P, budget -= P) dot(c, st.x + x, st.y, it.final ? 3 : 2.6, rgba(mix(FROM, TO, x / Math.max(1, st.w)), 0.95));
+        });
+      });
+      return false;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- 04 Terminal diagnosis
+  (function () {
+    var pin = document.querySelector('[data-dg-term]');
+    if (!pin) return;
+    var term = pin.querySelector('.dg-term'), body = pin.querySelector('.dg-term-body');
+    var SY = [].slice.call(document.querySelectorAll('.dg-card p:not(.dg-answer)')).map(function (p) { return p.textContent.toLowerCase(); });
+    var L = [{ t: '$ sage diagnose --team', cls: 'cmd' }, { t: 'scanning your workflow ...', cls: 'dim' }];
+    SY.forEach(function (s, i) { L.push({ t: '[' + (i + 1) + '/6] ' + s, cls: '' }, { t: '      DETECTED', cls: 'ok' }); });
+    L.push({ t: 'result: 6 of 6 symptoms found', cls: 'cmd' });
+    var total = L.reduce(function (a, l) { return a + l.t.length; }, 0);
+    body.innerHTML = L.map(function (l) { return '<div class="' + l.cls + '"></div>'; }).join('') + '<canvas aria-hidden="true"></canvas>';
+    var divs = [].slice.call(body.querySelectorAll('div')), cv = body.querySelector('canvas');
+    var o = { last: -1 };
+    o.size = function () { o.s = sizeCanvas(cv); o.last = -1; };
+    o.draw = function () {
+      var r = pin.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh()) return false;
+      var p = still ? 1 : clamp01(-r.top / (r.height - vh()));
+      var typed = Math.round(seg(p, 0.02, 0.72) * total);
+      if (typed !== o.last) {
+        o.last = typed;
+        var left = typed;
+        divs.forEach(function (d, i) {
+          var n = Math.max(0, Math.min(L[i].t.length, left)); left -= L[i].t.length;
+          d.textContent = L[i].t.slice(0, n);
+          d.classList.toggle('caret', n > 0 && (n < L[i].t.length || (left <= 0 && i === divs.length - 1)) && left <= 0);
+        });
+      }
+      // The verdict, built in big dots once it's all typed
+      var k = seg(p, 0.75, 0.95), c = o.s.c; c.clearRect(0, 0, o.s.w, o.s.h);
+      var str = "IT'S TIME FOR SAGE.", P = Math.min(o.s.w / (str.length * 6), o.s.h / 8);
+      led(c, str, 0, (o.s.h - 7 * P) / 2, P, k);
+      term.classList.toggle('is-done', k >= 1);
+      return false;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- 05 Erratic to steady
+  (function () {
+    var list = document.querySelector('.dg-pulse');
+    if (!list) return;
+    var cv = list.querySelector('canvas'), beats = [].slice.call(list.querySelectorAll('.dg-beat'));
+    var o = {};
+    o.size = function () {
+      o.s = sizeCanvas(cv);
+      var top = list.getBoundingClientRect().top;
+      o.rows = beats.map(function (b) { var r = b.getBoundingClientRect(); return { y0: r.top - top, y1: r.bottom - top }; });
+    };
+    // How far the trace swings at y (-1 to 1): beside the symptoms a jagged line between random
+    // points, now and then a spike; beside the answer a clean, steady heartbeat
+    function swing(y, t) {
+      var fin = o.rows[o.rows.length - 1].y0;
+      if (y >= fin) {
+        var ph = ((y - fin) % 90) / 90;
+        return ph < 0.08 ? -ph * 3 : ph < 0.14 ? -0.24 + (ph - 0.08) * 20 : ph < 0.2 ? 0.96 - (ph - 0.14) * 24 : ph < 0.26 ? -0.48 + (ph - 0.2) * 8 : 0;
+      }
+      var C = 14, cell = Math.floor(y / C), u = (y - cell * C) / C;
+      var at = function (n) { var v = (rand(n, 1) - 0.5) * 0.7 + Math.sin(n * 0.7 + t * 1.5) * 0.15; if (rand(n, 2) > 0.82) v = (rand(n, 3 + Math.floor(t * 2)) > 0.5 ? 1 : -1) * (0.7 + rand(n, 4) * 0.3); return v; };
+      return at(cell) + (at(cell + 1) - at(cell)) * u;
+    }
+    o.draw = function (now) {
+      var r = list.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh()) return false;
+      var t = still ? 0 : now / 1000, head = still ? Infinity : vh() * 0.62 - r.top, c = o.s.c, w = o.s.w, cx = w * 0.5, A = w * 0.42;
+      beats.forEach(function (b, i) { b.classList.toggle('is-on', o.rows[i].y0 + 30 < head); });
+      c.clearRect(0, 0, w, o.s.h);
+      var fin = o.rows[o.rows.length - 1].y0, lx = cx + swing(0, t) * A, ly = 0, acc = 0, tipX = cx;
+      // Dots every 4.5px along the line itself, so the spikes stay solid
+      for (var y = 1; y < o.s.h; y += 1) {
+        var x = cx + swing(y, t) * A;
+        acc += Math.hypot(x - lx, y - ly); lx = x; ly = y;
+        if (y <= head) tipX = x;
+        if (acc < 4.5) continue;
+        acc = 0;
+        var lit = y < head, steady = y >= fin;
+        dot(c, x, y, lit ? (steady ? 2.2 : 1.7) : 1.2, lit ? (steady ? rgba(mix(FROM, TO, (y - fin) / Math.max(1, o.s.h - fin)), 1) : rgba(INK, 0.6)) : rgba(INK, 0.13));
+      }
+      if (head > 0 && head < o.s.h) { c.shadowColor = 'rgba(151,26,255,0.8)'; c.shadowBlur = 16; dot(c, tipX, head, 4, '#b462ff'); c.shadowBlur = 0; }
+      return !still;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- one loop for them all
+  var running = false;
+  function frame() {
+    var now = performance.now(), more = false;
+    opts.forEach(function (o) { if (o.draw(now)) more = true; });
+    if (more) requestAnimationFrame(frame); else running = false;
+  }
+  function wake() { if (!running) { running = true; requestAnimationFrame(frame); } }
+  function start() { opts.forEach(function (o) { o.size(); }); wake(); }
+  addEventListener('scroll', wake, { passive: true });
+  addEventListener('resize', function () { clearTimeout(start.t); start.t = setTimeout(start, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(start, start); else start();
+})();
+</script>
