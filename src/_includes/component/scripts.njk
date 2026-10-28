@@ -1115,7 +1115,18 @@ document.addEventListener('DOMContentLoaded', () => {
       F: '######....#....####.#....#....#....', O: '.###.#...##...##...##...##...#.###.', R: '####.#...##...#####.#.#..#..#.#...#',
       A: '.###.#...##...#######...##...##...#', G: '.###.#...##....#.####...##...#.####', '.': '..........................##...##..', ' ': '...................................',
     };
-    const VERDICT = "IT'S TIME FOR SAGE.";
+    const VERDICT = "IT'S TIME FOR SAGE.IS";
+    // A sage leaf after it, 9 x 7 dots: pointing up and to the right from its stalk, a vein of
+    // darker dots along its middle (v)
+    const LEAF = [
+      '......##.',
+      '....####.',
+      '...##v##.',
+      '..##v###.',
+      '.#v####..',
+      '.v###....',
+      'v........',
+    ];
     let vW = 0, vH = 0, vDpr = 1, typedLast = -1, verdictLast = -1;
 
     const sizeDiag = () => {
@@ -1130,22 +1141,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawVerdict = (k) => {
       vCtx.setTransform(vDpr, 0, 0, vDpr, 0, 0);
       vCtx.clearRect(0, 0, vW, vH);
-      const P = Math.min(vW / (VERDICT.length * 6), vH / 8), y0 = (vH - 7 * P) / 2;
-      const letters = VERDICT.replace(/ /g, '').length;
+      // The words, a gap, then the leaf, all fitted to the width
+      const cols = VERDICT.length * 6 + 1 + LEAF[0].length;
+      const P = Math.min(vW / cols, vH / 8), y0 = (vH - 7 * P) / 2;
+      const letters = VERDICT.replace(/ /g, '').length + 1;
+      const tone = (u, kk) => `rgb(${mixD(mixD([48, 42, 255], [151, 26, 255], u), [205, 192, 255], Math.sin(Math.PI * kk) * 0.5).join(',')})`;
+      const dot = (x, y, on, kk, col) => {
+        vCtx.fillStyle = on ? col : 'rgba(255,255,255,0.07)';
+        vCtx.beginPath();
+        vCtx.arc(x, y, on ? P * 0.4 * outBackD(kk) : P * 0.16, 0, 6.2832);
+        vCtx.fill();
+      };
       let n = 0;
       [...VERDICT].forEach((ch, i) => {
         const g = GLYPH[ch] || GLYPH[' '];
         if (ch !== ' ') n++;
         const kk = clampD(k * letters * 1.2 - (n - 1));
         for (let q = 0; q < 35; q++) {
-          const x = (i * 6 + (q % 5) + 0.5) * P, y = y0 + (Math.floor(q / 5) + 0.5) * P;
           const on = g[q] === '#' && kk > 0;
-          vCtx.fillStyle = on ? `rgb(${mixD(mixD([48, 42, 255], [151, 26, 255], i / VERDICT.length), [205, 192, 255], Math.sin(Math.PI * kk) * 0.5).join(',')})` : 'rgba(255,255,255,0.07)';
-          vCtx.beginPath();
-          vCtx.arc(x, y, on ? P * 0.4 * outBackD(kk) : P * 0.16, 0, 6.2832);
-          vCtx.fill();
+          dot((i * 6 + (q % 5) + 0.5) * P, y0 + (Math.floor(q / 5) + 0.5) * P, on, kk, tone(i / VERDICT.length, kk));
         }
       });
+      // The leaf, last, in sage greens, its vein a shade darker
+      const kl = clampD(k * letters * 1.2 - (letters - 1)), lx = (VERDICT.length * 6 + 1) * P;
+      LEAF.forEach((row, r) => [...row].forEach((ch, c) => {
+        if (ch === '.') return;
+        const col = mixD(ch === 'v' ? [94, 122, 66] : mixD([143, 179, 106], [184, 214, 140], (c + (6 - r)) / 14), [230, 245, 210], Math.sin(Math.PI * kl) * 0.5);
+        dot(lx + (c + 0.5) * P, y0 + (r + 0.5) * P, kl > 0, kl, `rgb(${col.join(',')})`);
+      }));
     };
 
     const typeDiag = () => {
@@ -1181,11 +1204,11 @@ document.addEventListener('DOMContentLoaded', () => {
     typeDiag();
   }
 
-  // 15. Our Creed, back to the night (compared in concepts/creed.njk). The section holds the screen
-  //     while the scroll runs: the paper breaks into square cells of the hero's night, scattered,
-  //     rising from the bottom; the creed comes up in light type; then SAGE.IS HOW. builds over the
+  // 15. Our Creed, back to the night (compared in concepts/creed.njk). A screen of its own, not held:
+  //     as it scrolls into view the paper breaks into square cells of the hero's night, riding its
+  //     top edge; the creed comes up in light type; then SAGE.IS HOW. builds on its own over the
   //     hero's grid of dots, dot by dot, with its spring and flash (hero-dots.js). The dark footer
-  //     carries on from it. It runs backwards too
+  //     carries on from it
   const creed = document.querySelector('[data-creed]');
   if (creed) {
     const cStage = creed.querySelector('.creed-stage');
@@ -1198,7 +1221,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const rndC = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
     const outBackC = (x) => 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2);
     const mixC = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
-    let W = 0, H = 0, dpr = 1, word = null, area = null;
+    const stillCreed = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // The word builds on its own once the night has filled the screen (builtAt), over BUILD ms
+    const BUILD = 1800;
+    let W = 0, H = 0, dpr = 1, word = null, area = null, builtAt = 0, creedRunning = false;
 
     // SAGE.IS over HOW., sampled from Anton onto one grid, each line 22 dots high, centred
     const sampleCreed = () => {
@@ -1246,30 +1272,40 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!area) return;
       const r = creed.getBoundingClientRect(), vh = window.innerHeight;
       if (r.bottom < 0 || r.top > vh) return;
-      const p = clampC(-r.top / (r.height - vh));
+      // How far the section has come up into view
+      const entered = vh - r.top;
       cCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cCtx.clearRect(0, 0, W, H);
-      // The night, in cells, scattered, rising from the bottom
-      const C = Math.max(28, W / 32), B = H * 0.5, edge = H - segC(p, 0.02, 0.38) * (H + B);
+      // The night, in cells, scattered, its ragged front riding the section's top edge as it comes
+      // up into view, closing to solid night as it reaches the top of the screen. The edge is on the
+      // screen; the cells move with the section (stageTop: where it is on screen)
+      const C = Math.max(28, W / 32), B = vh * 0.5, stageTop = r.top;
+      const edge = stageTop + B * (1 - segC(entered, 0, vh));
       cCtx.fillStyle = NIGHT;
       for (let cy = 0; cy < H; cy += C) {
-        if (cy + C < edge - B) continue;
+        if (stageTop + cy + C < edge - B) continue;
         for (let cx = 0; cx < W; cx += C) {
-          const a = clampC((cy + C - edge + rndC(cx, cy) * B) / C);
+          const a = clampC((stageTop + cy + C - edge + rndC(cx, cy) * B) / C);
           if (a <= 0) continue;
           cCtx.globalAlpha = a;
           cCtx.fillRect(cx, cy, C + 0.5, C + 0.5);
         }
       }
       cCtx.globalAlpha = 1;
-      const night = p > 0.3;
+      const night = entered > vh * 0.6;
       if (creed.classList.contains('is-night') !== night) {
         creed.classList.toggle('is-night', night);
         if (night) creed.setAttribute('data-night', ''); else creed.removeAttribute('data-night');
         if (window.SageHeaderTone) window.SageHeaderTone();
       }
-      // The hero's grid, then the word built in it
-      const { P } = area, field = segC(p, 0.38, 0.5), build = segC(p, 0.45, 0.85);
+      // The hero's grid, then the word built in it: played on its own once the section is mostly in
+      // view (and again if you scroll back out and in), not by the scroll. However it got there
+      // (scrolling, a link, a resize), it starts when it arrives
+      const now = performance.now();
+      if (entered >= vh * 0.75 && !builtAt) { builtAt = now; wakeCreed(); }
+      if (entered < vh * 0.4) builtAt = 0;
+      const t = !builtAt ? 0 : stillCreed ? 1 : clampC((now - builtAt) / BUILD);
+      const { P } = area, field = segC(t, 0, 0.25), build = segC(t, 0.12, 1);
       if (field > 0) {
         cCtx.fillStyle = `rgba(241, 238, 250, ${(0.12 * field).toFixed(3)})`;
         for (let y = area.y - P * 3; y < area.y + word.h * P + P * 3; y += P) for (let x = (W % P) / 2; x < W; x += P) { cCtx.beginPath(); cCtx.arc(x, y, P * 0.12, 0, 6.2832); cCtx.fill(); }
@@ -1285,12 +1321,18 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    let creedTick = false;
-    window.addEventListener('scroll', () => {
-      if (creedTick) return;
-      creedTick = true;
-      requestAnimationFrame(() => { creedTick = false; drawCreed(); });
-    }, { passive: true });
+    // Draws on every scroll, and frame by frame while the word is building
+    const creedFrame = () => {
+      drawCreed();
+      if (builtAt && performance.now() - builtAt < BUILD + 50) requestAnimationFrame(creedFrame);
+      else creedRunning = false;
+    };
+    function wakeCreed() {
+      if (creedRunning) return;
+      creedRunning = true;
+      requestAnimationFrame(creedFrame);
+    }
+    window.addEventListener('scroll', wakeCreed, { passive: true });
     window.addEventListener('resize', sizeCreed);
     const startCreed = () => { word = sampleCreed(); sizeCreed(); };
     if (document.fonts) document.fonts.load('100px Anton').then(startCreed, startCreed); else startCreed();

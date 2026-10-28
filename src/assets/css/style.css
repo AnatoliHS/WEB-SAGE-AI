@@ -3824,22 +3824,22 @@ html [data-scroll-words] u {
   .faq-tab { padding: 0 14px; }
 }
 
-/* Creed: back to the night (scripts.njk, 15). The section holds the screen while the paper breaks
-   into cells of the hero's night, the creed comes up in light type and SAGE.IS HOW. builds in dots
+/* Creed: back to the night (scripts.njk, 15). As it scrolls into view the paper breaks into cells
+   of the hero's night, the creed comes up in light type and SAGE.IS HOW. builds in dots
    below it; the dark footer carries on from it */
 .section-builders {
   padding: clamp(96px, 12vw, 184px) 0 0;
   text-align: center;
 }
 
+/* A screen of its own, not held: the night comes up on its top edge as it scrolls into view, and
+   the word builds on its own once it's in view */
 .creed-pin {
   position: relative;
-  height: 300vh;
 }
 
 .creed-stage {
-  position: sticky;
-  top: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
