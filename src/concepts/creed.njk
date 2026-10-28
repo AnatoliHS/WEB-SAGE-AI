@@ -1,0 +1,300 @@
+---
+layout: policy.njk
+title: "Our Creed options: Sage"
+description: "Five dot-matrix animations for Our Creed, the closing statement."
+noindex: true
+permalink: /concepts/creed/
+options:
+  - id: night
+    tag: "01 · Recommended"
+    name: "Back to the night"
+    desc: "The page ends where it began. As you scroll in, the paper breaks into square cells that switch to the night, scattered, rising from the bottom (the hero's pixel dissolve, in reverse); the creed comes up in light type, and SAGE.IS HOW. builds itself in dots over the hero's grid, dot by dot, in the purples. A bookend."
+  - id: fall
+    tag: "02 · Built"
+    name: "Built from the ground up"
+    desc: "We build, so the words are built. Dots drop in from above and stack, bottom row first, each landing with a small bounce, until SAGE.IS HOW. stands in purple. Scroll back and they lift away again."
+  - id: plan
+    tag: "03 · Craft"
+    name: "From plan to built"
+    desc: "A blueprint first. Over a faint graph-paper grid of dots, the outline of SAGE.IS HOW. is plotted point by point in thin ink with small construction marks; then it's built, the dots filling in purple from the bottom up. The creators' process, start to finish."
+  - id: three
+    tag: "04 · Rhythm"
+    name: "We build, three times"
+    desc: "The section holds the screen. WE BUILD stands in big dot-matrix on the left; beside it the three reasons come in one at a time as you scroll, because we are builders, because we want to, because we are creators who love creating, each underlined in dots; then it resolves into Sage.is how."
+  - id: lit
+    tag: "05 · Quiet"
+    name: "Lit, then signed"
+    desc: "The creed lights up word by word as it scrolls up the screen, as the manifesto at the top of the page does; then under it the title signs itself, Sage.is in ink and HOW. building in purple dots. The lightest touch."
+---
+{# Ways to animate Our Creed (section 09, home-sections.njk), the page's closing statement, in the
+   dot-matrix hero's language. Every one is driven by the scroll, so it runs backwards too, and each
+   has its own phone layout. Everything is scoped under .cr- #}
+
+<style>
+  .cr-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .cr-intro > div { grid-column: 2 / -1; }
+  .cr-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .cr-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .cr-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .cr-jump a { color: var(--ink-2); }
+  .cr-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .cr-option { margin-inline: calc(50% - 50vw); padding-top: clamp(64px, 8vw, 120px); scroll-margin-top: 50px; }
+  .cr-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .cr-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .cr-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .cr-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* The held screen, its dots on one canvas, the words over it */
+  .cr-pin { position: relative; height: 300vh; }
+  .cr-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 var(--gutter); text-align: center; }
+  .cr-stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .cr-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 48vh; }
+  .cr-copy .section-label { transition: color 0.5s ease; }
+  .cr-lead { margin-top: clamp(16px, 2vw, 28px); max-width: 40em; font-size: clamp(1.125rem, 1.8vw, 2rem); line-height: 1.45; letter-spacing: -0.025em; color: var(--ink-2); text-wrap: balance; transition: color 0.5s ease, opacity 0.5s ease; }
+  /* 01: on the night */
+  .cr-pin[data-cr="night"].is-night .cr-lead { color: #c6c0d8; }
+  .cr-pin[data-cr="night"].is-night .section-label { color: #8d86a3; }
+  .cr-pin[data-cr="night"] .cr-copy { opacity: 0; transition: opacity 0.5s ease; }
+  .cr-pin[data-cr="night"].is-night .cr-copy { opacity: 1; }
+
+  /* 04: the reasons beside WE BUILD */
+  .cr-three .cr-copy { display: none; }
+  .cr-reasons { position: absolute; left: 52%; right: var(--gutter); top: 50%; translate: 0 -50%; text-align: left; }
+  .cr-reason { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -40%; opacity: 0; transition: opacity 0.4s ease, translate 0.5s var(--ease); font-size: clamp(1.75rem, 3.6vw, 4rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.05em; }
+  .cr-reason.is-on { opacity: 1; translate: 0 -50%; }
+  .cr-reason small { display: block; margin-bottom: 12px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-soft); }
+  .cr-final { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(16px, 2vw, 28px); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+  .cr-final.is-on { opacity: 1; }
+  .cr-final h3 { font-family: var(--font-display); font-size: clamp(4rem, 14vw, 15rem); font-weight: 400; line-height: 0.88; text-transform: uppercase; }
+
+  /* 05: not held; the creed lit by the scroll, the title signed under it */
+  .cr-quiet { padding: clamp(96px, 14vh, 180px) var(--gutter) clamp(96px, 16vh, 200px); text-align: center; }
+  .cr-quiet .cr-lead { margin-inline: auto; }
+  .cr-sign { display: flex; align-items: flex-end; justify-content: center; gap: clamp(10px, 1.6vw, 24px); margin-top: clamp(24px, 3vw, 48px); }
+  .cr-sign span { font-family: var(--font-display); font-size: clamp(4rem, 12vw, 13rem); line-height: 0.88; text-transform: uppercase; }
+  .cr-sign canvas { width: clamp(150px, 26vw, 330px); height: clamp(88px, 10.6vw, 186px); }
+
+  @media (max-width: 760px) {
+    .cr-intro, .cr-cap { grid-template-columns: 1fr; }
+    .cr-intro > div, .cr-cap > p:last-child { grid-column: 1; }
+    .cr-copy { margin-bottom: 40vh; }
+    .cr-reasons { left: var(--gutter); top: 64%; }
+    .cr-reason { font-size: clamp(1.625rem, 7.5vw, 2.25rem); }
+    .cr-sign { flex-direction: column; align-items: center; gap: 4px; }
+    .cr-sign canvas { width: 62vw; height: 30vw; }
+  }
+</style>
+
+<header class="cr-intro">
+  <p class="section-label"><span class="index-num">00</span>Our Creed</p>
+  <div>
+    <h1>Built, in dots.</h1>
+    <p>Five ways to animate Our Creed, the closing statement, in the hero's dot-matrix language. Each is driven by the scroll, so scroll slowly through it, and back, as a visitor would.</p>
+  </div>
+</header>
+
+<ul class="cr-jump">
+  {% for o in options %}<li><a href="#cr-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<section class="cr-option" id="cr-{{ loop.index }}">
+  <div class="container"><div class="cr-cap"><p>{{ o.tag }}</p><p><b>{{ o.name }}</b>{{ o.desc }}</p></div></div>
+  {% if o.id == 'lit' %}
+  <div class="cr-quiet" data-cr-lit>
+    <p class="section-label is-center">Our Creed</p>
+    <p class="cr-lead" data-scroll-words>We build because we are builders. We build because we want to. We build because we are creators who love creating.</p>
+    <h3 class="cr-sign"><span>Sage.is</span><canvas aria-hidden="true"></canvas><span class="sr-only">how.</span></h3>
+  </div>
+  {% else %}
+  <div class="cr-pin{% if o.id == 'three' %} cr-three{% endif %}" data-cr="{{ o.id }}">
+    <div class="cr-stage">
+      <canvas aria-hidden="true"></canvas>
+      <div class="cr-copy">
+        <p class="section-label is-center">Our Creed</p>
+        <p class="cr-lead">We build because we are builders. We build because we want to.<br> We build because we are creators who love creating.</p>
+      </div>
+      {% if o.id == 'three' %}
+      <div class="cr-reasons">
+        <p class="cr-reason"><small>Our creed · 1</small>because we are builders.</p>
+        <p class="cr-reason"><small>Our creed · 2</small>because we want to.</p>
+        <p class="cr-reason"><small>Our creed · 3</small>because we are creators who love creating.</p>
+      </div>
+      <div class="cr-final"><p class="section-label is-center">Our Creed</p><h3>Sage.is <span class="text-accent">how.</span></h3></div>
+      {% endif %}
+      <h3 class="sr-only">Sage.is how.</h3>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255], NIGHT = [14, 11, 26];
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function seg(p, a, b) { return clamp01((p - a) / (b - a)); }
+  function outBack(x) { return 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2); }
+  function outBounce(x) { var n = 7.5625, d = 2.75; if (x < 1 / d) return n * x * x; if (x < 2 / d) return n * (x -= 1.5 / d) * x + 0.75; if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + 0.9375; return n * (x -= 2.625 / d) * x + 0.984375; }
+  function mix(a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); }
+  function rgba(c, a) { return 'rgba(' + c.join(',') + ',' + a.toFixed(3) + ')'; }
+  function dot(c, x, y, r, col) { if (r <= 0.05) return; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
+
+  // Lines of text sampled from Anton onto one grid, each line rowsTall dots high, centred; each dot
+  // with its coverage, its line, whether it's on the letters' edge, and its column across (u)
+  function sample(lines, rowsTall) {
+    var m = document.createElement('canvas').getContext('2d'); m.font = '100px Anton';
+    var ms = lines.map(function (t) { return m.measureText(t); });
+    var s = rowsTall / Math.max.apply(null, ms.map(function (mt) { return mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent; }));
+    var cols = Math.ceil(Math.max.apply(null, ms.map(function (mt) { return mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight; })) * s) + 2;
+    var gap = Math.round(rowsTall * 0.3), rows = lines.length * rowsTall + (lines.length - 1) * gap + 2, k = 4;
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d'); mc.font = (100 * s * k) + 'px Anton';
+    lines.forEach(function (t, i) { var mt = ms[i], w = (mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight) * s; mc.fillText(t, ((cols - w) / 2 + mt.actualBoundingBoxLeft * s) * k, (1 + i * (rowsTall + gap) + mt.actualBoundingBoxAscent * s) * k); });
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data, grid = {}, dots = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var cov = 0;
+      for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+      cov /= k * k * 255;
+      if (cov > 0.05) { var d = { c: c, r: r, cov: cov, line: Math.floor(r / (rowsTall + gap)), u: c / cols }; grid[c + ',' + r] = d; dots.push(d); }
+    }
+    dots.forEach(function (d) { d.edge = !grid[(d.c - 1) + ',' + d.r] || !grid[(d.c + 1) + ',' + d.r] || !grid[d.c + ',' + (d.r - 1)] || !grid[d.c + ',' + (d.r + 1)]; });
+    return { dots: dots, w: cols, h: rows };
+  }
+
+  var WORD = null, WE = null, HOW = null, pins = [];
+
+  // Fits the word to the lower part of the stage: its P and top left
+  function fit(o, pat, area) {
+    var P = Math.min(area.w / pat.w, area.h / pat.h);
+    return { P: P, x: area.x + (area.w - pat.w * P) / 2, y: area.y + (area.h - pat.h * P) / 2 };
+  }
+
+  var KINDS = {
+    // 01 Back to the night
+    night: function (o, p, c) {
+      var W = o.W, H = o.H, C = Math.max(28, W / 32), B = H * 0.5;
+      // The night comes up in cells, scattered, from the bottom
+      var edge = H - seg(p, 0.02, 0.38) * (H + B);
+      c.fillStyle = rgba(NIGHT, 1);
+      for (var cy = 0; cy < H; cy += C) for (var cx = 0; cx < W; cx += C) {
+        var a = clamp01((cy + C - edge + rand(cx, cy) * B) / C);
+        if (a <= 0) continue;
+        c.globalAlpha = a; c.fillRect(cx, cy, C + 0.5, C + 0.5);
+      }
+      c.globalAlpha = 1;
+      o.pin.classList.toggle('is-night', p > 0.3);
+      // The hero's grid, then the word built in it
+      var f = fit(o, WORD, o.area), field = seg(p, 0.38, 0.5), build = seg(p, 0.45, 0.85), P = f.P;
+      if (field > 0) for (var y = f.y - P * 3; y < f.y + WORD.h * P + P * 3; y += P) for (var x = (W % P) / 2; x < W; x += P) dot(c, x, y, P * 0.12, rgba([241, 238, 250], 0.12 * field));
+      WORD.dots.forEach(function (d) {
+        var k = clamp01((build - (0.6 * d.u + 0.3 * rand(d.c, d.r))) / 0.12);
+        if (k <= 0) return;
+        var col = mix(mix([100, 92, 255], [180, 98, 255], d.u), LIGHT, Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.55);
+        dot(c, f.x + (d.c + 0.5) * P, f.y + (d.r + 0.5) * P, P * (0.13 + (0.35 * d.cov - 0.13 + 0.13) * outBack(k)) * 0.95, rgba(col, 0.4 + 0.6 * k));
+      });
+    },
+    // 02 Built from the ground up
+    fall: function (o, p, c) {
+      var f = fit(o, WORD, o.area), P = f.P, build = seg(p, 0.08, 0.85);
+      WORD.dots.forEach(function (d) {
+        var fromBottom = 1 - d.r / WORD.h, start = fromBottom * 0.62 + rand(d.c, d.r) * 0.18;
+        var k = clamp01((build - start) / 0.2);
+        if (k <= 0) return;
+        var ty = f.y + (d.r + 0.5) * P, y = -20 + (ty + 20) * outBounce(k);
+        dot(c, f.x + (d.c + 0.5) * P, y, P * (0.2 + 0.22 * d.cov), rgba(mix(FROM, TO, d.u), 0.95));
+      });
+    },
+    // 03 From plan to built
+    plan: function (o, p, c) {
+      var f = fit(o, WORD, o.area), P = f.P, plot = seg(p, 0.08, 0.5), fill = seg(p, 0.5, 0.88);
+      // Graph paper
+      for (var y = f.y - P * 4; y < f.y + WORD.h * P + P * 4; y += P * 2) for (var x = (o.W % (P * 2)) / 2; x < o.W; x += P * 2) dot(c, x, y, 0.9, rgba(INK, 0.12));
+      WORD.dots.forEach(function (d) {
+        var X = f.x + (d.c + 0.5) * P, Y = f.y + (d.r + 0.5) * P;
+        var kf = clamp01((fill - (1 - d.r / WORD.h) * 0.7 - rand(d.c, d.r) * 0.15) / 0.15);
+        if (kf > 0) { dot(c, X, Y, P * (0.2 + 0.22 * d.cov) * outBack(kf), rgba(mix(FROM, TO, d.u), 0.95)); return; }
+        if (!d.edge) return;
+        // The outline, plotted left to right, a construction mark at each point as it lands
+        var kp = clamp01((plot - d.u * 0.85) / 0.06);
+        if (kp <= 0) return;
+        dot(c, X, Y, P * 0.17, rgba(INK, 0.7));
+        if (kp < 1 && (d.c + d.r) % 3 === 0) { c.strokeStyle = rgba(FROM, 0.6 * (1 - kp)); c.lineWidth = 1; c.beginPath(); c.moveTo(X - P * 0.7, Y); c.lineTo(X + P * 0.7, Y); c.moveTo(X, Y - P * 0.7); c.lineTo(X, Y + P * 0.7); c.stroke(); }
+      });
+    },
+    // 04 We build, three times
+    three: function (o, p, c) {
+      var narrow = o.W <= 760;
+      var area = narrow ? { x: o.W * 0.08, y: o.H * 0.16, w: o.W * 0.84, h: o.H * 0.34 } : { x: o.W * 0.05, y: o.H * 0.22, w: o.W * 0.42, h: o.H * 0.56 };
+      var f = fit(o, WE, area), P = f.P, build = seg(p, 0.02, 0.16), out = seg(p, 0.84, 0.92);
+      var part = p < 0.16 ? -1 : p < 0.39 ? 0 : p < 0.62 ? 1 : p < 0.84 ? 2 : 3;
+      o.pin.querySelectorAll('.cr-reason').forEach(function (el, i) { el.classList.toggle('is-on', part === i); });
+      o.pin.querySelector('.cr-final').classList.toggle('is-on', part === 3);
+      WE.dots.forEach(function (d) {
+        var k = clamp01((build - (0.6 * d.u + 0.3 * rand(d.c, d.r))) / 0.12) * (1 - out);
+        if (k <= 0) return;
+        dot(c, f.x + (d.c + 0.5) * P, f.y + (d.r + 0.5) * P, P * (0.2 + 0.22 * d.cov) * (out > 0 ? k : outBack(k)), rgba(mix(FROM, TO, d.u), 0.95));
+      });
+      // Each reason underlined in dots as its part runs
+      if (part >= 0 && part <= 2) {
+        var el = o.pin.querySelectorAll('.cr-reason')[part], r = el.getBoundingClientRect(), st = o.stage.getBoundingClientRect();
+        var local = seg(p, [0.16, 0.39, 0.62][part], [0.39, 0.62, 0.84][part]), len = Math.min(r.width, 520) * seg(local, 0.1, 0.7);
+        for (var x = 0; x <= len; x += 9) dot(c, r.left - st.left + x, r.bottom - st.top + 14, 2.4, rgba(mix(FROM, TO, x / 520), 0.95));
+      }
+    }
+  };
+
+  [].forEach.call(document.querySelectorAll('[data-cr]'), function (pin) {
+    var o = { pin: pin, kind: pin.dataset.cr, stage: pin.querySelector('.cr-stage'), canvas: pin.querySelector('.cr-stage > canvas') };
+    o.size = function () {
+      var dpr = Math.min(devicePixelRatio || 1, 2);
+      o.W = o.stage.clientWidth; o.H = o.stage.clientHeight; o.dpr = dpr;
+      o.canvas.width = Math.round(o.W * dpr); o.canvas.height = Math.round(o.H * dpr);
+      o.ctx = o.canvas.getContext('2d');
+      // The word below the creed
+      var top = o.pin.querySelector('.cr-copy').getBoundingClientRect().bottom - o.stage.getBoundingClientRect().top;
+      o.area = { x: o.W * 0.06, y: Math.max(top + 24, o.H * 0.42), w: o.W * 0.88, h: o.H * 0.5 };
+    };
+    o.draw = function () {
+      var r = pin.getBoundingClientRect(), vh = innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      var p = clamp01(-r.top / (r.height - vh)), c = o.ctx;
+      c.setTransform(o.dpr, 0, 0, o.dpr, 0, 0); c.clearRect(0, 0, o.W, o.H);
+      KINDS[o.kind](o, p, c);
+    };
+    pins.push(o);
+  });
+
+  // 05 Lit, then signed: HOW. builds in dots under Sage.is as the title comes up the screen
+  var lit = document.querySelector('[data-cr-lit]');
+  if (lit) {
+    var sign = lit.querySelector('canvas');
+    pins.push({
+      size: function () { var dpr = Math.min(devicePixelRatio || 1, 2); this.w = sign.clientWidth; this.h = sign.clientHeight; sign.width = this.w * dpr; sign.height = this.h * dpr; this.ctx = sign.getContext('2d'); this.dpr = dpr; },
+      draw: function () {
+        var r = sign.getBoundingClientRect(), vh = innerHeight;
+        if (r.bottom < 0 || r.top > vh) return;
+        var k = seg((vh * 0.85 - r.top) / (vh * 0.4), 0, 1), c = this.ctx, P = Math.min(this.w / HOW.w, this.h / HOW.h);
+        c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); c.clearRect(0, 0, this.w, this.h);
+        var x0 = (this.w - HOW.w * P) / 2, y0 = this.h - HOW.h * P;
+        HOW.dots.forEach(function (d) {
+          var kk = clamp01((k - (0.6 * d.u + 0.3 * rand(d.c, d.r))) / 0.15);
+          dot(c, x0 + (d.c + 0.5) * P, y0 + (d.r + 0.5) * P, kk > 0 ? P * (0.2 + 0.22 * d.cov) * outBack(kk) : P * 0.1, kk > 0 ? rgba(mix(mix(FROM, TO, d.u), LIGHT, Math.sin(Math.PI * Math.min(1, kk * 1.4)) * 0.5), 0.95) : rgba(INK, 0.12));
+        });
+      }
+    });
+  }
+
+  var queued = false;
+  function frame() { queued = false; pins.forEach(function (o) { o.draw(); }); }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
+  function start() {
+    WORD = sample(['SAGE.IS', 'HOW.'], 22); WE = sample(['WE', 'BUILD'], 22); HOW = sample(['HOW.'], 22);
+    pins.forEach(function (o) { o.size(); }); frame();
+  }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', function () { clearTimeout(start.t); start.t = setTimeout(start, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(start, start); else start();
+})();
+</script>

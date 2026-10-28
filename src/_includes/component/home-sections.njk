@@ -296,247 +296,107 @@
       </div>
     </header>
 
-    <!-- Each group: its title pinned on the left, the questions on the right -->
-    <div class="faq-groups">
-      <!-- Group 1: Company FAQs -->
-      <div class="faq-group reveal">
-        <div class="faq-group-head">
-          <span class="faq-group-badge">01 / COMPANY</span>
-          <h3 id="company-faqs" class="faq-group-title">
-            <a href="#company-faqs">I have questions about your company…</a>
-          </h3>
-        </div>
-
-        <div class="faq-list">
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-1">
-              <span>Why partner with Sage.is for open-source incubation?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-1" class="faq-answer" hidden>
-              <p>At Sage.is OSVL, we're all about turning your bold vision into reality through hands-on technical incubation. We embed our open-source experts directly into your team to build, customize, and deploy OSS solutions that scale with you—no vendor lock-in, full ownership of your tech stack, and a collaborative path to launch. Whether you're bootstrapping an AI tool or scaling a dev platform, we make the journey smoother so you can focus on what you do best: innovating.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-2">
-              <span>How long have you been around? Can we trust you as our incubation partner?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-2" class="faq-answer" hidden>
-              <p>Sage.is is backed by <a href="https://Startr.Cloud/" target="_blank" rel="noopener"><u>Startr</u></a> (aka OpenCo), a tech incubator that's been empowering startups since 2007. We launched our OSVL program in 2023, and we've been refining our open-source technical support model ever since, helping teams ship faster and smarter. We're committed to sustainable growth: <strong>profitable for 18 straight years, zero debt, and privately held for the long haul.</strong> Check out our <a href="https://sage.is/books/handbook/" target="_blank" rel="noopener"><u>public employee handbook</u></a> to see how we foster a culture of trust and collaboration.<br>
-              You can email Izzy Plante, our Co-Founder and CEO, anytime at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>. They rely on their personal <strong>Sage AI (Mini Izzy)</strong> for organization, so expect a direct, thoughtful response from them.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-3">
-              <span>What about the reliability of your technical support and OSS solutions?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-3" class="faq-answer" hidden>
-              <p>We back our incubation with rock-solid reliability—our open-source deployments and expert support have maintained over 99.99% uptime across two decades of tech projects. Track real-time performance and support SLAs on our <a href="https://status.production.openco.ca" target="_blank" rel="noopener"><u>Status Page</u></a>, so you know your vision stays on track, even during rapid scaling.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-4">
-              <span>What if our partnership doesn't fit after we start?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-4" class="faq-answer" hidden>
-              <p>We're in this for mutual success, so we design flexible incubation paths. If things aren't clicking, we collaborate on a smooth transition—sharing all OSS code, knowledge, and resources we've built together. No hard exits; just open conversations to ensure you keep momentum toward your goals.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-5">
-              <span>Can I ask the founders a question directly about incubation?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-5" class="faq-answer" hidden>
-              <p><strong>Absolutely.</strong> Reach out to our Co-Founder and CEO Izzy Plante at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>, or our Co-Founder and CTO Alexander Somma at <a href="mailto:alexander@sage.is"><u>alexander@sage.is</u></a>. They're hands-on with OSVL and love chatting about your vision—they handle their own inboxes (with a little AI help), so you'll get a personal reply.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-co-6">
-              <span>Can we transition from proprietary tools to your open-source incubation model?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-co-6" class="faq-answer" hidden>
-              <p>Yes, absolutely—we specialize in seamless migrations to OSS stacks. Our team provides guided audits, custom migration plans, and hands-on support to port your workflows, models, and data. Start with a pilot project to test the waters, then scale as your vision takes shape.</p>
-            </div>
-          </div>
-        </div>
+    <!-- Tabs and a reading pane (compared in concepts/faq.njk): the groups as tabs, the questions
+         down the left and the chosen answer in a pane on the right, a dot marking the question;
+         on phones the answers open in place, one at a time (scripts.njk, 3). Every answer is in
+         the page; without script they're all shown -->
+    <div class="faq reveal" data-faq>
+      <div class="faq-tabs" role="tablist" aria-label="Question groups">
+        <button type="button" role="tab" class="faq-tab" id="company-faqs-tab" aria-controls="company-faqs" aria-selected="true">Company <span>6</span></button>
+        <button type="button" role="tab" class="faq-tab" id="security-faqs-tab" aria-controls="security-faqs" aria-selected="false">Security &amp; Data <span>7</span></button>
+        <button type="button" role="tab" class="faq-tab" id="general-faqs-tab" aria-controls="general-faqs" aria-selected="false">General &amp; Integrations <span>7</span></button>
       </div>
-
-      <!-- Group 2: Security & Data FAQs -->
-      <div class="faq-group reveal">
-        <div class="faq-group-head">
-          <span class="faq-group-badge">02 / SECURITY &amp; DATA</span>
-          <h3 id="security-faqs" class="faq-group-title">
-            <a href="#security-faqs">I have questions about security and our data…</a>
-          </h3>
+      <div class="faq-split">
+        <div class="faq-left">
+          <span class="faq-marker" aria-hidden="true"></span>
+        <ol class="faq-list" role="tabpanel" id="company-faqs" aria-labelledby="company-faqs-tab">
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-1" data-tag="Company · 01">Why partner with Sage.is for open-source incubation?</button>
+            <div class="faq-a" id="company-faqs-1"><p>At Sage.is OSVL, we're all about turning your bold vision into reality through hands-on technical incubation. We embed our open-source experts directly into your team to build, customize, and deploy OSS solutions that scale with you—no vendor lock-in, full ownership of your tech stack, and a collaborative path to launch. Whether you're bootstrapping an AI tool or scaling a dev platform, we make the journey smoother so you can focus on what you do best: innovating.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-2" data-tag="Company · 02">How long have you been around? Can we trust you as our incubation partner?</button>
+            <div class="faq-a" id="company-faqs-2"><p>Sage.is is backed by <a href="https://Startr.Cloud/" target="_blank" rel="noopener"><u>Startr</u></a> (aka OpenCo), a tech incubator that's been empowering startups since 2007. We launched our OSVL program in 2023, and we've been refining our open-source technical support model ever since, helping teams ship faster and smarter. We're committed to sustainable growth: <strong>profitable for 18 straight years, zero debt, and privately held for the long haul.</strong> Check out our <a href="https://sage.is/books/handbook/" target="_blank" rel="noopener"><u>public employee handbook</u></a> to see how we foster a culture of trust and collaboration.<br> You can email Izzy Plante, our Co-Founder and CEO, anytime at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>. They rely on their personal <strong>Sage AI (Mini Izzy)</strong> for organization, so expect a direct, thoughtful response from them.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-3" data-tag="Company · 03">What about the reliability of your technical support and OSS solutions?</button>
+            <div class="faq-a" id="company-faqs-3"><p>We back our incubation with rock-solid reliability—our open-source deployments and expert support have maintained over 99.99% uptime across two decades of tech projects. Track real-time performance and support SLAs on our <a href="https://status.production.openco.ca" target="_blank" rel="noopener"><u>Status Page</u></a>, so you know your vision stays on track, even during rapid scaling.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-4" data-tag="Company · 04">What if our partnership doesn't fit after we start?</button>
+            <div class="faq-a" id="company-faqs-4"><p>We're in this for mutual success, so we design flexible incubation paths. If things aren't clicking, we collaborate on a smooth transition—sharing all OSS code, knowledge, and resources we've built together. No hard exits; just open conversations to ensure you keep momentum toward your goals.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-5" data-tag="Company · 05">Can I ask the founders a question directly about incubation?</button>
+            <div class="faq-a" id="company-faqs-5"><p><strong>Absolutely.</strong> Reach out to our Co-Founder and CEO Izzy Plante at <a href="mailto:izzy@sage.is"><u>izzy@sage.is</u></a>, or our Co-Founder and CTO Alexander Somma at <a href="mailto:alexander@sage.is"><u>alexander@sage.is</u></a>. They're hands-on with OSVL and love chatting about your vision—they handle their own inboxes (with a little AI help), so you'll get a personal reply.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="company-faqs-6" data-tag="Company · 06">Can we transition from proprietary tools to your open-source incubation model?</button>
+            <div class="faq-a" id="company-faqs-6"><p>Yes, absolutely—we specialize in seamless migrations to OSS stacks. Our team provides guided audits, custom migration plans, and hands-on support to port your workflows, models, and data. Start with a pilot project to test the waters, then scale as your vision takes shape.</p></div>
+          </li>
+        </ol>
+        <ol class="faq-list" role="tabpanel" id="security-faqs" aria-labelledby="security-faqs-tab">
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-1" data-tag="Security &amp; Data · 01">Is Sage open‑source? Can we self‑host?</button>
+            <div class="faq-a" id="security-faqs-1"><p>Yes. Sage is open‑source with a permissive license. You can self‑host in your VPC or run on‑prem. We also provide a fully managed option with the same security model and data ownership guarantees.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-2" data-tag="Security &amp; Data · 02">How secure is Sage?</button>
+            <div class="faq-a" id="security-faqs-2"><p>We have a <a href="https://startr.cloud/policies/security/" target="_blank" rel="noopener"><u>full security write-up</u></a> available on the Startr site. Startr is the company behind Sage.</p> <p>We take security very seriously, and we’ve built Sage to be secure by default. We use the latest security protocols, including <strong>256-bit AES encryption</strong> for all data at rest, and <strong>TLS 1.2</strong> for all data in transit. We also use <strong>OAuth 2.0</strong> for secure authentication. Moreover, for organizations that require it, we can provide <strong>on-premises deployment</strong> options to keep data entirely within your own infrastructure.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-3" data-tag="Security &amp; Data · 03">Is our data backed up? How often?</button>
+            <div class="faq-a" id="security-faqs-3"><p>Data customers enter into Sage is stored in multiple, redundant data centers or securely on site when customers choose to use our own site solution. That data is backed up several times a day, and copies of those backups are stored both locally and off-site to further reduce points of possible failure. Files customers upload are stored off-site and backed up to servers in a different geographic region.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-4" data-tag="Security &amp; Data · 04">Where are the servers that store our data?</button>
+            <div class="faq-a" id="security-faqs-4"><p>Our servers are located where our users need them. Either in nearby data centers or for <strong>security</strong> in their offices.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-5" data-tag="Security &amp; Data · 05">Do you support compliance needs (SOC 2, GDPR, HIPAA)?</button>
+            <div class="faq-a" id="security-faqs-5"><p>We align with common frameworks and can provide guidance for deployments that need SOC 2, GDPR, or HIPAA readiness. Self‑hosting lets you meet internal and regional requirements while keeping full control of data residency.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-6" data-tag="Security &amp; Data · 06">Can you fill our custom security questionnaires?</button>
+            <div class="faq-a" id="security-faqs-6"><p>We don’t fill out custom security questionnaires, but we’ve <a href="https://startr.cloud/policies/security/Security-Overview.pdf" target="_blank" rel="noopener"><u>prepared a summary security PDF</u></a> which you can provide to your IT staff. We’re always happy to answer any questions you have directly. To streamline your request, click the link below to compose an email to Izzy with a pre-set subject and draft:</p> <p><a href="mailto:izzy@sage.is?subject=Custom%20Security%20Questionnaire" class="btn btn-outline btn-sm">Compose Email to Izzy</a></p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="security-faqs-7" data-tag="Security &amp; Data · 07">Can I export our data if we ever want to leave?</button>
+            <div class="faq-a" id="security-faqs-7"><p><strong>Absolutely,</strong> you can do it as often as you’d like. Plus, it’s entirely self-service and easy so you don’t need to ask anyone for help or permission. Further, we provide it in a format that allows you to browse it in a web browser so it’s actually useful.</p></div>
+          </li>
+        </ol>
+        <ol class="faq-list" role="tabpanel" id="general-faqs" aria-labelledby="general-faqs-tab">
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-1" data-tag="General &amp; Integrations · 01">Is Sage for teams?</button>
+            <div class="faq-a" id="general-faqs-1"><p>Yes. Open‑source plus onboarding means you avoid lock‑in and surprise bills. Teams replace multiple tools with Sage’s agents, chat, tasks, docs, and files in one place — lowering total cost of ownership.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-2" data-tag="General &amp; Integrations · 02">Does Sage have an API? Can we integrate with Sage?</button>
+            <div class="faq-a" id="general-faqs-2"><p><strong>Yes,</strong> <a href="https://startr.cloud/sage-API/" target="_blank" rel="noopener"><u>Sage has a full-featured API (docs are hosted on GitHub)</u></a>. Companies have written custom integrations, and <a href="https://sage.is/integrations/" target="_blank" rel="noopener"><u>our Integrations page</u></a> links up third-party solutions for invoicing, accounting, time tracking, reporting, planning, asset management, contracts, proposals, and more.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-3" data-tag="General &amp; Integrations · 03">What if we need more help?</button>
+            <div class="faq-a" id="general-faqs-3"><p>Our partner support is considered to be among the best of the best (by us). Everyone who works on our team are expert specialists who know Sage inside and out, many having been with us for years and years, some over a decade. Further, we occasionally cycle every employee through support — including our CEO — so everyone has a chance to directly interact with customers.<br> You can <a href="https://sage.is/support/" target="_blank" rel="noopener"><u>ask support a question</u></a>, or <a href="https://sage.is/learn/" target="_blank" rel="noopener"><u>watch tutorials</u></a>, or <a href="https://startr.cloud/docs/" target="_blank" rel="noopener"><u>review the help guides</u></a>, or <a href="https://sage.is/classes/" target="_blank" rel="noopener"><u>attend a live walkthrough class and Q&amp;A</u></a>.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-4" data-tag="General &amp; Integrations · 04">Is Sage available in languages other than English?</button>
+            <div class="faq-a" id="general-faqs-4"><p>We currently offer Sage’s interface in hundreds of languages, although we have people in over 160 countries writing and sharing in their own native languages using Sage.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-5" data-tag="General &amp; Integrations · 05">If we go with Sage, will we still need stuff like ChatGPT? Perplexity? Dropbox?</button>
+            <div class="faq-a" id="general-faqs-5"><p><strong>Nope,</strong> Sage.is AI engine replaces a whole set of separate products. Sage has chat built in (no more Slack, Teams). Sage has exceptional task management in the form of to-dos and RoundTable discussions (no more Jira, Asana, Trello, etc). And you can store and share all the files you need with your Sage.is AIs (no more Dropbox).</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-6" data-tag="General &amp; Integrations · 06">What kind of companies, in which industries, use Sage?</button>
+            <div class="faq-a" id="general-faqs-6"><p>Sage is used by top notch teams, schools, designers, client services firms, consultants, software developers, freelancers, PR agencies, contractors, religious institutions, schools, non-profits, first responders, and many others who value organized, efficient work.<br> Our partners are primarily small or medium-sized organization with a few hundred members, but Sage is also used by teams inside many of the world’s largest companies.</p></div>
+          </li>
+          <li class="faq-item">
+            <button type="button" class="faq-q" aria-expanded="false" aria-controls="general-faqs-7" data-tag="General &amp; Integrations · 07">What’s the developer experience like?</button>
+            <div class="faq-a" id="general-faqs-7"><p>We onboard developers in minutes, not days. Straightforward. Clean REST APIs and SDKs, webhooks, and CLIs. Run locally, in your VPC, or on‑prem with the same APIs. No black boxes.</p></div>
+          </li>
+        </ol>
         </div>
-
-        <div class="faq-list">
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-1">
-              <span>Is Sage open‑source? Can we self‑host?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-1" class="faq-answer" hidden>
-              <p>Yes. Sage is open‑source with a permissive license. You can self‑host in your VPC or run on‑prem. We also provide a fully managed option with the same security model and data ownership guarantees.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-2">
-              <span>How secure is Sage?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-2" class="faq-answer" hidden>
-              <p>We have a <a href="https://startr.cloud/policies/security/" target="_blank" rel="noopener"><u>full security write-up</u></a> available on the Startr site. Startr is the company behind Sage.</p>
-              <p>We take security very seriously, and we’ve built Sage to be secure by default. We use the latest security protocols, including <strong>256-bit AES encryption</strong> for all data at rest, and <strong>TLS 1.2</strong> for all data in transit. We also use <strong>OAuth 2.0</strong> for secure authentication. Moreover, for organizations that require it, we can provide <strong>on-premises deployment</strong> options to keep data entirely within your own infrastructure.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-3">
-              <span>Is our data backed up? How often?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-3" class="faq-answer" hidden>
-              <p>Data customers enter into Sage is stored in multiple, redundant data centers or securely on site when customers choose to use our own site solution. That data is backed up several times a day, and copies of those backups are stored both locally and off-site to further reduce points of possible failure. Files customers upload are stored off-site and backed up to servers in a different geographic region.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-4">
-              <span>Where are the servers that store our data?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-4" class="faq-answer" hidden>
-              <p>Our servers are located where our users need them. Either in nearby data centers or for <strong>security</strong> in their offices.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-5">
-              <span>Do you support compliance needs (SOC 2, GDPR, HIPAA)?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-5" class="faq-answer" hidden>
-              <p>We align with common frameworks and can provide guidance for deployments that need SOC 2, GDPR, or HIPAA readiness. Self‑hosting lets you meet internal and regional requirements while keeping full control of data residency.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-6">
-              <span>Can you fill our custom security questionnaires?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-6" class="faq-answer" hidden>
-              <p>We don’t fill out custom security questionnaires, but we’ve <a href="https://startr.cloud/policies/security/Security-Overview.pdf" target="_blank" rel="noopener"><u>prepared a summary security PDF</u></a> which you can provide to your IT staff. We’re always happy to answer any questions you have directly. To streamline your request, click the link below to compose an email to Izzy with a pre-set subject and draft:</p>
-              <p><a href="mailto:izzy@sage.is?subject=Custom%20Security%20Questionnaire" class="btn btn-outline btn-sm">Compose Email to Izzy</a></p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-sec-7">
-              <span>Can I export our data if we ever want to leave?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-sec-7" class="faq-answer" hidden>
-              <p><strong>Absolutely,</strong> you can do it as often as you’d like. Plus, it’s entirely self-service and easy so you don’t need to ask anyone for help or permission. Further, we provide it in a format that allows you to browse it in a web browser so it’s actually useful.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Group 3: Other FAQs -->
-      <div class="faq-group reveal">
-        <div class="faq-group-head">
-          <span class="faq-group-badge">03 / GENERAL &amp; INTEGRATIONS</span>
-          <h3 id="other-faqs" class="faq-group-title">
-            <a href="#other-faqs">I have other questions…</a>
-          </h3>
-        </div>
-
-        <div class="faq-list">
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-1">
-              <span>Is Sage for teams?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-1" class="faq-answer" hidden>
-              <p>Yes. Open‑source plus onboarding means you avoid lock‑in and surprise bills. Teams replace multiple tools with Sage’s agents, chat, tasks, docs, and files in one place — lowering total cost of ownership.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-2">
-              <span>Does Sage have an API? Can we integrate with Sage?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-2" class="faq-answer" hidden>
-              <p><strong>Yes,</strong> <a href="https://startr.cloud/sage-API/" target="_blank" rel="noopener"><u>Sage has a full-featured API (docs are hosted on GitHub)</u></a>. Companies have written custom integrations, and <a href="https://sage.is/integrations/" target="_blank" rel="noopener"><u>our Integrations page</u></a> links up third-party solutions for invoicing, accounting, time tracking, reporting, planning, asset management, contracts, proposals, and more.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-3">
-              <span>What if we need more help?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-3" class="faq-answer" hidden>
-              <p>Our partner support is considered to be among the best of the best (by us). Everyone who works on our team are expert specialists who know Sage inside and out, many having been with us for years and years, some over a decade. Further, we occasionally cycle every employee through support — including our CEO — so everyone has a chance to directly interact with customers.<br>
-              You can <a href="https://sage.is/support/" target="_blank" rel="noopener"><u>ask support a question</u></a>, or <a href="https://sage.is/learn/" target="_blank" rel="noopener"><u>watch tutorials</u></a>, or <a href="https://startr.cloud/docs/" target="_blank" rel="noopener"><u>review the help guides</u></a>, or <a href="https://sage.is/classes/" target="_blank" rel="noopener"><u>attend a live walkthrough class and Q&amp;A</u></a>.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-4">
-              <span>Is Sage available in languages other than English?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-4" class="faq-answer" hidden>
-              <p>We currently offer Sage’s interface in hundreds of languages, although we have people in over 160 countries writing and sharing in their own native languages using Sage.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-5">
-              <span>If we go with Sage, will we still need stuff like ChatGPT? Perplexity? Dropbox?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-5" class="faq-answer" hidden>
-              <p><strong>Nope,</strong> Sage.is AI engine replaces a whole set of separate products. Sage has chat built in (no more Slack, Teams). Sage has exceptional task management in the form of to-dos and RoundTable discussions (no more Jira, Asana, Trello, etc). And you can store and share all the files you need with your Sage.is AIs (no more Dropbox).</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-6">
-              <span>What kind of companies, in which industries, use Sage?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-6" class="faq-answer" hidden>
-              <p>Sage is used by top notch teams, schools, designers, client services firms, consultants, software developers, freelancers, PR agencies, contractors, religious institutions, schools, non-profits, first responders, and many others who value organized, efficient work.<br>
-              Our partners are primarily small or medium-sized organization with a few hundred members, but Sage is also used by teams inside many of the world’s largest companies.</p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question-btn" aria-expanded="false" aria-controls="faq-oth-7">
-              <span>What’s the developer experience like?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div id="faq-oth-7" class="faq-answer" hidden>
-              <p>We onboard developers in minutes, not days. Straightforward. Clean REST APIs and SDKs, webhooks, and CLIs. Run locally, in your VPC, or on‑prem with the same APIs. No black boxes.</p>
-            </div>
-          </div>
-        </div>
+        <article class="faq-pane" aria-live="polite"></article>
       </div>
     </div>
   </div>
@@ -545,17 +405,23 @@
 <!-- ========================================================
      9. BUILDERS STATEMENT
      ======================================================== -->
-<section class="section section-builders reveal">
-  <div class="ambient-glow ambient-glow--center" aria-hidden="true"></div>
-  <div class="container">
-    <p class="section-label is-center">Our Creed</p>
-    <p class="builders-lead">
-      We build because we are builders. We build because we want to.<br>
-      We build because we are creators who love creating.
-    </p>
-    <h3 class="builders-title">
-      Sage.is <span class="text-accent">how.</span>
-    </h3>
+<!-- Back to the night (compared in concepts/creed.njk): the section holds the screen while the paper
+     breaks into cells of the hero's night, rising from the bottom, the creed comes up in light type
+     and SAGE.IS HOW. builds in dots over the hero's grid; the dark footer carries on from it
+     (scripts.njk, 15). The page ends where it began -->
+<section class="section section-builders">
+  <div class="creed-pin" data-creed>
+    <div class="creed-stage">
+      <canvas aria-hidden="true"></canvas>
+      <div class="creed-copy">
+        <p class="section-label is-center">Our Creed</p>
+        <p class="builders-lead">
+          We build because we are builders. We build because we want to.<br>
+          We build because we are creators who love creating.
+        </p>
+      </div>
+      <h3 class="sr-only">Sage.is how.</h3>
+    </div>
   </div>
 </section>
 

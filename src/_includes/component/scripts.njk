@@ -127,10 +127,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const headerTone = () => {
     // Where the paper starts on screen: the hero's bottom, or the edge burning up through it (hero-burn.js)
     const paperTop = !hero ? 0 : window.SageHeroPaperTop ? window.SageHeroPaperTop() : hero.getBoundingClientRect().bottom;
-    const onPaper = paperTop <= (headerBar ? headerBar.offsetHeight : 0);
+    const barH = headerBar ? headerBar.offsetHeight : 0;
+    // ...and back off it wherever the night returns under it: the creed once it's dark (15), the footer
+    const onNight = Array.from(document.querySelectorAll('[data-night]')).some((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top <= barH && r.bottom > 0;
+    });
+    const onPaper = paperTop <= barH && !onNight;
     root.classList.toggle('header-on-paper', onPaper);
   };
   headerTone();
+  window.SageHeaderTone = headerTone;
   window.addEventListener('scroll', headerTone, { passive: true });
   window.addEventListener('resize', headerTone);
 
@@ -188,32 +195,67 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.hash === '#waitlist') openWaitlistDrawer();
   }
 
-  // 3. FAQ Accordion
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
-    const trigger = item.querySelector('.faq-question-btn');
-    const answer = item.querySelector('.faq-answer');
-    if (!trigger || !answer) return;
+  // 3. FAQ: tabs and a reading pane (home-sections.njk). The tabs show one group at a time. On wide
+  //    screens choosing a question copies its answer into the pane on the right and slides the dot
+  //    to it; on phones (the pane hidden) the answer opens in place, one at a time
+  const faq = document.querySelector('[data-faq]');
+  if (faq) {
+    const faqTabs = Array.from(faq.querySelectorAll('.faq-tab'));
+    const faqLists = Array.from(faq.querySelectorAll('.faq-list'));
+    const faqQs = Array.from(faq.querySelectorAll('.faq-q'));
+    const faqPane = faq.querySelector('.faq-pane');
+    const faqMarker = faq.querySelector('.faq-marker');
+    const faqLeft = faq.querySelector('.faq-left');
+    const faqWide = () => window.matchMedia('(min-width: 861px)').matches;
+    const answerOf = (q) => document.getElementById(q.getAttribute('aria-controls'));
+    let faqOn = null;
 
-    trigger.addEventListener('click', () => {
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-
-      faqItems.forEach(other => {
-        if (other === item) return;
-        const otherBtn = other.querySelector('.faq-question-btn');
-        const otherAns = other.querySelector('.faq-answer');
-        if (otherBtn && otherAns) {
-          otherBtn.setAttribute('aria-expanded', 'false');
-          otherAns.hidden = true;
-          other.classList.remove('open');
-        }
+    const markFaq = () => {
+      if (!faqOn || !faqWide()) return;
+      const r = faqOn.getBoundingClientRect(), l = faqLeft.getBoundingClientRect();
+      faqMarker.style.translate = `0 ${r.top - l.top + r.height / 2 - 4}px`;
+    };
+    // The question q, chosen: in the pane, or (on phones) opened or closed in place
+    const chooseFaq = (q, toggle) => {
+      if (faqWide()) {
+        faqQs.forEach((x) => { x.setAttribute('aria-expanded', String(x === q)); x.classList.toggle('is-on', x === q); answerOf(x).hidden = true; });
+        faqOn = q;
+        faqPane.innerHTML = `<p class="faq-pane-tag">${q.dataset.tag}</p><h3 class="faq-pane-q">${q.innerHTML}</h3><div class="faq-pane-a">${answerOf(q).innerHTML}</div>`;
+        markFaq();
+        return;
+      }
+      const open = toggle ? q.getAttribute('aria-expanded') !== 'true' : true;
+      faqQs.forEach((x) => { const on = x === q && open; x.setAttribute('aria-expanded', String(on)); x.classList.toggle('is-on', on); answerOf(x).hidden = !on; });
+      faqOn = open ? q : null;
+    };
+    const showGroup = (tab) => {
+      faqTabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      faqLists.forEach((l) => { l.hidden = l.id !== tab.getAttribute('aria-controls'); });
+      const first = faq.querySelector(`#${tab.getAttribute('aria-controls')} .faq-q`);
+      if (faqWide()) chooseFaq(first);
+      else faqQs.forEach((x) => { x.setAttribute('aria-expanded', 'false'); x.classList.remove('is-on'); answerOf(x).hidden = true; });
+    };
+    faqTabs.forEach((t, i) => {
+      t.addEventListener('click', () => showGroup(t));
+      // Arrow keys move between the tabs
+      t.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        const next = faqTabs[(i + step + faqTabs.length) % faqTabs.length];
+        next.focus();
+        showGroup(next);
       });
-
-      trigger.setAttribute('aria-expanded', String(!isOpen));
-      answer.hidden = isOpen;
-      item.classList.toggle('open', !isOpen);
     });
-  });
+    faqQs.forEach((q) => q.addEventListener('click', () => chooseFaq(q, true)));
+    // Switching between wide and narrow keeps the chosen question
+    let faqWas = faqWide();
+    window.addEventListener('resize', () => {
+      if (faqWide() !== faqWas) { faqWas = faqWide(); const q = faqOn || faq.querySelector('.faq-list:not([hidden]) .faq-q'); if (faqWas) chooseFaq(q); else faqQs.forEach((x) => { x.setAttribute('aria-expanded', String(x === faqOn)); answerOf(x).hidden = x !== faqOn; }); }
+      markFaq();
+    });
+    faq.classList.add('is-ready');
+    showGroup(faqTabs[0]);
+  }
 
   // 4. Scroll Reveal
   const revealEls = document.querySelectorAll('.reveal');
@@ -1137,6 +1179,121 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => { sizeDiag(); typeDiag(); });
     sizeDiag();
     typeDiag();
+  }
+
+  // 15. Our Creed, back to the night (compared in concepts/creed.njk). The section holds the screen
+  //     while the scroll runs: the paper breaks into square cells of the hero's night, scattered,
+  //     rising from the bottom; the creed comes up in light type; then SAGE.IS HOW. builds over the
+  //     hero's grid of dots, dot by dot, with its spring and flash (hero-dots.js). The dark footer
+  //     carries on from it. It runs backwards too
+  const creed = document.querySelector('[data-creed]');
+  if (creed) {
+    const cStage = creed.querySelector('.creed-stage');
+    const cCanvas = cStage.querySelector('canvas');
+    const cCtx = cCanvas.getContext('2d');
+    const cCopy = creed.querySelector('.creed-copy');
+    const NIGHT = 'rgb(14, 11, 26)';
+    const clampC = (v) => Math.min(Math.max(v, 0), 1);
+    const segC = (p, a, b) => clampC((p - a) / (b - a));
+    const rndC = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
+    const outBackC = (x) => 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2);
+    const mixC = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+    let W = 0, H = 0, dpr = 1, word = null, area = null;
+
+    // SAGE.IS over HOW., sampled from Anton onto one grid, each line 22 dots high, centred
+    const sampleCreed = () => {
+      const lines = ['SAGE.IS', 'HOW.'], rowsTall = 22;
+      const m = document.createElement('canvas').getContext('2d');
+      m.font = '100px Anton';
+      const ms = lines.map((t) => m.measureText(t));
+      const s = rowsTall / Math.max(...ms.map((mt) => mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent));
+      const cols = Math.ceil(Math.max(...ms.map((mt) => mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight)) * s) + 2;
+      const gap = Math.round(rowsTall * 0.3), rows = lines.length * rowsTall + gap + 2, k = 4;
+      const mask = document.createElement('canvas');
+      mask.width = cols * k; mask.height = rows * k;
+      const mc = mask.getContext('2d');
+      mc.font = `${100 * s * k}px Anton`;
+      lines.forEach((t, i) => {
+        const mt = ms[i], w = (mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight) * s;
+        mc.fillText(t, ((cols - w) / 2 + mt.actualBoundingBoxLeft * s) * k, (1 + i * (rowsTall + gap) + mt.actualBoundingBoxAscent * s) * k);
+      });
+      const ink = mc.getImageData(0, 0, mask.width, mask.height).data, dots = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        let cov = 0;
+        for (let y = 0; y < k; y++) for (let x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+        cov /= k * k * 255;
+        if (cov > 0.05) dots.push({ c, r, cov, u: c / cols, d: 0.6 * c / cols + 0.3 * rndC(c, r) });
+      }
+      return { dots, w: cols, h: rows };
+    };
+
+    const sizeCreed = () => {
+      if (!word) return;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cStage.clientWidth; H = cStage.clientHeight;
+      cCanvas.width = Math.round(W * dpr);
+      cCanvas.height = Math.round(H * dpr);
+      // The word in the room left under the creed
+      const top = cCopy.getBoundingClientRect().bottom - cStage.getBoundingClientRect().top + 24;
+      const box = { x: W * 0.06, y: Math.max(top, H * 0.38), w: W * 0.88 };
+      box.h = H - box.y - H * 0.06;
+      const P = Math.min(box.w / word.w, box.h / word.h);
+      area = { P, x: box.x + (box.w - word.w * P) / 2, y: box.y + (box.h - word.h * P) / 2 };
+      drawCreed();
+    };
+
+    const drawCreed = () => {
+      if (!area) return;
+      const r = creed.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      const p = clampC(-r.top / (r.height - vh));
+      cCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cCtx.clearRect(0, 0, W, H);
+      // The night, in cells, scattered, rising from the bottom
+      const C = Math.max(28, W / 32), B = H * 0.5, edge = H - segC(p, 0.02, 0.38) * (H + B);
+      cCtx.fillStyle = NIGHT;
+      for (let cy = 0; cy < H; cy += C) {
+        if (cy + C < edge - B) continue;
+        for (let cx = 0; cx < W; cx += C) {
+          const a = clampC((cy + C - edge + rndC(cx, cy) * B) / C);
+          if (a <= 0) continue;
+          cCtx.globalAlpha = a;
+          cCtx.fillRect(cx, cy, C + 0.5, C + 0.5);
+        }
+      }
+      cCtx.globalAlpha = 1;
+      const night = p > 0.3;
+      if (creed.classList.contains('is-night') !== night) {
+        creed.classList.toggle('is-night', night);
+        if (night) creed.setAttribute('data-night', ''); else creed.removeAttribute('data-night');
+        if (window.SageHeaderTone) window.SageHeaderTone();
+      }
+      // The hero's grid, then the word built in it
+      const { P } = area, field = segC(p, 0.38, 0.5), build = segC(p, 0.45, 0.85);
+      if (field > 0) {
+        cCtx.fillStyle = `rgba(241, 238, 250, ${(0.12 * field).toFixed(3)})`;
+        for (let y = area.y - P * 3; y < area.y + word.h * P + P * 3; y += P) for (let x = (W % P) / 2; x < W; x += P) { cCtx.beginPath(); cCtx.arc(x, y, P * 0.12, 0, 6.2832); cCtx.fill(); }
+      }
+      word.dots.forEach((d) => {
+        const k = clampC((build - d.d) / 0.12);
+        if (k <= 0) return;
+        const col = mixC(mixC([100, 92, 255], [180, 98, 255], d.u), [205, 192, 255], Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.55);
+        cCtx.fillStyle = `rgba(${col.join(',')},${(0.4 + 0.6 * k).toFixed(3)})`;
+        cCtx.beginPath();
+        cCtx.arc(area.x + (d.c + 0.5) * P, area.y + (d.r + 0.5) * P, P * (0.13 + 0.35 * d.cov * outBackC(k)) * 0.95, 0, 6.2832);
+        cCtx.fill();
+      });
+    };
+
+    let creedTick = false;
+    window.addEventListener('scroll', () => {
+      if (creedTick) return;
+      creedTick = true;
+      requestAnimationFrame(() => { creedTick = false; drawCreed(); });
+    }, { passive: true });
+    window.addEventListener('resize', sizeCreed);
+    const startCreed = () => { word = sampleCreed(); sizeCreed(); };
+    if (document.fonts) document.fonts.load('100px Anton').then(startCreed, startCreed); else startCreed();
   }
 
   // 11. Scroll-lit text ([data-scroll-words]): every word starts faint and lights up, in order, as the
