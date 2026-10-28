@@ -1,61 +1,45 @@
-<section id="hero" class="hero">
-  <div class="container">
+{# The dot-matrix hero (concepts/wordmark-4.njk): SAGE.IS as a field of dots, built in on load
+   (assets/js/hero-dots.js), what Sage offers rolling beside it, the statement and the buttons
+   below. The previous hero is kept in component/hero-classic.njk #}
+{% set offers = ["Private AI workspaces", "Custom AI agents", "Self-hosted models", "Sage AI-UI for teams", "AI education", "Technical Capital", "Automation"] %}
+<section id="hero" class="hero hero-dots" data-brand-from-dots>
 
-    <!-- The wordmark row, standing on the rule: who we are on the left, the brand's place, social
-         proof on the right -->
-    <div class="hero-top">
-      <div class="hero-meta">
-        <p>
-          Makers of <a href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener"><u>Sage AI-UI</u></a>,<br>
-          <a href="https://sage.education" target="_blank" rel="noopener"><u>Sage Education</u></a>, and<br>
-          <a href="https://sage.is/programs#packages" target="_blank" rel="noopener"><u>Technical Capital</u></a>.
-        </p>
-      </div>
-
-      <!-- Reserves the exact space the dynamic brand (navbar.njk) occupies at the top of the page -->
-      <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
-        <div class="wordmark hero-wordmark-ghost" aria-hidden="true">
-          <!-- Split into letters like the dynamic brand, so both measure exactly the same -->
-          <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
-          <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
-        </div>
-      </div>
-
-      <p class="hero-subtext">
-        Hundreds of students already build with Sage.
-      </p>
-    </div>
-
-    <!-- The intros (component/intro.njk) all land on this line -->
-    <div class="hero-rule" id="hero-rule"></div>
-
-    <div class="hero-grid">
-
-      <h1 class="hero-title">Your next <span class="text-accent">AI breakthrough</span></h1>
-
-      <div class="hero-body">
-        <p class="hero-lede">
-          Decades of experience building AI before ChatGPT.<br>We help create custom solutions and open-source tools to grow your business.
-        </p>
-        <div class="hero-buttons">
-          <a class="btn btn-primary" href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 98 96" fill="currentColor"><path d="M49 0C21.9 0 0 21.8 0 48.8c0 21.6 14 39.9 33.4 46.4 2.4.5 3.3-1 3.3-2.3 0-1.1 0-4.1-.1-8-13.6 2.9-16.4-5.8-16.4-5.8-2.2-5.6-5.4-7.1-5.4-7.1-4.4-3 .3-3 .3-3 4.9.3 7.5 5 7.5 5 4.3 7.3 11.3 5.2 14 4 0-3.2 1.7-5.3 3-6.5-10.8-1.2-22.2-5.4-22.2-24 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5a46.4 46.4 0 0 1 24.4 0c9.3-6.3 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.7-11.4 22.8-22.3 24 1.8 1.5 3.3 4.5 3.3 9.2 0 6.6-.1 11.9-.1 13.5 0 1.3.9 2.8 3.3 2.3C84 88.7 98 70.4 98 48.8 98 21.8 76.1 0 49 0Z"/></svg>
-            Sage.is AI-UI v3.2.0
-          </a>
-          <a class="btn btn-ghost" href="https://sage.education" target="_blank" rel="noopener">
-            Sage Education
-          </a>
-          <a class="btn btn-ghost" href="https://sage.is/programs#packages" target="_blank" rel="noopener">
-            Technical Capital
-          </a>
-        </div>
+  <!-- The dynamic brand (navbar.njk) waits, unseen, over the dots' SAGE and flies to the corner as
+       scrolling starts. This unseen copy is laid over the dots by hero-dots.js and gives it its
+       place and size (scripts.njk) -->
+  <div class="hero-dots-ghost" aria-hidden="true">
+    <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
+      <div class="wordmark hero-wordmark-ghost">
+        <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+        <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
       </div>
     </div>
+  </div>
 
-    <!-- Bottom of the first screen: the way down, centred -->
-    <div class="hero-foot">
-      <a href="#learn-more" class="hero-scroll-prompt" aria-label="Scroll down">
-        <span class="scroll-lines" aria-hidden="true"><i></i><i></i><i></i></span>
+  <div class="container hero-dots-head">
+    <div class="hero-dots-field" data-hero-dots aria-hidden="true">
+      <canvas></canvas>
+      <span class="hero-dots-word">SAGE.IS</span>
+    </div>
+    <!-- Rolling up without pause; the list is there twice so half a turn is a whole one -->
+    <div class="hero-offers">
+      <ul>{% for o in offers %}<li>{{ o }}</li>{% endfor %}{% for o in offers %}<li aria-hidden="true">{{ o }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+
+  <div class="container hero-dots-foot">
+    <p class="hero-dots-kicker">Makers of Sage AI-UI, Sage Education and Technical Capital. Building AI since long before ChatGPT.</p>
+    <h1 class="hero-dots-title">Your next AI breakthrough. <span>Decades in the making.</span></h1>
+    <div class="hero-buttons">
+      <a class="btn btn-primary" href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 98 96" fill="currentColor"><path d="M49 0C21.9 0 0 21.8 0 48.8c0 21.6 14 39.9 33.4 46.4 2.4.5 3.3-1 3.3-2.3 0-1.1 0-4.1-.1-8-13.6 2.9-16.4-5.8-16.4-5.8-2.2-5.6-5.4-7.1-5.4-7.1-4.4-3 .3-3 .3-3 4.9.3 7.5 5 7.5 5 4.3 7.3 11.3 5.2 14 4 0-3.2 1.7-5.3 3-6.5-10.8-1.2-22.2-5.4-22.2-24 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5a46.4 46.4 0 0 1 24.4 0c9.3-6.3 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.7-11.4 22.8-22.3 24 1.8 1.5 3.3 4.5 3.3 9.2 0 6.6-.1 11.9-.1 13.5 0 1.3.9 2.8 3.3 2.3C84 88.7 98 70.4 98 48.8 98 21.8 76.1 0 49 0Z"/></svg>
+        Sage.is AI-UI v3.2.0
+      </a>
+      <a class="btn btn-ghost" href="https://sage.education" target="_blank" rel="noopener">
+        Sage Education
+      </a>
+      <a class="btn btn-ghost" href="https://sage.is/programs#packages" target="_blank" rel="noopener">
+        Technical Capital
       </a>
     </div>
   </div>

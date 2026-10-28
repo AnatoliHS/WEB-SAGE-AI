@@ -834,6 +834,183 @@ button {
 }
 
 /* ==========================================================================
+   HERO: DOT MATRIX (component/hero.njk, assets/js/hero-dots.js)
+   SAGE.IS as a field of dots beside what Sage offers, rolling; the statement and
+   the buttons below. On the hero's night ground (.hero's own tokens)
+   ========================================================================== */
+/* Two rows, not the classic hero's stretched column (.hero > .container): the field at the top,
+   the statement at the foot of the first screen */
+.hero-dots > .container {
+  display: block;
+  flex: none;
+}
+
+.hero-dots > .hero-dots-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--gutter);
+  align-items: center;
+  /* On a tall screen the room left over is shared above and below the field */
+  margin-top: auto;
+  padding-top: clamp(8px, 3vh, 40px);
+}
+
+.hero-dots {
+  position: relative;
+}
+
+/* The dynamic brand's measuring copy (scripts.njk): never seen */
+.hero-dots-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The brand stays in its dock with its letters unseen, still, and laid out where they land
+   (scripts.njk); hero-dots.js draws them there in dots (.nav-dots) once the hero's have gone. It
+   never glides there (by id, to outrank html[data-theme="home"] .dynamic-brand), so it can be
+   measured the moment it's placed */
+.brand-from-dots #dynamic-brand {
+  transition: opacity 0.35s ease;
+}
+
+.brand-from-dots .dynamic-brand .ltr {
+  visibility: hidden;
+}
+
+/* (by id, to outrank the letters' rise, .js .dynamic-brand.is-ready) */
+.brand-from-dots #dynamic-brand .ltr > span {
+  transform: none;
+  transition: none;
+}
+
+.brand-from-dots .dynamic-brand:not(.is-docked) {
+  pointer-events: none;
+}
+
+.nav-dots {
+  position: fixed;
+  z-index: 1001;
+  pointer-events: none;
+}
+
+/* The phrase waits for the dots to finish building */
+.brand-from-dots.brand-docked:not(.brand-dots-on) .brand-phrase {
+  opacity: 0;
+  translate: -10px 0;
+  transition: opacity 0.25s ease, translate 0.4s var(--ease);
+}
+
+/* The field gives way on a short screen, so the statement and the buttons always fit on the first
+   one: the rest of the hero takes about 430px, and the field is about 0.35 of its width tall */
+.hero-dots-field {
+  position: relative;
+  width: min(100%, max(320px, calc((100svh - 430px) * 2.85)));
+}
+
+.hero-dots-field canvas {
+  display: block;
+  width: 100%;
+}
+
+/* Until the dots are drawn (or without script): the word in the two purples */
+.hero-dots-word {
+  display: block;
+  width: max-content;
+  margin: 0 auto;
+  padding-block: 0.3em;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 17vw, 24rem);
+  line-height: 0.8;
+  white-space: nowrap;
+  user-select: none;
+  background: linear-gradient(90deg, #645cff, #b462ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-dots-field.is-drawn .hero-dots-word {
+  display: none;
+}
+
+/* What Sage offers, rolling up without pause, five showing (three on small screens). The list is
+   there twice, and each tag carries its own spacing, so moving up by half is exactly a full turn */
+.hero-offers {
+  --rows: 5;
+  --step: 56px;
+  height: calc(var(--rows) * var(--step) - 10px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.hero-offers ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  list-style: none;
+  animation: hero-offers-roll 26s linear infinite;
+}
+
+.hero-offers li {
+  margin-bottom: 10px;
+  padding: 11px 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  line-height: 22px;
+  white-space: nowrap;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@keyframes hero-offers-roll {
+  to { transform: translateY(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-offers ul { animation: none; }
+}
+
+.hero-dots-foot {
+  margin-top: auto;
+  padding-top: clamp(20px, 3.5vh, 64px);
+}
+
+.hero-dots-kicker {
+  max-width: 30em;
+  font-size: clamp(0.9375rem, 1vw, 1.125rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.hero-dots-title {
+  margin-top: clamp(12px, 2.2vh, 32px);
+  font-size: clamp(2.5rem, min(5.6vw, 7.2vh), 8.5rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+
+.hero-dots-title span {
+  display: block;
+  color: #5f5878;
+}
+
+.hero-dots .hero-buttons {
+  margin-top: clamp(18px, 3vh, 40px);
+}
+
+@media (max-width: 960px) {
+  .hero-dots > .hero-dots-head { grid-template-columns: 1fr; }
+  .hero-offers { --rows: 3; }
+  .hero-offers ul { align-items: flex-start; }
+}
+
+/* ==========================================================================
    INTRO (component/intro.njk, assets/js/intros/)
    Plays over the hero on load. Every variant ends the same way: it lands on
    the hero rule, the real wordmark (the dynamic brand, which sits above the
@@ -2490,6 +2667,28 @@ a:hover u {
   text-wrap: balance;
 }
 
+/* Lit word by word as it scrolls (scripts.njk, 11): each word faint, rising to full. The
+   underlined phrases take their gradient a word at a time, so each can fade on its own */
+.lit-word {
+  opacity: calc(0.14 + 0.86 * var(--lit, 0));
+}
+
+html [data-scroll-words] u {
+  background: none;
+}
+
+[data-scroll-words] u .lit-word {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Opening the section (no header above it on the homepage) */
+.section-grow .container > .grow-lede:first-child {
+  margin-top: 0;
+}
+
 .grow-lede u {
   text-decoration: none;
   background: var(--accent-gradient);
@@ -2793,8 +2992,23 @@ a:hover u {
   color: var(--accent-soft);
 }
 
+/* On phones each column gets its own small band over its label (scripts.njk, 9) */
+.untangle-mini {
+  display: none;
+  height: 104px;
+  margin-bottom: 20px;
+}
+
+.untangle-mini canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 @media (max-width: 860px) {
   .untangle-cols { grid-template-columns: 1fr; }
+  .untangle-band { display: none; }
+  .untangle-mini { display: block; }
 }
 
 /* The product shot: a quiet window frame lit from below */
@@ -2929,7 +3143,7 @@ a:hover u {
   line-height: 0.85;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 1.5px rgba(238, 233, 226, 0.26);
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--ink) 28%, transparent);
 }
 
 .step.is-featured .step-num {
@@ -2959,96 +3173,359 @@ a:hover u {
   .steps { grid-template-columns: 1fr; gap: 48px; }
 }
 
-/* 04. Yes: a big answer, then the capabilities as ruled rows */
-.yes-callout {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px var(--gutter);
-  margin-bottom: clamp(64px, 8vw, 120px);
-}
-
-.yes-callout > * {
-  grid-column: 2 / -1;
-}
-
-.yes-question {
-  font-size: clamp(1rem, 1.15vw, 1.35rem);
-  color: var(--muted);
-}
-
-.yes-answer {
-  font-size: clamp(1.875rem, 3.6vw, 4.5rem);
-  font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
-}
-
-.yes-list {
+/* 03. How it works: one stem of dots down the middle, the steps alternating either side of it.
+   It lights in the Sage purples as the section scrolls (scripts.njk, 12): each step's node lights,
+   its number builds in big dot-matrix figures beside it and its text comes up */
+.stem {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 0 20px;
   list-style: none;
+}
+
+/* The stem and the numbers, drawn on one canvas reaching past the stem's sides */
+.stem-dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.stem-dots canvas {
+  position: absolute;
+  top: 0;
+  left: -40px;
+}
+
+.stem-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 140px;
+  margin-bottom: clamp(80px, 10vw, 140px);
+}
+
+.stem-step:last-child { margin-bottom: 0; }
+
+.js .stem-text {
+  opacity: 0.2;
+  translate: 0 20px;
+  transition: opacity 0.6s ease, translate 0.7s var(--ease);
+}
+
+.js .stem-step.is-on .stem-text {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Left of the stem, then right, then left */
+.stem-step:nth-child(even) .stem-text { grid-column: 1; text-align: right; }
+.stem-step:nth-child(odd) .stem-text { grid-column: 2; }
+
+.stem-title {
+  font-size: clamp(1.75rem, 2.6vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.stem-desc {
+  max-width: 36ch;
+  margin-top: 14px;
+  font-size: clamp(1rem, 1.1vw, 1.1875rem);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.stem-step:nth-child(even) .stem-desc { margin-left: auto; }
+
+.stem-node {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  width: 14px;
+  height: 14px;
+  translate: -7px 0;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 2px var(--line);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stem-step.is-on .stem-node {
+  background: var(--accent-2);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent-2) 20%, transparent), 0 0 18px var(--accent-2);
+}
+
+/* Phones: the stem down the left, every step to its right */
+@media (max-width: 860px) {
+  .stem-node { left: 12px; }
+  /* The number builds above the title, in room left for it */
+  .stem-text { padding-top: 104px; }
+  .stem-step { grid-template-columns: 1fr; padding-left: 44px; }
+  .stem-step:nth-child(n) .stem-text { grid-column: 1; text-align: left; }
+  .stem-step:nth-child(n) .stem-desc { margin-left: 0; }
+}
+
+/* 04. Proven Advantage, sideways: the section holds the screen (.yes-stage, sticky) for as long as
+   its tall wrapper (.yes-pin) takes to scroll past, and that scroll moves the row (.yes-track) left
+   (scripts.njk, 13). A curving sage stem (an SVG the script draws) grows along the row to the middle
+   of the screen; at each question the node lights, its leaves open, the outlined YES fills with the
+   gradient and the status becomes a pill. The row ends with the answer in the middle of the screen,
+   where the stem flowers. Above it a bar with the section's label and a count; below, the progress */
+.section-yes {
+  overflow-x: clip;
+  /* The stage is a full screen of its own */
+  padding-top: 0;
+}
+
+.yes-pin {
+  /* Set by the script: a screen, the row's travel, and a pause at the end */
+  height: 400vh;
+}
+
+.yes-stage {
+  position: sticky;
+  top: 0;
+  display: grid;
+  /* One column the width of the screen, however wide the row inside it is */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--header-h) + clamp(16px, 3vh, 32px)) 0 clamp(28px, 5vh, 56px);
+  overflow: hidden;
+}
+
+.yes-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 18px;
   border-top: 1px solid var(--line);
 }
 
-.yes-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px var(--gutter);
-  align-items: baseline;
-  padding: clamp(26px, 2.8vw, 44px) 0;
-  border-bottom: 1px solid var(--line);
+.yes-count {
+  font-size: clamp(0.8125rem, 0.9vw, 1rem);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
-/* On hover the row's rule fills with the accent */
-.yes-row::after {
+.yes-count b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.yes-rail {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.yes-track {
+  /* Where the stem runs, down from the top of the row */
+  --node-y: clamp(120px, 17vh, 170px);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(72px, 7vw, 140px);
+  /* Breathing room before the heading; the script ends the row with the answer centred */
+  padding: 0 max(calc(var(--gutter) * 2), 7vw, calc((100vw - var(--container-max)) / 2 + var(--gutter) * 2));
+  list-style: none;
+  will-change: transform;
+}
+
+.yes-intro {
+  flex: none;
+  align-self: center;
+  width: min(78vw, 600px);
+  padding-right: clamp(0px, 3vw, 40px);
+}
+
+.yes-intro .section-title {
+  font-size: clamp(2.5rem, 4.6vw, 5rem);
+}
+
+.yes-intro .section-lede {
+  margin-top: 24px;
+  max-width: 32em;
+}
+
+.yes-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(32px, 5vh, 56px);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* A short line drawing itself out to the right, over and over */
+.yes-hint i {
+  position: relative;
+  width: 48px;
+  height: 1px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.yes-hint i::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 1px;
-  background: var(--accent-gradient);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.8s var(--ease);
+  inset: 0;
+  background: var(--accent-2);
+  animation: yes-hint 1.8s var(--ease-in-out) infinite;
 }
 
-.yes-row:hover::after {
-  transform: scaleX(1);
+@keyframes yes-hint {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.yes-step {
+  position: relative;
+  flex: none;
+  width: min(80vw, 580px);
+  padding-top: calc(var(--node-y) + 52px);
+}
+
+.yes-node {
+  position: absolute;
+  left: 0;
+  top: var(--node-y);
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  translate: -8px -8px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ink) 22%, transparent);
+  transition: background 0.4s ease, box-shadow 0.5s ease;
+}
+
+.yes-step.is-yes .yes-node {
+  background: var(--accent-2);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-2) 18%, transparent), 0 0 22px var(--accent-2);
 }
 
 .yes-tag {
-  font-size: clamp(0.75rem, 0.8vw, 0.875rem);
+  display: block;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--accent-soft);
 }
 
 .yes-q {
-  grid-column: 2 / span 2;
-  font-size: clamp(1.375rem, 2.1vw, 2.5rem);
-  line-height: 1.18;
-  letter-spacing: -0.035em;
+  margin-top: 16px;
+  font-size: clamp(2rem, 3.1vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
   color: var(--ink-2);
-  text-wrap: balance;
 }
 
 .yes-q strong {
-  color: var(--ink);
   font-weight: 500;
+  color: var(--ink);
+}
+
+.yes-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  margin-top: clamp(24px, 3.4vh, 40px);
+}
+
+/* The YES: its word keeps the room, the script draws it in dots over it (faint while it waits,
+   then filling with purple from the left) */
+.yes-word {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 8.5vw, 8.75rem);
+  line-height: 0.86;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The stem, leaves, buds and flower, drawn in dots on one canvas along the row */
+.yes-dots {
+  position: absolute;
+  left: 0;
+  pointer-events: none;
 }
 
 .yes-status {
-  justify-self: end;
-  text-align: right;
-  font-size: clamp(0.875rem, 0.95vw, 1.0625rem);
-  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.yes-step.is-yes .yes-status {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent-2) 8%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-2) 45%, transparent);
+}
+
+.js .yes-step:not(.is-yes) .yes-q { opacity: 0.4; }
+.yes-q { transition: opacity 0.5s ease; }
+
+/* The answer, centred at the end of the row, where the stem flowers */
+.yes-final {
+  /* About as wide as the answer sets (nine of its ems), so centring it centres the words */
+  width: min(86vw, calc(clamp(2.6rem, 4.8vw, 5.25rem) * 9));
+}
+
+.yes-question {
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  color: var(--muted);
+}
+
+.yes-answer {
+  margin-top: 18px;
+  font-size: clamp(2.6rem, 4.8vw, 5.25rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  transition: opacity 0.6s ease;
+}
+
+.js .yes-final:not(.is-yes) .yes-answer { opacity: 0.35; }
+
+.yes-yes {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.yes-progress {
+  height: 2px;
+  background: var(--line);
+}
+
+.yes-progress i {
+  display: block;
+  height: 100%;
+  background: var(--accent-gradient);
+  transform: scaleX(var(--yes-p, 0));
+  transform-origin: 0 50%;
 }
 
 @media (max-width: 760px) {
-  .yes-callout, .yes-row { grid-template-columns: 1fr; }
-  .yes-callout > *, .yes-q { grid-column: 1; }
-  .yes-status { justify-self: start; text-align: left; }
+  .yes-track { gap: 56px; }
+  .yes-step { width: 82vw; }
+  .yes-final { width: 86vw; }
 }
 
 /* 05. It's time: the symptoms as a running list, the answer on the right */
@@ -3670,14 +4147,21 @@ html[data-theme="home"]:not(.header-on-paper):not(.drawer-open) :is(.site-header
   --accent-soft: #f2d364;
   --on-accent: #1d2516;
   --on-ink: #1d2516;
+  /* The ground, as "r, g, b": its middle, between, and its edges (night) */
+  --ground-1: 29, 37, 22;
+  --ground-2: 20, 26, 15;
+  --ground-3: 12, 16, 9;
+  /* The soft light in the middle, and the light along the line (intros/prompt.js) */
+  --lens: 169, 186, 134;
+  --glow: 254, 200, 32;
 }
 
 html[data-theme="home"] .hero {
   /* The loading screen's ground (intros/prompt.js): night at the edges, the forest in the middle,
      and the soft sage light that sits behind its input, here behind the copy */
   background:
-    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(169, 186, 134, 0.15), rgba(169, 186, 134, 0)),
-    radial-gradient(circle farthest-corner at 50% 50%, #1d2516 0%, #141a0f 55%, #0c1009 100%);
+    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(var(--lens), 0.15), rgba(var(--lens), 0)),
+    radial-gradient(circle farthest-corner at 50% 50%, rgb(var(--ground-1)) 0%, rgb(var(--ground-2)) 55%, rgb(var(--ground-3)) 100%);
   color: var(--ink);
   /* Room under the scroll lines, now the hero ends on a colour change */
   padding-bottom: clamp(40px, 6vh, 80px);
@@ -3685,7 +4169,7 @@ html[data-theme="home"] .hero {
 
 /* Over the hero's dark top edge, the bar is night rather than forest */
 html[data-theme="home"]:not(.header-on-paper):not(.drawer-open) .site-header-bar {
-  background: rgba(12, 16, 9, 0.86);
+  background: rgba(var(--ground-3), 0.86);
 }
 
 /* Inherited text colour has to be re-set where the Forest tokens start */
@@ -3777,10 +4261,10 @@ html[data-hero-burn] .hero {
   padding-bottom: calc(40svh + clamp(40px, 6vh, 80px));
   /* The lit ground stays on the first screen, fading to the night that fills the rest */
   background:
-    linear-gradient(to bottom, rgba(12, 16, 9, 0) 55%, #0c1009) 0 0 / 100% 100svh no-repeat,
-    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(169, 186, 134, 0.15), rgba(169, 186, 134, 0)) 0 0 / 100% 100svh no-repeat,
-    radial-gradient(circle farthest-corner at 50% 50%, #1d2516 0%, #141a0f 55%, #0c1009 100%) 0 0 / 100% 100svh no-repeat,
-    #0c1009;
+    linear-gradient(to bottom, rgba(var(--ground-3), 0) 55%, rgb(var(--ground-3))) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(var(--lens), 0.15), rgba(var(--lens), 0)) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(circle farthest-corner at 50% 50%, rgb(var(--ground-1)) 0%, rgb(var(--ground-2)) 55%, rgb(var(--ground-3)) 100%) 0 0 / 100% 100svh no-repeat,
+    rgb(var(--ground-3));
 }
 
 .hb-mask {
@@ -3792,3 +4276,409 @@ html[data-hero-burn] .hero {
   pointer-events: none;
 }
 
+
+/* ==========================================================================
+   HERO AMBIENT (trial, assets/js/hero-ambient.js)
+   One canvas over the hero's first screen, behind its copy and under the burn.
+   html[data-hero-ambient] from the page's heroAmbient, or ?ambient= (head.njk);
+   concepts/ambient.njk compares them.
+   ========================================================================== */
+.ha-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+html[data-hero-ambient] .hero {
+  position: relative;
+}
+
+/* The copy over it */
+html[data-hero-ambient] .hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* The lens variants draw their own light, which moves; the fixed one goes */
+html[data-hero-ambient="lens"] .hero,
+html[data-hero-ambient="veins-lens"] .hero {
+  background:
+    linear-gradient(to bottom, rgba(var(--ground-3), 0) 55%, rgb(var(--ground-3))) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(circle farthest-corner at 50% 50%, rgb(var(--ground-1)) 0%, rgb(var(--ground-2)) 55%, rgb(var(--ground-3)) 100%) 0 0 / 100% 100svh no-repeat,
+    rgb(var(--ground-3));
+}
+
+
+/* ==========================================================================
+   PALETTES (trial): the Home theme's structure, other colours.
+   html[data-palette] from ?palette= (head.njk); concepts/colours.njk compares
+   them. Each sets the paper side, then the hero side (hero, intro, and the
+   header while it's over the hero). The sage leaves stay green throughout.
+   ========================================================================== */
+
+/* Sage in bloom: the forest and paper as now, the accent salvia's purple flower in place of the sun */
+html[data-palette="bloom"] {
+  --accent: #4f3a86;
+  --accent-2: #8f6bd6;
+  --accent-gradient: linear-gradient(135deg, #4a3a78 0%, #8f6bd6 100%);
+  --accent-soft: #6a4fa3;
+}
+
+html[data-palette="bloom"] :is(.hero, .intro),
+html[data-palette="bloom"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --accent: #b49cff;
+  --accent-2: #b49cff;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #b49cff 100%);
+  --accent-soft: #c4b2ff;
+  --on-accent: #1d2516;
+  --on-ink: #1d2516;
+  --glow: 170, 140, 255;
+}
+
+/* Plum night: an aubergine hero, the sage leaves its complement; lavender light; paper ink plum */
+html[data-palette="plum"] {
+  --bg: #f4efe9;
+  --bg-raised: #ebe3da;
+  --ink: #2a1d33;
+  --ink-2: #54465c;
+  --muted: #8a7f8e;
+  --line: rgba(42, 29, 51, 0.15);
+  --accent: #4a2f5c;
+  --accent-2: #8fae7a;
+  --accent-gradient: linear-gradient(135deg, #4a2f5c 0%, #8a5fa8 100%);
+  --accent-soft: #6e4a86;
+  --on-accent: #f4efe9;
+  --on-ink: #f4efe9;
+}
+
+html[data-palette="plum"] :is(.hero, .intro),
+html[data-palette="plum"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --bg: #34243e;
+  --bg-raised: #3e2c4a;
+  --ink: #f4efe9;
+  --ink-2: #cfc4d4;
+  --muted: #9a8da0;
+  --line: rgba(244, 239, 233, 0.12);
+  --accent: #d0b8ff;
+  --accent-2: #d0b8ff;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #c9a6ff 100%);
+  --accent-soft: #d8c6ff;
+  --on-accent: #1f1526;
+  --on-ink: #1f1526;
+  --ground-1: 52, 36, 62;
+  --ground-2: 32, 22, 40;
+  --ground-3: 16, 11, 21;
+  --lens: 196, 170, 220;
+  --glow: 214, 190, 255;
+}
+
+/* Smudge: white sage burning: charcoal and ash, silver smoke light, an ember for the accent */
+html[data-palette="smudge"] {
+  --bg: #efece6;
+  --bg-raised: #e5e1d9;
+  --ink: #22201d;
+  --ink-2: #4d4943;
+  --muted: #85807a;
+  --line: rgba(34, 32, 29, 0.15);
+  --accent: #2e2b27;
+  --accent-2: #e8742c;
+  --accent-gradient: linear-gradient(135deg, #3a3631 0%, #c4622a 100%);
+  --accent-soft: #a8541f;
+  --on-accent: #efece6;
+  --on-ink: #efece6;
+}
+
+html[data-palette="smudge"] :is(.hero, .intro),
+html[data-palette="smudge"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --bg: #282521;
+  --bg-raised: #322e29;
+  --ink: #efece6;
+  --ink-2: #c9c4bb;
+  --muted: #8f8a82;
+  --line: rgba(239, 236, 230, 0.12);
+  --accent: #ff9a4d;
+  --accent-2: #ff9a4d;
+  --accent-gradient: linear-gradient(135deg, #d8d4ca 0%, #ff8a3d 100%);
+  --accent-soft: #ffb27a;
+  --on-accent: #1a1816;
+  --on-ink: #1a1816;
+  --ground-1: 40, 37, 33;
+  --ground-2: 25, 23, 21;
+  --ground-3: 12, 11, 10;
+  --lens: 214, 208, 196;
+  --glow: 255, 140, 60;
+}
+
+/* Terracotta: the herb garden: a clay-brown hero, sand paper, sage against terracotta */
+html[data-palette="terracotta"] {
+  --bg: #f5ece1;
+  --bg-raised: #ece0d2;
+  --ink: #3a2219;
+  --ink-2: #634a3e;
+  --muted: #9a8174;
+  --line: rgba(58, 34, 25, 0.15);
+  --accent: #8a3f22;
+  --accent-2: #6b7f3a;
+  --accent-gradient: linear-gradient(135deg, #8a3f22 0%, #c9673d 100%);
+  --accent-soft: #a5512d;
+  --on-accent: #f5ece1;
+  --on-ink: #f5ece1;
+}
+
+html[data-palette="terracotta"] :is(.hero, .intro),
+html[data-palette="terracotta"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --bg: #42261c;
+  --bg-raised: #4d2e22;
+  --ink: #f5ece1;
+  --ink-2: #d9c6b8;
+  --muted: #a48a7c;
+  --line: rgba(245, 236, 225, 0.12);
+  --accent: #f0a070;
+  --accent-2: #f0a070;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #f08a5d 100%);
+  --accent-soft: #f5b58f;
+  --on-accent: #2a160f;
+  --on-ink: #2a160f;
+  --ground-1: 66, 38, 28;
+  --ground-2: 40, 23, 17;
+  --ground-3: 20, 11, 8;
+  --lens: 232, 160, 120;
+  --glow: 255, 170, 110;
+}
+
+/* Slate: a cool blue-grey night, a pale cool paper, sage greening to mint */
+html[data-palette="slate"] {
+  --bg: #eef0eb;
+  --bg-raised: #e3e7e0;
+  --ink: #1b2430;
+  --ink-2: #45505d;
+  --muted: #7d8692;
+  --line: rgba(27, 36, 48, 0.15);
+  --accent: #2b3a4d;
+  --accent-2: #8fae7a;
+  --accent-gradient: linear-gradient(135deg, #2b3a4d 0%, #5b7a8f 100%);
+  --accent-soft: #3f5a73;
+  --on-accent: #eef0eb;
+  --on-ink: #eef0eb;
+}
+
+html[data-palette="slate"] :is(.hero, .intro),
+html[data-palette="slate"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --bg: #212d3a;
+  --bg-raised: #2a3847;
+  --ink: #eef0eb;
+  --ink-2: #c3cbd2;
+  --muted: #8792a0;
+  --line: rgba(238, 240, 235, 0.12);
+  --accent: #c5e0a5;
+  --accent-2: #c5e0a5;
+  --accent-gradient: linear-gradient(135deg, #a9ba86 0%, #d6f0b8 100%);
+  --accent-soft: #cfe6b4;
+  --on-accent: #121a22;
+  --on-ink: #121a22;
+  --ground-1: 33, 45, 58;
+  --ground-2: 21, 29, 38;
+  --ground-3: 10, 14, 19;
+  --lens: 160, 190, 170;
+  --glow: 190, 225, 170;
+}
+
+/* Purple sage: the leaves themselves in the original Sage purples, #302aff and #971aff, flowing on
+   a current (--leaves, --leaf-flow: sage-leaf.js, hero-ambient.js, intros/fields/leaves.js) over
+   a near-black violet ground, with the original gradient and violet light */
+html[data-palette="purple"] {
+  --leaves: purple;
+  --leaf-flow: 1;
+  --bg: #f3f1f6;
+  --bg-raised: #e9e6f0;
+  --ink: #16131f;
+  --ink-2: #474255;
+  --muted: #827d8f;
+  --line: rgba(22, 19, 31, 0.14);
+  --accent: #302aff;
+  --accent-2: #971aff;
+  --accent-gradient: linear-gradient(135deg, #302aff 0%, #971aff 100%);
+  --accent-soft: #4a3df0;
+  --on-accent: #fff;
+  --on-ink: #f3f1f6;
+}
+
+html[data-palette="purple"] :is(.hero, .intro),
+html[data-palette="purple"]:not(.header-on-paper):not(.drawer-open) :is(.site-header-bar, .dynamic-brand, .brand-phrase, .header-nav, .header-cta) {
+  --bg: #161028;
+  --bg-raised: #1f1736;
+  --ink: #f1eefa;
+  --ink-2: #c6c0d8;
+  --muted: #8d86a3;
+  --line: rgba(241, 238, 250, 0.12);
+  --accent: #971aff;
+  --accent-2: #971aff;
+  --accent-gradient: linear-gradient(135deg, #302aff 0%, #971aff 100%);
+  --accent-soft: #8f86ff;
+  --on-accent: #fff;
+  --on-ink: #0e0b18;
+  --ground-1: 24, 18, 44;
+  --ground-2: 14, 11, 26;
+  --ground-3: 6, 5, 12;
+  --lens: 110, 50, 255;
+  --glow: 151, 26, 255;
+}
+
+/* ==========================================================================
+   JOURNEYS (trial, assets/js/journeys.js and intros/eclipse, ripple, terminal,
+   aurora): five whole openings, compared in concepts/journeys.njk. The hero runs
+   half a screen longer for the transition, like the burn's.
+   ========================================================================== */
+html[data-journey] .hero {
+  position: relative;
+  min-height: 150svh;
+  padding-bottom: calc(50svh + clamp(40px, 6vh, 80px));
+  background:
+    linear-gradient(to bottom, rgba(var(--ground-3), 0) 55%, rgb(var(--ground-3))) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(min(560px, 70vw) 280px at 50% 50%, rgba(var(--lens), 0.12), rgba(var(--lens), 0)) 0 0 / 100% 100svh no-repeat,
+    radial-gradient(circle farthest-corner at 50% 50%, rgb(var(--ground-1)) 0%, rgb(var(--ground-2)) 55%, rgb(var(--ground-3)) 100%) 0 0 / 100% 100svh no-repeat,
+    rgb(var(--ground-3));
+}
+
+html[data-journey] .hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.jy-back,
+.jy-front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.jy-front {
+  z-index: 2;
+  height: 100%;
+}
+
+/* Each its own night */
+html[data-journey="ripple"] :is(.hero, .intro) {
+  --ground-1: 22, 20, 58;
+  --ground-2: 13, 11, 36;
+  --ground-3: 5, 4, 16;
+}
+
+html[data-journey="terminal"] :is(.hero, .intro) {
+  --ground-1: 16, 15, 22;
+  --ground-2: 9, 9, 13;
+  --ground-3: 3, 3, 5;
+}
+
+html[data-journey="aurora"] :is(.hero, .intro) {
+  --ground-1: 12, 14, 34;
+  --ground-2: 7, 8, 20;
+  --ground-3: 2, 3, 8;
+}
+
+html[data-journey="horizon"] :is(.hero, .intro) {
+  --ground-1: 10, 9, 20;
+  --ground-2: 5, 5, 11;
+  --ground-3: 0, 0, 3;
+}
+
+/* Aurora: a centred hero, the wordmark in the middle with the note and social proof at the ends
+   of the rule, and the copy centred under it */
+@media (min-width: 961px) {
+  html[data-journey="aurora"] .hero-top {
+    position: relative;
+    justify-content: center;
+  }
+
+  html[data-journey="aurora"] .hero-wordmark-wrap {
+    margin: 0;
+  }
+
+  html[data-journey="aurora"] :is(.hero-meta, .hero-subtext) {
+    position: absolute;
+    bottom: 0;
+  }
+
+  html[data-journey="aurora"] .hero-meta { left: 0; }
+  html[data-journey="aurora"] .hero-subtext { right: 0; }
+
+  html[data-journey="aurora"] :is(.hero-title, .hero-body) {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  html[data-journey="aurora"] .hero-body {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Stairs (assets/js/stairs.js): sprigs from the staircase's points and the way into section 02,
+   on one canvas laid on the page over that stretch (its top and height set there), under the header */
+.st-canvas {
+  position: absolute;
+  left: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* The dot sprigs (stairs.js, sprout): one canvas inside the staircase, under the steps so each
+   step's point sits over its sprig's stem */
+.st-sprout {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+html[data-stairs="sprout"] .grow-step {
+  z-index: 2;
+}
+
+/* Phones: room above each step's copy for the sprig lying along its top */
+@media (max-width: 760px) {
+  html[data-stairs] .grow-step { padding-top: 56px; }
+  html[data-stairs] .grow-steps { gap: 64px; }
+}
+
+/* Room between the staircase and section 02 for the way down to travel through */
+html:is([data-stairs="swoop"], [data-stairs="roots"]) .section-wrestle {
+  padding-top: clamp(260px, 38vh, 440px);
+}
+
+/* ==========================================================================
+   GUIDE (trial, assets/js/guide.js): one element leading down the page, an SVG
+   laid behind the content (its top and size set there). html[data-guide] from
+   ?guide= (head.njk); concepts/guide.njk compares them.
+   ========================================================================== */
+.gd-svg {
+  position: absolute;
+  left: 0;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* The leaf's layer, over the content and under the header */
+.gd-over { z-index: 40; }
+
+.gd-trail { fill: none; stroke: color-mix(in srgb, var(--ink) 32%, transparent); stroke-width: 1.3; stroke-linecap: round; }
+.gd-trail-ahead { fill: none; stroke: color-mix(in srgb, var(--ink) 10%, transparent); stroke-width: 1; stroke-dasharray: 2 7; stroke-linecap: round; }
+.gd-none { fill: none; stroke: none; }
+.gd-ring { fill: var(--bg); stroke: color-mix(in srgb, var(--ink) 45%, transparent); stroke-width: 1.2; transition: fill 0.4s ease, stroke 0.4s ease; }
+.gd-halo { fill: color-mix(in srgb, var(--accent-2) 22%, transparent); opacity: 0; transition: opacity 0.5s ease; }
+.gd-stop.is-passed .gd-ring { fill: var(--accent-2); stroke: var(--accent-2); }
+.gd-stop.is-passed .gd-halo { opacity: 1; }
+.gd-shadow { fill: rgba(40, 20, 70, 0.14); filter: blur(4px); }
+.gd-thread { fill: none; stroke: color-mix(in srgb, var(--ink) 55%, transparent); stroke-width: 1.5; }
+.gd-tick { fill: none; stroke: var(--accent-2); stroke-width: 1.5; stroke-linecap: round; }
+.gd-head { fill: var(--accent-2); filter: drop-shadow(0 0 6px var(--accent-2)); }
+.gd-stem { fill: none; stroke: #4e346c; stroke-width: 2.2; stroke-linecap: round; }
+.gd-pair { transition: opacity 0.3s ease; }
+.gd-bud { fill: var(--accent-2); filter: drop-shadow(0 0 5px var(--accent-2)); }
+.gd-midrib { fill: none; stroke: color-mix(in srgb, var(--accent-2) 45%, transparent); stroke-width: 1.8; stroke-linecap: round; }
+.gd-vein { fill: none; stroke: color-mix(in srgb, var(--accent-2) 42%, transparent); stroke-width: 1.5; stroke-linecap: round; }

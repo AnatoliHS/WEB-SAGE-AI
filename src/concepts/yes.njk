@@ -1,0 +1,268 @@
+---
+layout: policy.njk
+title: "Proven Advantage options: Sage"
+description: Four layouts for the Proven Advantage section, each working, with the real copy.
+noindex: true
+permalink: /concepts/yes/
+rows:
+  - tag: Expert incubation
+    q: "Can our vision <strong>be incubated and grow with AI/ML experts?</strong>"
+    status: "Fully Supported &amp; Tailored"
+    big: Tailored
+  - tag: Direct assistance
+    q: "Can we access <strong>hands-on technical support?</strong>"
+    status: "99.99% Uptime &amp; Founder Access"
+    big: "99.99%"
+  - tag: Speed to market
+    q: "Can our team <strong>accelerate from idea to impact quickly?</strong>"
+    status: Production Ready in Days
+    big: Days
+---
+{# Four layouts for section 04, Proven Advantage. Each runs full width on this page, so the
+   scroll-driven ones behave as they would on the homepage. Everything is scoped under .ya- #}
+{% macro head() %}
+<header class="section-head ya-head">
+  <p class="section-label"><span class="index-num">04</span>Proven Advantage</p>
+  <div>
+    <h2 class="section-title">With Sage the answer is <span class="text-accent">YES!</span></h2>
+    <p class="section-lede">As a Technical Capital Solution, we empower projects to grow quickly, with our decades of hands-on expertise, open-source innovation, and lock-in-free flexibility.</p>
+  </div>
+</header>
+{% endmacro %}
+
+<style>
+  .ya-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .ya-intro > div { grid-column: 2 / -1; }
+  .ya-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .ya-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .ya-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .ya-jump a { color: var(--ink-2); }
+  .ya-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .ya-option { margin-inline: calc(50% - 50vw); padding: clamp(64px, 8vw, 120px) 0 0; border-bottom: 1px solid var(--line); scroll-margin-top: 50px; }
+  .ya-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(56px, 7vw, 100px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .ya-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .ya-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .ya-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+  .ya-pad { padding-bottom: clamp(96px, 12vw, 180px); }
+  .ya-tag { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-soft); }
+  .ya-yes { font-family: var(--font-display); background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  /* 01 Answered one by one */
+  .ya-pin { height: 420vh; }
+  .ya-pin-stage { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; height: 100vh; }
+  .ya-pin-stage .section-head { margin-bottom: clamp(28px, 4vh, 56px); }
+  .ya-qs { position: relative; min-height: clamp(18rem, 44vh, 26rem); }
+  .ya-q { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); align-content: center; opacity: 0; translate: 0 30px; transition: opacity 0.5s ease, translate 0.6s var(--ease); pointer-events: none; }
+  .ya-q.is-on { opacity: 1; translate: 0 0; }
+  .ya-q .ya-tag { grid-column: 1; align-self: start; padding-top: 1.2em; }
+  .ya-q-text { grid-column: 2 / 4; font-size: clamp(2rem, 3.6vw, 4rem); font-weight: 500; line-height: 1.06; letter-spacing: -0.045em; color: var(--ink-2); }
+  .ya-q-text strong { font-weight: 500; color: var(--ink); }
+  .ya-stamp { grid-column: 4; justify-self: end; text-align: right; }
+  .ya-stamp .ya-yes { display: block; font-size: clamp(5rem, 11vw, 11rem); line-height: 0.9; scale: 1.6; opacity: 0; filter: blur(10px); transition: scale 0.55s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.3s ease, filter 0.4s ease; }
+  .ya-q.is-yes .ya-stamp .ya-yes { scale: 1; opacity: 1; filter: none; }
+  .ya-stamp small { display: block; margin-top: 12px; font-size: 0.9375rem; color: var(--ink-2); opacity: 0; transition: opacity 0.4s ease 0.25s; }
+  .ya-q.is-yes .ya-stamp small { opacity: 1; }
+  .ya-final { grid-column: 1 / -1; text-align: center; }
+  .ya-final p { font-size: 1.0625rem; color: var(--muted); }
+  .ya-final h3 { margin-top: 14px; font-size: clamp(2.4rem, 5.4vw, 6rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .ya-dots { display: flex; justify-content: center; gap: 10px; margin-top: clamp(24px, 4vh, 48px); }
+  .ya-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background 0.3s ease, scale 0.3s ease; }
+  .ya-dots i.is-on { background: var(--accent-2); scale: 1.3; }
+
+  /* 02 Scroll-lit statement, then proof */
+  .ya-statement { max-width: 22em; font-size: clamp(2.2rem, 5vw, 6rem); font-weight: 500; line-height: 1.04; letter-spacing: -0.05em; }
+  .ya-proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px var(--gutter); margin-top: clamp(64px, 8vw, 120px); padding-top: 28px; border-top: 1px solid var(--line); list-style: none; }
+  .ya-proof .big { display: block; margin: 14px 0 10px; font-family: var(--font-display); font-size: clamp(3.5rem, 7vw, 7.5rem); line-height: 0.9; }
+  .ya-proof p { font-size: 1.0625rem; line-height: 1.5; color: var(--ink-2); }
+  .ya-proof p strong { font-weight: 500; color: var(--ink); }
+  .ya-proof li { opacity: 0; translate: 0 24px; transition: opacity 0.6s ease, translate 0.7s var(--ease); }
+  .ya-proof li:nth-child(2) { transition-delay: 0.12s; }
+  .ya-proof li:nth-child(3) { transition-delay: 0.24s; }
+  .ya-proof.is-on li { opacity: 1; translate: 0 0; }
+
+  /* 03 A checklist that ticks itself */
+  .ya-check { list-style: none; border-top: 1px solid var(--line); }
+  .ya-check li { display: grid; grid-template-columns: auto 1fr auto; gap: 24px clamp(24px, 3vw, 48px); align-items: center; padding: clamp(28px, 3.4vw, 48px) 0; border-bottom: 1px solid var(--line); }
+  .ya-tick { width: clamp(56px, 6vw, 84px); height: clamp(56px, 6vw, 84px); }
+  .ya-tick circle { fill: none; stroke: var(--line); stroke-width: 1.5; transition: stroke 0.4s ease, fill 0.5s ease; }
+  .ya-tick path { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 40; transition: stroke-dashoffset 0.55s var(--ease) 0.2s; }
+  .ya-check li.is-on .ya-tick circle { stroke: var(--accent-2); fill: var(--accent-2); }
+  .ya-check li.is-on .ya-tick path { stroke-dashoffset: 0; }
+  .ya-check .ya-q-text { font-size: clamp(1.6rem, 2.8vw, 3rem); }
+  .ya-check .ya-tag { display: block; margin-bottom: 10px; }
+  .ya-status { font-size: 1rem; color: var(--accent-soft); text-align: right; opacity: 0; translate: 12px 0; transition: opacity 0.5s ease 0.35s, translate 0.6s var(--ease) 0.35s; }
+  .ya-check li.is-on .ya-status { opacity: 1; translate: 0 0; }
+  .ya-check-final { margin-top: clamp(56px, 7vw, 104px); text-align: center; }
+  .ya-check-final p { color: var(--muted); }
+  .ya-check-final h3 { margin-top: 12px; font-size: clamp(2.4rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+
+  /* 04 The answer grows */
+  .ya-grow { position: relative; padding-left: clamp(90px, 10vw, 150px); list-style: none; }
+  .ya-grow-line { position: absolute; left: clamp(30px, 3.5vw, 52px); top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .ya-grow-line::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#302aff, #971aff); transform: scaleY(var(--p, 0)); transform-origin: 50% 0; }
+  .ya-grow-row { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 16px var(--gutter); align-items: center; padding: clamp(36px, 4vw, 60px) 0; }
+  .ya-grow-row .ya-q-text { font-size: clamp(1.75rem, 3vw, 3.25rem); }
+  .ya-grow-row .ya-tag { display: block; margin-bottom: 10px; }
+  .ya-grow-row .ya-yes { font-size: clamp(3rem, 6vw, 6rem); line-height: 0.9; opacity: 0; translate: -20px 0; transition: opacity 0.5s ease, translate 0.6s var(--ease); }
+  .ya-grow-row.is-on .ya-yes { opacity: 1; translate: 0 0; }
+  .ya-grow-row small { display: block; margin-top: 6px; text-align: right; font-size: 0.9375rem; color: var(--ink-2); }
+  .ya-grow-leaf { position: absolute; left: calc(-1 * clamp(90px, 10vw, 150px) + clamp(30px, 3.5vw, 52px)); top: 50%; width: 72px; height: 31px; transform-origin: 0 50%; rotate: -24deg; scale: 0; transition: scale 0.8s var(--ease); }
+  .ya-grow-row:nth-child(odd) .ya-grow-leaf { rotate: -40deg; }
+  .ya-grow-row.is-on .ya-grow-leaf { scale: 1; }
+
+  @media (max-width: 860px) {
+    .ya-q { grid-template-columns: 1fr; }
+    .ya-q > * { grid-column: 1 !important; justify-self: start !important; text-align: left !important; }
+    .ya-proof { grid-template-columns: 1fr; }
+    .ya-check li { grid-template-columns: auto 1fr; }
+    .ya-status { grid-column: 2; text-align: left; }
+    .ya-grow-row { grid-template-columns: 1fr; }
+    .ya-grow-row small { text-align: left; }
+  }
+</style>
+
+<header class="ya-intro">
+  <p class="section-label"><span class="index-num">00</span>Proven Advantage</p>
+  <div>
+    <h1>Four ways to say yes.</h1>
+    <p>Four layouts for section 04, each working, with the real copy, all making the "yes" land as an answer rather than saying it twice. Scroll through each as a visitor would.</p>
+  </div>
+</header>
+
+<ul class="ya-jump">
+  <li><a href="#ya-1"><b>01</b>Answered one by one</a></li>
+  <li><a href="#ya-2"><b>02</b>Statement and proof</a></li>
+  <li><a href="#ya-3"><b>03</b>Checklist</a></li>
+  <li><a href="#ya-4"><b>04</b>The answer grows</a></li>
+</ul>
+
+<!-- 01 -->
+<section class="ya-option" id="ya-1">
+  <div class="container">
+    <div class="ya-cap"><p>01 · Recommended</p><p><b>Answered one by one</b>The section holds the screen while you scroll. Each question comes up large, then a big gradient YES stamps in beside it with its proof underneath. After the three, the line lands: when working with Sage.is, the answer is absolutely YES.</p></div>
+  </div>
+  <div class="ya-pin" data-ya-pin>
+    <div class="ya-pin-stage">
+      <div class="container">
+        {{ head() }}
+        <div class="ya-qs">
+          {% for r in rows %}
+          <div class="ya-q{% if loop.first %} is-on{% endif %}">
+            <span class="ya-tag">{{ r.tag }}</span>
+            <p class="ya-q-text">{{ r.q | safe }}</p>
+            <div class="ya-stamp"><span class="ya-yes">YES</span><small>✓ {{ r.status | safe }}</small></div>
+          </div>
+          {% endfor %}
+          <div class="ya-q">
+            <div class="ya-final"><p>Are your projects fully ready for bold breakthroughs?</p><h3>When working with Sage.is, the answer is absolutely <span class="text-accent">YES!</span></h3></div>
+          </div>
+        </div>
+        <div class="ya-dots">{% for i in [0, 1, 2, 3] %}<i{% if loop.first %} class="is-on"{% endif %}></i>{% endfor %}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="ya-option" id="ya-2">
+  <div class="container ya-pad">
+    <div class="ya-cap"><p>02 · Editorial</p><p><b>Statement and proof</b>The question and its answer become one big statement that lights up word by word as you scroll, like section 01. Under it, the three capabilities as large figures, each with its question, coming up together once the statement is read.</p></div>
+    {{ head() }}
+    <p class="ya-statement" data-scroll-words>Are your projects fully ready for bold breakthroughs? When working with Sage.is, the answer is absolutely <u>YES!</u></p>
+    <ul class="ya-proof" data-ya-proof>
+      {% for r in rows %}
+      <li><span class="ya-tag">{{ r.tag }}</span><span class="big ya-yes">{{ r.big }}</span><p>{{ r.q | safe }}</p></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="ya-option" id="ya-3">
+  <div class="container ya-pad">
+    <div class="ya-cap"><p>03 · Quiet</p><p><b>A checklist that ticks itself</b>The three questions as a list with large empty circles. As each comes to the middle of the screen, its circle fills violet, a tick draws itself in and its answer slides in on the right. Then the line: the answer is absolutely YES.</p></div>
+    {{ head() }}
+    <ul class="ya-check" data-ya-check>
+      {% for r in rows %}
+      <li>
+        <svg class="ya-tick" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="28"/><path d="M18 31 l8 8 l16 -18"/></svg>
+        <div><span class="ya-tag">{{ r.tag }}</span><p class="ya-q-text">{{ r.q | safe }}</p></div>
+        <span class="ya-status">✓ {{ r.status | safe }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="ya-check-final"><p>Are your projects fully ready for bold breakthroughs?</p><h3>When working with Sage.is, the answer is absolutely <span class="text-accent">YES!</span></h3></div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="ya-option" id="ya-4">
+  <div class="container ya-pad">
+    <div class="ya-cap"><p>04 · Growth</p><p><b>The answer grows</b>A sage sprig grows down the side of the questions as you scroll, opening a leaf at each one as it gets its gradient YES, with the proof beside it. Closest to the stem in How It Works, so it risks repeating it right after.</p></div>
+    {{ head() }}
+    <ul class="ya-grow" data-ya-grow>
+      <li class="ya-grow-line" aria-hidden="true"></li>
+      {% for r in rows %}
+      <li class="ya-grow-row">
+        <img class="ya-grow-leaf" alt="" data-leaf="{{ loop.index0 }}">
+        <div><span class="ya-tag">{{ r.tag }}</span><p class="ya-q-text">{{ r.q | safe }}</p></div>
+        <div><span class="ya-yes">YES</span><small>✓ {{ r.status | safe }}</small></div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<script src="/assets/js/sage-leaf.js?v={{ build.version }}"></script>
+<script>
+(() => {
+  const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+  const mid = () => innerHeight * 0.6;
+  const tick = [];
+
+  // 01 Answered one by one: four beats (three questions, then the answer); within each question's
+  // beat, the question first and its YES just after
+  document.querySelectorAll('[data-ya-pin]').forEach((pin) => {
+    const qs = pin.querySelectorAll('.ya-q');
+    const dots = pin.querySelectorAll('.ya-dots i');
+    tick.push(() => {
+      const r = pin.getBoundingClientRect();
+      const p = clamp01(-r.top / (r.height - innerHeight)) * 4;
+      const i = Math.min(3, Math.floor(p));
+      qs.forEach((q, j) => {
+        q.classList.toggle('is-on', j === i);
+        q.classList.toggle('is-yes', j === i && p - i > 0.35);
+      });
+      dots.forEach((d, j) => d.classList.toggle('is-on', j === i));
+    });
+  });
+
+  // 02 The proof comes up once it's into the screen
+  document.querySelectorAll('[data-ya-proof]').forEach((el) => {
+    tick.push(() => el.classList.toggle('is-on', el.getBoundingClientRect().top < innerHeight * 0.8));
+  });
+
+  // 03 Each row ticks as it reaches the middle
+  document.querySelectorAll('[data-ya-check] li').forEach((li) => {
+    tick.push(() => { const r = li.getBoundingClientRect(); li.classList.toggle('is-on', r.top + r.height / 2 < mid()); });
+  });
+
+  // 04 The sprig grows to the middle of the screen; each row opens its leaf and its YES as it's reached
+  document.querySelectorAll('[data-ya-grow]').forEach((grow) => {
+    const line = grow.querySelector('.ya-grow-line');
+    if (window.SageLeaf) {
+      const leaves = SageLeaf.make(8, SageLeaf.tones());
+      grow.querySelectorAll('[data-leaf]').forEach((img) => { img.src = leaves[+img.dataset.leaf % leaves.length].top.toDataURL(); });
+    }
+    const rows = grow.querySelectorAll('.ya-grow-row');
+    tick.push(() => {
+      const r = grow.getBoundingClientRect();
+      line.style.setProperty('--p', clamp01((mid() - r.top) / r.height).toFixed(3));
+      rows.forEach((row) => { const rr = row.getBoundingClientRect(); row.classList.toggle('is-on', rr.top + rr.height / 2 < mid()); });
+    });
+  });
+
+  const frame = () => { requestAnimationFrame(frame); tick.forEach((f) => f()); };
+  requestAnimationFrame(frame);
+})();
+</script>

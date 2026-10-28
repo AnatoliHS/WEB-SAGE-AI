@@ -8,6 +8,8 @@
 //   singed   burning paper with no fire: one ragged edge, the paper beside it toasted brown, a
 //            thin char line along it
 //   arch     a hole burning open from the bottom middle, widening into a frayed arch
+//   pixels   the night breaks into square cells that switch to paper one by one, scattered,
+//            rising from the bottom, after the dot-matrix hero (concepts/transition.njk)
 // The noise is made once (at half the screen's resolution, again on resize); each scroll only
 // thresholds it against where the edge has got to and paints the result onto one canvas.
 (() => {
@@ -16,13 +18,22 @@
   const hero = document.getElementById('hero');
   if (!variant || !hero) return;
 
-  const PAPER = [244, 237, 221];
+  // The paper it burns through to: the page's own (style.css, --bg), whatever the theme
+  const PAPER = (() => {
+    const probe = document.createElement('i');
+    probe.style.color = 'var(--bg)';
+    document.body.append(probe);
+    const c = getComputedStyle(probe).color.match(/[\d.]+/g).slice(0, 3).map(Number);
+    probe.remove();
+    return c;
+  })();
   const V = {
     //        noise: grid px per cell, octaves, falloff; amp: how ragged; band: edge depth (screens)
-    inkblot: { scale: 46, oct: 5, fall: 0.55, amp: 0.95, band: 0.34, rim: { color: [207, 208, 192], alpha: 0.32, width: 0.22 }, spareFoliage: true },
+    inkblot: { scale: 46, oct: 5, fall: 0.55, amp: 0.95, band: 0.34, rim: { color: PAPER.map((v) => Math.round(v * 0.85)), alpha: 0.32, width: 0.22 }, spareFoliage: true },
     singed: { scale: 110, oct: 4, fall: 0.5, amp: 0.45, band: 0.26, char: { color: [28, 22, 12], alpha: 0.75, width: 0.07 }, toast: { color: [168, 140, 92], alpha: 0.6, width: 0.4 } },
-    arch: { scale: 18, oct: 4, fall: 0.62, amp: 0.55, band: 0.2, arch: true, rim: { color: [244, 237, 221], alpha: 0.35, width: 0.12 } },
+    arch: { scale: 18, oct: 4, fall: 0.62, amp: 0.55, band: 0.2, arch: true, rim: { color: PAPER, alpha: 0.35, width: 0.12 } },
   }[variant];
+  if (variant === 'pixels') return pixels();
   if (!V) return;
 
   // Value noise, seeded and smooth, summed over octaves
@@ -193,4 +204,64 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
   // It follows the scroll rather than playing on its own, so it runs with reduced motion too
   build();
+
+  // pixels: square cells, about a thirty-second of the hero's width. The paper's edge climbs from
+  // the hero's bottom as travel() goes; each cell switches up to BAND of a screen ahead of it, by
+  // its own steady random, easing in over a cell's height. Drawn only where it's on screen
+  function pixels() {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hb-mask';
+    canvas.setAttribute('aria-hidden', 'true');
+    hero.append(canvas);
+    const ctx = canvas.getContext('2d');
+    const BAND = 0.45;
+    const rand = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
+    let W = 0, H = 0, C = 0, dpr = 1;
+
+    function travel() {
+      const vh = window.innerHeight, r = hero.getBoundingClientRect();
+      return { vh, r, edge: H - Math.max(0, vh - r.bottom + vh * 0.3) * 1.6 };
+    }
+
+    // Where everything below is paper, on screen (scripts.njk turns the header to paper by it)
+    window.SageHeroPaperTop = () => {
+      const { r, edge } = travel();
+      return Math.min(r.bottom, r.top + Math.ceil(edge / C) * C);
+    };
+
+    function build() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = hero.clientWidth; H = hero.offsetHeight; C = Math.max(28, W / 32);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      paint();
+    }
+
+    function paint() {
+      const { vh, r, edge } = travel(), B = BAND * vh;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (edge >= H) return;
+      ctx.fillStyle = `rgb(${PAPER.join(',')})`;
+      const top = Math.max(0, -r.top), bottom = Math.min(H, vh - r.top);
+      for (let cy = Math.floor(top / C) * C; cy < bottom; cy += C) {
+        if (cy + C + B < edge) continue;
+        for (let cx = 0; cx < W; cx += C) {
+          const a = Math.min(1, Math.max(0, (cy + C - edge + rand(cx, cy) * B) / C));
+          if (a <= 0) continue;
+          ctx.globalAlpha = a;
+          ctx.fillRect(cx, cy, C + 0.5, C + 0.5);
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; paint(); });
+    }, { passive: true });
+    // Sized again whenever the hero's size changes (its fonts and dots coming in, a resize)
+    new ResizeObserver(build).observe(hero);
+  }
 })();

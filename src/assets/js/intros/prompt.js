@@ -10,19 +10,19 @@
 (() => {
   const style = document.createElement('style');
   style.textContent = `
-    .ipr-glow { position: absolute; left: 50%; top: 50%; width: min(900px, 120vw); height: 420px; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgba(169, 186, 134, 0.16), transparent); filter: blur(40px); transition: opacity 0.6s ease; }
-    .ipr-pill { position: absolute; display: flex; align-items: center; gap: 14px; box-sizing: border-box; padding: 0 10px 0 26px; overflow: hidden; border-radius: 999px; background: rgba(16, 21, 12, 0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(244, 237, 221, 0.12), 0 30px 80px -30px rgba(0, 0, 0, 0.9); opacity: 0; scale: 0.96;
+    .ipr-glow { position: absolute; left: 50%; top: 50%; width: min(900px, 120vw); height: 420px; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--lens), 0.16), transparent); filter: blur(40px); transition: opacity 0.6s ease; }
+    .ipr-pill { position: absolute; display: flex; align-items: center; gap: 14px; box-sizing: border-box; padding: 0 10px 0 26px; overflow: hidden; border-radius: 999px; background: rgba(var(--ground-3), 0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(244, 237, 221, 0.12), 0 30px 80px -30px rgba(0, 0, 0, 0.9); opacity: 0; scale: 0.96;
       transition: opacity 0.5s ease, scale 0.6s var(--ease), left 0.65s var(--ease-in-out), top 0.65s var(--ease-in-out), width 0.65s var(--ease-in-out), height 0.65s var(--ease-in-out), border-radius 0.65s var(--ease-in-out), background-color 0.4s ease 0.15s, box-shadow 0.4s ease, padding 0.65s var(--ease-in-out); }
     .ipr-pill.is-in { opacity: 1; scale: 1; }
     .ipr-text { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; font-size: clamp(1rem, 1.7vw, 1.75rem); letter-spacing: -0.02em; color: var(--ink); transition: opacity 0.2s ease; }
     .ipr-caret { display: inline-block; width: 1.5px; height: 1.1em; margin-left: 1px; vertical-align: -0.18em; background: var(--ink); animation: ui-blink 1s steps(1) infinite; }
     .ipr-send { display: grid; flex: none; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--ink); color: var(--bg); transition: transform 0.25s var(--ease), background 0.25s ease, opacity 0.2s ease; }
     .ipr-send.is-press { transform: scale(0.86); background: var(--accent-soft); }
-    .ipr-pill.is-rule { padding: 0; border-radius: 0; background: #fffbea; box-shadow: 0 0 18px 2px rgba(254, 200, 32, 0.8), 0 0 60px 6px rgba(169, 186, 134, 0.45); }
-    .ipr-pill.is-rule.is-cool { background: var(--ink); box-shadow: 0 0 0 0 rgba(254, 200, 32, 0); transition: left 0.65s var(--ease-in-out), top 0.65s var(--ease-in-out), width 0.65s var(--ease-in-out), height 0.65s var(--ease-in-out), background-color 0.6s ease, box-shadow 0.8s ease; }
+    .ipr-pill.is-rule { padding: 0; border-radius: 0; background: #fffbea; box-shadow: 0 0 18px 2px rgba(var(--glow), 0.8), 0 0 60px 6px rgba(var(--lens), 0.45); }
+    .ipr-pill.is-rule.is-cool { background: var(--ink); box-shadow: 0 0 0 0 rgba(var(--glow), 0); transition: left 0.65s var(--ease-in-out), top 0.65s var(--ease-in-out), width 0.65s var(--ease-in-out), height 0.65s var(--ease-in-out), background-color 0.6s ease, box-shadow 0.8s ease; }
     /* The light along the line as it stretches, as in Horizon: travels with it to the rule */
     .ipr-band { position: absolute; left: 0; right: 0; height: 44vh; translate: 0 -50%; pointer-events: none; opacity: 0;
-      background: linear-gradient(to bottom, rgba(169, 186, 134, 0), rgba(214, 196, 96, 0.2) 50%, rgba(169, 186, 134, 0));
+      background: linear-gradient(to bottom, rgba(var(--lens), 0), rgba(var(--glow), 0.18) 50%, rgba(var(--lens), 0));
       transition: top 0.65s var(--ease-in-out), opacity 0.45s ease; }
     .ipr-band.is-on { opacity: 1; }
     .ipr-band.is-off { opacity: 0; transition: top 0.65s var(--ease-in-out), opacity 0.9s ease; }
@@ -31,11 +31,12 @@
   document.head.append(style);
 })();
 
-// The forest palette (style.css, html[data-theme="home"]), as RGB for the canvas
+// The palette, as RGB for the canvas; the ground's three are read from the theme (style.css,
+// --ground-1/2/3, on .intro) when it starts
 const PAL = {
   night: [12, 16, 9],      // the ground: night at the edges,
   dusk: [20, 26, 15],
-  hero: [29, 37, 22],      // the hero's forest in the middle
+  hero: [29, 37, 22],      // the hero's ground in the middle
   cream: [244, 237, 221],
   mist: [207, 208, 192],
   sage: [169, 186, 134],
@@ -45,7 +46,7 @@ const PAL = {
 };
 
 SageIntro.run({
-  background: '#0c1009',
+  background: 'rgb(var(--ground-3, 12, 16, 9))',
   brandAt: 2000,
   duration: 2800,
 
@@ -80,6 +81,11 @@ SageIntro.run({
     // Ground: the hero's own (style.css, html[data-theme="home"] .hero), forest in the middle and
     // night at the edges, so it hands over without a change
     if (!st.ground) {
+      const css = getComputedStyle(api.intro);
+      const read = (name, fallback) => (css.getPropertyValue(name).trim() || fallback.join(',')).split(',').map(Number);
+      PAL.hero = read('--ground-1', PAL.hero);
+      PAL.dusk = read('--ground-2', PAL.dusk);
+      PAL.night = read('--ground-3', PAL.night);
       const r = Math.hypot(W, H) / 2;
       st.ground = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, r);
       st.ground.addColorStop(0, `rgb(${PAL.hero})`);

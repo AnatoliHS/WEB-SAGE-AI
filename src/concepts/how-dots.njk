@@ -1,0 +1,324 @@
+---
+layout: policy.njk
+title: "How It Works animation options: Sage"
+description: Five dot-matrix animations for How It Works, in place of the growing stem and sage leaves.
+noindex: true
+permalink: /concepts/how-dots/
+options:
+  - id: digits
+    tag: 01 · Recommended
+    name: Dot-matrix numbers
+    desc: The stem becomes a line of dots that switch on as you scroll down it. As each step is reached, its number builds itself in big dot-matrix figures in the empty half beside it, dot by dot with the hero's spring and flash, so 01, 02 and 03 echo SAGE.IS at the top of the page and fill the space the leaves left.
+  - id: leaves
+    tag: 02 · Sage, in pixels
+    name: Pixel sprout
+    desc: The stem and its leaves kept, rebuilt in dots, to match the staircase's sprigs. As each step is reached, a pyramid of a sprout builds itself up the stem from its node, stem first and then its pairs of leaves, widest at the bottom. On phones, where the stem runs down the edge, only the half that opens into the page.
+  - id: icons
+    tag: 03 · Story
+    name: Packet and icons
+    desc: A glowing packet of light falls down the dotted stem with your scroll. At each step it bursts in a ring of dots, and a dot-matrix picture of the step builds beside it, an eye for your vision, a launch for deploying, rising bars for impact.
+  - id: halftone
+    tag: 04 · Editorial
+    name: Halftone reveal
+    desc: No pictures; the type does it. As each step is reached, its words come up through a fine screen of dots that swell until they close into solid text, like a print being made. The stem is dotted, its nodes light as before.
+  - id: gather
+    tag: 05 · Bring it together
+    name: Gathering dots
+    desc: As each step is reached, a cloud of loose dots drifts in from around it and gathers into a ring about its node, which then lights; the ring stays, a small halo, on each step you've passed.
+---
+{# Ways to animate How It Works (section 03, home-sections.njk) in the dot-matrix hero's language,
+   in place of the growing stem and its sage leaves (scripts.njk, 12). Each option is the real
+   heading and steps, with one canvas over the stem. Everything is scoped under .hd- #}
+
+<style>
+  .hd-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .hd-intro > div { grid-column: 2 / -1; }
+  .hd-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .hd-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .hd-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .hd-jump a { color: var(--ink-2); }
+  .hd-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .hd-option { padding: clamp(80px, 10vw, 140px) 0 clamp(120px, 20vh, 260px); border-bottom: 1px solid var(--line); scroll-margin-top: 50px; }
+  .hd-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(48px, 6vw, 96px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .hd-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .hd-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .hd-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* The stem is drawn in dots on the canvas instead */
+  .hd-option .stem-line { opacity: 0; }
+  .hd-canvas { position: absolute; z-index: 0; pointer-events: none; }
+  .hd-option .stem-step { z-index: 1; }
+
+  /* 01: the big numbers stand for the small ones */
+  .hd-option[data-kind="digits"] .stem-num { display: none; }
+
+  /* 02: room above the first step for its sprout */
+  .hd-option[data-kind="leaves"] .stem { padding-top: 150px; }
+
+  /* 04: the words come up through a screen of dots that closes into solid type */
+  @property --hd-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+  .hd-option[data-kind="halftone"] .stem-text {
+    opacity: 1; translate: 0 0;
+    -webkit-mask-image: radial-gradient(circle, #000 var(--hd-r), transparent calc(var(--hd-r) + 0.6px));
+    mask-image: radial-gradient(circle, #000 var(--hd-r), transparent calc(var(--hd-r) + 0.6px));
+    -webkit-mask-size: 6px 6px; mask-size: 6px 6px;
+    transition: --hd-r 1.1s cubic-bezier(0.5, 0, 0.3, 1);
+  }
+  .hd-option[data-kind="halftone"] .stem-step.is-on .stem-text { --hd-r: 4.4px; }
+
+  /* Phones: the stem runs down the left and the steps stack beside it, so each picture takes its
+     own room at the top of its step, the text moved down under it */
+  @media (max-width: 860px) {
+    .hd-option[data-kind="digits"] .stem-text { padding-top: 104px; }
+    .hd-option[data-kind="icons"] .stem-text { padding-top: 88px; }
+    .hd-option[data-kind="leaves"] .stem-text { padding-top: 30px; }
+    .hd-option[data-kind="leaves"] .stem { padding-top: 110px; }
+  }
+
+  @media (max-width: 640px) {
+    .hd-intro, .hd-cap { grid-template-columns: 1fr; }
+    .hd-intro > div, .hd-cap > p:last-child { grid-column: 1; }
+  }
+</style>
+
+<header class="hd-intro">
+  <p class="section-label"><span class="index-num">00</span>How It Works</p>
+  <div>
+    <h1>Walk through it, in dots.</h1>
+    <p>Five ways to bring How It Works to life in the hero's dot-matrix language, in place of the growing stem and its sage leaves. Each follows your scroll as today's does: scroll slowly down through each one and watch the steps come in.</p>
+  </div>
+</header>
+
+<ul class="hd-jump">
+  {% for o in options %}<li><a href="#hd-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<section class="hd-option section-steps" id="hd-{{ loop.index }}" data-kind="{{ o.id }}">
+  <div class="hd-cap"><p>{{ o.tag }}</p><p><b>{{ o.name }}</b>{{ o.desc }}</p></div>
+<header class="section-head">
+      <p class="section-label"><span class="index-num">03</span>How It Works</p>
+      <div>
+        <h2 class="section-title">Let's walk through it.</h2>
+        <h3 class="section-subtitle">Present us with your project and we'll help you get it done, <u>fast.</u></h3>
+      </div>
+    </header>
+<ol class="stem">
+      <li class="stem-line" aria-hidden="true"></li>
+      <li class="stem-step">
+        <span class="stem-node" aria-hidden="true"></span>
+        <div class="stem-text">
+          <span class="stem-num" aria-hidden="true">01</span>
+          <h4 class="stem-title">Present Your Vision</h4>
+          <p class="stem-desc">Here at Sage, we help teams get things done with AI. Share your goals and challenges with our team.</p>
+        </div>
+      </li>
+      <li class="stem-step">
+        <span class="stem-node" aria-hidden="true"></span>
+        <div class="stem-text">
+          <span class="stem-num" aria-hidden="true">02</span>
+          <h4 class="stem-title">Deploy AI &amp; Capital</h4>
+          <p class="stem-desc">We'll organize your work, manage your team, and embed our expertise, our capital, and our Sage.is AI Engine.</p>
+        </div>
+      </li>
+      <li class="stem-step">
+        <span class="stem-node" aria-hidden="true"></span>
+        <div class="stem-text">
+          <span class="stem-num" aria-hidden="true">03</span>
+          <h4 class="stem-title">Achieve Real Impact</h4>
+          <p class="stem-desc">No more chaos, no more confusion. We provide the right tools, support, and technical capital to reach your goals.</p>
+        </div>
+      </li>
+    </ol>
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255];
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function outBack(x) { return 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2); }
+  function mix(a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); }
+  function rgba(c, a) { return 'rgba(' + c.join(',') + ',' + a.toFixed(3) + ')'; }
+  function dot(c, x, y, r, col) { if (r <= 0.05) return; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
+
+  // Small pictures, as dots (o: a dot)
+  var ICONS = [
+    ['...........', '...ooooo...', '.oo.....oo.', 'o...ooo...o', 'o..ooooo..o', 'o..ooooo..o', 'o...ooo...o', '.oo.....oo.', '...ooooo...', '...........'],
+    ['.....o.....', '....ooo....', '...ooooo...', '...oo.oo...', '...ooooo...', '...ooooo...', '..ooooooo..', '.oo.ooo.oo.', 'o...ooo...o', '....o.o....', '...o...o...'],
+    ['.........oo', '.........oo', '......oo.oo', '......oo.oo', '...oo.oo.oo', '...oo.oo.oo', 'oo.oo.oo.oo', 'oo.oo.oo.oo', 'oo.oo.oo.oo', 'ooooooooooo']
+  ];
+  // The sprout: pairs of leaves up a stem, the biggest pair at the bottom, each pair above smaller,
+  // and a bud at the top. Each leaf is a leaf shape (pointed at both ends, widest a third of the
+  // way out) angled up from the stem, sampled onto the dot grid. Lengths in px, at full size
+  var PAIRS = [66, 52, 39, 26], LEAF_TILT = 0.62, LEAF_WIDTH = 0.24;
+  function sproutDots(P, scale, sides, pairs, gap) {
+    var out = [], top = gap * pairs.length + 4;
+    // The stem, from the node up to the bud
+    for (var y = 0; y <= top; y += P) out.push({ x: 0, y: -y, stem: true, at: y / top * 0.55 });
+    pairs.forEach(function (L0, j) {
+      var L = L0 * scale, W = L * LEAF_WIDTH, by = -(6 + j * gap), ca = Math.cos(LEAF_TILT), sa = Math.sin(LEAF_TILT);
+      sides.forEach(function (side) {
+        // Every grid point near the leaf, kept if it falls inside its shape
+        for (var gx = 0; gx <= L + P; gx += P) for (var gy = -L; gy <= W; gy += P) {
+          var dx = gx, dy = gy;
+          var u = dx * ca - dy * sa, v = dx * sa + dy * ca;
+          if (u < 2 || u > L) continue;
+          var t = u / L, half = W / 2 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.75)), 0.9);
+          if (Math.abs(v) > half) continue;
+          out.push({ x: side * gx, y: by + gy, j: j, t: t, at: 0.15 + j * 0.13 + t * 0.25 });
+        }
+      });
+    });
+    // The bud
+    out.push({ x: 0, y: -top - P, bud: true, at: 0.75 });
+    return out;
+  }
+
+  // A pattern as a list of dots, with when each switches on (0 to 1)
+  function pattern(rows) {
+    var out = [];
+    rows.forEach(function (row, r) { for (var c = 0; c < row.length; c++) if (row[c] === 'o') out.push({ c: c, r: r, d: 0.6 * c / row.length + 0.4 * rand(c, r) }); });
+    return { dots: out, w: rows[0].length, h: rows.length };
+  }
+  // The step numbers, sampled from Anton onto a grid
+  function digits(text, P, rowsTall) {
+    var m = document.createElement('canvas').getContext('2d'); m.font = '100px Anton';
+    var mt = m.measureText(text), s = rowsTall / (mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent);
+    var cols = Math.ceil((mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight) * s) + 2, rows = rowsTall + 2, k = 4;
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d'); mc.font = (100 * s * k) + 'px Anton';
+    mc.fillText(text, (1 + mt.actualBoundingBoxLeft * s) * k, (1 + mt.actualBoundingBoxAscent * s) * k);
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data, out = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var cov = 0;
+      for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+      cov /= k * k * 255;
+      if (cov > 0.05) out.push({ c: c, r: r, cov: cov, d: 0.6 * c / cols + 0.4 * rand(c, r) });
+    }
+    return { dots: out, w: cols, h: rows };
+  }
+  var NUMS = ['01', '02', '03'].map(function (t) { return digits(t, 6, 22); });
+  var PICS = ICONS.map(pattern);
+
+  var opts = [].map.call(document.querySelectorAll('.hd-option'), function (sec) {
+    var stem = sec.querySelector('.stem'), canvas = document.createElement('canvas');
+    canvas.className = 'hd-canvas'; canvas.setAttribute('aria-hidden', 'true');
+    stem.prepend(canvas);
+    var steps = [].slice.call(stem.querySelectorAll('.stem-step'));
+    return { kind: sec.dataset.kind, stem: stem, canvas: canvas, steps: steps, onAt: steps.map(function () { return 0; }) };
+  });
+
+  // The canvas reaches PAD past the stem's sides, and TOP above it, for the first step's sprout
+  var PAD = 40, TOP = 160;
+  function measure(o) {
+    var s = o.stem.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    o.W = s.width; o.H = s.height; o.dpr = dpr;
+    Object.assign(o.canvas.style, { left: -PAD + 'px', top: -TOP + 'px', width: o.W + PAD * 2 + 'px', height: o.H + TOP + 'px' });
+    o.canvas.width = Math.round((o.W + PAD * 2) * dpr); o.canvas.height = Math.round((o.H + TOP) * dpr);
+    o.ctx = o.canvas.getContext('2d');
+    o.narrow = innerWidth <= 860;
+    o.cx = o.narrow ? 12 : o.W / 2;
+    o.nodes = o.steps.map(function (st, i) {
+      var n = st.querySelector('.stem-node').getBoundingClientRect(), t = st.querySelector('.stem-text').getBoundingClientRect();
+      // The empty half beside the step's text
+      var textRight = t.left - s.left > o.W / 2 - 10;
+      // On phones: where the step's text starts, and the top of the room left for its picture
+      return { y: n.top - s.top + 7, gapX: textRight ? o.W * 0.25 : o.W * 0.75, side: textRight ? -1 : 1, textX: t.left - s.left, top: t.top - s.top };
+    });
+  }
+
+  // Builds a pattern centred at (x, y), k ms after it was switched on
+  function build(c, pat, x, y, P, t, colAt) {
+    var moving = false, w = pat.w * P, h = pat.h * P;
+    pat.dots.forEach(function (d) {
+      var k = clamp01((t - d.d * 900) / 480);
+      if (k < 1) moving = true;
+      if (k <= 0) return;
+      var col = colAt(d.c / pat.w), flash = Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.5;
+      dot(c, x - w / 2 + (d.c + 0.5) * P, y - h / 2 + (d.r + 0.5) * P, P * (d.cov ? 0.2 + 0.22 * d.cov : 0.38) * outBack(k), rgba(mix(col, LIGHT, flash), 0.9));
+    });
+    return moving;
+  }
+
+  function draw(o, now) {
+    var r = o.stem.getBoundingClientRect(), vh = innerHeight;
+    if (r.bottom < -200 || r.top > vh + 200) return;
+    var head = vh * 0.62, grownY = clamp01((head - r.top) / r.height) * o.H;
+    // Steps on as their node passes the head, as today (scripts.njk, 12)
+    o.steps.forEach(function (st, i) {
+      var on = st.querySelector('.stem-node').getBoundingClientRect().top + 18 < head;
+      st.classList.toggle('is-on', on);
+      if (on && !o.onAt[i]) o.onAt[i] = now;
+      if (!on) o.onAt[i] = 0;
+    });
+    var c = o.ctx, W = o.W;
+    c.setTransform(o.dpr, 0, 0, o.dpr, o.dpr * PAD, o.dpr * TOP);
+    c.clearRect(-PAD, -TOP, W + PAD * 2, o.H + TOP);
+    // The stem: a line of dots, lit down to the head
+    for (var y = 6; y < o.H; y += 10) {
+      var lit = y < grownY;
+      dot(c, o.cx, y, lit ? 2.1 : 1.2, lit ? rgba(mix(FROM, TO, y / o.H), 1) : rgba(INK, 0.16));
+    }
+    var age = function (i) { return still ? 1e9 : o.onAt[i] ? now - o.onAt[i] : -1; };
+
+    // On phones a picture sits at the top of its step, from the text's left edge
+    var place = function (n, pat, P) { return o.narrow ? [n.textX + pat.w * P / 2, n.top + 4 + pat.h * P / 2] : [n.gapX, null]; };
+    if (o.kind === 'digits') {
+      o.nodes.forEach(function (n, i) {
+        if (age(i) < 0) return;
+        var P = o.narrow ? 3.5 : 6, at = place(n, NUMS[i], P);
+        build(c, NUMS[i], at[0], at[1] === null ? n.y + 60 : at[1], P, age(i), function (f) { return mix(FROM, TO, f); });
+      });
+    } else if (o.kind === 'leaves') {
+      // The sprout grows up the bare stem from just above the node: the stem climbs, and each pair
+      // of leaves opens from the stem out to its tip as the stem reaches it. On phones only the
+      // side that opens into the page, a touch smaller
+      if (!o.sprout || o.sprout.narrow !== o.narrow) o.sprout = { narrow: o.narrow, dots: o.narrow ? sproutDots(4, 0.72, [1], PAIRS.slice(0, 3), 18) : sproutDots(4.5, 1, [1, -1], PAIRS, 27) };
+      o.nodes.forEach(function (n, i) {
+        var a = age(i);
+        if (a < 0) return;
+        o.sprout.dots.forEach(function (d) {
+          var k = clamp01((a - d.at * 1400) / 420);
+          if (k <= 0) return;
+          var x = o.cx + d.x, y = n.y - 10 + d.y;
+          if (d.stem) dot(c, x, y, 1.8 * outBack(k), rgba([78, 52, 108], 0.9));
+          else if (d.bud) dot(c, x, y, 3 * outBack(k), rgba(TO, 0.95));
+          else dot(c, x, y, 1.7 * outBack(k), rgba(mix(FROM, TO, 0.15 + d.j * 0.22 + d.t * 0.2), 0.88));
+        });
+      });
+    } else if (o.kind === 'icons') {
+      if (grownY > 0 && grownY < o.H) { c.shadowColor = 'rgba(151,26,255,.85)'; c.shadowBlur = 18; dot(c, o.cx, grownY, 4.5, '#e8e2ff'); c.shadowBlur = 0; for (var q = 1; q < 5; q++) dot(c, o.cx, grownY - q * 10, 2.6 - q * 0.4, rgba(TO, 0.8 - q * 0.15)); }
+      o.nodes.forEach(function (n, i) {
+        var a = age(i); if (a < 0) return;
+        var pk = clamp01(a / 700);
+        if (pk < 1) for (var j = 0; j < 16; j++) { var an = j / 16 * 6.2832, rr = 10 + 46 * pk; dot(c, o.cx + Math.cos(an) * rr, n.y + Math.sin(an) * rr, 2.2 * (1 - pk), rgba(TO, 1 - pk)); }
+        var P = o.narrow ? 7 : 9, at = place(n, PICS[i], P);
+        build(c, PICS[i], at[0], at[1] === null ? n.y + 46 : at[1], P, a - 250, function (f) { return mix(FROM, TO, f); });
+      });
+    } else if (o.kind === 'gather') {
+      o.nodes.forEach(function (n, i) {
+        var a = age(i); if (a < 0) return;
+        for (var j = 0; j < 40; j++) {
+          var an = j / 40 * 6.2832, k = clamp01((a - rand(j, i) * 300) / 900), e = 1 - Math.pow(1 - k, 3);
+          var sx = o.cx + (rand(j, i + 3) - 0.5) * 420, sy = n.y + (rand(j, i + 5) - 0.5) * 260;
+          var tx = o.cx + Math.cos(an) * 22, ty = n.y + Math.sin(an) * 22;
+          dot(c, sx + (tx - sx) * e, sy + (ty - sy) * e, 1.2 + 0.8 * e, rgba(mix(INK, mix(FROM, TO, j / 40), e), 0.25 + 0.7 * e));
+        }
+      });
+    }
+  }
+
+  function frame() {
+    var t = performance.now();
+    opts.forEach(function (o) { draw(o, t); });
+    requestAnimationFrame(frame);
+  }
+  function all() { opts.forEach(measure); }
+  addEventListener('resize', function () { clearTimeout(all.t); all.t = setTimeout(all, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(function () { NUMS = ['01', '02', '03'].map(function (t) { return digits(t, 6, 22); }); all(); requestAnimationFrame(frame); });
+  else { all(); requestAnimationFrame(frame); }
+})();
+</script>

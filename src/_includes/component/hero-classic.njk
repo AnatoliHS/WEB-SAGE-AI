@@ -1,0 +1,62 @@
+<section id="hero" class="hero">
+  <div class="container">
+
+    <!-- The wordmark row, standing on the rule: who we are on the left, the brand's place, social
+         proof on the right -->
+    <div class="hero-top">
+      <div class="hero-meta">
+        <p>
+          Makers of <a href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener"><u>Sage AI-UI</u></a>,<br>
+          <a href="https://sage.education" target="_blank" rel="noopener"><u>Sage Education</u></a>, and<br>
+          <a href="https://sage.is/programs#packages" target="_blank" rel="noopener"><u>Technical Capital</u></a>.
+        </p>
+      </div>
+
+      <!-- Reserves the exact space the dynamic brand (navbar.njk) occupies at the top of the page -->
+      <div class="hero-wordmark-wrap" id="hero-wordmark-anchor">
+        <div class="wordmark hero-wordmark-ghost" aria-hidden="true">
+          <!-- Split into letters like the dynamic brand, so both measure exactly the same -->
+          <span class="tinker-word">{% for ch in "SAGE" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+          <span class="click-word">{% for ch in ".IS" | list %}<span class="ltr"><span>{{ ch }}</span></span>{% endfor %}</span>
+        </div>
+      </div>
+
+      <p class="hero-subtext">
+        Hundreds of students already build with Sage.
+      </p>
+    </div>
+
+    <!-- The intros (component/intro.njk) all land on this line -->
+    <div class="hero-rule" id="hero-rule"></div>
+
+    <div class="hero-grid">
+
+      <h1 class="hero-title">Your next <span class="text-accent">AI breakthrough</span></h1>
+
+      <div class="hero-body">
+        <p class="hero-lede">
+          Decades of experience building AI before ChatGPT.<br>We help create custom solutions and open-source tools to grow your business.
+        </p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 98 96" fill="currentColor"><path d="M49 0C21.9 0 0 21.8 0 48.8c0 21.6 14 39.9 33.4 46.4 2.4.5 3.3-1 3.3-2.3 0-1.1 0-4.1-.1-8-13.6 2.9-16.4-5.8-16.4-5.8-2.2-5.6-5.4-7.1-5.4-7.1-4.4-3 .3-3 .3-3 4.9.3 7.5 5 7.5 5 4.3 7.3 11.3 5.2 14 4 0-3.2 1.7-5.3 3-6.5-10.8-1.2-22.2-5.4-22.2-24 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5a46.4 46.4 0 0 1 24.4 0c9.3-6.3 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.7-11.4 22.8-22.3 24 1.8 1.5 3.3 4.5 3.3 9.2 0 6.6-.1 11.9-.1 13.5 0 1.3.9 2.8 3.3 2.3C84 88.7 98 70.4 98 48.8 98 21.8 76.1 0 49 0Z"/></svg>
+            Sage.is AI-UI v3.2.0
+          </a>
+          <a class="btn btn-ghost" href="https://sage.education" target="_blank" rel="noopener">
+            Sage Education
+          </a>
+          <a class="btn btn-ghost" href="https://sage.is/programs#packages" target="_blank" rel="noopener">
+            Technical Capital
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom of the first screen: the way down, centred -->
+    <div class="hero-foot">
+      <a href="#learn-more" class="hero-scroll-prompt" aria-label="Scroll down">
+        <span class="scroll-lines" aria-hidden="true"><i></i><i></i><i></i></span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const triggerBtn = document.getElementById('btn-waitlist-trigger');
   const brandPhrase = document.getElementById('brand-phrase');
 
+  // Over a hero that draws its own wordmark (the dot matrix, hero.njk) the brand stays in its dock,
+  // its letters unseen, and is drawn there in dots once the hero's have gone (hero-dots.js; style.css,
+  // html.brand-from-dots). Docking still follows the scroll, for the header bar and the phrase
+  const fromDots = !!document.querySelector('[data-brand-from-dots]');
+  root.classList.toggle('brand-from-dots', fromDots);
+
   const geo = { x: 0, y: 0, dockX: 24, dockY: 24, dockScale: 0.2 };
   let isDocked = null;
   let drawerOpen = false;
@@ -74,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     isDocked = docked;
 
     if (!animate) dynamicBrand.classList.add('no-transition');
-    dynamicBrand.style.transform = docked
+    dynamicBrand.style.transform = docked || fromDots
       ? `translate3d(${geo.dockX}px, ${geo.dockY}px, 0) scale(${geo.dockScale})`
       : `translate3d(${geo.x}px, ${geo.y}px, 0) scale(1)`;
     dynamicBrand.classList.toggle('is-docked', docked);
@@ -89,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function remeasure() {
     measurePositions();
     applyBrand(false);
+    // Where it now sits, for the dots drawn over it (hero-dots.js)
+    document.dispatchEvent(new CustomEvent('sage:brand-placed'));
   }
 
   if (heroAnchor && dynamicBrand) {
@@ -603,77 +611,94 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 9. The Problem & The Solution: a band of lines, knotted over the challenge and combed straight
-  //    (and violet) over the solution. The knot's reach and size shrink as the band comes up the
-  //    screen, so scrolling through unties it; it only draws while on screen
-  const untangle = document.querySelector('[data-untangle]');
-  if (untangle) {
-    const canvas = untangle.querySelector('canvas');
-    const ctx = canvas.getContext('2d');
+  // 9. The Problem & The Solution: a field of dots flickering like static over the challenge,
+  //    settling, from the right as the band comes up the screen, into a tick over the solution
+  //    (compared in concepts/problem.njk). Each [data-untangle] is one of:
+  //      band    the whole width, over both columns: static, then the tick over the right
+  //      static  over the challenge on phones: static that never settles
+  //      tick    over the solution on phones: static that settles into a tick as it comes up
+  //    Only the ones laid out (style.css shows the band, or the two on phones) and on screen draw
+  const untangles = Array.from(document.querySelectorAll('[data-untangle]')).map((el) => ({ el, mode: el.dataset.untangle, canvas: el.querySelector('canvas') }));
+  if (untangles.length) {
     const reducedUntangle = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const clampU = (v) => Math.min(Math.max(v, 0), 1);
-    const N = 16;
-    const lines = Array.from({ length: N }, (_, i) => ({
-      f1: 0.006 + Math.random() * 0.012, f2: 0.015 + Math.random() * 0.02,
-      p1: Math.random() * 6.28, p2: Math.random() * 6.28, s: 0.4 + Math.random() * 0.8, i,
-    }));
-    let W = 0, H = 0, onScreen = false;
-    // The band's colours come from its section's tokens (style.css), so they follow the theme:
-    // each resolved to "r, g, b" so it can take an alpha
-    const rgbOf = (name) => {
+    const smoothU = (a, b, x) => { const k = clampU((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+    // A steady random per dot (and per moment, for the flicker)
+    const rnd = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
+    // The colours come from the section's tokens (style.css), so they follow the theme
+    const rgbOf = (el, name) => {
       const probe = document.createElement('i');
       probe.style.color = `var(${name})`;
-      untangle.append(probe);
-      const rgb = getComputedStyle(probe).color.match(/[\d.]+/g).slice(0, 3).join(', ');
+      el.append(probe);
+      const rgb = getComputedStyle(probe).color.match(/[\d.]+/g).slice(0, 3).map(Number);
       probe.remove();
       return rgb;
     };
     let tones;
-    const readTones = () => { tones = { ink: rgbOf('--ink'), soft: rgbOf('--accent-soft'), accent: rgbOf('--accent-2') }; };
+    const readTones = () => { const el = untangles[0].el; tones = { ink: rgbOf(el, '--ink'), from: rgbOf(el, '--accent'), to: rgbOf(el, '--accent-2') }; };
     readTones();
-    new MutationObserver(readTones).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-    const size = () => {
+    new MutationObserver(readTones).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-palette'] });
+    const rgba = (c, a) => `rgba(${c.join(',')},${a.toFixed(3)})`;
+    const mixU = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+
+    // Sizes a band's canvas and draws its tick, as a mask, where it settles
+    const size = (u) => {
+      const W = u.el.clientWidth, H = u.el.clientHeight;
+      u.W = W; u.H = H;
+      if (!W || !H) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = untangle.clientWidth;
-      H = untangle.clientHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      u.canvas.width = W * dpr;
+      u.canvas.height = H * dpr;
+      u.ctx = u.canvas.getContext('2d');
+      u.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      u.P = W < 600 ? 8 : 10;
+      if (u.mode === 'static') return;
+      const m = document.createElement('canvas');
+      m.width = W; m.height = H;
+      const mc = m.getContext('2d'), s = H * 0.78;
+      mc.lineWidth = s * 0.17; mc.lineCap = 'round'; mc.lineJoin = 'round';
+      const x0 = W * (u.mode === 'band' ? 0.76 : 0.5) - s * 0.45, y0 = H / 2;
+      mc.beginPath(); mc.moveTo(x0, y0); mc.lineTo(x0 + s * 0.3, y0 + s * 0.3); mc.lineTo(x0 + s * 0.9, y0 - s * 0.36); mc.stroke();
+      u.tick = mc.getImageData(0, 0, W, H).data;
     };
-    size();
-    window.addEventListener('resize', size);
-    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(untangle);
-    else onScreen = true;
-    const draw = (now) => {
-      requestAnimationFrame(draw);
-      if (!onScreen || document.hidden) return;
-      const r = untangle.getBoundingClientRect();
-      // 0 as the band comes up the screen, 1 by the time it's most of the way up
-      const untie = reducedUntangle ? 0.6 : clampU((window.innerHeight - r.top) / (window.innerHeight * 0.9));
-      const t = reducedUntangle ? 0 : now / 1000;
+    const sizeAll = () => untangles.forEach(size);
+    sizeAll();
+    window.addEventListener('resize', sizeAll);
+
+    const draw = (u, t) => {
+      if (!u.ctx || !u.el.offsetParent) return;
+      const r = u.el.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      // 0 as it comes up the screen, 1 by the time it's most of the way up
+      const p = reducedUntangle ? 1 : clampU((vh - r.top) / (vh * 0.9));
+      const { W, H, P, ctx } = u;
+      // Where the settled dots start: the band's from the right; the tick's whole width, sooner
+      const settle = u.mode === 'static' ? Infinity : u.mode === 'band' ? W * (1 - 0.62 * p) : W * (1.15 - 1.5 * p);
+      const frame = Math.floor(t * 12);
       ctx.clearRect(0, 0, W, H);
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, `rgba(${tones.ink}, 0.28)`);
-      grad.addColorStop(0.5, `rgba(${tones.ink}, 0.35)`);
-      grad.addColorStop(0.78, `rgba(${tones.soft}, 0.9)`);
-      grad.addColorStop(1, `rgba(${tones.accent}, 0.9)`);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 1.2;
-      const gap = H / (N + 3);
-      lines.forEach((l) => {
-        const base = H / 2 + (l.i - (N - 1) / 2) * gap;
-        ctx.beginPath();
-        for (let x = 0; x <= W; x += 6) {
-          // How knotted at this point: all of it on the left, none past the middle; less as it unties
-          const k = Math.pow(1 - clampU(x / (W * (0.42 + 0.3 * untie))), 1.6) * (1 - 0.55 * untie);
-          const amp = H * 0.42 * k;
-          const y = base + amp * (Math.sin(x * l.f1 + l.p1 + t * l.s) * 0.7 + Math.sin(x * l.f2 + l.p2 - t * l.s * 1.4) * 0.5) - (base - H / 2) * k * 0.9;
-          if (x) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      for (let y = P / 2; y < H; y += P) {
+        for (let x = P / 2; x < W; x += P) {
+          const j = x * 13 + y;
+          if (smoothU(settle - 120, settle + 40, x + rnd(j, 9) * 80) > 0.5) {
+            const inTick = u.tick[(Math.round(y) * W + Math.round(x)) * 4 + 3] > 120;
+            ctx.fillStyle = inTick ? rgba(mixU(tones.from, tones.to, u.mode === 'band' ? x / W : 0.3 + 0.7 * x / W), 0.95) : rgba(tones.ink, 0.12);
+            ctx.beginPath(); ctx.arc(x, y, inTick ? P * 0.32 : P * 0.12, 0, 6.2832); ctx.fill();
+          } else {
+            const on = rnd(j, frame) > 0.55;
+            ctx.fillStyle = rgba(tones.ink, on ? 0.18 + rnd(j, frame + 2) * 0.35 : 0.06);
+            ctx.beginPath(); ctx.arc(x, y, on ? P * (0.12 + rnd(j, frame + 1) * 0.16) : P * 0.1, 0, 6.2832); ctx.fill();
+          }
         }
-        ctx.stroke();
-      });
+      }
     };
-    requestAnimationFrame(draw);
+    const loop = (now) => {
+      if (!document.hidden) untangles.forEach((u) => draw(u, reducedUntangle ? 0 : now / 1000));
+      if (!reducedUntangle) requestAnimationFrame(loop);
+    };
+    if (reducedUntangle) {
+      window.addEventListener('scroll', () => loop(0), { passive: true });
+      loop(0);
+    } else requestAnimationFrame(loop);
   }
 
   // 10. The phrase beside the docked brand ("SAGE.IS refreshingly simple"): every few seconds the
@@ -706,6 +731,374 @@ document.addEventListener('DOMContentLoaded', () => {
       word.textContent = phrases[pIdx];
       brandPhrase.append(word);
     }, 2800);
+  }
+
+  // 12. How it works: the stem is a line of dots that lights, in the purples, down to just past
+  //     60% of the screen; each step lights as its node is reached, and its number builds in big
+  //     dot-matrix figures, dot by dot with the hero's spring and flash (hero-dots.js): in the empty
+  //     half beside the step, or on phones, where the stem runs down the left, above its title.
+  //     Compared in concepts/how-dots.njk. It only draws while on screen
+  const stem = document.querySelector('[data-stem]');
+  if (stem) {
+    const stemCanvas = stem.querySelector('.stem-dots canvas');
+    const stemSteps = Array.from(stem.querySelectorAll('.stem-step'));
+    const stemCtx = stemCanvas.getContext('2d');
+    const stillStem = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255];
+    const PAD = 40;
+    const clampS = (v) => Math.min(Math.max(v, 0), 1);
+    const rndS = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
+    const outBackS = (x) => 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2);
+    const mixS = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+    const rgbaS = (c, a) => `rgba(${c.join(',')},${a.toFixed(3)})`;
+    const dotS = (x, y, r, col) => { if (r <= 0.05) return; stemCtx.fillStyle = col; stemCtx.beginPath(); stemCtx.arc(x, y, r, 0, 6.2832); stemCtx.fill(); };
+
+    // A number sampled from Anton onto a grid `rowsTall` dots high: its dots, and when each switches on
+    const numberDots = (text, rowsTall) => {
+      const m = document.createElement('canvas').getContext('2d');
+      m.font = '100px Anton';
+      const mt = m.measureText(text), s = rowsTall / (mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent);
+      const cols = Math.ceil((mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight) * s) + 2, rows = rowsTall + 2, k = 4;
+      const mask = document.createElement('canvas');
+      mask.width = cols * k; mask.height = rows * k;
+      const mc = mask.getContext('2d');
+      mc.font = `${100 * s * k}px Anton`;
+      mc.fillText(text, (1 + mt.actualBoundingBoxLeft * s) * k, (1 + mt.actualBoundingBoxAscent * s) * k);
+      const ink = mc.getImageData(0, 0, mask.width, mask.height).data, dots = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        let cov = 0;
+        for (let y = 0; y < k; y++) for (let x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+        cov /= k * k * 255;
+        if (cov > 0.05) dots.push({ c, r, cov, d: 0.6 * c / cols + 0.4 * rndS(c, r) });
+      }
+      return { dots, w: cols, h: rows };
+    };
+    let numbers = [];
+    let W = 0, H = 0, dpr = 1, narrow = false, nodes = [];
+    const onAt = stemSteps.map(() => 0);
+
+    const measureStem = () => {
+      const s = stem.getBoundingClientRect();
+      W = s.width; H = s.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      Object.assign(stemCanvas.style, { width: `${W + PAD * 2}px`, height: `${H}px` });
+      stemCanvas.width = Math.round((W + PAD * 2) * dpr);
+      stemCanvas.height = Math.round(H * dpr);
+      narrow = window.innerWidth <= 860;
+      nodes = stemSteps.map((st) => {
+        const n = st.querySelector('.stem-node').getBoundingClientRect(), t = st.querySelector('.stem-text').getBoundingClientRect();
+        const textRight = t.left - s.left > W / 2 - 10;
+        // Desktop: the middle of the empty half; phones: the top of the room left above the title
+        return { y: n.top - s.top + 7, gapX: textRight ? W * 0.25 : W * 0.75, textX: t.left - s.left, top: t.top - s.top };
+      });
+    };
+
+    // Draws the stem and the numbers; returns whether any number is still building
+    const drawStem = () => {
+      const r = stem.getBoundingClientRect(), vh = window.innerHeight;
+      const head = vh * 0.62, now = performance.now();
+      const grownY = clampS((head - r.top) / r.height) * H;
+      stemSteps.forEach((st, i) => {
+        const on = st.querySelector('.stem-node').getBoundingClientRect().top + 18 < head;
+        st.classList.toggle('is-on', on);
+        if (on && !onAt[i]) onAt[i] = now;
+        if (!on) onAt[i] = 0;
+      });
+      stemCtx.setTransform(dpr, 0, 0, dpr, dpr * PAD, 0);
+      stemCtx.clearRect(-PAD, 0, W + PAD * 2, H);
+      const cx = narrow ? 12 : W / 2;
+      for (let y = 6; y < H; y += 10) {
+        const lit = y < grownY;
+        dotS(cx, y, lit ? 2.1 : 1.2, lit ? rgbaS(mixS(FROM, TO, y / H), 1) : rgbaS(INK, 0.16));
+      }
+      let moving = false;
+      nodes.forEach((n, i) => {
+        if (!onAt[i] || !numbers[i]) return;
+        const a = stillStem ? 1e9 : now - onAt[i], pat = numbers[i], P = narrow ? 3.5 : 6;
+        const w = pat.w * P, h = pat.h * P;
+        const x0 = narrow ? n.textX : n.gapX - w / 2, y0 = narrow ? n.top + 4 : n.y + 60 - h / 2;
+        pat.dots.forEach((d) => {
+          const k = clampS((a - d.d * 900) / 480);
+          if (k < 1) moving = true;
+          if (k <= 0) return;
+          const flash = Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.5;
+          dotS(x0 + (d.c + 0.5) * P, y0 + (d.r + 0.5) * P, P * (0.2 + 0.22 * d.cov) * outBackS(k), rgbaS(mixS(mixS(FROM, TO, d.c / pat.w), LIGHT, flash), 0.9));
+        });
+      });
+      return moving;
+    };
+
+    let stemRunning = false;
+    const stemFrame = () => {
+      if (drawStem()) requestAnimationFrame(stemFrame);
+      else stemRunning = false;
+    };
+    const wakeStem = () => {
+      const r = stem.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+      if (stemRunning) return;
+      stemRunning = true;
+      requestAnimationFrame(stemFrame);
+    };
+    const startStem = () => {
+      numbers = ['01', '02', '03'].map((t) => numberDots(t, 22));
+      measureStem();
+      wakeStem();
+    };
+    window.addEventListener('scroll', wakeStem, { passive: true });
+    window.addEventListener('resize', () => { measureStem(); wakeStem(); });
+    // Measured again if anything above it changes height (the hero coming in, say)
+    if ('ResizeObserver' in window) new ResizeObserver(() => { measureStem(); wakeStem(); }).observe(stem);
+    if (document.fonts) document.fonts.load('100px Anton').then(startStem, startStem); else startStem();
+  }
+
+  // 13. Proven Advantage, sideways, in dots (compared in concepts/yes-dots.njk). The wrapper is made
+  //     tall enough for a screen, the row's travel (until the answer is centred) and a pause at the
+  //     end, so the last step always lights and flowers. A curving stem of dots runs through the
+  //     nodes and lights to the middle of the screen; each step lights as it's reached: its node,
+  //     a pair of dot leaves opening from it, its YES filling with purple dots from the left, and
+  //     small dot leaves budding between; at the answer the plant flowers, a spike of dot florets.
+  //     All of it on one canvas that moves with the row, drawn only while the section is on screen
+  const yesPin = document.querySelector('[data-yes-pin]');
+  if (yesPin) {
+    const yesTrack = yesPin.querySelector('.yes-track');
+    const yesSteps = Array.from(yesPin.querySelectorAll('.yes-step'));
+    const yesFinal = yesPin.querySelector('.yes-final');
+    const yesBar = yesPin.querySelector('.yes-progress i');
+    const yesCount = yesPin.querySelector('[data-yes-count]');
+    const stillYes = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255], LAV = [181, 143, 224], STEM = [78, 52, 108];
+    const TOP = 260;
+    const clampY = (v) => Math.min(Math.max(v, 0), 1);
+    const outBackY = (x) => 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2);
+    const mixY = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+    const rgbaY = (c, a) => `rgba(${c.join(',')},${a.toFixed(3)})`;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'yes-dots';
+    canvas.setAttribute('aria-hidden', 'true');
+    yesTrack.prepend(canvas);
+    const ctx = canvas.getContext('2d');
+    const dotY = (x, y, r, col) => { if (r <= 0.05) return; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill(); };
+
+    // A leaf's dots: pointed at both ends, widest a third of the way out, L long, pointing at angle
+    // a from (0, 0), each with how far out it is (t)
+    const leafDots = (L, w, a, P) => {
+      const out = [], ca = Math.cos(a), sa = Math.sin(a);
+      for (let u = P; u <= L; u += P) {
+        const t = u / L, half = w / 2 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.75)), 0.9);
+        for (let v = -half; v <= half + 0.01; v += P) out.push({ x: u * ca - v * sa, y: u * sa + v * ca, t });
+      }
+      return out;
+    };
+    // YES sampled from Anton onto a grid rowsTall dots high, letter by letter
+    const wordDots = (text, rowsTall) => {
+      const m = document.createElement('canvas').getContext('2d');
+      m.font = '100px Anton';
+      const xs = [], ms = [];
+      let pen = 0;
+      for (const ch of text) { const mt = m.measureText(ch); xs.push(pen); ms.push(mt); pen += mt.width + 3; }
+      const last = text.length - 1, left = xs[0] - ms[0].actualBoundingBoxLeft, right = xs[last] + ms[last].actualBoundingBoxRight;
+      const asc = Math.max(...ms.map((x) => x.actualBoundingBoxAscent)), desc = Math.max(...ms.map((x) => x.actualBoundingBoxDescent));
+      const s = rowsTall / (asc + desc), cols = Math.ceil((right - left) * s) + 2, rows = rowsTall + 2, k = 4;
+      const mask = document.createElement('canvas');
+      mask.width = cols * k; mask.height = rows * k;
+      const mc = mask.getContext('2d');
+      mc.font = `${100 * s * k}px Anton`;
+      [...text].forEach((ch, j) => mc.fillText(ch, (1 + (xs[j] - left) * s) * k, (1 + asc * s) * k));
+      const ink = mc.getImageData(0, 0, mask.width, mask.height).data, dots = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        let cov = 0;
+        for (let y = 0; y < k; y++) for (let x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+        cov /= k * k * 255;
+        if (cov > 0.05) dots.push({ c, r, cov });
+      }
+      return { dots, w: cols, h: rows };
+    };
+
+    let YES = null, travel = 0, dwell = 0, g = null, dpr = 1;
+    const onAt = {};
+
+    const sizeYes = () => {
+      if (!YES) return;
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const nodes = yesSteps.map((st) => st.offsetLeft);
+      const ny = yesSteps[0].querySelector('.yes-node').offsetTop;
+      travel = Math.max(0, yesFinal.offsetLeft + yesFinal.offsetWidth / 2 - vw / 2);
+      // Just long enough for the last node to light and the flower to open
+      dwell = vh * 0.35;
+      yesPin.style.height = `${vh + travel + dwell}px`;
+      const w = yesTrack.scrollWidth, h = yesTrack.offsetHeight + TOP + 60;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      Object.assign(canvas.style, { top: `${-TOP}px`, width: `${w}px`, height: `${h}px` });
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      // The stem: dots every 11px along a curve through the nodes, bowing up and down between them
+      const amp = Math.min(22, vh * 0.025), stem = [];
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const a = nodes[i], b = nodes[i + 1], dy = (i % 2 ? 1 : -1) * amp * 2;
+        let lx = a, ly = ny, acc = 0;
+        for (let t = 0; t <= 1; t += 0.002) {
+          const mt = 1 - t;
+          const x = mt * mt * mt * a + 3 * mt * mt * t * (a + (b - a) * 0.3) + 3 * mt * t * t * (a + (b - a) * 0.7) + t * t * t * b;
+          const y = mt * mt * mt * ny + 3 * mt * mt * t * (ny + dy) + 3 * mt * t * t * (ny + dy) + t * t * t * ny;
+          acc += Math.hypot(x - lx, y - ly); lx = x; ly = y;
+          if (acc >= 11) { stem.push({ x, y }); acc = 0; }
+        }
+      }
+      // Two leaves at each question's node, one up and forward, one up and back; buds between
+      const leaves = nodes.slice(0, -1).map(() => [leafDots(96, 30, -58 * Math.PI / 180, 5), leafDots(96, 30, -128 * Math.PI / 180, 5)]);
+      const buds = [];
+      for (let j = 0; j < nodes.length - 1; j++) [0.38, 0.66].forEach((u, q) => {
+        const up = (j + q) % 2 === 0;
+        buds.push({ x: nodes[j] + (nodes[j + 1] - nodes[j]) * u, y: ny + (j % 2 ? 1 : -1) * amp * 1.5, dots: leafDots(42, 15, (up ? -40 : 40) * Math.PI / 180, 4), key: `b${j}${q}` });
+      });
+      // Each YES, over its word
+      const words = yesSteps.filter((st) => st !== yesFinal).map((st) => {
+        const el = st.querySelector('.yes-word'), hgt = el.offsetHeight;
+        return { x: st.offsetLeft + el.offsetLeft, y: st.offsetTop + el.offsetTop + hgt * 0.04, P: Math.max(3, hgt / 26) };
+      });
+      // The flower: a stem up from the answer's node, pairs of florets up it, smaller each pair
+      const H = Math.min(190, vh * 0.2), flower = [];
+      for (let s = 0; s <= H; s += 6) flower.push({ x: 0, y: -s, at: s / H * 0.45, stem: true });
+      for (let f = 0; f < 7; f++) {
+        const fy = -H * (0.18 + f * 0.11), L = 26 - f * 2.6;
+        [-2.62, -0.52].forEach((a) => leafDots(L, L * 0.55, a, 3.6).forEach((d) => flower.push({ x: d.x, y: fy + d.y, at: 0.35 + f * 0.08 + d.t * 0.06, f: f / 7 })));
+      }
+      flower.push({ x: 0, y: -H - 8, at: 0.95, bud: true });
+      g = { w, h, nodes, ny, stem, leaves, buds, words, flower };
+    };
+
+    // Draws the row at the scroll; returns whether anything is still opening
+    const drawYes = () => {
+      if (!g) return false;
+      const r = yesPin.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return false;
+      const s = Math.min(Math.max(-r.top, 0), travel + dwell), x = -Math.min(s, travel), now = performance.now();
+      yesTrack.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
+      yesBar.style.setProperty('--yes-p', Math.min(s / Math.max(1, travel + dwell * 0.5), 1).toFixed(3));
+      // The lit tip, along the row: the middle of the screen, and the whole way once it's done
+      const head = s >= travel - 1 ? Infinity : window.innerWidth / 2 - x;
+      const { nodes, ny } = g, n0 = nodes[0], nN = nodes[nodes.length - 1];
+      let lit = 0, moving = false;
+      yesSteps.forEach((st, i) => {
+        const on = nodes[i] <= head;
+        st.classList.toggle('is-yes', on);
+        if (on && st !== yesFinal) lit++;
+      });
+      yesCount.textContent = String(lit).padStart(2, '0');
+      // How long since each piece was reached (-1: not yet); each opens over time once it is
+      const age = (key, on) => {
+        if (!on) { delete onAt[key]; return -1; }
+        if (!onAt[key]) onAt[key] = now;
+        return stillYes ? 1e9 : now - onAt[key];
+      };
+      ctx.setTransform(dpr, 0, 0, dpr, 0, dpr * TOP);
+      ctx.clearRect(0, -TOP, g.w, g.h);
+      g.stem.forEach((p) => {
+        const on = p.x <= head;
+        dotY(p.x, p.y, on ? 2.1 : 1.3, on ? rgbaY(mixY(FROM, TO, (p.x - n0) / (nN - n0)), 1) : rgbaY(INK, 0.18));
+      });
+      g.buds.forEach((b) => {
+        const a = age(b.key, b.x <= head);
+        if (a < 0) return;
+        b.dots.forEach((d) => { const k = clampY((a - d.t * 400) / 380); if (k < 1) moving = true; dotY(b.x + d.x, b.y + d.y, 1.6 * outBackY(k), rgbaY(mixY(FROM, TO, 0.5), 0.8)); });
+      });
+      g.leaves.forEach((pair, i) => {
+        const a = age(`l${i}`, nodes[i] <= head);
+        if (a < 0) return;
+        pair.forEach((lf, q) => lf.forEach((d) => {
+          const k = clampY((a - q * 200 - d.t * 600) / 420);
+          if (k < 1) moving = true;
+          if (k > 0) dotY(nodes[i] + d.x, ny + d.y, 1.9 * outBackY(k), rgbaY(mixY(FROM, TO, 0.2 + d.t * 0.6), 0.85));
+        }));
+      });
+      // The YES: faint dots while it waits, then the purple sweeps into it from the left
+      g.words.forEach((wd, i) => {
+        const a = age(`w${i}`, nodes[i] <= head);
+        YES.dots.forEach((d) => {
+          const k = a < 0 ? 0 : clampY((a - (d.c / YES.w) * 700) / 260);
+          if (a >= 0 && k < 1) moving = true;
+          const col = k > 0 ? mixY(mixY(INK, mixY(FROM, TO, d.c / YES.w), k), LIGHT, Math.sin(Math.PI * k) * 0.4) : INK;
+          dotY(wd.x + (d.c + 0.5) * wd.P, wd.y + (d.r + 0.5) * wd.P, wd.P * (0.2 + 0.22 * d.cov) * (k > 0 ? 1 : 0.7), rgbaY(col, k > 0 ? 0.25 + 0.7 * k : 0.16));
+        });
+      });
+      const fa = age('flower', nN <= head);
+      if (fa >= 0) g.flower.forEach((d) => {
+        const k = clampY((fa - d.at * 1600) / 420);
+        if (k < 1) moving = true;
+        if (k <= 0) return;
+        const X = nN + d.x, Y = ny - 10 + d.y;
+        if (d.stem) dotY(X, Y, 1.6 * outBackY(k), rgbaY(STEM, 0.9));
+        else if (d.bud) dotY(X, Y, 3.2 * outBackY(k), rgbaY(LAV, 1));
+        else dotY(X, Y, 1.5 * outBackY(k), rgbaY(mixY(FROM, LAV, d.f), 0.9));
+      });
+      return moving;
+    };
+
+    let yesRunning = false;
+    const yesFrame = () => {
+      if (drawYes()) requestAnimationFrame(yesFrame);
+      else yesRunning = false;
+    };
+    const wakeYes = () => { if (!yesRunning) { yesRunning = true; requestAnimationFrame(yesFrame); } };
+    const resizeYes = () => { sizeYes(); wakeYes(); };
+    const startYes = () => { YES = wordDots('YES', 24); resizeYes(); };
+    window.addEventListener('scroll', wakeYes, { passive: true });
+    window.addEventListener('resize', resizeYes);
+    if (document.fonts) document.fonts.load('100px Anton').then(startYes, startYes); else startYes();
+  }
+
+  // 11. Scroll-lit text ([data-scroll-words]): every word starts faint and lights up, in order, as the
+  //     text scrolls up through the screen, from its top coming past 85% of the way down to its
+  //     bottom reaching 70%, so it's all lit while it's still being read
+  const litTexts = Array.from(document.querySelectorAll('[data-scroll-words]'));
+  if (litTexts.length) {
+    const reducedLit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const texts = litTexts.map((el) => {
+      // Each word in its own span, inside whatever it was in (an underlined phrase keeps its <u>)
+      const spans = [];
+      const wrap = (node) => {
+        Array.from(node.childNodes).forEach((n) => {
+          if (n.nodeType === 1) { wrap(n); return; }
+          if (n.nodeType !== 3) return;
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.append(' '); return; }
+            const span = document.createElement('span');
+            span.className = 'lit-word';
+            span.textContent = part;
+            spans.push(span);
+            frag.append(span);
+          });
+          n.replaceWith(frag);
+        });
+      };
+      wrap(el);
+      if (reducedLit) spans.forEach((sp) => sp.style.setProperty('--lit', 1));
+      return { el, spans };
+    });
+    const light = () => {
+      const vh = window.innerHeight;
+      texts.forEach(({ el, spans }) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -vh || r.top > vh * 2) return;
+        const k = Math.min(Math.max((vh * 0.85 - r.top) / (vh * 0.85 - vh * 0.7 + r.height), 0), 1) * (spans.length + 2);
+        // Each word fades up over the span of about two words
+        spans.forEach((sp, i) => sp.style.setProperty('--lit', Math.min(Math.max((k - i) / 2, 0), 1).toFixed(3)));
+      });
+    };
+    if (!reducedLit) {
+      let litTick = false;
+      window.addEventListener('scroll', () => {
+        if (litTick) return;
+        litTick = true;
+        requestAnimationFrame(() => { litTick = false; light(); });
+      }, { passive: true });
+      window.addEventListener('resize', light);
+      light();
+    }
   }
 });
 </script>

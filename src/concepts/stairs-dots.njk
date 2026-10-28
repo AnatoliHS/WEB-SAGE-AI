@@ -1,0 +1,304 @@
+---
+layout: policy.njk
+title: "Staircase options: Sage"
+description: Five dot-matrix animations for the staircase's points, in place of the growing sage sprigs.
+noindex: true
+permalink: /concepts/stairs-dots/
+options:
+  - id: bloom
+    tag: 01 · Recommended
+    name: Dot sunrise
+    desc: At each point of the staircase a half-circle of dots switches on, rising from the line outwards like a small sun coming up, each dot springing in with a brief flash as the hero's do. Each step's is bigger than the last, so the staircase grows as it goes; the last one glows violet.
+  - id: sprout
+    tag: 02 · Sage, in pixels
+    name: Pixel sprout
+    desc: The sage sprig kept, but rebuilt in the hero's language. A small sprig of dots builds itself up from each point, stem first and then its leaves, dot by dot, taller at each step.
+  - id: run
+    tag: 03 · Journey
+    name: Light along the line
+    desc: A point of violet light runs the staircase from idea to impact, lighting the line behind it in the purples. As it reaches each point, a ring of light pulses out of it and the point turns violet.
+  - id: meter
+    tag: 04 · Growth
+    name: Level meters
+    desc: Above each point a column of dots fills upwards like a level meter, a third, two thirds, then all the way, with faint empty slots above showing the room left. Growth, measured.
+  - id: trace
+    tag: 05 · Quiet
+    name: Dotted trace
+    desc: The staircase line becomes a dotted line that switches on dot by dot as you scroll, following you down, with a soft head of light at its front; each point gets a small ring of dots as it's passed. Driven by the scroll, not played.
+---
+{# Ways to bring the staircase (section 01, home-sections.njk) to life in the dot-matrix hero's
+   language, in place of the sage sprigs (assets/js/stairs.js). Each option is the real staircase,
+   with one canvas over it. Everything is scoped under .sp- #}
+
+<style>
+  .sp-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .sp-intro > div { grid-column: 2 / -1; }
+  .sp-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .sp-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .sp-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .sp-jump a { color: var(--ink-2); }
+  .sp-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .sp-option { padding: clamp(80px, 10vw, 140px) 0 clamp(60px, 8vw, 120px); border-bottom: 1px solid var(--line); scroll-margin-top: 50px; }
+  .sp-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .sp-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .sp-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .sp-cap > div { grid-column: 2 / -1; }
+  .sp-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+  .sp-replay { margin-top: 12px; font-size: 0.875rem; font-weight: 500; color: var(--accent-soft); text-decoration: underline; cursor: pointer; background: none; border: 0; padding: 0; }
+
+  /* The canvas reaches past the staircase, for what grows above its points */
+  .sp-canvas { position: absolute; z-index: 1; pointer-events: none; }
+  .sp-option .grow-step { z-index: 2; }
+  /* Options that draw the line themselves */
+  .sp-option[data-kind="run"] .grow-path, .sp-option[data-kind="trace"] .grow-path { opacity: 0.35; }
+  .sp-option[data-kind="trace"] .grow-path { opacity: 0; }
+
+  @media (max-width: 640px) {
+    .sp-intro, .sp-cap { grid-template-columns: 1fr; }
+    .sp-intro > div, .sp-cap > p:last-child { grid-column: 1; }
+  }
+</style>
+
+<header class="sp-intro">
+  <p class="section-label"><span class="index-num">00</span>Staircase</p>
+  <div>
+    <h1>Growth, in dots.</h1>
+    <p>Five ways to bring the staircase's three points to life in the hero's dot-matrix language, in place of the growing sage sprigs. Each plays as it comes into view (05 follows the scroll); replay any of them under its caption.</p>
+  </div>
+</header>
+
+<ul class="sp-jump">
+  {% for o in options %}<li><a href="#sp-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<section class="sp-option" id="sp-{{ loop.index }}" data-kind="{{ o.id }}">
+  <div class="sp-cap"><p>{{ o.tag }}</p><div><p style="margin:0;font-size:1rem;line-height:1.6;color:var(--ink-2)"><b>{{ o.name }}</b>{{ o.desc }}</p>{% if o.id != 'trace' %}<button class="sp-replay" type="button">Replay</button>{% endif %}</div></div>
+<div class="grow-stairs" data-sp>
+      <svg class="grow-path" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="grow-path-grad" x1="0" x2="1"><stop offset="0" style="stop-color: color-mix(in srgb, var(--ink) 25%, transparent)"/><stop offset="1" style="stop-color: var(--accent-2)"/></linearGradient></defs>
+        <path d="M0 0 L100 0 L100 50 L200 50 L200 100 L300 100" fill="none" stroke="url(#grow-path-grad)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <ol class="grow-steps">
+        <li class="grow-step">
+          <span class="grow-icon" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </span>
+          <h3>Open-Source AI Engine</h3>
+          <p>Deploy and customize the core Sage.is AI engine. Full ownership of your models, workflows, and data with zero vendor lock-in.</p>
+          <p class="grow-tag">100% Data Sovereignty</p>
+        </li>
+        <li class="grow-step">
+          <span class="grow-icon" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <h3>Embedded Technical Capital</h3>
+          <p>Our elite engineering experts embed directly with your team, providing hands-on OSS collaboration and deep AI/ML technical leverage.</p>
+          <p class="grow-tag">Hands-On Co-Creation</p>
+        </li>
+        <li class="grow-step">
+          <span class="grow-icon" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </span>
+          <h3>Idea to Impact, Fast</h3>
+          <p>Work with our powerful AI and human specialists to develop your bold vision. From concept to production impact in record time.</p>
+          <p class="grow-tag">Zero Debt &bull; Fast Launch</p>
+        </li>
+      </ol>
+    </div>
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31];
+  var PADX = 80, PADT = 200, PADB = 60;
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function outBack(x) { return 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2); }
+  function mix(a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); }
+  function rgba(c, a) { return 'rgba(' + c.join(',') + ',' + a.toFixed(3) + ')'; }
+
+  // A small sage sprig, as dots: | the stem, L a leaf (read bottom up)
+  var SPRIG = [
+    '....L....',
+    '...LLL...',
+    '...L|L...',
+    'L...|...L',
+    'LL..|..LL',
+    '.LL.|.LL.',
+    '..LL|LL..',
+    '....|....',
+    '.L..|..L.',
+    'LLL.|.LLL',
+    '.LLL|LLL.',
+    '...L|L...',
+    '....|....',
+    '....|....'
+  ];
+
+  var opts = [].map.call(document.querySelectorAll('.sp-option'), function (sec) {
+    var stairs = sec.querySelector('[data-sp]'), canvas = document.createElement('canvas');
+    canvas.className = 'sp-canvas'; canvas.setAttribute('aria-hidden', 'true');
+    stairs.append(canvas);
+    var o = { sec: sec, kind: sec.dataset.kind, stairs: stairs, canvas: canvas, start: 0 };
+    var btn = sec.querySelector('.sp-replay');
+    if (btn) btn.addEventListener('click', function () { o.start = performance.now(); run(); });
+    return o;
+  });
+
+  function measure(o) {
+    var s = o.stairs.getBoundingClientRect(), W = s.width, H = s.height;
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    Object.assign(o.canvas.style, { left: -PADX + 'px', top: -PADT + 'px', width: W + PADX * 2 + 'px', height: H + PADT + PADB + 'px' });
+    o.canvas.width = Math.round((W + PADX * 2) * dpr); o.canvas.height = Math.round((H + PADT + PADB) * dpr);
+    o.ctx = o.canvas.getContext('2d'); o.dpr = dpr;
+    // Each step's point (its ::before dot: 9px, 4px above the step) and the line's corners
+    o.nodes = [].map.call(o.stairs.querySelectorAll('.grow-step'), function (st) {
+      var r = st.getBoundingClientRect();
+      return { x: r.left - s.left + 4.5, y: r.top - s.top + 0.5 };
+    });
+    var p = o.stairs.querySelector('.grow-path').getBoundingClientRect(), pw = p.width / 300, ph = p.height / 100, px = p.left - s.left, py = p.top - s.top;
+    o.path = [[0, 0], [100, 0], [100, 50], [200, 50], [200, 100], [300, 100]].map(function (q) { return [px + q[0] * pw, py + q[1] * ph]; });
+    o.len = 0;
+    for (var i = 1; i < o.path.length; i++) o.len += Math.hypot(o.path[i][0] - o.path[i - 1][0], o.path[i][1] - o.path[i - 1][1]);
+  }
+
+  // The point along the line at distance d, and whether it's past each node's x
+  function along(o, d) {
+    for (var i = 1; i < o.path.length; i++) {
+      var a = o.path[i - 1], b = o.path[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (d <= l) return [a[0] + (b[0] - a[0]) * d / l, a[1] + (b[1] - a[1]) * d / l];
+      d -= l;
+    }
+    return o.path[o.path.length - 1];
+  }
+
+  function dot(c, x, y, r, col) { if (r <= 0.05) return; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
+
+  // Draws option o at t ms in (Infinity: finished). Returns whether it's still moving
+  function draw(o, t) {
+    var c = o.ctx; c.setTransform(o.dpr, 0, 0, o.dpr, o.dpr * PADX, o.dpr * PADT);
+    c.clearRect(-PADX, -PADT, o.canvas.width, o.canvas.height);
+    var W = o.stairs.clientWidth, moving = false;
+
+    if (o.kind === 'bloom') {
+      o.nodes.forEach(function (n, i) {
+        var R = [46, 66, 90][i], P = 7, t0 = i * 550;
+        for (var gy = 0; gy <= R; gy += P) for (var gx = -R; gx <= R; gx += P) {
+          var d = Math.hypot(gx, gy); if (d > R || d < 1) continue;
+          var on = t0 + d / R * 700 + rand(gx + i * 31, gy) * 160, k = clamp01((t - on) / 450);
+          if (k < 1) moving = true;
+          if (k <= 0) continue;
+          var fall = 1 - d / R, col = mix(FROM, TO, (n.x + gx) / W);
+          var flash = Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.5;
+          dot(c, n.x + gx, n.y - gy - 1, P * 0.4 * Math.pow(fall, 0.55) * outBack(k), rgba(mix(col, [205, 192, 255], flash), 0.25 + 0.75 * fall));
+        }
+        if (i === 2 && t > t0 + 900) { c.shadowColor = 'rgba(151,26,255,.6)'; c.shadowBlur = 24; dot(c, n.x, n.y, 4.5, '#971aff'); c.shadowBlur = 0; }
+      });
+    } else if (o.kind === 'sprout') {
+      o.nodes.forEach(function (n, i) {
+        var P = [5, 6.5, 8][i], rows = SPRIG.length, t0 = i * 600;
+        for (var r = 0; r < rows; r++) {
+          var line = SPRIG[rows - 1 - r];
+          for (var cIdx = 0; cIdx < line.length; cIdx++) {
+            var ch = line[cIdx]; if (ch === '.') continue;
+            var on = t0 + r * 85 + (ch === 'L' ? 120 + rand(cIdx, r + i * 7) * 120 : 0), k = clamp01((t - on) / 420);
+            if (k < 1) moving = true;
+            if (k <= 0) continue;
+            var x = n.x + (cIdx - 4) * P, y = n.y - (r + 1) * P - 2;
+            var col = ch === '|' ? [78, 52, 108] : mix(FROM, TO, cIdx / 8 * 0.5 + i * 0.25);
+            dot(c, x, y, P * (ch === '|' ? 0.34 : 0.4) * outBack(k), rgba(col, ch === '|' ? 0.9 : 0.85));
+          }
+        }
+      });
+    } else if (o.kind === 'run') {
+      var T = 2600, k = still ? 1 : clamp01(t / T), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, head = e * o.len;
+      if (k < 1) moving = true;
+      var g = c.createLinearGradient(0, 0, W, 0); g.addColorStop(0, '#302aff'); g.addColorStop(1, '#971aff');
+      c.strokeStyle = g; c.lineWidth = 2; c.beginPath(); c.moveTo(o.path[0][0], o.path[0][1]);
+      var dd = 0;
+      for (var s = 1; s < o.path.length; s++) {
+        var a = o.path[s - 1], b = o.path[s], l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+        if (dd + l <= head) c.lineTo(b[0], b[1]); else { var q = along(o, head); c.lineTo(q[0], q[1]); break; }
+        dd += l;
+      }
+      c.stroke();
+      var hp = along(o, head);
+      if (k < 1) { c.shadowColor = 'rgba(151,26,255,.9)'; c.shadowBlur = 22; dot(c, hp[0], hp[1], 4, '#e8e2ff'); c.shadowBlur = 0; }
+      o.nodes.forEach(function (n, i) {
+        // When the head reaches the node (by distance along the line to the node's x)
+        var reach = 0;
+        for (var d = 0; d <= o.len; d += 4) { var q2 = along(o, d); if (q2[0] >= n.x - 1 && Math.abs(q2[1] - n.y) < 6) { reach = d; break; } }
+        if (head < reach) return;
+        var since = (still ? 9e9 : (head - reach) / o.len * T);
+        var pk = clamp01(since / 900);
+        if (pk < 1) moving = true;
+        c.strokeStyle = 'rgba(151,26,255,' + (0.6 * (1 - pk)).toFixed(3) + ')'; c.lineWidth = 1.5;
+        c.beginPath(); c.arc(n.x, n.y, 6 + 34 * pk, 0, 6.2832); c.stroke();
+        if (i === 2) { c.shadowColor = 'rgba(151,26,255,.6)'; c.shadowBlur = 20; }
+        dot(c, n.x, n.y, 4.5, rgba(mix(FROM, TO, n.x / W), 1)); c.shadowBlur = 0;
+      });
+    } else if (o.kind === 'meter') {
+      o.nodes.forEach(function (n, i) {
+        var P = 8, full = 12, h = [4, 8, 12][i], t0 = i * 450;
+        for (var r = 0; r < full; r++) for (var cx = -1; cx <= 1; cx++) {
+          var x = n.x + cx * P, y = n.y - 14 - r * P;
+          if (r >= h) { dot(c, x, y, 1.2, rgba(INK, 0.14)); continue; }
+          var on = t0 + r * 75 + (cx + 1) * 18, k = clamp01((t - on) / 380);
+          if (k < 1) moving = true;
+          var col = mix(FROM, TO, r / full);
+          dot(c, x, y, 1.2 + (P * 0.36 - 1.2) * outBack(k), k > 0 ? rgba(mix(col, [205, 192, 255], Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.5), 0.3 + 0.7 * Math.min(1, k * 2)) : rgba(INK, 0.14));
+        }
+      });
+    } else if (o.kind === 'trace') {
+      var r2 = o.stairs.getBoundingClientRect(), vh = innerHeight;
+      var p = still ? 1 : clamp01((vh * 0.8 - r2.top) / (r2.height * 0.9));
+      var headD = p * o.len, step = 10;
+      for (var d2 = 0; d2 <= o.len; d2 += step) {
+        var q3 = along(o, d2), on2 = d2 <= headD;
+        dot(c, q3[0], q3[1], on2 ? 2.2 : 1.3, on2 ? rgba(mix(FROM, TO, q3[0] / W), 1) : rgba(INK, 0.18));
+      }
+      var hq = along(o, headD);
+      if (p > 0 && p < 1) { c.shadowColor = 'rgba(151,26,255,.8)'; c.shadowBlur = 18; dot(c, hq[0], hq[1], 4, '#b8a8ff'); c.shadowBlur = 0; }
+      o.nodes.forEach(function (n) {
+        if (hq[0] < n.x - 2 && !(hq[1] > n.y + 2)) return;
+        for (var a2 = 0; a2 < 10; a2++) { var an = a2 / 10 * 6.2832; dot(c, n.x + Math.cos(an) * 14, n.y + Math.sin(an) * 14, 1.6, rgba(mix(FROM, TO, n.x / W), 0.8)); }
+      });
+    }
+    return moving;
+  }
+
+  var looping = false;
+  function run() {
+    if (looping) return; looping = true;
+    (function frame() {
+      var now = performance.now(), any = false;
+      opts.forEach(function (o) {
+        if (o.kind === 'trace' || !o.start) return;
+        if (draw(o, still ? Infinity : now - o.start)) any = true;
+      });
+      if (any) requestAnimationFrame(frame); else looping = false;
+    })();
+  }
+
+  // Each plays once, when its staircase's top is 30% up the screen
+  function check() {
+    var vh = innerHeight;
+    opts.forEach(function (o) {
+      if (o.kind === 'trace') { draw(o, 0); return; }
+      var r = o.stairs.getBoundingClientRect();
+      if (!o.start && r.top < vh * 0.7 && r.bottom > 0) { o.start = performance.now(); run(); }
+    });
+  }
+
+  function all() {
+    opts.forEach(function (o) { measure(o); draw(o, o.kind === 'trace' ? 0 : (o.start ? performance.now() - o.start : 0)); });
+    check();
+  }
+  addEventListener('scroll', check, { passive: true });
+  addEventListener('resize', function () { clearTimeout(all.t); all.t = setTimeout(all, 150); });
+  if (document.readyState === 'complete') all(); else addEventListener('load', all);
+})();
+</script>

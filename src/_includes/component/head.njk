@@ -41,18 +41,29 @@
   <!-- Flag JS early so reveal animations never hide content without it -->
   <script>document.documentElement.classList.add('js');</script>
   <!-- Colour theme (style.css, COLOUR THEMES): Home (Paper, with a Forest hero); ?theme=<name> tries
-       another for the comparison page (concepts/palettes.njk), ?theme=violet the original. ?intro=0 skips the intro -->
+       another, ?theme=violet the original. ?intro=0 skips the intro -->
   <script>(function () {
     var q = new URLSearchParams(location.search), root = document.documentElement;
     root.dataset.theme = q.get('theme') || 'home';
+    // Palette (style.css, PALETTES): Purple sage; ?palette=<name> tries another, ?palette=forest the
+    // forest and sun
+    root.dataset.palette = q.get('palette') || 'purple';
+    // A guide down the page (assets/js/guide.js): ?guide=<name>
+    if (q.get('guide')) root.dataset.guide = q.get('guide');
+    // Staircase sprigs (assets/js/stairs.js): the page's stairs, or ?stairs=<name> (none: off)
+    var stairs = q.get('stairs') || '{{ stairs or "" }}';
+    if (stairs && stairs !== 'none') root.dataset.stairs = stairs;
     // Hero depth (assets/js/hero-depth.js): the page's heroDepth, or ?depth=<name> (none: off)
     var depth = q.get('depth') || '{{ heroDepth or "" }}';
     if (depth && depth !== 'none') root.dataset.heroDepth = depth;
     // Hero burn (assets/js/hero-burn.js): the page's heroBurn, or ?burn=<name> (none: off)
     var burn = q.get('burn') || '{{ heroBurn or "" }}';
     if (burn && burn !== 'none') root.dataset.heroBurn = burn;
+    // Hero ambient (assets/js/hero-ambient.js): the page's heroAmbient, or ?ambient=<name> (none: off)
+    var ambient = q.get('ambient') || '{{ heroAmbient or "" }}';
+    if (ambient && ambient !== 'none') root.dataset.heroAmbient = ambient;
   })();</script>
-  {% if intro %}
+  {% if intro and introVariant != 'none' %}
   <!-- Intro (component/intro.njk): plays on every load, except with reduced motion -->
   <script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]intro=0/.test(location.search)) document.documentElement.classList.add('has-intro');</script>
   {% endif %}
@@ -71,5 +82,5 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/assets/images/general/sage.webp">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#1d2516">
+  <meta name="theme-color" content="#161028">
 </head>

@@ -1,0 +1,351 @@
+---
+layout: policy.njk
+title: "Wordmark hero, round two: Sage"
+description: Five variations built from Living letters and Night, reflected, with nothing covering the wordmark.
+noindex: true
+permalink: /concepts/wordmark-2/
+models: [Llama, Mistral, Qwen, DeepSeek, Gemma, Ollama]
+---
+{# Round two of the Wordmark ground hero (concepts/wordmark.njk), from its Living letters and Night,
+   reflected. The wordmark always has its own band: the copy above it, the strip below a hairline,
+   nothing laid over the letters. Everything is scoped under .lt- #}
+{% macro mark(cls) %}<div class="lt-mark {{ cls }}" aria-hidden="true">{% for ch in "SAGE.IS" | list %}<span data-ch="{{ ch }}"{% if ch == "." %} class="dot"{% endif %}>{{ ch }}</span>{% endfor %}</div>{% endmacro %}
+{% macro cta(label, cls) %}
+<a class="lt-cta {{ cls }}" href="https://sage.is/programs#packages"><span class="lt-cta-key"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></span>{{ label }}</a>
+{% endmacro %}
+{% macro copy(cls) %}
+<div class="container lt-top {{ cls }}">
+  <h2 class="lt-title lt-in"><span>Your next</span> AI breakthrough.</h2>
+  <div class="lt-side lt-in">
+    <p class="lt-lede">Decades of experience building AI before ChatGPT. Custom solutions and open-source tools to grow your business.</p>
+    <div class="lt-actions">{{ cta("Start a project", "is-light" if "is-dark-cta" in cls else "") }}<a class="lt-link" href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener">Star on GitHub</a></div>
+  </div>
+</div>
+{% endmacro %}
+{% macro strip() %}
+<div class="container"><div class="lt-strip"><p>Hundreds of students already build with Sage. Runs privately, on the models you choose.</p><ul>{% for m in models %}<li>{{ m }}</li>{% endfor %}</ul></div></div>
+{% endmacro %}
+
+<style>
+  .lt-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .lt-intro > div { grid-column: 2 / -1; }
+  .lt-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .lt-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .lt-intro p a { text-decoration: underline; }
+  .lt-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .lt-jump a { color: var(--ink-2); }
+  .lt-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .lt-option { margin-inline: calc(50% - 50vw); padding: clamp(64px, 8vw, 120px) 0 0; scroll-margin-top: 50px; }
+  .lt-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(28px, 3vw, 44px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .lt-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .lt-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .lt-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* The frame: a first screen inset from the page edge, rounded, with a fine grain */
+  .lt-stage {
+    position: relative; display: flex; flex-direction: column; isolation: isolate; overflow: hidden; container-type: inline-size;
+    min-height: min(calc(100svh - 24px), 1000px); margin: 0 clamp(8px, 1vw, 14px); border-radius: clamp(18px, 2vw, 32px); color: var(--ink);
+  }
+  .lt-stage::after { content: ""; position: absolute; inset: 0; z-index: 20; pointer-events: none; opacity: 0.07; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .lt-stage.is-dark { --ink: #f1eefa; --ink-2: #c6c0d8; --muted: #6f688a; --line: rgba(241, 238, 250, 0.12); background: radial-gradient(55% 50% at 50% 0%, rgba(143, 134, 255, 0.2), transparent 70%), linear-gradient(180deg, #110d20 0%, #07060d 100%); }
+  .lt-stage.is-dark::after { mix-blend-mode: overlay; opacity: 0.12; }
+  .lt-stage.is-light { --ink: #16131f; --ink-2: #4c475a; --muted: #a39eb2; --line: rgba(22, 19, 31, 0.1); background: radial-gradient(60% 50% at 80% 10%, rgba(151, 26, 255, 0.07), transparent 70%), linear-gradient(180deg, #fcfbfe 0%, #f0edf5 100%); }
+
+  /* The copy: headline left, lede and actions right, all above the wordmark's band */
+  .lt-top { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px var(--gutter); align-items: end; padding-top: clamp(48px, 8vh, 104px); }
+  .lt-top.is-centre { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .lt-top.is-centre .lt-side { display: flex; flex-direction: column; align-items: center; }
+  .lt-title { font-size: clamp(2.75rem, 5.8vw, 6.5rem); font-weight: 500; line-height: 0.98; letter-spacing: -0.055em; text-wrap: balance; }
+  .lt-title span { display: block; color: var(--muted); }
+  .lt-top.is-centre .lt-title { font-size: clamp(2.5rem, 5vw, 5.5rem); }
+  .lt-top.is-centre .lt-title span { display: inline; }
+  .lt-lede { max-width: 40ch; font-size: clamp(1rem, 1.15vw, 1.25rem); line-height: 1.55; color: var(--ink-2); }
+  .lt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 24px; }
+  .lt-top.is-centre .lt-actions { justify-content: center; }
+  .lt-link { font-size: 0.9375rem; font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: border-color 0.3s ease; }
+  .lt-link:hover { border-color: currentColor; }
+  .lt-cta { display: inline-flex; align-items: center; gap: 16px; height: 60px; padding: 6px 28px 6px 6px; border-radius: 16px; font-size: 1rem; font-weight: 500; color: #fff; background: #16131f; box-shadow: 0 10px 30px -12px rgba(22, 19, 31, 0.6); transition: box-shadow 0.3s ease; }
+  .lt-cta-key { display: grid; place-items: center; width: 64px; height: 100%; border-radius: 11px; color: #16131f; background: #fff; transition: width 0.45s var(--ease); }
+  .lt-cta:hover .lt-cta-key { width: 76px; }
+  .lt-cta:hover { box-shadow: 0 16px 40px -12px rgba(110, 50, 255, 0.55); }
+  .lt-cta.is-light { color: #16131f; background: #f1eefa; box-shadow: 0 10px 40px -12px rgba(151, 26, 255, 0.5); }
+  .lt-cta.is-light .lt-cta-key { color: #fff; background: var(--accent-gradient); }
+
+  /* The wordmark's band. --fs fits SAGE.IS (2.76em wide in Anton) to its share of the frame */
+  .lt-brand { --fs: calc(var(--fit, 0.84) * 100cqw / 2.77); position: relative; margin-top: auto; padding-top: clamp(40px, 7vh, 88px); }
+  .lt-brand.is-reflected { padding-bottom: calc(var(--fs) * 0.3); }
+  .lt-box { position: relative; width: max-content; margin: 0 auto; }
+  .lt-mark { display: flex; font-family: var(--font-display); font-size: var(--fs); line-height: 0.8; white-space: nowrap; user-select: none; }
+  /* Padded past the tight line box, so a fill clipped to the glyphs reaches their full height */
+  .lt-mark span { position: relative; display: block; padding-block: 0.14em; margin-block: -0.14em; background-size: var(--bw, 100%) 100%; background-position: var(--bx, 0) 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; translate: 0 40%; opacity: 0; transition: translate 1.3s var(--ease), opacity 0.9s ease; }
+  .is-on .lt-mark span { translate: 0 0; opacity: 1; }
+  {% for i in range(0, 7) %}.is-on .lt-mark span:nth-child({{ i + 1 }}) { transition-delay: {{ 0.1 + i * 0.07 }}s; }
+  {% endfor %}
+  .lt-mirror { position: absolute; left: 0; top: 100%; scale: 1 -1; opacity: 0.24; filter: blur(1.5px); -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 42%); mask-image: linear-gradient(0deg, #000 0%, transparent 42%); pointer-events: none; }
+  .lt-bloom { position: absolute; inset: 0; z-index: -1; filter: blur(clamp(24px, 3.4cqw, 64px)); opacity: 0.55; pointer-events: none; }
+  .lt-floor { position: absolute; left: -5%; right: -5%; top: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(201, 166, 255, 0.85), transparent); box-shadow: 0 0 24px 1px rgba(151, 26, 255, 0.55); }
+
+  /* The living colour: a slow field of Sage purple, blue, gold and green inside the letters */
+  .lt-live .lt-mark span { background-image:
+      radial-gradient(38% 70% at var(--mx, 30%) var(--my, 40%), #971aff, transparent 70%),
+      radial-gradient(34% 60% at calc(100% - var(--mx, 30%)) 30%, #302aff, transparent 70%),
+      radial-gradient(30% 60% at 55% 100%, #fec820, transparent 70%),
+      radial-gradient(30% 60% at 12% 90%, #8fb36a, transparent 70%),
+      linear-gradient(180deg, var(--base-1), var(--base-2)); }
+
+  .lt-in { opacity: 0; translate: 0 16px; transition: opacity 0.9s ease, translate 1.1s var(--ease); }
+  .is-on .lt-in { opacity: 1; translate: 0 0; }
+  .is-on .lt-side.lt-in { transition-delay: 0.12s; }
+
+  /* The foot: proof and the models, below a hairline, clear of the wordmark */
+  .lt-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px var(--gutter); margin-top: clamp(16px, 3vh, 36px); padding: 20px 0 clamp(20px, 2.4vw, 32px); border-top: 1px solid var(--line); }
+  .lt-strip p { max-width: 26em; font-size: 0.875rem; line-height: 1.5; color: var(--ink-2); }
+  .lt-strip ul { display: flex; flex-wrap: wrap; gap: 10px clamp(20px, 3vw, 52px); list-style: none; }
+  .lt-strip li { font-size: clamp(1.125rem, 1.5vw, 1.5rem); font-weight: 600; letter-spacing: -0.04em; color: color-mix(in srgb, var(--ink) 40%, transparent); }
+
+  /* 01 Aurora, reflected */
+  .lt-1 { --base-1: #ffffff; --base-2: #a9a1c8; }
+  .lt-1 .lt-bloom span { opacity: 1; }
+
+  /* 02 Spotlight */
+  .lt-2 { background: radial-gradient(28% 42% at var(--sx, 50%) 66%, rgba(143, 134, 255, 0.16), transparent 70%), radial-gradient(55% 50% at 50% 0%, rgba(143, 134, 255, 0.12), transparent 70%), linear-gradient(180deg, #0f0c1c 0%, #060509 100%); }
+  .lt-2 .lt-mark span { background-image:
+      radial-gradient(16% 50% at var(--lx, 50%) var(--ly, 30%), rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 100%),
+      radial-gradient(34% 90% at var(--lx, 50%) var(--ly, 30%), rgba(169, 150, 255, 0.55), rgba(169, 150, 255, 0) 100%),
+      linear-gradient(180deg, #4a4462 0%, #211d31 100%); }
+  .lt-2 .lt-mark .dot { background-image: radial-gradient(16% 50% at var(--lx, 50%) var(--ly, 30%), rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 100%), linear-gradient(180deg, #971aff, #302aff); }
+  .lt-2 .lt-floor { background: radial-gradient(18% 100% at var(--lx, 50%) 50%, rgba(241, 238, 250, 0.95), transparent 100%); box-shadow: none; }
+  .lt-2 .lt-mirror { opacity: 0.3; }
+
+  /* 03 Eclipse */
+  .lt-3 { background: linear-gradient(180deg, #0c0918 0%, #05040a 100%); }
+  .lt-horizon { position: absolute; left: -18%; right: -18%; bottom: 0; height: 230%; z-index: -1; background: radial-gradient(50% 100% at 50% 100%, rgba(254, 200, 32, 0.95) 0%, rgba(255, 138, 92, 0.8) 14%, rgba(151, 26, 255, 0.6) 36%, rgba(48, 42, 255, 0.25) 60%, transparent 82%); filter: blur(14px); transform-origin: 50% 100%; scale: 1 0.35; opacity: 0; transition: scale 2.4s var(--ease), opacity 1.6s ease; pointer-events: none; }
+  .is-on .lt-horizon { scale: 1 1; opacity: 1; animation: lt-breathe 9s ease-in-out 2.4s infinite; }
+  @keyframes lt-breathe { 50% { scale: 1.04 1.08; } }
+  .lt-3 .lt-mark span { -webkit-text-fill-color: #07060d; color: #07060d; text-shadow: 0 -1px 0 rgba(255, 226, 170, 0.7), 0 -12px 40px rgba(254, 200, 32, 0.2); }
+  .lt-3 .lt-mark .dot { -webkit-text-fill-color: #07060d; }
+  .lt-3 .lt-floor { left: -20%; right: -20%; background: linear-gradient(90deg, transparent, rgba(254, 200, 32, 0.9), transparent); box-shadow: 0 0 30px 2px rgba(254, 200, 32, 0.45); }
+
+  /* 04 Living paper */
+  .lt-4 { --base-1: #cdc5df; --base-2: #e3ddee; }
+  .lt-4 .lt-bloom { translate: 0 8%; opacity: 0.45; }
+  .lt-4 .lt-floor { background: linear-gradient(90deg, transparent, rgba(22, 19, 31, 0.25), transparent); box-shadow: none; }
+  .lt-4 .lt-mirror { opacity: 0.18; }
+
+  /* 05 Letter by letter */
+  .lt-5 { --base-1: #ffffff; --base-2: #c9b8ff; }
+  .lt-5 .lt-mark span { background-image: linear-gradient(180deg, #ffffff 0%, #d8d2ec 45%, #6f688a 100%); transform: translateY(calc(var(--lit, 0) * -4%)); transition: translate 1.3s var(--ease), opacity 0.9s ease, transform 0.5s var(--ease); }
+  .lt-5 .lt-mark span::after { content: attr(data-ch); position: absolute; inset: 0; padding-block: 0.14em; opacity: var(--lit, 0); background-image:
+      radial-gradient(38% 70% at 30% 40%, #971aff, transparent 70%),
+      radial-gradient(34% 60% at 70% 30%, #302aff, transparent 70%),
+      radial-gradient(30% 60% at 55% 100%, #fec820, transparent 70%),
+      radial-gradient(30% 60% at 12% 90%, #8fb36a, transparent 70%),
+      linear-gradient(180deg, var(--base-1), var(--base-2));
+    background-size: var(--bw, 100%) 100%; background-position: var(--bx, 0) 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; transition: opacity 0.45s ease; }
+  .lt-5 .lt-mark span.dot { background-image: linear-gradient(180deg, #c9a6ff, #971aff 50%, #302aff); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lt-mark span, .lt-in, .lt-horizon { opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; animation: none !important; }
+    .lt-mirror .lt-mark span, .lt-mirror span { opacity: 1 !important; }
+  }
+  @media (max-width: 960px) {
+    .lt-top { grid-template-columns: 1fr; align-items: start; }
+  }
+  @media (max-width: 640px) {
+    .lt-intro, .lt-cap { grid-template-columns: 1fr; }
+    .lt-intro > div, .lt-cap > p:last-child { grid-column: 1; }
+    .lt-strip ul { display: none; }
+    .lt-brand { --fit: 0.92; }
+    .lt-cta { height: 54px; padding-right: 22px; }
+  }
+</style>
+
+<header class="lt-intro">
+  <p class="section-label"><span class="index-num">00</span>Hero · Wordmark, round two</p>
+  <div>
+    <h1>The name, uncovered.</h1>
+    <p>Five variations built from <a href="/concepts/wordmark/#wg-3">Living letters</a> and <a href="/concepts/wordmark/#wg-5">Night, reflected</a>. The wordmark always has its own band, with the copy above and the strip below a hairline; nothing sits on the letters. Move your pointer over each one, too.</p>
+  </div>
+</header>
+
+<ul class="lt-jump">
+  <li><a href="#lt-1"><b>01</b>Aurora, reflected</a></li>
+  <li><a href="#lt-2"><b>02</b>Spotlight</a></li>
+  <li><a href="#lt-3"><b>03</b>Eclipse</a></li>
+  <li><a href="#lt-4"><b>04</b>Living paper</a></li>
+  <li><a href="#lt-5"><b>05</b>Letter by letter</a></li>
+</ul>
+
+<!-- 01 -->
+<section class="lt-option" id="lt-1">
+  <div class="container">
+    <div class="lt-cap"><p>01 · Recommended</p><p><b>Aurora, reflected</b>Your two favourites as one. The living colour drifts through silver letters, which follow the pointer, shed a soft bloom of the same colour behind them, and are reflected, still moving, in a glowing floor. The copy above and the strip below never touch them.</p></div>
+  </div>
+  <div class="lt-stage is-dark lt-1 lt-live" data-lt-live>
+    {{ copy("is-centre is-dark-cta") }}
+    <div class="lt-brand is-reflected">
+      <div class="lt-box">
+        {{ mark("lt-bloom") }}
+        {{ mark() }}
+        {{ mark("lt-mirror") }}
+        <span class="lt-floor"></span>
+      </div>
+    </div>
+    {{ strip() }}
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="lt-option" id="lt-2">
+  <div class="container">
+    <div class="lt-cap"><p>02 · Material</p><p><b>Spotlight</b>Graphite letters in a dark room, and a soft light you hold: it follows the pointer (or wanders by itself) and catches the letters' faces like polished metal, lighting a pool on the floor and in the reflection beneath.</p></div>
+  </div>
+  <div class="lt-stage is-dark lt-2" data-lt-spot>
+    {{ copy("is-dark-cta") }}
+    <div class="lt-brand is-reflected">
+      <div class="lt-box">
+        {{ mark() }}
+        {{ mark("lt-mirror") }}
+        <span class="lt-floor"></span>
+      </div>
+    </div>
+    {{ strip() }}
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="lt-option" id="lt-3">
+  <div class="container">
+    <div class="lt-cap"><p>03 · Cinematic</p><p><b>Eclipse</b>A sunrise behind the name. As the hero comes into view, light rises from the horizon in gold, coral and the Sage purples, leaving SAGE.IS as a black silhouette with a thin gold rim along its top edge. Then it slowly breathes.</p></div>
+  </div>
+  <div class="lt-stage is-dark lt-3">
+    {{ copy("is-centre is-dark-cta") }}
+    <div class="lt-brand">
+      <div class="lt-box">
+        <span class="lt-horizon"></span>
+        {{ mark() }}
+        <span class="lt-floor"></span>
+      </div>
+    </div>
+    {{ strip() }}
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="lt-option" id="lt-4">
+  <div class="container">
+    <div class="lt-cap"><p>04 · Light</p><p><b>Living paper</b>Living letters, finished: the whole name now stands clear on paper instead of bleeding off the bottom, its colour spills softly onto the paper beneath it, and a faint reflection grounds it on a hairline.</p></div>
+  </div>
+  <div class="lt-stage is-light lt-4 lt-live" data-lt-live>
+    {{ copy("") }}
+    <div class="lt-brand is-reflected">
+      <div class="lt-box">
+        {{ mark("lt-bloom") }}
+        {{ mark() }}
+        {{ mark("lt-mirror") }}
+        <span class="lt-floor"></span>
+      </div>
+    </div>
+    {{ strip() }}
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="lt-option" id="lt-5">
+  <div class="container">
+    <div class="lt-cap"><p>05 · Playful</p><p><b>Letter by letter</b>Night, reflected, with the living colour held back for the letters nearest the pointer. They warm into colour and lift a touch as you pass, and the reflection follows them. Left alone, a slow wave of colour walks along the name.</p></div>
+  </div>
+  <div class="lt-stage is-dark lt-5" data-lt-letters>
+    {{ copy("is-centre is-dark-cta") }}
+    <div class="lt-brand is-reflected">
+      <div class="lt-box">
+        {{ mark() }}
+        {{ mark("lt-mirror") }}
+        <span class="lt-floor"></span>
+      </div>
+    </div>
+    {{ strip() }}
+  </div>
+</section>
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // One background across the whole word: each letter shows its own slice of it
+  function slice() {
+    document.querySelectorAll('.lt-mark').forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      el.querySelectorAll('span').forEach(function (ch) {
+        ch.style.setProperty('--bw', r.width + 'px');
+        ch.style.setProperty('--bx', (r.left - ch.getBoundingClientRect().left) + 'px');
+      });
+    });
+  }
+  slice();
+  if (document.fonts) document.fonts.ready.then(slice);
+  addEventListener('resize', slice);
+
+  // Entrances play once; the motion below only runs while its frame is on screen
+  var seen = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('is-on'); });
+  }, { threshold: 0.3 });
+  var live = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { e.target.ltVisible = e.isIntersecting; });
+  });
+  document.querySelectorAll('.lt-stage').forEach(function (el) { seen.observe(el); live.observe(el); });
+
+  // A point that wanders by itself, and follows the pointer while it's over the frame
+  function wander(stage, box, step) {
+    var p = { x: 0.5, y: 0.4, tx: 0.5, ty: 0.4, hover: false }, t0 = performance.now();
+    stage.addEventListener('pointermove', function (e) {
+      var r = box.getBoundingClientRect();
+      p.tx = (e.clientX - r.left) / r.width; p.ty = (e.clientY - r.top) / r.height; p.hover = true;
+    });
+    stage.addEventListener('pointerleave', function () { p.hover = false; });
+    if (still) { step(p); return; }
+    (function frame(now) {
+      if (stage.ltVisible) {
+        var t = (now - t0) / 1000;
+        if (!p.hover) { p.tx = 0.5 + 0.42 * Math.sin(t * 0.3); p.ty = 0.42 + 0.3 * Math.sin(t * 0.41 + 1); }
+        p.x += (p.tx - p.x) * 0.06; p.y += (p.ty - p.y) * 0.06;
+        step(p);
+      }
+      requestAnimationFrame(frame);
+    })(t0);
+  }
+
+  // 01, 04: the living colour
+  document.querySelectorAll('[data-lt-live]').forEach(function (stage) {
+    wander(stage, stage.querySelector('.lt-box'), function (p) {
+      stage.style.setProperty('--mx', (p.x * 100).toFixed(2) + '%');
+      stage.style.setProperty('--my', (p.y * 100).toFixed(2) + '%');
+    });
+  });
+
+  // 02: the spotlight, on the letters and in the room
+  document.querySelectorAll('[data-lt-spot]').forEach(function (stage) {
+    var box = stage.querySelector('.lt-box');
+    wander(stage, box, function (p) {
+      box.style.setProperty('--lx', (p.x * 100).toFixed(2) + '%');
+      box.style.setProperty('--ly', (Math.min(Math.max(p.y, -0.2), 1.2) * 100).toFixed(2) + '%');
+      var b = box.getBoundingClientRect(), s = stage.getBoundingClientRect();
+      stage.style.setProperty('--sx', ((b.left - s.left + p.x * b.width) / s.width * 100).toFixed(2) + '%');
+    });
+  });
+
+  // 05: the letters nearest the point warm into colour, in the word and its reflection
+  document.querySelectorAll('[data-lt-letters]').forEach(function (stage) {
+    var box = stage.querySelector('.lt-box'), marks = box.querySelectorAll('.lt-mark');
+    var main = marks[0].querySelectorAll('span');
+    wander(stage, box, function (p) {
+      var b = box.getBoundingClientRect();
+      main.forEach(function (ch, i) {
+        var r = ch.getBoundingClientRect(), c = (r.left + r.width / 2 - b.left) / b.width;
+        var lit = Math.max(0, 1 - Math.abs(p.x - c) / 0.2).toFixed(3);
+        marks.forEach(function (m) { m.children[i].style.setProperty('--lit', lit); });
+      });
+    });
+  });
+})();
+</script>

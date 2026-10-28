@@ -1,0 +1,639 @@
+---
+layout: policy.njk
+title: "Proven Advantage animation options: Sage"
+description: "The current Proven Advantage, converted to dots, and four new dot-matrix concepts."
+noindex: true
+permalink: /concepts/yes-dots/
+steps:
+  - tag: "01 · Expert incubation"
+    q: "Can our vision <strong>be incubated and grow with AI/ML experts?</strong>"
+    status: "Fully Supported &amp; Tailored"
+  - tag: "02 · Direct assistance"
+    q: "Can we access <strong>hands-on technical support?</strong>"
+    status: "99.99% Uptime &amp; Founder Access"
+  - tag: "03 · Speed to market"
+    q: "Can our team <strong>accelerate from idea to impact quickly?</strong>"
+    status: "Production Ready in Days"
+options:
+  - id: current
+    tag: "01 · Today's, in dots"
+    name: "The current one, in dots"
+    desc: "The live section exactly, sideways row and all, rebuilt in dots. The stem is a curving line of dots that lights to the middle of the screen as the row moves; at each question a pair of dot leaves opens from its node and the outlined YES fills with purple dots from the left; small dot leaves bud between; and at the answer the plant flowers, a spike of dot florets climbing to a bud."
+  - id: spell
+    tag: "02 · Recommended"
+    name: "One letter per answer"
+    desc: "A wall of dots across the top of the screen, a giant YES! waiting in it, unlit. Each question you scroll through answers with one letter: the Y lights for the first, the E for the second, the S for the third, and the answer lights the ! and the whole word flashes. The YES is earned, letter by letter."
+  - id: morph
+    tag: "03 · Transformation"
+    name: "Question becomes YES"
+    desc: "Every question starts as a big question mark of grey dots. As you scroll, the very same dots lift off and fly, on curving paths, to rearrange themselves into a purple YES; then they gather back into a question mark for the next one. Doubt, literally turned into YES, by the scroll."
+  - id: board
+    tag: "04 · LED"
+    name: "Departures board"
+    desc: "A dark LED board, like a station's, in the light page. Each question runs across the ticker at its foot; its row's status blinks ?, then scrambles through the alphabet and locks on YES, in purple. The last row is the answer, YES!. The most literal dot matrix there is."
+  - id: receipt
+    tag: "05 · Playful"
+    name: "Printed proof"
+    desc: "A small dot-matrix printer prints the proof as you scroll: a receipt rises out of it, line by line, each question then its ANSWER .... YES and its status, ending on TOTAL .... YES! in purple, a barcode and a thank you. Proven, on paper."
+---
+{# Ways to animate Proven Advantage (section 04, home-sections.njk) in the dot-matrix hero's
+   language. 01 is the live section (scripts.njk, 13) rebuilt in dots; 02 to 05 are new. Each holds
+   the screen while you scroll through its questions, driven by the scroll so it runs backwards too,
+   and each has its own phone layout. Everything is scoped under .yp- (01 reuses the live .yes-
+   classes, under data-yp="current", which scripts.njk doesn't touch) #}
+{% macro panels() %}
+<div class="yp-panel" data-at="0">
+  <h3 class="section-title">With Sage the answer is <span class="text-accent">YES!</span></h3>
+  <p class="section-lede">As a Technical Capital Solution, we empower projects to grow quickly, with our decades of hands-on expertise, open-source innovation, and lock-in-free flexibility.</p>
+</div>
+{% for s in steps %}<div class="yp-panel" data-at="{{ loop.index }}"><p class="yp-tag">{{ s.tag }}</p><p class="yp-q">{{ s.q | safe }}</p><p class="yp-status">{{ s.status | safe }}</p></div>{% endfor %}
+<div class="yp-panel" data-at="4"><p class="yp-tag">The answer</p><p class="yp-q">Are your projects fully ready for <strong>bold breakthroughs?</strong></p><p class="yp-status">When working with Sage.is, the answer is absolutely YES!</p></div>
+{% endmacro %}
+
+<style>
+  .yp-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .yp-intro > div { grid-column: 2 / -1; }
+  .yp-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .yp-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .yp-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .yp-jump a { color: var(--ink-2); }
+  .yp-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .yp-option { margin-inline: calc(50% - 50vw); padding-top: clamp(64px, 8vw, 120px); scroll-margin-top: 50px; }
+  .yp-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .yp-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .yp-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .yp-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* 01: the live section, its words and stem drawn in dots */
+  [data-yp="current"] .yes-word { -webkit-text-stroke: 0; }
+  [data-yp="current"] .yes-word::after { display: none; }
+  .yp-track-canvas { position: absolute; left: 0; pointer-events: none; }
+
+  /* 02 to 05: a screen held while the scroll runs through it */
+  .yp-pin { position: relative; height: 520vh; }
+  .yp-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .yp-stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .yp-top { position: absolute; left: 0; right: 0; top: clamp(20px, 4vh, 40px); display: flex; justify-content: space-between; align-items: baseline; padding-top: 18px; border-top: 1px solid var(--line); }
+  .yp-count { font-size: 0.875rem; letter-spacing: 0.08em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .yp-count b { font-weight: 500; color: var(--ink); }
+  .yp-bar { position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(18px, 3.5vh, 32px); height: 2px; background: var(--line); }
+  .yp-bar i { position: absolute; inset: 0; background: linear-gradient(90deg, #302aff, #971aff); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+
+  /* The words: one panel at a time. Where they sit is set per option below */
+  .yp-panel { position: absolute; left: var(--gutter); right: var(--gutter); opacity: 0; translate: 0 14px; transition: opacity 0.4s ease, translate 0.6s var(--ease); pointer-events: none; }
+  .yp-panel.is-on { opacity: 1; translate: 0 0; pointer-events: auto; }
+  .yp-panel .section-title { font-size: clamp(2rem, 3.8vw, 4.25rem); }
+  .yp-panel .section-lede { margin-top: 16px; max-width: 34em; }
+  .yp-tag { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .yp-q { margin-top: 12px; max-width: 22em; font-size: clamp(1.75rem, 3.2vw, 3.4rem); font-weight: 500; line-height: 1.07; letter-spacing: -0.045em; color: var(--ink-2); }
+  .yp-q strong { font-weight: 500; color: var(--ink); }
+  .yp-status { margin-top: 16px; font-size: clamp(1rem, 1.2vw, 1.25rem); color: var(--accent-soft); }
+  .yp-status::before { content: "✓ "; }
+
+  /* 02: the wall across the top, the words under it */
+  [data-yp="spell"] .yp-panel { top: 62%; }
+  /* 03: the words left, the dots right; on phones, the dots on top */
+  [data-yp="morph"] .yp-panel { top: 50%; right: auto; width: min(46%, 600px); translate: 0 calc(-50% + 14px); }
+  [data-yp="morph"] .yp-panel.is-on { translate: 0 -50%; }
+  /* 04: the board up top, the words under it */
+  [data-yp="board"] .yp-panel { top: 66%; text-align: center; }
+  [data-yp="board"] .yp-panel .yp-q { font-size: clamp(1.25rem, 2vw, 1.875rem); margin-inline: auto; }
+  [data-yp="board"] .yp-panel .section-lede { margin-inline: auto; }
+  [data-yp="board"] .yp-panel .section-title { font-size: clamp(1.75rem, 2.8vw, 3rem); }
+  /* 05: the words left, the printer right; on phones the heading only until printing starts */
+  [data-yp="receipt"] .yp-panel { top: 50%; right: auto; width: min(44%, 560px); translate: 0 calc(-50% + 14px); }
+  [data-yp="receipt"] .yp-panel.is-on { translate: 0 -50%; }
+
+  @media (max-width: 760px) {
+    .yp-intro, .yp-cap { grid-template-columns: 1fr; }
+    .yp-intro > div, .yp-cap > p:last-child { grid-column: 1; }
+    .yp-q { font-size: clamp(1.5rem, 7vw, 2rem); }
+    .yp-panel .section-title { font-size: clamp(2rem, 9vw, 2.5rem); }
+    [data-yp="spell"] .yp-panel { top: 46%; }
+    [data-yp="morph"] .yp-panel { top: auto; bottom: 10svh; width: auto; right: var(--gutter); translate: 0 14px; }
+    [data-yp="morph"] .yp-panel.is-on { translate: 0 0; }
+    [data-yp="board"] .yp-panel { top: 40%; }
+    [data-yp="receipt"] .yp-panel { top: 14svh; width: auto; right: var(--gutter); translate: 0 14px; }
+    [data-yp="receipt"] .yp-panel.is-on { translate: 0 0; }
+    [data-yp="receipt"] .yp-panel:not([data-at="0"]) { display: none; }
+  }
+</style>
+
+<header class="yp-intro">
+  <p class="section-label"><span class="index-num">00</span>Proven Advantage</p>
+  <div>
+    <h1>Proven, in dots.</h1>
+    <p>First, the live section exactly as it is, rebuilt in dots. Then four new directions that lean into what a dot matrix really is: an LED wall, particles, a station board, a printer. Each holds the screen while you scroll through the three questions, runs backwards when you scroll up, and has its own phone layout.</p>
+  </div>
+</header>
+
+<ul class="yp-jump">
+  {% for o in options %}<li><a href="#yp-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<section class="yp-option" id="yp-{{ loop.index }}">
+  <div class="container"><div class="yp-cap"><p>{{ o.tag }}</p><p><b>{{ o.name }}</b>{{ o.desc }}</p></div></div>
+  {% if o.id == 'current' %}
+  <div class="section-yes">
+<div class="yes-pin" data-yp="current">
+    <div class="yes-stage">
+      <div class="container yes-top">
+        <p class="section-label"><span class="index-num">04</span>Proven Advantage</p>
+        <p class="yes-count" aria-hidden="true"><b data-yes-count>00</b> / 03</p>
+      </div>
+
+      <div class="yes-rail">
+        <ol class="yes-track">
+          <li class="yes-intro">
+            <h3 class="section-title">With Sage the answer is <span class="text-accent">YES!</span></h3>
+            <p class="section-lede">As a Technical Capital Solution, we empower projects to grow quickly, with our decades of hands-on expertise, open-source innovation, and lock-in-free flexibility.</p>
+            <span class="yes-hint" aria-hidden="true"><i></i>Keep scrolling</span>
+          </li>
+          <li class="yes-step">
+            <span class="yes-node" aria-hidden="true"></span>
+            <span class="yes-tag">01 · Expert incubation</span>
+            <p class="yes-q">Can our vision <strong>be incubated and grow with AI/ML experts?</strong></p>
+            <div class="yes-stamp">
+              <span class="yes-word" data-word="YES">YES</span>
+              <span class="yes-status">✓ Fully Supported &amp; Tailored</span>
+            </div>
+          </li>
+          <li class="yes-step">
+            <span class="yes-node" aria-hidden="true"></span>
+            <span class="yes-tag">02 · Direct assistance</span>
+            <p class="yes-q">Can we access <strong>hands-on technical support?</strong></p>
+            <div class="yes-stamp">
+              <span class="yes-word" data-word="YES">YES</span>
+              <span class="yes-status">✓ 99.99% Uptime &amp; Founder Access</span>
+            </div>
+          </li>
+          <li class="yes-step">
+            <span class="yes-node" aria-hidden="true"></span>
+            <span class="yes-tag">03 · Speed to market</span>
+            <p class="yes-q">Can our team <strong>accelerate from idea to impact quickly?</strong></p>
+            <div class="yes-stamp">
+              <span class="yes-word" data-word="YES">YES</span>
+              <span class="yes-status">✓ Production Ready in Days</span>
+            </div>
+          </li>
+          <li class="yes-step yes-final">
+            <span class="yes-node" aria-hidden="true"></span>
+            <p class="yes-question">Are your projects fully ready for bold breakthroughs?</p>
+            <h4 class="yes-answer">When working with Sage.is, the answer is absolutely <span class="yes-yes">YES!</span></h4>
+          </li>
+        </ol>
+      </div>
+
+      <div class="container"><div class="yes-progress"><i></i></div></div>
+    </div>
+  </div>
+  </div>
+  {% else %}
+  <div class="yp-pin" data-yp="{{ o.id }}">
+    <div class="yp-stage">
+      <canvas aria-hidden="true"></canvas>
+      <div class="container yp-top"><p class="section-label"><span class="index-num">04</span>Proven Advantage</p><p class="yp-count" aria-hidden="true"><b>00</b> / 03</p></div>
+      {{ panels() }}
+      <div class="yp-bar"><i></i></div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FROM = [48, 42, 255], TO = [151, 26, 255], INK = [22, 19, 31], LIGHT = [205, 192, 255], LAV = [181, 143, 224];
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+  function seg(p, a, b) { return clamp01((p - a) / (b - a)); }
+  function outBack(x) { return 1 + 2.9 * Math.pow(x - 1, 3) + 1.9 * Math.pow(x - 1, 2); }
+  function inOut(k) { return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+  function mix(a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); }
+  function rgba(c, a) { return 'rgba(' + c.join(',') + ',' + a.toFixed(3) + ')'; }
+  function dot(c, x, y, r, col) { if (r <= 0.05) return; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill(); }
+
+  // Text sampled from Anton onto a grid rowsTall dots high, letter by letter as the wordmark is
+  // set: each dot with its coverage, its letter (ch), and when it switches on (d, 0 to 1)
+  function sample(text, rowsTall) {
+    var m = document.createElement('canvas').getContext('2d'); m.font = '100px Anton';
+    var xs = [], ms = [], pen = 0;
+    for (var i = 0; i < text.length; i++) { var mt = m.measureText(text[i]); xs.push(pen); ms.push(mt); pen += mt.width + 3; }
+    var last = text.length - 1, left = xs[0] - ms[0].actualBoundingBoxLeft, right = xs[last] + ms[last].actualBoundingBoxRight;
+    var asc = Math.max.apply(null, ms.map(function (x) { return x.actualBoundingBoxAscent; })), desc = Math.max.apply(null, ms.map(function (x) { return x.actualBoundingBoxDescent; }));
+    var s = rowsTall / (asc + desc), cols = Math.ceil((right - left) * s) + 2, rows = rowsTall + 2, k = 4;
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d'); mc.font = (100 * s * k) + 'px Anton';
+    var starts = xs.map(function (x, j) { return 1 + (x - ms[j].actualBoundingBoxLeft - left) * s; });
+    for (var j = 0; j < text.length; j++) mc.fillText(text[j], (1 + (xs[j] - left) * s) * k, (1 + asc * s) * k);
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data, dots = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var cov = 0;
+      for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + c * k + x) * 4 + 3];
+      cov /= k * k * 255;
+      if (cov <= 0.05) continue;
+      var ch = 0; for (var q = 0; q < starts.length; q++) if (c >= starts[q] - 0.5) ch = q;
+      dots.push({ c: c, r: r, cov: cov, ch: ch, d: 0.6 * c / cols + 0.4 * rand(c, r) });
+    }
+    return { dots: dots, w: cols, h: rows };
+  }
+
+  // A 5 x 7 dot font for the LED board and the printer
+  var F = {
+    A: '.###.#...##...#######...##...##...#',
+    B: '####.#...##...#####.#...##...#####.',
+    C: '.###.#...##....#....#....#...#.###.',
+    D: '####.#...##...##...##...##...#####.',
+    E: '######....#....####.#....#....#####',
+    F: '######....#....####.#....#....#....',
+    G: '.###.#...##....#.####...##...#.####',
+    H: '#...##...##...#######...##...##...#',
+    I: '.###...#....#....#....#....#...###.',
+    J: '..###...#....#....#....#.#..#..##..',
+    K: '#...##..#.#.#..##...#.#..#..#.#...#',
+    L: '#....#....#....#....#....#....#####',
+    M: '#...###.###.#.##.#.##...##...##...#',
+    N: '#...##...###..##.#.##..###...##...#',
+    O: '.###.#...##...##...##...##...#.###.',
+    P: '####.#...##...#####.#....#....#....',
+    Q: '.###.#...##...##...##.#.##..#..##.#',
+    R: '####.#...##...#####.#.#..#..#.#...#',
+    S: '.#####....#.....###.....#....#####.',
+    T: '#####..#....#....#....#....#....#..',
+    U: '#...##...##...##...##...##...#.###.',
+    V: '#...##...##...##...##...#.#.#...#..',
+    W: '#...##...##...##.#.##.#.##.#.#.#.#.',
+    X: '#...##...#.#.#...#...#.#.#...##...#',
+    Y: '#...##...#.#.#...#....#....#....#..',
+    Z: '#####....#...#...#...#...#....#####',
+    '0': '.###.#...##..###.#.###..##...#.###.',
+    '1': '..#...##....#....#....#....#...###.',
+    '2': '.###.#...#....#...#...#...#...#####',
+    '3': '#####...#...#.....#.....##...#.###.',
+    '4': '...#...##..#.#.#..#.#####...#....#.',
+    '5': '######....####.....#....##...#.###.',
+    '6': '..##..#...#....####.#...##...#.###.',
+    '7': '#####....#...#...#...#....#....#...',
+    '8': '.###.#...##...#.###.#...##...#.###.',
+    '9': '.###.#...##...#.####....#...#..##..',
+    '.': '..........................##...##..',
+    ',': '.....................##....#...#...',
+    '?': '.###.#...#....#...#...#.........#..',
+    '!': '..#....#....#....#....#.........#..',
+    '-': '...............#####...............',
+    '/': '.........#...#...#...#...#.........',
+    ':': '......##...##........##...##.......',
+    '&': '.##..#..#.#.#...#...#.#.##..#..##.#',
+    '%': '##...##..#...#...#...#...#..##...##',
+    '=': '..........#####.....#####..........',
+    '*': '.........#...#.#.#...#.............',
+    '@': '.###.#...##.####.#.##.####.....###.',
+    ' ': '...................................'
+  };
+  // The dots of str at (x, y), P apart, the first n characters lit (on), the rest unlit (off, or skipped)
+  function led(c, str, x, y, P, onCol, offCol, n, r) {
+    var R = r || P * 0.36;
+    for (var i = 0; i < str.length; i++) {
+      var g = F[str[i]] || F[' '], lit = n === undefined || i < n;
+      for (var q = 0; q < 35; q++) {
+        var on = g[q] === '#' && lit, cx = x + (i * 6 + (q % 5) + 0.5) * P, cy = y + (Math.floor(q / 5) + 0.5) * P;
+        if (on) dot(c, cx, cy, R, typeof onCol === 'function' ? onCol(i) : onCol);
+        else if (offCol) dot(c, cx, cy, R * 0.75, offCol);
+      }
+    }
+  }
+  // Breaks text into lines of at most n characters
+  function wrap(text, n) {
+    var out = [], line = '';
+    text.split(' ').forEach(function (w) { if ((line + ' ' + w).trim().length > n) { out.push(line.trim()); line = w; } else line += ' ' + w; });
+    if (line.trim()) out.push(line.trim());
+    return out;
+  }
+  // The dots of a leaf: pointed at both ends, widest a third of the way out, L long, pointing at
+  // angle a from (0, 0); each with how far out it is (t)
+  function leaf(L, Wd, a, P) {
+    var out = [], ca = Math.cos(a), sa = Math.sin(a);
+    for (var u = P; u <= L; u += P) {
+      var t = u / L, half = Wd / 2 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.75)), 0.9);
+      for (var v = -half; v <= half + 0.01; v += P) out.push({ x: u * ca - v * sa, y: u * sa + v * ca, t: t });
+    }
+    return out;
+  }
+
+  var QS = ['CAN OUR VISION BE INCUBATED AND GROW WITH AI/ML EXPERTS?', 'CAN WE ACCESS HANDS-ON TECHNICAL SUPPORT?', 'CAN OUR TEAM ACCELERATE FROM IDEA TO IMPACT QUICKLY?'];
+  var TAGS = ['EXPERT INCUBATION', 'DIRECT ASSISTANCE', 'SPEED TO MARKET'];
+  var STATUS = ['FULLY SUPPORTED & TAILORED', '99.99% UPTIME & FOUNDER ACCESS', 'PRODUCTION READY IN DAYS'];
+  // The held screen's parts as the scroll goes: the intro, the three questions, the answer
+  var AT = [0, 0.12, 0.33, 0.54, 0.75, 1];
+  function stepOf(p) { for (var i = AT.length - 2; i >= 0; i--) if (p >= AT[i]) return i; return 0; }
+  var W_ = {};
+
+  var opts = [];
+
+  // ---------------------------------------------------------------- 01 the current one, in dots
+  (function () {
+    var pin = document.querySelector('[data-yp="current"]');
+    if (!pin) return;
+    var track = pin.querySelector('.yes-track'), steps = [].slice.call(pin.querySelectorAll('.yes-step')), fin = pin.querySelector('.yes-final');
+    var bar = pin.querySelector('.yes-progress i'), count = pin.querySelector('[data-yes-count]');
+    var canvas = document.createElement('canvas'); canvas.className = 'yp-track-canvas'; canvas.setAttribute('aria-hidden', 'true');
+    track.prepend(canvas);
+    var TOP = 260, o = { pin: pin }, onAt = {}, travel = 0, dwell = 0;
+    o.size = function () {
+      var vw = innerWidth, vh = innerHeight;
+      var nodes = steps.map(function (st) { return st.offsetLeft; }), ny = steps[0].querySelector('.yes-node').offsetTop;
+      travel = Math.max(0, fin.offsetLeft + fin.offsetWidth / 2 - vw / 2); dwell = vh * 0.35;
+      pin.style.height = (vh + travel + dwell) + 'px';
+      var w = track.scrollWidth, h = track.offsetHeight + TOP + 60, dpr = Math.min(devicePixelRatio || 1, 2);
+      Object.assign(canvas.style, { top: -TOP + 'px', width: w + 'px', height: h + 'px' });
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      o.ctx = canvas.getContext('2d'); o.dpr = dpr; o.w = w; o.h = h; o.nodes = nodes; o.ny = ny;
+      // The stem: dots along the same curve as today's, bowing up and down between the nodes
+      var amp = Math.min(22, vh * 0.025), pts = [];
+      for (var i = 0; i < nodes.length - 1; i++) {
+        var a = nodes[i], b = nodes[i + 1], dy = (i % 2 ? 1 : -1) * amp * 2, lx = a, ly = ny, acc = 0;
+        for (var t = 0; t <= 1; t += 0.002) {
+          var mt = 1 - t, x = mt * mt * mt * a + 3 * mt * mt * t * (a + (b - a) * 0.3) + 3 * mt * t * t * (a + (b - a) * 0.7) + t * t * t * b;
+          var y = mt * mt * mt * ny + 3 * mt * mt * t * (ny + dy) + 3 * mt * t * t * (ny + dy) + t * t * t * ny;
+          acc += Math.hypot(x - lx, y - ly); lx = x; ly = y;
+          if (acc >= 11) { pts.push({ x: x, y: y }); acc = 0; }
+        }
+      }
+      o.stem = pts;
+      // Two leaves at each question's node (one up and forward, one up and back), buds between
+      o.leaves = nodes.slice(0, -1).map(function (x) { return [leaf(96, 30, -58 * Math.PI / 180, 5), leaf(96, 30, -128 * Math.PI / 180, 5)]; });
+      o.buds = [];
+      for (var j = 0; j < nodes.length - 1; j++) [0.38, 0.66].forEach(function (u, q) {
+        var x = nodes[j] + (nodes[j + 1] - nodes[j]) * u, up = (j + q) % 2 === 0;
+        o.buds.push({ x: x, y: ny + (j % 2 ? 1 : -1) * amp * 1.5, dots: leaf(42, 15, (up ? -40 : 40) * Math.PI / 180, 4), key: 'b' + j + q });
+      });
+      // Each YES, where its outlined word is
+      o.words = steps.filter(function (st) { return st !== fin; }).map(function (st) {
+        var el = st.querySelector('.yes-word'), x = st.offsetLeft + el.offsetLeft, y = st.offsetTop + el.offsetTop, hgt = el.offsetHeight;
+        var P = Math.max(3, hgt / 26);
+        return { x: x, y: y + hgt * 0.04, P: P, pat: W_.YES26 };
+      });
+      // The flower: a stem up from the answer's node, pairs of florets up it, smaller each pair
+      var fl = { x: nodes[nodes.length - 1], dots: [] }, H = Math.min(190, vh * 0.2);
+      for (var s = 0; s <= H; s += 6) fl.dots.push({ x: 0, y: -s, at: s / H * 0.45, stem: true });
+      for (var f = 0; f < 7; f++) {
+        var fy = -H * (0.18 + f * 0.11), L = 26 - f * 2.6;
+        [-1, 1].forEach(function (side) { leaf(L, L * 0.55, side < 0 ? -2.62 : -0.52, 3.6).forEach(function (d) { fl.dots.push({ x: d.x, y: fy + d.y, at: 0.35 + f * 0.08 + d.t * 0.06, f: f / 7 }); }); });
+      }
+      fl.dots.push({ x: 0, y: -H - 8, at: 0.95, bud: true });
+      o.flower = fl;
+    };
+    o.draw = function (now) {
+      var r = pin.getBoundingClientRect(), vh = innerHeight;
+      if (r.bottom < 0 || r.top > vh) return false;
+      var s = Math.min(Math.max(-r.top, 0), travel + dwell), x = -Math.min(s, travel);
+      track.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+      bar.style.setProperty('--yes-p', Math.min(s / Math.max(1, travel + dwell * 0.5), 1).toFixed(3));
+      var head = s >= travel - 1 ? Infinity : innerWidth / 2 - x, lit = 0, moving = false;
+      steps.forEach(function (st, i) { var on = o.nodes[i] <= head; st.classList.toggle('is-yes', on); if (on && st !== fin) lit++; });
+      count.textContent = String(lit).padStart(2, '0');
+      var age = function (key, on) { if (!on) { delete onAt[key]; return -1; } if (!onAt[key]) onAt[key] = now; return still ? 1e9 : now - onAt[key]; };
+      var c = o.ctx; c.setTransform(o.dpr, 0, 0, o.dpr, 0, o.dpr * TOP); c.clearRect(0, -TOP, o.w, o.h);
+      o.stem.forEach(function (p) { var on = p.x <= head; dot(c, p.x, p.y, on ? 2.1 : 1.3, on ? rgba(mix(FROM, TO, (p.x - o.nodes[0]) / (o.nodes[o.nodes.length - 1] - o.nodes[0])), 1) : rgba(INK, 0.18)); });
+      o.buds.forEach(function (b) {
+        var a = age(b.key, b.x <= head); if (a < 0) return;
+        b.dots.forEach(function (d) { var k = clamp01((a - d.t * 400) / 380); if (k < 1) moving = true; dot(c, b.x + d.x, b.y + d.y, 1.6 * outBack(k), rgba(mix(FROM, TO, 0.5), 0.8)); });
+      });
+      o.leaves.forEach(function (pair, i) {
+        var a = age('l' + i, o.nodes[i] <= head); if (a < 0) return;
+        pair.forEach(function (lf, q) { lf.forEach(function (d) { var k = clamp01((a - q * 200 - d.t * 600) / 420); if (k < 1) moving = true; if (k > 0) dot(c, o.nodes[i] + d.x, o.ny + d.y, 1.9 * outBack(k), rgba(mix(FROM, TO, 0.2 + d.t * 0.6), 0.85)); }); });
+      });
+      // The YES: faint dots while it waits, then the purple sweeps into it from the left
+      o.words.forEach(function (wd, i) {
+        var a = age('w' + i, o.nodes[i] <= head);
+        wd.pat.dots.forEach(function (d) {
+          var k = a < 0 ? 0 : clamp01((a - (d.c / wd.pat.w) * 700) / 260); if (a >= 0 && k < 1) moving = true;
+          var col = k > 0 ? mix(mix(INK, mix(FROM, TO, d.c / wd.pat.w), k), LIGHT, Math.sin(Math.PI * k) * 0.4) : INK;
+          dot(c, wd.x + (d.c + 0.5) * wd.P, wd.y + (d.r + 0.5) * wd.P, wd.P * (0.2 + 0.22 * d.cov) * (k > 0 ? 1 : 0.7), rgba(col, k > 0 ? 0.25 + 0.7 * k : 0.16));
+        });
+      });
+      var fa = age('flower', o.nodes[o.nodes.length - 1] <= head);
+      if (fa >= 0) o.flower.dots.forEach(function (d) {
+        var k = clamp01((fa - d.at * 1600) / 420); if (k < 1) moving = true; if (k <= 0) return;
+        var X = o.flower.x + d.x, Y = o.ny - 10 + d.y;
+        if (d.stem) dot(c, X, Y, 1.6 * outBack(k), rgba([78, 52, 108], 0.9));
+        else if (d.bud) dot(c, X, Y, 3.2 * outBack(k), rgba(LAV, 1));
+        else dot(c, X, Y, 1.5 * outBack(k), rgba(mix(FROM, LAV, d.f), 0.9));
+      });
+      return moving;
+    };
+    opts.push(o);
+  })();
+
+  // ---------------------------------------------------------------- the held screens, 02 to 05
+  function held(kind, setup, paint) {
+    var pin = document.querySelector('[data-yp="' + kind + '"]');
+    if (!pin) return;
+    var o = { pin: pin, stage: pin.querySelector('.yp-stage'), canvas: pin.querySelector('.yp-stage > canvas'),
+      panels: [].slice.call(pin.querySelectorAll('.yp-panel')), bar: pin.querySelector('.yp-bar'), count: pin.querySelector('.yp-count b'), mem: {} };
+    o.size = function () {
+      var dpr = Math.min(devicePixelRatio || 1, 2);
+      o.W = o.stage.clientWidth; o.H = o.stage.clientHeight; o.dpr = dpr; o.narrow = o.W <= 760;
+      o.canvas.width = Math.round(o.W * dpr); o.canvas.height = Math.round(o.H * dpr);
+      o.ctx = o.canvas.getContext('2d');
+      setup(o);
+    };
+    o.draw = function (now) {
+      var r = pin.getBoundingClientRect(), vh = innerHeight;
+      if (r.bottom < 0 || r.top > vh) return false;
+      var p = clamp01(-r.top / (r.height - vh)), step = stepOf(p), local = seg(p, AT[step], AT[step + 1]);
+      o.bar.style.setProperty('--p', p.toFixed(3));
+      o.panels.forEach(function (el) { el.classList.toggle('is-on', +el.dataset.at === step); });
+      o.ctx.setTransform(o.dpr, 0, 0, o.dpr, 0, 0); o.ctx.clearRect(0, 0, o.W, o.H);
+      var answered = paint(o, p, step, local, now);
+      o.count.textContent = String(Math.min(3, answered)).padStart(2, '0');
+      return !!o.live;
+    };
+    opts.push(o);
+  }
+
+  // 02 One letter per answer: a wall of dots, YES! in it, a letter lit per answer
+  held('spell', function (o) {
+    var top = o.narrow ? o.H * 0.16 : o.H * 0.16, bottom = o.narrow ? o.H * 0.42 : o.H * 0.56;
+    var pat = W_.YESX, P = Math.min((o.W - 2 * 24) / (pat.w + 6), (bottom - top) / (pat.h + 4));
+    o.P = P; o.pat = pat;
+    o.ox = (o.W - pat.w * P) / 2; o.oy = top + (bottom - top - pat.h * P) / 2;
+    // The wall: every point of the grid, the word's marked with its letter
+    var cols = Math.floor(o.W / P), rows = Math.floor((bottom - top + 2 * P) / P), gx0 = o.ox - Math.floor(o.ox / P) * P, gy0 = top - P;
+    var word = {}; pat.dots.forEach(function (d) { word[d.c + ',' + d.r] = d; });
+    o.wall = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var x = gx0 + (c + 0.5) * P, y = gy0 + (r + 0.5) * P, wc = Math.round((x - o.ox) / P - 0.5), wr = Math.round((y - o.oy) / P - 0.5);
+      o.wall.push({ x: x, y: y, d: word[wc + ',' + wr] || null, edge: Math.min(1, Math.min(c, cols - 1 - c) / 6) });
+    }
+  }, function (o, p, step, local, now) {
+    var c = o.ctx, P = o.P, lit = [step >= 1 ? seg(step > 1 ? 1 : local, 0.1, 0.55) : 0, step >= 2 ? seg(step > 2 ? 1 : local, 0.1, 0.55) : 0, step >= 3 ? seg(step > 3 ? 1 : local, 0.1, 0.55) : 0, step >= 4 ? seg(local, 0.05, 0.4) : 0];
+    var flash = step === 4 ? Math.sin(Math.PI * seg(local, 0.35, 0.75)) : 0;
+    o.wall.forEach(function (w) {
+      if (!w.d) { dot(c, w.x, w.y, P * 0.11, rgba(INK, 0.1 * w.edge)); return; }
+      var d = w.d, k = clamp01((lit[d.ch] - d.d * 0.6) / 0.4);
+      if (k <= 0) { dot(c, w.x, w.y, P * 0.16, rgba(INK, 0.16)); return; }
+      var col = mix(mix(FROM, TO, d.c / o.pat.w), LIGHT, Math.max(Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.5, flash * 0.7));
+      dot(c, w.x, w.y, P * (0.16 + (0.2 + 0.22 * d.cov - 0.16) * outBack(k)) * (1 + flash * 0.12), rgba(col, 0.25 + 0.7 * Math.min(1, k * 2)));
+    });
+    return step >= 4 ? 3 : Math.max(0, step - 1) + (step >= 1 && local > 0.3 ? 1 : 0);
+  });
+
+  // 03 Question becomes YES: the same dots, flown from ? to YES and back
+  held('morph', function (o) {
+    var S = o.narrow ? { x: o.W / 2, y: o.H * 0.33, w: o.W * 0.84, h: o.H * 0.3 } : { x: o.W * 0.73, y: o.H * 0.5, w: o.W * 0.42, h: o.H * 0.5 };
+    function place(pat, sc, kind) {
+      var P = Math.min(S.w * sc / pat.w, S.h / pat.h), x0 = S.x - pat.w * P / 2, y0 = S.y - pat.h * P / 2;
+      return pat.dots.map(function (d) { return { x: x0 + (d.c + 0.5) * P, y: y0 + (d.r + 0.5) * P, r: P * (0.2 + 0.22 * d.cov), u: d.c / pat.w, kind: kind }; })
+        .sort(function (a, b) { return a.x - b.x || a.y - b.y; });
+    }
+    o.Q = place(W_.Q, 0.5, 'q'); o.Y = place(W_.YES, 1, 'y'); o.YX = place(W_.YESX, 1, 'y');
+    o.SC = o.Q.map(function (d, i) { return { x: S.x + (rand(i, 1) - 0.5) * S.w * 1.3, y: S.y + (rand(i, 2) - 0.5) * S.h * 1.4, r: 1 + rand(i, 3) * 1.4, u: rand(i, 4), kind: 's' }; });
+  }, function (o, p, step, local) {
+    var c = o.ctx;
+    function look(d) { return d.kind === 'y' ? [mix(FROM, TO, d.u), 0.92] : d.kind === 'q' ? [INK, 0.32] : [INK, 0.14]; }
+    function morph(A, B, k) {
+      var N = Math.max(A.length, B.length);
+      for (var j = 0; j < N; j++) {
+        var a = A[Math.floor(j * A.length / N)], b = B[Math.floor(j * B.length / N)];
+        var kk = inOut(clamp01((k - rand(j, 7) * 0.35) / 0.65)), arc = Math.sin(Math.PI * kk) * (rand(j, 8) - 0.5) * 160;
+        var la = look(a), lb = look(b), col = mix(la[0], lb[0], kk);
+        dot(c, a.x + (b.x - a.x) * kk + arc * 0.4, a.y + (b.y - a.y) * kk + arc, a.r + (b.r - a.r) * kk, rgba(mix(col, LIGHT, Math.sin(Math.PI * kk) * (b.kind === 'y' ? 0.5 : 0)), la[1] + (lb[1] - la[1]) * kk));
+      }
+    }
+    if (step === 0) morph(o.SC, o.Q, seg(local, 0.25, 1));
+    else if (step <= 3) {
+      if (local < 0.62) morph(o.Q, o.Y, seg(local, 0.05, 0.55));
+      else morph(o.Y, o.Q, seg(local, 0.8, 1));
+    } else morph(o.Q, o.YX, seg(local, 0.05, 0.6));
+    return step >= 4 ? 3 : Math.max(0, step - 1) + (step >= 1 && local > 0.4 ? 1 : 0);
+  });
+
+  // 04 Departures board: a dark LED board; each question runs along its ticker, its status locks on YES
+  held('board', function (o) {
+    var cols = 26, bw = Math.min(o.W - (o.narrow ? 24 : 2 * 48), 1000), pad = o.narrow ? 12 : 26;
+    o.P = Math.min(4.6, (bw - 2 * pad) / (cols * 6)); o.cols = cols;
+    o.bw = cols * 6 * o.P + 2 * pad; o.bx = (o.W - o.bw) / 2; o.pad = pad;
+    o.lh = 10 * o.P; o.by = o.narrow ? o.H * 0.15 : o.H * 0.14;
+    o.bh = pad * 2 + o.lh * 7 + o.P * 4;
+    o.reached = [0, 0, 0, 0];
+  }, function (o, p, step, local, now) {
+    var c = o.ctx, P = o.P, x0 = o.bx + o.pad, y = o.by + o.pad, OFF = 'rgba(255,255,255,0.06)';
+    o.live = true;
+    // The board
+    c.fillStyle = '#0d0b16'; c.beginPath(); c.roundRect(o.bx, o.by, o.bw, o.bh, o.narrow ? 12 : 20); c.fill();
+    c.strokeStyle = 'rgba(151,26,255,0.25)'; c.lineWidth = 1; c.stroke();
+    led(c, padTo('PROVEN ADVANTAGE', o.cols - 6) + 'STATUS', x0, y, P, 'rgba(198,192,216,0.55)', OFF);
+    y += o.lh * 1.3;
+    var answered = 0;
+    for (var i = 0; i < 4; i++) {
+      var isFinal = i === 3, asked = isFinal ? step >= 4 : step >= i + 1;
+      var done = isFinal ? step >= 4 && local > 0.3 : step > i + 1 || (step === i + 1 && local > 0.35);
+      if (done && !o.reached[i]) o.reached[i] = now;
+      if (!done) o.reached[i] = 0;
+      if (done && !isFinal) answered++;
+      var label = isFinal ? 'BOLD BREAKTHROUGHS' : '0' + (i + 1) + ' ' + TAGS[i];
+      var current = isFinal ? step === 4 : step === i + 1;
+      var text = current ? 'rgba(241,238,250,0.95)' : asked ? 'rgba(198,192,216,0.6)' : 'rgba(198,192,216,0.3)';
+      if (isFinal) { y += o.lh * 0.3; c.fillStyle = 'rgba(255,255,255,0.08)'; c.fillRect(x0, y - o.lh * 0.15, o.cols * 6 * P, 1); y += o.lh * 0.15; }
+      led(c, padTo(label, o.cols - 5), x0, y, P, text, OFF);
+      // The status: dim dashes, a blinking ? while it's asked, a scramble, then YES
+      var st, col, sx = x0 + (o.cols - 5) * 6 * P;
+      if (done) {
+        var a = still ? 1e9 : now - o.reached[i];
+        if (a < 650) { st = ''; for (var q = 0; q < 4; q++) st += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!'[Math.floor(rand(q + i * 5, Math.floor(a / 55)) * 37)]; col = 'rgba(198,192,216,0.8)'; }
+        else { st = isFinal ? 'YES!' : 'YES*'; col = function (j) { return j === 3 && !isFinal ? 'rgba(198,192,216,0.7)' : rgba(mix([140, 120, 255], [190, 110, 255], j / 3), 1); }; }
+      } else if (asked) { st = Math.floor(now / 420) % 2 ? ' ?  ' : '    '; col = 'rgba(241,238,250,0.9)'; }
+      else { st = '----'; col = 'rgba(198,192,216,0.25)'; }
+      led(c, st, sx, y, P, col, OFF);
+      y += o.lh;
+    }
+    // The ticker: the question, running right to left across the foot of the board
+    y += o.lh * 0.5;
+    c.fillStyle = 'rgba(255,255,255,0.08)'; c.fillRect(x0, y - o.lh * 0.3, o.cols * 6 * P, 1);
+    var msg = (step === 0 ? 'WITH SAGE THE ANSWER IS YES!' : step === 4 ? 'ARE YOUR PROJECTS FULLY READY FOR BOLD BREAKTHROUGHS?' : QS[step - 1]) + '   *   ';
+    var cw = 6 * P, off = still ? 0 : (now / 1000 * 9 * cw) % (msg.length * cw);
+    c.save(); c.beginPath(); c.rect(x0, y - 2, o.cols * cw, 7 * P + 4); c.clip();
+    for (var rep = 0; rep < 3; rep++) led(c, msg, x0 + o.cols * cw * 0.3 - off + rep * msg.length * cw, y, P, function () { return 'rgba(201,184,255,0.95)'; }, null);
+    c.restore();
+    return answered;
+  });
+  function padTo(s, n) { while (s.length < n) s += ' '; return s.slice(0, n); }
+
+  // 05 Printed proof: a receipt rises out of a dot-matrix printer, line by line
+  held('receipt', function (o) {
+    var paperW = o.narrow ? Math.min(o.W - 40, 340) : Math.min(420, o.W * 0.34), P = o.narrow ? 1.7 : 1.9;
+    o.P = P; o.paperW = paperW; o.cpl = Math.floor((paperW - 28) / (6 * P));
+    o.px = o.narrow ? o.W / 2 : o.W * 0.72; o.slot = o.narrow ? o.H * 0.86 : o.H * 0.8;
+    var n = o.cpl, L = [], dots = function (a, b) { var s = a; while (s.length + b.length < n) s += '.'; return s + b; };
+    var rule = new Array(n + 1).join('-');
+    L.push({ t: 'SAGE.IS', big: true, ph: 0 }, { t: 'PROVEN ADVANTAGE', ph: 0 }, { t: 'NO. 0004   CERTIFIED', ph: 0 }, { t: rule, ph: 0 });
+    QS.forEach(function (q, i) {
+      L.push({ t: '0' + (i + 1) + ' ' + TAGS[i], ph: i + 1 });
+      wrap(q, n).forEach(function (w) { L.push({ t: w, ph: i + 1, dim: true }); });
+      L.push({ t: dots('ANSWER', 'YES'), ph: i + 1, yes: true });
+      wrap(STATUS[i], n).forEach(function (w) { L.push({ t: w, ph: i + 1, dim: true }); });
+      L.push({ t: '', ph: i + 1 });
+    });
+    L.push({ t: new Array(n + 1).join('='), ph: 4 }, { t: 'READY FOR BOLD BREAKTHROUGHS?', ph: 4, dim: true });
+    L.push({ t: 'TOTAL', ph: 4 }, { t: 'YES!', big: true, yes: true, ph: 4 }, { t: '', ph: 4, bars: true }, { t: 'THANK YOU', ph: 4 });
+    L.forEach(function (l) { l.h = l.big ? 16 * P : l.bars ? 15 * P : 9 * P; if (l.t.length > n && !l.big) l.t = l.t.slice(0, n); });
+    o.lines = L;
+  }, function (o, p, step, local, now) {
+    var c = o.ctx, P = o.P, L = o.lines;
+    // How much of each part has printed: the header across the end of the intro, each question's
+    // block across its part, the total across the answer's
+    var prog = [seg(step > 0 ? 1 : local, 0.35, 0.95)];
+    for (var s = 1; s <= 4; s++) prog.push(step > s ? 1 : step === s ? seg(local, 0.05, 0.6) : 0);
+    var shown = [], printing = -1;
+    [0, 1, 2, 3, 4].forEach(function (ph) {
+      var ls = L.filter(function (l) { return l.ph === ph; }), total = ls.reduce(function (a, l) { return a + Math.max(4, l.t.length); }, 0), budget = prog[ph] * total;
+      ls.forEach(function (l) { var need = Math.max(4, l.t.length); if (budget <= 0) return; l.n = Math.min(l.t.length, Math.ceil(budget / need * l.t.length)); l.full = budget >= need; shown.push(l); if (!l.full) printing = shown.length - 1; budget -= need; });
+    });
+    o.live = printing >= 0 || step === 4;
+    var hgt = shown.reduce(function (a, l) { return a + l.h; }, 0), top = o.slot - hgt - 22, x0 = o.px - o.paperW / 2;
+    // The paper, with a torn top edge, rising out of the printer
+    if (shown.length) {
+      c.save(); c.shadowColor = 'rgba(22,19,31,0.18)'; c.shadowBlur = 24; c.shadowOffsetY = 6;
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(x0, o.slot);
+      for (var z = 0; z <= 24; z++) c.lineTo(x0 + o.paperW * z / 24, top + (z % 2 ? 0 : 6));
+      c.lineTo(x0 + o.paperW, o.slot); c.closePath(); c.fill(); c.restore();
+      var y = top + 16;
+      shown.forEach(function (l) {
+        var sc = l.big ? 2 : 1, tw = l.t.length * 6 * P * sc, lx = l.big ? o.px - tw / 2 : x0 + 14;
+        if (l.bars) { for (var b = 0; b < 40; b++) { var hh = rand(b, 3) > 0.3 ? 12 * P : 8 * P; for (var q = 0; q < hh; q += P * 1.4) dot(c, x0 + 14 + b * (o.paperW - 28) / 40, y + q, P * 0.42, rgba(INK, 0.85)); } }
+        else led(c, l.t, lx, y, P * sc, function (i) { return l.yes && (l.big || i >= l.t.length - 3) ? rgba(mix(FROM, TO, i / Math.max(1, l.t.length)), 0.95) : rgba(INK, l.dim ? 0.55 : 0.85); }, null, l.n, P * sc * 0.42);
+        y += l.h;
+      });
+    }
+    // The printer: a dark body, its slot, and a light that blinks while it prints
+    var bw = o.paperW + 44;
+    c.fillStyle = '#16131f'; c.beginPath(); c.roundRect(o.px - bw / 2, o.slot - 4, bw, 64, 14); c.fill();
+    c.fillStyle = '#0a0812'; c.fillRect(o.px - o.paperW / 2 - 6, o.slot - 4, o.paperW + 12, 6);
+    var on = printing >= 0 && Math.floor(now / 180) % 2;
+    dot(c, o.px + bw / 2 - 22, o.slot + 30, 4, on ? '#b462ff' : 'rgba(180,98,255,0.35)');
+    for (var g = 0; g < 8; g++) dot(c, o.px - bw / 2 + 24 + g * 9, o.slot + 30, 1.6, 'rgba(255,255,255,0.18)');
+    var answered = 0; for (var s2 = 1; s2 <= 3; s2++) if (prog[s2] > 0.7) answered++;
+    return answered;
+  });
+
+  // ---------------------------------------------------------------- one loop for them all
+  var running = false;
+  function frame() {
+    var now = performance.now(), more = false;
+    opts.forEach(function (o) { if (o.ctx && o.draw(now)) more = true; });
+    if (more) requestAnimationFrame(frame); else running = false;
+  }
+  function wake() { if (!running) { running = true; requestAnimationFrame(frame); } }
+  function start() {
+    W_ = { YES: sample('YES', 26), YES26: sample('YES', 24), YESX: sample('YES!', 26), Q: sample('?', 30) };
+    opts.forEach(function (o) { o.size(); });
+    wake();
+  }
+  addEventListener('scroll', wake, { passive: true });
+  addEventListener('resize', function () { clearTimeout(start.t); start.t = setTimeout(start, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(start, start); else start();
+})();
+</script>

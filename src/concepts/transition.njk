@@ -1,0 +1,249 @@
+---
+layout: policy.njk
+title: "Hero transition options: Sage"
+description: Five scroll transitions from the dot-matrix hero into the paper of the next section.
+noindex: true
+permalink: /concepts/transition/
+options:
+  - id: halftone
+    tag: 01 · Recommended
+    name: Halftone rise
+    desc: The paper rises up through the hero as a halftone, on the dots' own grid. Ahead of the paper's edge, paper-coloured dots grow from nothing until they touch and close into solid paper, so the night breaks up the way a printed photograph does. The hero's language, carried into the page.
+  - id: pixels
+    tag: 02 · Digital
+    name: Pixel dissolve
+    desc: The night breaks into square cells that switch to paper one by one, scattered, rising from the bottom, like the dots switching off at the end of the hero's build. Crisp and digital.
+  - id: scan
+    tag: 03 · Light
+    name: Scanline
+    desc: A single line of the dots' violet light sweeps up the hero as you scroll, glowing, with paper behind it, like a screen being wiped. The cleanest of the five.
+  - id: card
+    tag: 04 · Depth
+    name: Card over
+    desc: The hero holds still and sinks back a little, darkening, as the next section slides up over it as a card with rounded top corners and a soft shadow. No pattern at all; the depth does the work.
+  - id: grid
+    tag: 05 · Quiet
+    name: The grid carries on
+    desc: No motion of its own. The night fades softly into paper, and the hero's faint grid of dots carries on down into the paper, fading out as it goes, so the two read as one surface.
+---
+{# Ways out of the dot-matrix hero (component/hero.njk) into the paper of the section under it, to
+   replace the inkblot burn (assets/js/hero-burn.js). Each option is a short hero, then the real
+   next section's opening. Everything is scoped under .tr- #}
+{% macro heroCopy() %}
+<div class="container tr-hero-copy">
+  <div class="tr-word" aria-hidden="true"><canvas></canvas></div>
+  <h2 class="tr-title">Your next AI breakthrough. <span>Decades in the making.</span></h2>
+</div>
+{% endmacro %}
+{% macro next() %}
+<div class="tr-next">
+  <div class="container">
+    <p class="tr-lede">Work with our <u>powerful AI</u> and <u>human experts</u> to develop <u>your bold vision</u>, no matter the challenge. Our experts embed with your team to deploy and customize the <u>Sage.is AI engine.</u></p>
+  </div>
+</div>
+{% endmacro %}
+
+<style>
+  .tr-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .tr-intro > div { grid-column: 2 / -1; }
+  .tr-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .tr-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .tr-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .tr-jump a { color: var(--ink-2); }
+  .tr-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .tr-option { margin-inline: calc(50% - 50vw); padding-top: clamp(64px, 8vw, 120px); scroll-margin-top: 50px; }
+  .tr-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(28px, 3vw, 44px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .tr-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .tr-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .tr-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* The hero, on its night ground. The overlay options run it 40% of a screen longer, as the burn
+     does, so the paper has room to come up through it while its copy stays on the first screen */
+  .tr-hero {
+    color-scheme: dark;
+    --ink: #f1eefa; --ink-2: #c6c0d8; --line: rgba(241, 238, 250, 0.12);
+    position: relative; overflow: hidden; color: var(--ink);
+    min-height: 100svh;
+    background: radial-gradient(circle farthest-corner at 50% 40%, #18122c 0%, #0e0b1a 55%, #06050c 100%) 0 0 / 100% 100svh no-repeat, #06050c;
+  }
+  .tr-hero.is-long { min-height: 140svh; }
+  .tr-hero-copy { display: flex; flex-direction: column; justify-content: center; gap: clamp(28px, 5vh, 56px); height: 100svh; }
+  .tr-word canvas { display: block; width: 100%; }
+  .tr-title { font-size: clamp(2.25rem, min(5vw, 6.4vh), 7rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.065em; }
+  .tr-title span { display: block; color: #5f5878; }
+  .tr-veil { position: absolute; inset: 0; z-index: 2; display: block; width: 100%; height: 100%; pointer-events: none; }
+
+  /* The next section's opening, on the paper */
+  .tr-next { position: relative; z-index: 3; padding: clamp(80px, 12vh, 160px) 0 clamp(120px, 18vh, 220px); background: var(--bg); color: var(--ink); }
+  .tr-lede { max-width: 22em; font-size: clamp(2rem, 4vw, 4.5rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; }
+  .tr-lede u { text-decoration: none; background: linear-gradient(135deg, #302aff, #971aff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  /* 04 Card over: the hero holds while the card slides up over it */
+  .tr-card { position: relative; }
+  .tr-card .tr-hero { position: sticky; top: 0; height: 100svh; }
+  .tr-card .tr-hero-inner { height: 100%; transform-origin: 50% 30%; transform: scale(calc(1 - 0.06 * var(--p, 0))); }
+  .tr-card .tr-hero::after { content: ""; position: absolute; inset: 0; background: #000; opacity: calc(0.55 * var(--p, 0)); pointer-events: none; }
+  .tr-card .tr-next { margin-top: -6vh; border-radius: clamp(24px, 3vw, 44px) clamp(24px, 3vw, 44px) 0 0; box-shadow: 0 -30px 80px -20px rgba(0, 0, 0, 0.5); }
+
+  /* 05 The grid carries on: the night fades to paper, under one grid of dots */
+  .tr-grid { position: relative; }
+  .tr-grid .tr-hero { background: radial-gradient(circle farthest-corner at 50% 40%, #18122c 0%, #0e0b1a 55%, #06050c 100%) 0 0 / 100% 100svh no-repeat, linear-gradient(180deg, #06050c 100svh, #1c1636 115svh, #6e64a0 132svh, #cbc5e0 142svh, var(--bg) 150svh); min-height: 150svh; }
+  .tr-grid::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: calc(150svh + 60vh); z-index: 4; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(140, 132, 170, 0.5) 1.1px, transparent 1.6px); background-size: 12px 12px;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, transparent 70svh, #000 110svh, #000 150svh, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, transparent 70svh, #000 110svh, #000 150svh, transparent 100%); }
+
+  @media (max-width: 640px) {
+    .tr-intro, .tr-cap { grid-template-columns: 1fr; }
+    .tr-intro > div, .tr-cap > p:last-child { grid-column: 1; }
+  }
+</style>
+
+<header class="tr-intro">
+  <p class="section-label"><span class="index-num">00</span>Hero · Transition</p>
+  <div>
+    <h1>Out of the night.</h1>
+    <p>Five ways from the dot-matrix hero into the paper of the next section, in place of the inkblot burn, which belonged to the old forest. Scroll slowly through each one as a visitor would.</p>
+  </div>
+</header>
+
+<ul class="tr-jump">
+  {% for o in options %}<li><a href="#tr-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ o.name }}</a></li>{% endfor %}
+</ul>
+
+{% for o in options %}
+<!-- 0{{ loop.index }} -->
+<section class="tr-option" id="tr-{{ loop.index }}">
+  <div class="container">
+    <div class="tr-cap"><p>{{ o.tag }}</p><p><b>{{ o.name }}</b>{{ o.desc }}</p></div>
+  </div>
+  {% if o.id == 'card' %}
+  <div class="tr-card" data-tr="card">
+    <div class="tr-hero"><div class="tr-hero-inner">{{ heroCopy() }}</div></div>
+    {{ next() }}
+  </div>
+  {% elif o.id == 'grid' %}
+  <div class="tr-grid">
+    <div class="tr-hero">{{ heroCopy() }}</div>
+    {{ next() }}
+  </div>
+  {% else %}
+  <div class="tr-hero is-long" data-tr="{{ o.id }}">
+    {{ heroCopy() }}
+    <canvas class="tr-veil" aria-hidden="true"></canvas>
+  </div>
+  {{ next() }}
+  {% endif %}
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  // The paper the hero gives way to: the page's own
+  var PAPER = (function () {
+    var i = document.createElement('i'); i.style.color = 'var(--bg)'; document.body.append(i);
+    var c = getComputedStyle(i).color; i.remove(); return c;
+  })();
+
+  // Each hero's SAGE.IS, in dots and at rest, as the hero leaves it (component/hero.njk)
+  function drawWord(canvas) {
+    var W = canvas.parentElement.clientWidth * 0.78, pitch = Math.max(5, W / 136), cols = Math.floor(W / pitch), k = 4;
+    var m = document.createElement('canvas').getContext('2d'); m.font = '100px Anton';
+    var mt = m.measureText('SAGE.IS'), s = cols * 0.9 / (mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight);
+    var asc = mt.actualBoundingBoxAscent * s, rows = Math.round((mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent) * s + 6);
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d'); mc.font = (100 * s * k) + 'px Anton';
+    mc.fillText('SAGE.IS', (cols * 0.05 + mt.actualBoundingBoxLeft * s) * k, (3 + asc) * k);
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data;
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = W * dpr; canvas.height = rows * pitch * dpr; canvas.style.width = W + 'px'; canvas.style.height = rows * pitch + 'px';
+    var c = canvas.getContext('2d'); c.scale(dpr, dpr);
+    for (var r = 0; r < rows; r++) for (var col = 0; col < cols; col++) {
+      var cov = 0;
+      for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + col * k + x) * 4 + 3];
+      cov /= k * k * 255;
+      var f = col / cols, inside = cov > 0.02;
+      c.fillStyle = inside ? 'rgba(' + Math.round(100 + 80 * f) + ',' + Math.round(92 + 6 * f) + ',255,' + (0.35 + 0.65 * cov) + ')' : 'rgba(241,238,250,0.15)';
+      c.beginPath(); c.arc((col + 0.5) * pitch, (r + 0.5) * pitch, pitch * (0.13 + 0.22 * cov), 0, 6.2832); c.fill();
+    }
+  }
+
+  // A steady random per cell
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+
+  // The overlay options. The paper's edge, in the hero's own px, climbs 1.7 times as fast as the
+  // page scrolls: it comes into view a quarter of a screen in, and reaches the top most of a
+  // screen in
+  var veils = [].map.call(document.querySelectorAll('.tr-hero[data-tr]'), function (hero) {
+    return { hero: hero, kind: hero.dataset.tr, canvas: hero.querySelector('.tr-veil') };
+  });
+  function size(v) {
+    var dpr = Math.min(devicePixelRatio || 1, 1.5);
+    v.W = v.hero.clientWidth; v.H = v.hero.offsetHeight; v.dpr = dpr;
+    v.canvas.width = Math.round(v.W * dpr); v.canvas.height = Math.round(v.H * dpr);
+    v.ctx = v.canvas.getContext('2d');
+  }
+  function draw(v) {
+    var r = v.hero.getBoundingClientRect(), vh = innerHeight;
+    if (r.bottom < 0 || r.top > vh) return;
+    var s = Math.max(0, -r.top), edge = v.H - 1.7 * s, c = v.ctx, W = v.W;
+    c.setTransform(v.dpr, 0, 0, v.dpr, 0, 0);
+    c.clearRect(0, 0, W, v.H);
+    c.fillStyle = PAPER;
+    // Only what's on screen is drawn
+    var top = Math.max(0, -r.top), bottom = Math.min(v.H, vh - r.top);
+    if (v.kind === 'halftone') {
+      var P = Math.max(14, W / 90), B = vh * 0.5, R = P * 0.72;
+      if (edge < bottom) c.fillRect(0, Math.max(edge, top), W, bottom - Math.max(edge, top));
+      for (var y = Math.floor(Math.max(top, edge - B) / P) * P + P / 2; y < Math.min(bottom, edge) + P; y += P) {
+        var k = 1 - (edge - y) / B;
+        if (k <= 0) continue;
+        var rad = R * k * k;
+        for (var x = P / 2; x < W + P; x += P) { c.beginPath(); c.arc(x, y, rad, 0, 6.2832); c.fill(); }
+      }
+    } else if (v.kind === 'pixels') {
+      var C = Math.max(28, W / 32), B2 = vh * 0.45;
+      for (var cy = Math.floor(Math.max(0, top - B2) / C) * C; cy < bottom; cy += C) {
+        for (var cx = 0; cx < W; cx += C) {
+          // Cells switch ahead of the edge by up to B2, each by its own random
+          var a = Math.min(1, Math.max(0, (cy + C - edge + rand(cx, cy) * B2) / C));
+          if (a <= 0) continue;
+          c.globalAlpha = a; c.fillRect(cx, cy, C + 0.5, C + 0.5);
+        }
+      }
+      c.globalAlpha = 1;
+    } else if (v.kind === 'scan') {
+      if (edge < bottom) {
+        c.fillRect(0, Math.max(edge, top), W, bottom - Math.max(edge, top));
+        // The line, and its glow up into the night
+        var g = c.createLinearGradient(0, edge - 120, 0, edge);
+        g.addColorStop(0, 'rgba(151, 26, 255, 0)'); g.addColorStop(1, 'rgba(151, 26, 255, 0.35)');
+        c.fillStyle = g; c.fillRect(0, edge - 120, W, 120);
+        var l = c.createLinearGradient(0, 0, W, 0);
+        l.addColorStop(0, 'rgba(100, 92, 255, 0)'); l.addColorStop(0.15, '#645cff'); l.addColorStop(0.5, '#e8e2ff'); l.addColorStop(0.85, '#b462ff'); l.addColorStop(1, 'rgba(180, 98, 255, 0)');
+        c.shadowColor = 'rgba(151, 26, 255, 0.9)'; c.shadowBlur = 18;
+        c.fillStyle = l; c.fillRect(0, edge - 2, W, 3);
+        c.shadowBlur = 0;
+      }
+    }
+  }
+
+  // 04: the hero sinks back as the card comes up over it
+  var cards = document.querySelectorAll('[data-tr="card"]');
+  function card(el) {
+    var next = el.querySelector('.tr-next').getBoundingClientRect(), vh = innerHeight;
+    el.querySelector('.tr-hero').style.setProperty('--p', Math.min(1, Math.max(0, 1 - next.top / vh)).toFixed(3));
+  }
+
+  var queued = false;
+  function frame() { queued = false; veils.forEach(draw); cards.forEach(card); }
+  function queue() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
+  function all() {
+    document.querySelectorAll('.tr-word canvas').forEach(drawWord);
+    veils.forEach(size); frame();
+  }
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', function () { clearTimeout(all.t); all.t = setTimeout(all, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(all, all); else all();
+})();
+</script>

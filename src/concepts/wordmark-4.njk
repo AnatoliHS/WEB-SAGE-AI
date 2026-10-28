@@ -1,0 +1,246 @@
+---
+layout: policy.njk
+title: "Wordmark hero, round four: Sage"
+description: The dot-matrix hero, light and dark, with the site's own buttons.
+noindex: true
+permalink: /concepts/wordmark-4/
+offers: [Private AI workspaces, Custom AI agents, Self-hosted models, Sage AI-UI for teams, AI education, Technical Capital, Automation]
+themes:
+  - id: light
+    tag: 01 · Light
+    name: Dot matrix, on paper
+    desc: SAGE.IS drawn as a field of dots, after your reference. Inside the letters the dots grow and take on the two purples; outside they stay small and grey, softening away at the edges. When it first comes into view, the word switches on into the matrix dot by dot, like a sign booting up; each dot springs from grey to purple with a brief flash of light. What Sage offers rolls slowly upwards beside it, and the statement sits large below, with the hero's three buttons.
+  - id: dark
+    tag: 02 · Dark
+    name: Dot matrix, at night
+    desc: The same hero on the current hero's night ground, for comparison. The purples are lifted a little and the grey dots turn light, so the word and the field read as clearly as on paper; the buttons take the site's dark-ground colours.
+---
+{# Round four of the Wordmark ground hero (concepts/wordmark-3.njk): SAGE.IS as a field of dots,
+   after a reference, light and dark. The buttons are the current hero's (component/hero.njk), in
+   the site's own .btn styles. Everything is scoped under .wf- #}
+
+<style>
+  .wf-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .wf-intro > div { grid-column: 2 / -1; }
+  .wf-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .wf-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .wf-intro p a { text-decoration: underline; }
+  .wf-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .wf-jump a { color: var(--ink-2); }
+  .wf-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+  .wf-option { margin-inline: calc(50% - 50vw); padding: clamp(64px, 8vw, 120px) 0 0; scroll-margin-top: 50px; }
+  .wf-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(28px, 3vw, 44px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .wf-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .wf-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .wf-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+
+  /* The frame, inset and rounded, with a fine grain. Each ground sets the tokens the site's
+     buttons (.btn-primary, .btn-ghost) read */
+  .wf-stage {
+    position: relative; display: flex; flex-direction: column; isolation: isolate; overflow: hidden; container-type: inline-size;
+    min-height: min(calc(100svh - 24px), 1000px); margin: 0 clamp(8px, 1vw, 14px); border-radius: clamp(18px, 2vw, 32px); color: var(--ink);
+  }
+  .wf-stage::after { content: ""; position: absolute; inset: 0; z-index: 20; pointer-events: none; opacity: 0.07; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .wf-stage.is-light {
+    --bg: #ffffff; --ink: #16131f; --ink-2: #4c475a; --muted: #aaa6b5; --line: rgba(22, 19, 31, 0.12); --tag: #ffffff;
+    --accent-gradient: linear-gradient(135deg, #302aff 0%, #971aff 100%); --on-accent: #fff;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f6fa 100%);
+  }
+  .wf-stage.is-dark {
+    color-scheme: dark;
+    --bg: #161028; --ink: #f1eefa; --ink-2: #c6c0d8; --muted: #5f5878; --line: rgba(241, 238, 250, 0.14); --tag: rgba(255, 255, 255, 0.04);
+    --accent-gradient: linear-gradient(135deg, #302aff 0%, #971aff 100%); --on-accent: #fff;
+    background: radial-gradient(circle farthest-corner at 50% 40%, #18122c 0%, #0e0b1a 55%, #06050c 100%);
+  }
+  .wf-stage.is-dark::after { mix-blend-mode: overlay; opacity: 0.12; }
+
+  /* The word as a field of dots beside the offers, the statement and the buttons below */
+  .wf-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--gutter); align-items: center; padding-top: clamp(32px, 6vh, 72px); }
+  .wf-field { position: relative; }
+  .wf-field canvas { display: block; width: 100%; }
+  /* Until the dots are drawn (or without script): the word in the two purples */
+  .wf-word { display: block; width: max-content; margin: 0 auto; padding-block: 0.3em; font-family: var(--font-display); font-size: calc(0.7 * 100cqw / 2.77); line-height: 0.8; white-space: nowrap; user-select: none; background: linear-gradient(90deg, #302aff, #971aff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .wf-field.is-drawn .wf-word { display: none; }
+  /* What Sage offers, rolling up without pause (--rows of them showing). The list is there twice,
+     and each tag carries its own spacing, so moving up by half is exactly one full turn */
+  .wf-offers { --rows: 5; --step: 56px; height: calc(var(--rows) * var(--step) - 10px); overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%); }
+  .wf-offers ul { display: flex; flex-direction: column; align-items: flex-end; list-style: none; animation: wf-roll 26s linear infinite; }
+  .wf-offers li { margin-bottom: 10px; padding: 11px 18px; border: 1px solid var(--line); border-radius: 10px; font-size: 0.9375rem; line-height: 22px; white-space: nowrap; color: var(--ink); background: var(--tag); }
+  @keyframes wf-roll { to { transform: translateY(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .wf-offers ul { animation: none; } }
+  .wf-foot { margin-top: auto; padding-block: clamp(32px, 5vh, 64px) clamp(28px, 3.4vw, 48px); }
+  .wf-kicker { max-width: 30em; font-size: clamp(0.9375rem, 1vw, 1.125rem); line-height: 1.45; color: var(--ink-2); }
+  .wf-big { margin-top: clamp(20px, 3vh, 36px); font-size: clamp(2.5rem, 5.8cqw, 8.5rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.065em; }
+  .wf-big span { display: block; color: var(--muted); }
+  /* The current hero's buttons (component/hero.njk) */
+  .wf-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: clamp(24px, 3.4vh, 40px); }
+
+  @media (max-width: 960px) {
+    .wf-head { grid-template-columns: 1fr; }
+    .wf-offers { --rows: 3; }
+    .wf-offers ul { align-items: flex-start; }
+  }
+  @media (max-width: 640px) {
+    .wf-intro, .wf-cap { grid-template-columns: 1fr; }
+    .wf-intro > div, .wf-cap > p:last-child { grid-column: 1; }
+  }
+</style>
+
+<header class="wf-intro">
+  <p class="section-label"><span class="index-num">00</span>Hero · Wordmark, round four</p>
+  <div>
+    <h1>The dot matrix, light and dark.</h1>
+    <p>SAGE.IS as a field of dots, after your reference, on paper and on the current hero's night ground, with the hero's own three buttons. Each builds SAGE.IS into its matrix as it comes into view.</p>
+  </div>
+</header>
+
+<ul class="wf-jump">
+  {% for t in themes %}<li><a href="#wf-{{ loop.index }}"><b>0{{ loop.index }}</b>{{ t.name }}</a></li>{% endfor %}
+</ul>
+
+{% for t in themes %}
+<!-- 0{{ loop.index }} -->
+<section class="wf-option" id="wf-{{ loop.index }}">
+  <div class="container">
+    <div class="wf-cap"><p>{{ t.tag }}</p><p><b>{{ t.name }}</b>{{ t.desc }}</p></div>
+  </div>
+  <div class="wf-stage is-{{ t.id }}">
+    <div class="container wf-head">
+      <div class="wf-field" data-wf-dots="{{ t.id }}" aria-hidden="true">
+        <canvas></canvas>
+        <span class="wf-word">SAGE.IS</span>
+      </div>
+      <div class="wf-offers"><ul>{% for o in offers %}<li>{{ o }}</li>{% endfor %}{% for o in offers %}<li aria-hidden="true">{{ o }}</li>{% endfor %}</ul></div>
+    </div>
+    <div class="container wf-foot">
+      <p class="wf-kicker">Makers of Sage AI-UI, Sage Education and Technical Capital. Building AI since long before ChatGPT.</p>
+      <h2 class="wf-big">Your next AI breakthrough. <span>Decades in the making.</span></h2>
+      <div class="wf-buttons">
+        <a class="btn btn-primary" href="https://github.com/Sage-is/AI-UI" target="_blank" rel="noopener">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 98 96" fill="currentColor"><path d="M49 0C21.9 0 0 21.8 0 48.8c0 21.6 14 39.9 33.4 46.4 2.4.5 3.3-1 3.3-2.3 0-1.1 0-4.1-.1-8-13.6 2.9-16.4-5.8-16.4-5.8-2.2-5.6-5.4-7.1-5.4-7.1-4.4-3 .3-3 .3-3 4.9.3 7.5 5 7.5 5 4.3 7.3 11.3 5.2 14 4 0-3.2 1.7-5.3 3-6.5-10.8-1.2-22.2-5.4-22.2-24 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5a46.4 46.4 0 0 1 24.4 0c9.3-6.3 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.7-11.4 22.8-22.3 24 1.8 1.5 3.3 4.5 3.3 9.2 0 6.6-.1 11.9-.1 13.5 0 1.3.9 2.8 3.3 2.3C84 88.7 98 70.4 98 48.8 98 21.8 76.1 0 49 0Z"/></svg>
+          Sage.is AI-UI v3.2.0
+        </a>
+        <a class="btn btn-ghost" href="https://sage.education" target="_blank" rel="noopener">Sage Education</a>
+        <a class="btn btn-ghost" href="https://sage.is/programs#packages" target="_blank" rel="noopener">Technical Capital</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endfor %}
+
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // SAGE.IS as a field of dots. The word is drawn four times finer than the grid, and each cell's
+  // share of ink sets its dot: small and grey outside, larger and in the purples inside. On the
+  // dark ground the purples are lifted and the grey is light, so both read as clearly
+  var THEMES = {
+    light: { from: [48, 42, 255], to: [151, 26, 255], grey: [22, 19, 31], out: 0.2, light: [205, 192, 255], lift: 0.55 },
+    dark: { from: [100, 92, 255], to: [180, 98, 255], grey: [241, 238, 250], out: 0.17, light: [244, 240, 255], lift: 0.7 }
+  };
+
+  function build(field) {
+    var canvas = field.querySelector('canvas'), W = field.clientWidth, t = THEMES[field.dataset.wfDots] || THEMES.light;
+    if (!W) return;
+    var pitch = Math.max(6, W / 136), cols = Math.floor(W / pitch), k = 4;
+    var m = document.createElement('canvas').getContext('2d');
+    m.font = '100px Anton';
+    var mt = m.measureText('SAGE.IS'), left = mt.actualBoundingBoxLeft, asc = mt.actualBoundingBoxAscent;
+    var s = cols * 0.84 / (left + mt.actualBoundingBoxRight), wordH = (asc + mt.actualBoundingBoxDescent) * s;
+    var rows = Math.round(wordH + 8), H = rows * pitch;
+
+    var mask = document.createElement('canvas'); mask.width = cols * k; mask.height = rows * k;
+    var mc = mask.getContext('2d');
+    mc.font = (100 * s * k) + 'px Anton'; mc.fillStyle = '#000';
+    mc.fillText('SAGE.IS', (cols * 0.08 + left * s) * k, ((rows - wordH) / 2 + asc * s) * k);
+    var ink = mc.getImageData(0, 0, mask.width, mask.height).data;
+
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); canvas.style.height = H + 'px';
+    var ox = (W - cols * pitch) / 2, dots = [];
+    for (var r = 0; r < rows; r++) {
+      for (var col = 0; col < cols; col++) {
+        var cov = 0;
+        for (var y = 0; y < k; y++) for (var x = 0; x < k; x++) cov += ink[((r * k + y) * mask.width + col * k + x) * 4 + 3];
+        cov /= k * k * 255;
+        // Soft edges: the field thins out towards its sides, top and bottom
+        var edge = Math.min(1, Math.min(col, cols - 1 - col) / 7) * Math.min(1, Math.min(r, rows - 1 - r) / 3);
+        var f = col / (cols - 1);
+        dots.push({
+          x: ox + (col + 0.5) * pitch, y: (r + 0.5) * pitch, cov: cov,
+          // When it switches on in the entrance: mostly left to right, a little scattered
+          delay: 0.6 * f + 0.1 * r / rows + 0.3 * rand(col, r),
+          tint: t.from.map(function (v, i) { return v + (t.to[i] - v) * f; }),
+          a: cov > 0.02 ? 0.35 + 0.65 * cov : t.out * edge
+        });
+      }
+    }
+    field.wf = field.wf || { start: 0 };
+    Object.assign(field.wf, { canvas: canvas, ctx: canvas.getContext('2d'), dpr: dpr, W: W, H: H, pitch: pitch, dots: dots, t: t });
+    paint(field.wf, field.wf.start && !still ? performance.now() - field.wf.start : (still ? Infinity : 0));
+    field.classList.add('is-drawn');
+  }
+
+  // A steady random per dot, so the entrance scatters the same way on every load
+  function rand(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+  function outBack(x) { var c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }
+
+  // The entrance, el milliseconds in (Infinity: finished). The grey field fades in from the left;
+  // then each dot of the word switches on in its turn, springing from a grey point to its full
+  // size and purple, with a brief flash of the theme's light as it lands
+  var FIELD = 700, SPAN = 1300, DOT = 520;
+  function paint(w, el) {
+    var c = w.ctx, t = w.t, G = t.grey, L = t.light;
+    c.setTransform(w.dpr, 0, 0, w.dpr, 0, 0);
+    c.clearRect(0, 0, w.W, w.H);
+    for (var i = 0; i < w.dots.length; i++) {
+      var d = w.dots[i], inside = d.cov > 0.02, out = w.pitch * 0.13;
+      var base = Math.min(1, Math.max(0, (el - d.x / w.W * FIELD * 0.6) / (FIELD * 0.4)));
+      var a = (inside ? t.out : d.a) * base, rad = out, rgb = G;
+      if (inside) {
+        var k = Math.min(1, Math.max(0, (el - FIELD * 0.5 - d.delay * SPAN) / DOT));
+        if (k > 0) {
+          var flash = Math.sin(Math.PI * Math.min(1, k * 1.4)) * t.lift;
+          rad = out + (w.pitch * (0.13 + 0.22 * d.cov) - out) * outBack(k);
+          rgb = d.tint.map(function (v, j) { return Math.round(G[j] + (v - G[j]) * Math.min(1, k * 2) + (L[j] - v) * flash); });
+          a = a + (d.a - a) * Math.min(1, k * 2);
+        }
+      }
+      c.fillStyle = 'rgba(' + rgb.join(',') + ',' + a.toFixed(3) + ')';
+      c.beginPath();
+      c.arc(d.x, d.y, Math.max(0, rad), 0, Math.PI * 2);
+      c.fill();
+    }
+  }
+
+  // Plays the entrance once, the first time the hero comes into view, then rests
+  var TOTAL = FIELD * 0.5 + SPAN + DOT + 60;
+  function play(field) {
+    var w = field.wf;
+    if (!w || w.start) return;
+    w.start = performance.now();
+    (function frame() {
+      var el = performance.now() - w.start;
+      paint(field.wf, el);
+      if (el < TOTAL) requestAnimationFrame(frame);
+      else paint(field.wf, Infinity);
+    })();
+  }
+
+  var fields = document.querySelectorAll('[data-wf-dots]');
+  var seen = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting || still) return;
+      e.target.wfSeen = true; play(e.target);
+    });
+  }, { threshold: 0.4 });
+  function all() {
+    fields.forEach(function (f) { build(f); if (f.wfSeen) play(f); });
+    fields.forEach(function (f) { seen.observe(f); });
+  }
+  var timer;
+  addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(all, 150); });
+  if (document.fonts) document.fonts.load('100px Anton').then(all, all); else all();
+})();
+</script>

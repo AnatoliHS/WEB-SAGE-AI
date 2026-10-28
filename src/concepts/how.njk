@@ -1,0 +1,361 @@
+---
+layout: policy.njk
+title: "How It Works options: Sage"
+description: Five layouts for the How It Works section, each working, with the real copy.
+noindex: true
+permalink: /concepts/how/
+steps:
+  - title: Present Your Vision
+    desc: Here at Sage, we help teams get things done with AI. Share your goals and challenges with our team.
+  - title: "Deploy AI & Capital"
+    desc: "We'll organize your work, manage your team, and embed our expertise, our capital, and our Sage.is AI Engine."
+  - title: Achieve Real Impact
+    desc: No more chaos, no more confusion. We provide the right tools, support, and technical capital to reach your goals.
+---
+{# Five layouts for section 03, How It Works. Each runs full width on this page, so the
+   scroll-driven ones behave as they would on the homepage. Everything is scoped under .hw- #}
+{% macro head() %}
+<header class="section-head hw-head">
+  <p class="section-label"><span class="index-num">03</span>How It Works</p>
+  <div>
+    <h2 class="section-title">Let's walk through it.</h2>
+    <p class="section-subtitle">Present us with your project and we'll help you get it done, <u>fast.</u></p>
+  </div>
+</header>
+{% endmacro %}
+
+<style>
+  .hw-intro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px var(--gutter); padding: 20px 0 40px; border-top: 1px solid var(--line); }
+  .hw-intro > div { grid-column: 2 / -1; }
+  .hw-intro h1 { font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 500; line-height: 1; letter-spacing: -0.05em; }
+  .hw-intro p { margin-top: 20px; max-width: 60ch; font-size: clamp(1.0625rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .hw-jump { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); list-style: none; font-size: 0.875rem; }
+  .hw-jump a { color: var(--ink-2); }
+  .hw-jump b { margin-right: 6px; font-weight: 500; color: var(--accent-soft); }
+
+  /* Each option: a caption, then the section at full width */
+  .hw-option { margin-inline: calc(50% - 50vw); padding: clamp(64px, 8vw, 120px) 0 0; border-bottom: 1px solid var(--line); scroll-margin-top: 50px; }
+  .hw-cap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px var(--gutter); margin-bottom: clamp(56px, 7vw, 100px); padding: 18px 20px; border-radius: 14px; background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+  .hw-cap > p:first-child { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .hw-cap > p:last-child { grid-column: 2 / -1; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .hw-cap b { display: block; margin-bottom: 4px; font-size: 1.375rem; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+  .hw-pad { padding-bottom: clamp(96px, 12vw, 180px); }
+  .hw-num-outline { font-family: var(--font-display); line-height: 0.85; color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--ink) 28%, transparent); }
+  .hw-num-fill { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 0; }
+
+  /* 01 Pinned walkthrough */
+  .hw-pin { height: 320vh; }
+  .hw-pin-stage { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; height: 100vh; }
+  .hw-pin-stage .hw-head { margin-bottom: clamp(32px, 5vh, 64px); }
+  .hw-pin-body { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 var(--gutter); align-items: center; }
+  .hw-reel { grid-column: 1 / 3; height: clamp(9rem, 22vw, 20rem); overflow: hidden; }
+  .hw-reel-track { transition: transform 0.7s var(--ease); }
+  .hw-reel span { display: block; height: clamp(9rem, 22vw, 20rem); font-family: var(--font-display); font-size: clamp(9rem, 22vw, 20rem); line-height: 1; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hw-panels { position: relative; grid-column: 3 / -1; min-height: 14rem; }
+  .hw-panel { position: absolute; inset: 0 0 auto 0; opacity: 0; translate: 0 24px; transition: opacity 0.5s ease, translate 0.6s var(--ease); }
+  .hw-panel.is-on { opacity: 1; translate: 0 0; }
+  .hw-panel h3 { font-size: clamp(2rem, 3.4vw, 3.6rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.045em; }
+  .hw-panel p { margin-top: 20px; max-width: 34ch; font-size: clamp(1.0625rem, 1.3vw, 1.5rem); line-height: 1.5; color: var(--ink-2); }
+  .hw-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); margin-top: clamp(40px, 7vh, 88px); }
+  .hw-progress i { position: relative; height: 2px; background: var(--line); overflow: hidden; }
+  .hw-progress i::after { content: ""; position: absolute; inset: 0; background: var(--accent-gradient); transform: scaleX(var(--p, 0)); transform-origin: 0 50%; }
+  .hw-progress span { display: block; margin-top: 12px; font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--muted); transition: color 0.3s ease; }
+  .hw-progress div.is-on span { color: var(--ink); }
+
+  /* 02 Growing stem */
+  .hw-stem { position: relative; max-width: 1100px; margin: 0 auto; padding: 40px 0 20px; }
+  .hw-stem-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; translate: -1px 0; background: var(--line); }
+  .hw-stem-line::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#302aff, #971aff); transform: scaleY(var(--p, 0)); transform-origin: 50% 0; }
+  .hw-stem-step { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0 140px; margin-bottom: clamp(80px, 10vw, 140px); }
+  .hw-stem-step:last-child { margin-bottom: 0; }
+  .hw-stem-text { opacity: 0.2; translate: 0 20px; transition: opacity 0.6s ease, translate 0.7s var(--ease); }
+  .hw-stem-step.is-on .hw-stem-text { opacity: 1; translate: 0 0; }
+  .hw-stem-step:nth-child(odd of .hw-stem-step) .hw-stem-text { grid-column: 1; text-align: right; }
+  .hw-stem-step:nth-child(even of .hw-stem-step) .hw-stem-text { grid-column: 2; }
+  .hw-stem-text small { font-family: var(--font-display); font-size: 1.6rem; color: var(--accent-soft); }
+  .hw-stem-text h3 { margin-top: 8px; font-size: clamp(1.75rem, 2.6vw, 2.8rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .hw-stem-text p { margin-top: 14px; font-size: 1.0625rem; line-height: 1.6; color: var(--ink-2); }
+  .hw-stem-step:nth-child(odd of .hw-stem-step) .hw-stem-text p { margin-left: auto; max-width: 36ch; }
+  .hw-stem-step:nth-child(even of .hw-stem-step) .hw-stem-text p { max-width: 36ch; }
+  .hw-node { position: absolute; left: 50%; top: 18px; width: 14px; height: 14px; translate: -7px 0; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 2px var(--line); transition: background 0.4s ease, box-shadow 0.4s ease; }
+  .hw-stem-step.is-on .hw-node { background: var(--accent-2); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent-2) 20%, transparent), 0 0 18px var(--accent-2); }
+  /* The pair of leaves sits just under the node, opening downwards and out, clear of the text */
+  .hw-leaf { position: absolute; left: 50%; top: 40px; width: 58px; height: 25px; transform-origin: 0 50%; scale: 0; transition: scale 0.8s var(--ease) 0.15s; }
+  .hw-leaf.l { rotate: 155deg; }
+  .hw-leaf.r { rotate: 25deg; }
+  .hw-stem-step.is-on .hw-leaf { scale: 1; }
+
+  /* 03 Editorial rows */
+  .hw-rows { list-style: none; border-top: 1px solid var(--line); }
+  .hw-row { display: grid; grid-template-columns: 1.1fr 1.3fr 1.6fr; gap: 24px var(--gutter); align-items: center; padding: clamp(32px, 4vw, 56px) 0; border-bottom: 1px solid var(--line); }
+  .hw-row .hw-num-outline { font-size: clamp(6rem, 13vw, 13rem); transition: -webkit-text-stroke-color 0.5s ease; }
+  .hw-row .hw-fill { position: relative; display: inline-block; }
+  .hw-row .hw-fill::after { content: attr(data-n); position: absolute; inset: 0; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 0; clip-path: inset(100% 0 0 0); transition: clip-path 0.9s var(--ease); }
+  .hw-row.is-on .hw-fill::after { clip-path: inset(0 0 0 0); }
+  .hw-row h3 { font-size: clamp(1.75rem, 3vw, 3.25rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.045em; }
+  .hw-row p { font-size: clamp(1rem, 1.2vw, 1.375rem); line-height: 1.55; color: var(--ink-2); }
+  .hw-row h3, .hw-row p { opacity: 0.35; transition: opacity 0.6s ease; }
+  .hw-row.is-on h3, .hw-row.is-on p { opacity: 1; }
+
+  /* 04 Before / during / after */
+  .hw-bda { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px var(--gutter); list-style: none; }
+  .hw-bda canvas { display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 16px; background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  .hw-bda small { display: flex; gap: 12px; align-items: baseline; margin-top: 28px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-soft); }
+  .hw-bda small b { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; letter-spacing: 0; }
+  .hw-bda h3 { margin-top: 10px; font-size: clamp(1.5rem, 2vw, 2.25rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.1; }
+  .hw-bda p { margin-top: 12px; max-width: 36ch; font-size: 1.0625rem; line-height: 1.6; color: var(--ink-2); }
+
+  /* 05 Horizontal strip */
+  .hw-hz { height: 340vh; }
+  .hw-hz-stage { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; height: 100vh; overflow: hidden; }
+  .hw-hz-track { display: flex; gap: 4vw; padding-left: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter))); will-change: transform; }
+  .hw-hz-card { position: relative; flex: none; display: flex; flex-direction: column; justify-content: flex-end; width: min(72vw, 980px); height: min(62vh, 560px); padding: clamp(28px, 4vw, 56px); border-radius: 28px; overflow: hidden; background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .hw-hz-card.is-dark { background: #161028; color: #f1eefa; }
+  .hw-hz-card .big { position: absolute; right: -2%; top: -8%; font-family: var(--font-display); font-size: min(42vh, 30vw); line-height: 1; }
+  .hw-hz-card h3 { position: relative; font-size: clamp(2rem, 4vw, 4.25rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1; }
+  .hw-hz-card p { position: relative; margin-top: 18px; max-width: 38ch; font-size: clamp(1.0625rem, 1.3vw, 1.4rem); line-height: 1.5; opacity: 0.75; }
+  .hw-hz-bar { height: 2px; margin: 36px max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter))) 0; background: var(--line); }
+  .hw-hz-bar i { display: block; height: 100%; background: var(--accent-gradient); transform: scaleX(var(--p, 0)); transform-origin: 0 50%; }
+
+  @media (max-width: 860px) {
+    .hw-pin-body { grid-template-columns: 1fr; }
+    .hw-reel, .hw-panels { grid-column: 1; }
+    .hw-reel { height: 7rem; }
+    .hw-reel span { height: 7rem; font-size: 7rem; }
+    .hw-stem-line, .hw-node, .hw-leaf { left: 12px; }
+    .hw-stem-step { grid-template-columns: 1fr; padding-left: 44px; }
+    .hw-stem-step .hw-stem-text { grid-column: 1 !important; text-align: left !important; }
+    .hw-stem-step .hw-stem-text p { margin-left: 0 !important; }
+    .hw-row { grid-template-columns: 1fr; }
+    .hw-bda { grid-template-columns: 1fr; }
+    .hw-hz-card { width: 84vw; }
+  }
+</style>
+
+<header class="hw-intro">
+  <p class="section-label"><span class="index-num">00</span>How It Works</p>
+  <div>
+    <h1>Five walks through it.</h1>
+    <p>Five layouts for section 03, each working, with the real copy. Scroll through each one as a visitor would; the scroll-driven ones hold the screen while their steps play.</p>
+  </div>
+</header>
+
+<ul class="hw-jump">
+  <li><a href="#hw-1"><b>01</b>Pinned walkthrough</a></li>
+  <li><a href="#hw-2"><b>02</b>Growing stem</a></li>
+  <li><a href="#hw-3"><b>03</b>Editorial rows</a></li>
+  <li><a href="#hw-4"><b>04</b>Before, during, after</a></li>
+  <li><a href="#hw-5"><b>05</b>Horizontal strip</a></li>
+</ul>
+
+<!-- 01 -->
+<section class="hw-option" id="hw-1">
+  <div class="container">
+    <div class="hw-cap"><p>01 · Recommended</p><p><b>Pinned walkthrough</b>The section holds the screen while you scroll: one huge number rolls from 01 to 03 on the left as each step's title and text fade in on the right, and a progress line fills along the bottom. "Let's walk through it", literally.</p></div>
+  </div>
+  <div class="hw-pin" data-hw-pin>
+    <div class="hw-pin-stage">
+      <div class="container">
+        {{ head() }}
+        <div class="hw-pin-body">
+          <div class="hw-reel"><div class="hw-reel-track">{% for s in steps %}<span>0{{ loop.index }}</span>{% endfor %}</div></div>
+          <div class="hw-panels">
+            {% for s in steps %}<div class="hw-panel{% if loop.first %} is-on{% endif %}"><h3>{{ s.title }}</h3><p>{{ s.desc }}</p></div>{% endfor %}
+          </div>
+        </div>
+        <div class="hw-progress">{% for s in steps %}<div{% if loop.first %} class="is-on"{% endif %}><i></i><span>0{{ loop.index }} · {{ s.title }}</span></div>{% endfor %}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="hw-option" id="hw-2">
+  <div class="container hw-pad">
+    <div class="hw-cap"><p>02 · Growth</p><p><b>Growing stem</b>One stem runs down the middle of the section with the steps alternating either side of it. As you scroll, the stem grows in the Sage purples, each step's node lights up, a pair of leaves opens beside it, and its text comes up.</p></div>
+    {{ head() }}
+    <div class="hw-stem" data-hw-stem>
+      <span class="hw-stem-line"></span>
+      {% for s in steps %}
+      <div class="hw-stem-step">
+        <span class="hw-node"></span>
+        <img class="hw-leaf l" alt="" data-leaf="{{ loop.index0 * 2 }}">
+        <img class="hw-leaf r" alt="" data-leaf="{{ loop.index0 * 2 + 1 }}">
+        <div class="hw-stem-text"><small>0{{ loop.index }}</small><h3>{{ s.title }}</h3><p>{{ s.desc }}</p></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="hw-option" id="hw-3">
+  <div class="container hw-pad">
+    <div class="hw-cap"><p>03 · Calm</p><p><b>Editorial rows</b>Each step is a full-width row: a giant outlined number, the title large, the text beside it, ruled between. As a row comes to the middle of the screen its number fills with the purple gradient from the bottom up and its words come to full ink.</p></div>
+    {{ head() }}
+    <ol class="hw-rows" data-hw-rows>
+      {% for s in steps %}
+      <li class="hw-row">
+        <span class="hw-num-outline hw-fill" data-n="0{{ loop.index }}">0{{ loop.index }}</span>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.desc }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="hw-option" id="hw-4">
+  <div class="container hw-pad">
+    <div class="hw-cap"><p>04 · Story</p><p><b>Before, during, after</b>Each step gets a small living picture of the change it makes, carrying on section 02's band of lines: your project as a tangle, Sage combing it out, and clean, straight lines in the Sage purples, the impact.</p></div>
+    {{ head() }}
+    <ol class="hw-bda" data-hw-bda>
+      {% set tags = ["Your project", "Sage at work", "The impact"] %}
+      {% for s in steps %}
+      <li>
+        <canvas data-knot="{{ [1, 0.5, 0][loop.index0] }}"></canvas>
+        <small><b>0{{ loop.index }}</b>{{ tags[loop.index0] }}</small>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.desc }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="hw-option" id="hw-5">
+  <div class="container">
+    <div class="hw-cap"><p>05 · Cinematic</p><p><b>Horizontal strip</b>The section holds the screen and scrolling down moves the three steps sideways past you, each a large panel with its number set huge behind it, the middle one in the dark Sage night, a progress line filling underneath.</p></div>
+    {{ head() }}
+  </div>
+  <div class="hw-hz" data-hw-hz>
+    <div class="hw-hz-stage">
+      <div class="hw-hz-track">
+        {% for s in steps %}
+        <article class="hw-hz-card{% if loop.index == 2 %} is-dark{% endif %}">
+          <span class="big {% if loop.index == 2 %}hw-num-fill{% else %}hw-num-outline{% endif %}">0{{ loop.index }}</span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.desc }}</p>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="hw-hz-bar"><i></i></div>
+    </div>
+  </div>
+</section>
+
+<script src="/assets/js/sage-leaf.js?v={{ build.version }}"></script>
+<script>
+(() => {
+  const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
+  // How far through a tall, pinned block the scroll is (0 at its top reaching the screen's top)
+  const through = (el) => {
+    const r = el.getBoundingClientRect();
+    return clamp01(-r.top / (r.height - innerHeight));
+  };
+  const tick = [];
+
+  // 01 Pinned walkthrough
+  document.querySelectorAll('[data-hw-pin]').forEach((pin) => {
+    const track = pin.querySelector('.hw-reel-track');
+    const reelH = () => pin.querySelector('.hw-reel').clientHeight;
+    const panels = pin.querySelectorAll('.hw-panel');
+    const bars = pin.querySelectorAll('.hw-progress > div');
+    tick.push(() => {
+      const p = through(pin) * 3;
+      const i = Math.min(2, Math.floor(p));
+      track.style.transform = `translateY(${-i * reelH()}px)`;
+      panels.forEach((el, j) => el.classList.toggle('is-on', j === i));
+      bars.forEach((el, j) => {
+        el.classList.toggle('is-on', j === i);
+        el.querySelector('i').style.setProperty('--p', clamp01(p - j).toFixed(3));
+      });
+    });
+  });
+
+  // 02 Growing stem
+  document.querySelectorAll('[data-hw-stem]').forEach((stem) => {
+    const line = stem.querySelector('.hw-stem-line');
+    const steps = stem.querySelectorAll('.hw-stem-step');
+    if (window.SageLeaf) {
+      const leaves = SageLeaf.make(8, SageLeaf.tones());
+      stem.querySelectorAll('[data-leaf]').forEach((img) => { img.src = leaves[+img.dataset.leaf % leaves.length].top.toDataURL(); });
+    }
+    tick.push(() => {
+      const r = stem.getBoundingClientRect();
+      const head = innerHeight * 0.62;
+      line.style.setProperty('--p', clamp01((head - r.top) / r.height).toFixed(3));
+      steps.forEach((s) => s.classList.toggle('is-on', s.getBoundingClientRect().top + 18 < head));
+    });
+  });
+
+  // 03 Editorial rows: lit while in the middle band of the screen (and after)
+  document.querySelectorAll('[data-hw-rows] .hw-row').forEach((row) => {
+    tick.push(() => {
+      const r = row.getBoundingClientRect();
+      row.classList.toggle('is-on', r.top + r.height / 2 < innerHeight * 0.62);
+    });
+  });
+
+  // 04 Before, during, after: sixteen lines in each picture, knotted by how far along it is; the
+  // middle one combs itself out and back, over and over
+  const css = getComputedStyle(document.documentElement);
+  const ink = (() => { const p = document.createElement('i'); p.style.color = 'var(--ink)'; document.body.append(p); const c = getComputedStyle(p).color.match(/[\d.]+/g).slice(0, 3).join(', '); p.remove(); return c; })();
+  const pics = Array.from(document.querySelectorAll('[data-hw-bda] canvas')).map((cv) => {
+    const lines = Array.from({ length: 16 }, () => ({ f1: 0.01 + Math.random() * 0.02, f2: 0.02 + Math.random() * 0.03, p1: Math.random() * 6.28, p2: Math.random() * 6.28, s: 0.4 + Math.random() * 0.8 }));
+    return { cv, g: cv.getContext('2d'), knot: +cv.dataset.knot, lines, seen: false };
+  });
+  const io = new IntersectionObserver((es) => es.forEach((e) => { const p = pics.find((x) => x.cv === e.target); if (p) p.seen = e.isIntersecting; }));
+  pics.forEach((p) => io.observe(p.cv));
+  const drawPics = (t) => {
+    pics.forEach((p) => {
+      if (!p.seen) return;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const W = p.cv.clientWidth, H = p.cv.clientHeight;
+      if (p.cv.width !== Math.round(W * dpr)) { p.cv.width = Math.round(W * dpr); p.cv.height = Math.round(H * dpr); }
+      const g = p.g;
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.clearRect(0, 0, W, H);
+      const k = p.knot === 0.5 ? 0.5 + 0.5 * Math.sin(t * 0.6) : p.knot;
+      const grad = g.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, `rgba(${ink}, ${0.2 + 0.25 * k})`);
+      grad.addColorStop(1, k < 0.5 ? `rgba(151, 26, 255, ${0.9 - k})` : `rgba(${ink}, 0.3)`);
+      g.strokeStyle = p.knot === 0 ? 'rgba(151, 26, 255, 0.85)' : grad;
+      if (p.knot === 0) { const gg = g.createLinearGradient(0, 0, W, 0); gg.addColorStop(0, 'rgba(48, 42, 255, 0.9)'); gg.addColorStop(1, 'rgba(151, 26, 255, 0.9)'); g.strokeStyle = gg; }
+      g.lineWidth = 1.2;
+      const gap = H / 20;
+      p.lines.forEach((l, i) => {
+        const base = H / 2 + (i - 7.5) * gap;
+        g.beginPath();
+        for (let x = 0; x <= W; x += 4) {
+          const amp = H * 0.4 * k;
+          const y = base + amp * (Math.sin(x * l.f1 + l.p1 + t * l.s) * 0.7 + Math.sin(x * l.f2 + l.p2 - t * l.s * 1.3) * 0.5) - (base - H / 2) * k * 0.9;
+          if (x) g.lineTo(x, y); else g.moveTo(x, y);
+        }
+        g.stroke();
+      });
+    });
+  };
+
+  // 05 Horizontal strip
+  document.querySelectorAll('[data-hw-hz]').forEach((hz) => {
+    const track = hz.querySelector('.hw-hz-track');
+    const bar = hz.querySelector('.hw-hz-bar i');
+    tick.push(() => {
+      const p = through(hz);
+      const max = track.scrollWidth - innerWidth + parseFloat(getComputedStyle(track).paddingLeft);
+      track.style.transform = `translateX(${(-p * Math.max(0, max)).toFixed(1)}px)`;
+      bar.style.setProperty('--p', p.toFixed(3));
+    });
+  });
+
+  const frame = (now) => {
+    requestAnimationFrame(frame);
+    tick.forEach((f) => f());
+    drawPics(now / 1000);
+  };
+  requestAnimationFrame(frame);
+})();
+</script>
